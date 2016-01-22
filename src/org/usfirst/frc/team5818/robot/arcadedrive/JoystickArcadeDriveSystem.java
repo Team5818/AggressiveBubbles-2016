@@ -9,6 +9,7 @@ public class JoystickArcadeDriveSystem extends ArcadeDriveSystem {
 	public JoystickArcadeDriveSystem(int joystickAPort, int talonAChannel, int talonBChannel) {
 		super(talonAChannel, talonBChannel);
 		this.joystick = new Joystick(joystickAPort);
+		//this.joystick = new Joystick(joystickBPort);
 	}
 
 	@Override
