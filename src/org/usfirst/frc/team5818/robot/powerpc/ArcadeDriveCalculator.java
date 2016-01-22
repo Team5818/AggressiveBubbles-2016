@@ -2,6 +2,9 @@ package org.usfirst.frc.team5818.robot.powerpc;
 
 import org.usfirst.frc.team5818.robot.util.Vector2d;
 
+/**
+ * A Calculator that computes values for arcade drive.
+ */
 public final class ArcadeDriveCalculator implements Calculator {
 
 	public Vector2d compute(Vector2d in) {

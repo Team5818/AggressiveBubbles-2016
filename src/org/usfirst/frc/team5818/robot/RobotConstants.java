@@ -3,6 +3,9 @@ package org.usfirst.frc.team5818.robot;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Talon;
 
+/**
+ * Controllers for the robot.
+ */
 public final class RobotConstants {
 
 	public static final Talon TALON_LEFT_FRONT = new Talon(0);
