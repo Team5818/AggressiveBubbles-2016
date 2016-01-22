@@ -1,7 +1,10 @@
 
 package org.usfirst.frc.team5818.robot;
 
-import org.usfirst.frc.team5818.robot.tankdrive.JoystickTankDriveSystem;
+import org.usfirst.frc.team5818.robot.powerpc.Calculator;
+import org.usfirst.frc.team5818.robot.powerpc.TankDriveCalculator;
+import org.usfirst.frc.team5818.robot.util.Vector2d;
+import org.usfirst.frc.team5818.robot.util.Vectors;
 
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -19,7 +22,9 @@ public class Robot extends IterativeRobot {
 	final String customAuto = "My Auto";
 	String autoSelected;
 	SendableChooser chooser;
-	DriveSystem system;
+	Calculator driveCalculator = new TankDriveCalculator();
+	TalonSet leftSet = new TalonSet(RobotConstants.TALON_LEFT_BACK, RobotConstants.TALON_LEFT_FRONT);
+	TalonSet rightSet = new TalonSet(RobotConstants.TALON_RIGHT_BACK, RobotConstants.TALON_RIGHT_FRONT);
 
 	/**
 	 * This function is run when the robot is first started up and should be
@@ -48,23 +53,16 @@ public class Robot extends IterativeRobot {
 		// autoSelected = SmartDashboard.getString("Auto Selector",
 		// defaultAuto);
 		System.out.println("Auto selected: " + autoSelected);
-		system = new AutoDriveSystem(RobotConstants.TALON_A_CHANNEL, RobotConstants.TALON_B_CHANNEL);
 	}
 
 	@Override
 	public void teleopInit() {
-		system = new JoystickTankDriveSystem(RobotConstants.JOYSTICK_A_PORT, RobotConstants.JOYSTICK_B_PORT,
-				RobotConstants.TALON_A_CHANNEL, RobotConstants.TALON_B_CHANNEL);
 	}
 
 	/**
 	 * This function is called periodically during autonomous
 	 */
 	public void autonomousPeriodic() {
-		if (system == null) {
-			throw new IllegalStateException("No drive system!");
-		}
-		system.transferPowerToTalons();
 		switch (autoSelected) {
 		case customAuto:
 			// Put custom auto code here
@@ -72,8 +70,9 @@ public class Robot extends IterativeRobot {
 		case defaultAuto:
 		default:
 			// Put default auto code here
-			((AutoDriveSystem) system).setPowerLeft(0.25);
-			((AutoDriveSystem) system).setPowerRight(0.25);
+			Vector2d talonPowers = driveCalculator.compute(new Vector2d(0.1, 0.1));
+			leftSet.sendPowerToTalons(talonPowers.getX());
+			rightSet.sendPowerToTalons(talonPowers.getY());
 			break;
 		}
 	}
@@ -82,10 +81,9 @@ public class Robot extends IterativeRobot {
 	 * This function is called periodically during operator control
 	 */
 	public void teleopPeriodic() {
-		if (system == null) {
-			throw new IllegalStateException("No drive system!");
-		}
-		system.transferPowerToTalons();
+		Vector2d talonPowers = driveCalculator.compute(Vectors.fromJoystick(RobotConstants.JOYSTICK_A));
+		leftSet.sendPowerToTalons(talonPowers.getX());
+		rightSet.sendPowerToTalons(talonPowers.getY());
 	}
 
 	/**

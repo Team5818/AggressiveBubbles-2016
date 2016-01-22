@@ -1,23 +1,12 @@
-package org.usfirst.frc.team5818.robot.arcadedrive;
+package org.usfirst.frc.team5818.robot.powerpc;
 
-import org.usfirst.frc.team5818.robot.DriveSystem;
+import org.usfirst.frc.team5818.robot.util.Vector2d;
 
-public abstract class ArcadeDriveSystem extends DriveSystem {
+public final class ArcadeDriveCalculator implements Calculator {
 
-	private double leftMotorSpeed;
-	private double rightMotorSpeed;
-
-	public ArcadeDriveSystem(int talonAChannel, int talonBChannel) {
-		super(talonAChannel, talonBChannel);
-	}
-
-	public abstract double getRotatePower();
-
-	public abstract double getMovePower();
-
-	public void calculateMotorSpeeds() {
-		double rotateValue = getRotatePower();
-		double moveValue = getMovePower();
+	public Vector2d compute(Vector2d in) {
+		double rotateValue = in.getX();
+		double moveValue = in.getY();
 
 		// if (reversedTurn) {
 		// rotateValue = -rotateValue;
@@ -36,6 +25,8 @@ public abstract class ArcadeDriveSystem extends DriveSystem {
 		// }
 		// }
 
+		double leftMotorSpeed;
+		double rightMotorSpeed;
 		if (moveValue > 0.0) {
 			if (rotateValue > 0.0) {
 				leftMotorSpeed = moveValue - rotateValue;
@@ -53,18 +44,7 @@ public abstract class ArcadeDriveSystem extends DriveSystem {
 				rightMotorSpeed = -Math.max(-moveValue, -rotateValue);
 			}
 		}
-	}
-
-	@Override
-	public double getPowerLeft() {
-		calculateMotorSpeeds();
-		return leftMotorSpeed;
-	}
-
-	@Override
-	public double getPowerRight() {
-		calculateMotorSpeeds();
-		return rightMotorSpeed;
+		return new Vector2d(leftMotorSpeed, rightMotorSpeed);
 	}
 
 }
