@@ -5,40 +5,40 @@ package org.usfirst.frc.team5818.robot.util;
  */
 public class Vector2d {
 
-	private final double x;
-	private final double y;
+    private final double x;
+    private final double y;
 
-	/**
-	 * Creates a new vector from an x and y.
-	 * 
-	 * @param x
-	 *            - x value
-	 * @param y
-	 *            - y value
-	 */
-	public Vector2d(double x, double y) {
-		this.x = x;
-		this.y = y;
-	}
+    /**
+     * Creates a new vector from an x and y.
+     * 
+     * @param x
+     *            - x value
+     * @param y
+     *            - y value
+     */
+    public Vector2d(double x, double y) {
+        this.x = x;
+        this.y = y;
+    }
 
-	/**
-	 * Returns the x value.
-	 * 
-	 * @return The x value.
-	 */
-	public double getX() {
-		return x;
-	}
+    /**
+     * Returns the x value.
+     * 
+     * @return The x value.
+     */
+    public double getX() {
+        return x;
+    }
 
-	/**
-	 * Returns the y value.
-	 * 
-	 * @return The y value
-	 */
-	public double getY() {
-		return y;
-	}
+    /**
+     * Returns the y value.
+     * 
+     * @return The y value
+     */
+    public double getY() {
+        return y;
+    }
 
-	// TODO: more vector math!
+    // TODO: more vector math!
 
 }

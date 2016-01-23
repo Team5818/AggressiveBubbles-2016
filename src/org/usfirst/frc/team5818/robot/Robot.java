@@ -18,79 +18,84 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  * directory.
  */
 public class Robot extends IterativeRobot {
-	final String defaultAuto = "Default";
-	final String customAuto = "My Auto";
-	String autoSelected;
-	SendableChooser chooser;
-	Calculator driveCalculator = new TankDriveCalculator();
-	DriveSide leftSet = new DriveSide(RobotConstants.TALON_LEFT_BACK, RobotConstants.TALON_LEFT_FRONT);
-	DriveSide rightSet = new DriveSide(RobotConstants.TALON_RIGHT_BACK, RobotConstants.TALON_RIGHT_FRONT);
 
-	/**
-	 * This function is run when the robot is first started up and should be
-	 * used for any initialization code.
-	 */
-	public void robotInit() {
-		chooser = new SendableChooser();
-		chooser.addDefault("Default Auto", defaultAuto);
-		chooser.addObject("My Auto", customAuto);
-		SmartDashboard.putData("Auto choices", chooser);
-	}
+    final String defaultAuto = "Default";
+    final String customAuto = "My Auto";
+    String autoSelected;
+    SendableChooser chooser;
+    Calculator driveCalculator = new TankDriveCalculator();
+    DriveSide leftSet = new DriveSide(RobotConstants.TALON_LEFT_BACK,
+            RobotConstants.TALON_LEFT_FRONT);
+    DriveSide rightSet = new DriveSide(RobotConstants.TALON_RIGHT_BACK,
+            RobotConstants.TALON_RIGHT_FRONT);
 
-	/**
-	 * This autonomous (along with the chooser code above) shows how to select
-	 * between different autonomous modes using the dashboard. The sendable
-	 * chooser code works with the Java SmartDashboard. If you prefer the
-	 * LabVIEW Dashboard, remove all of the chooser code and uncomment the
-	 * getString line to get the auto name from the text box below the Gyro
-	 *
-	 * You can add additional auto modes by adding additional comparisons to the
-	 * switch structure below with additional strings. If using the
-	 * SendableChooser make sure to add them to the chooser code above as well.
-	 */
-	public void autonomousInit() {
-		autoSelected = (String) chooser.getSelected();
-		// autoSelected = SmartDashboard.getString("Auto Selector",
-		// defaultAuto);
-		System.out.println("Auto selected: " + autoSelected);
-	}
+    /**
+     * This function is run when the robot is first started up and should be
+     * used for any initialization code.
+     */
+    public void robotInit() {
+        chooser = new SendableChooser();
+        chooser.addDefault("Default Auto", defaultAuto);
+        chooser.addObject("My Auto", customAuto);
+        SmartDashboard.putData("Auto choices", chooser);
+    }
 
-	@Override
-	public void teleopInit() {
-	}
+    /**
+     * This autonomous (along with the chooser code above) shows how to select
+     * between different autonomous modes using the dashboard. The sendable
+     * chooser code works with the Java SmartDashboard. If you prefer the
+     * LabVIEW Dashboard, remove all of the chooser code and uncomment the
+     * getString line to get the auto name from the text box below the Gyro
+     *
+     * You can add additional auto modes by adding additional comparisons to the
+     * switch structure below with additional strings. If using the
+     * SendableChooser make sure to add them to the chooser code above as well.
+     */
+    public void autonomousInit() {
+        autoSelected = (String) chooser.getSelected();
+        // autoSelected = SmartDashboard.getString("Auto Selector",
+        // defaultAuto);
+        System.out.println("Auto selected: " + autoSelected);
+    }
 
-	/**
-	 * This function is called periodically during autonomous
-	 */
-	public void autonomousPeriodic() {
-		switch (autoSelected) {
-		case customAuto:
-			// Put custom auto code here
-			break;
-		case defaultAuto:
-		default:
-			// Put default auto code here
-			Vector2d talonPowers = driveCalculator.compute(new Vector2d(0.1, 0.1));
-			leftSet.pidWrite(talonPowers.getX());
-			rightSet.pidWrite(talonPowers.getY());
-			break;
-		}
-	}
+    @Override
+    public void teleopInit() {
+    }
 
-	/**
-	 * This function is called periodically during operator control
-	 */
-	public void teleopPeriodic() {
-		Vector2d talonPowers = driveCalculator.compute(Vectors.fromJoystick(RobotConstants.JOYSTICK_A));
-		leftSet.pidWrite(talonPowers.getX());
-		rightSet.pidWrite(talonPowers.getY());
-	}
+    /**
+     * This function is called periodically during autonomous
+     */
+    public void autonomousPeriodic() {
+        switch (autoSelected) {
+            case customAuto:
+                // Put custom auto code here
+                break;
+            case defaultAuto:
+            default:
+                // Put default auto code here
+                Vector2d talonPowers =
+                        driveCalculator.compute(new Vector2d(0.1, 0.1));
+                leftSet.pidWrite(talonPowers.getX());
+                rightSet.pidWrite(talonPowers.getY());
+                break;
+        }
+    }
 
-	/**
-	 * This function is called periodically during test mode
-	 */
-	public void testPeriodic() {
+    /**
+     * This function is called periodically during operator control
+     */
+    public void teleopPeriodic() {
+        Vector2d talonPowers = driveCalculator
+                .compute(Vectors.fromJoystick(RobotConstants.JOYSTICK_A));
+        leftSet.pidWrite(talonPowers.getX());
+        rightSet.pidWrite(talonPowers.getY());
+    }
 
-	}
+    /**
+     * This function is called periodically during test mode
+     */
+    public void testPeriodic() {
+
+    }
 
 }

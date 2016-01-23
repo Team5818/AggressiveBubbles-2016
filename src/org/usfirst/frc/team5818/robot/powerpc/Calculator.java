@@ -8,13 +8,13 @@ import org.usfirst.frc.team5818.robot.util.Vector2d;
  */
 public interface Calculator {
 
-	/**
-	 * Converts raw power to talon power.
-	 * 
-	 * @param leftAndRight
-	 *            - raw power, as (x-axis, y-axis)
-	 * @return left and right talon power, as (left, right)
-	 */
-	Vector2d compute(Vector2d leftAndRight);
+    /**
+     * Converts raw power to talon power.
+     * 
+     * @param leftAndRight
+     *            - raw power, as (x-axis, y-axis)
+     * @return left and right talon power, as (left, right)
+     */
+    Vector2d compute(Vector2d leftAndRight);
 
 }
