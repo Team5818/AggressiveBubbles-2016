@@ -23,8 +23,8 @@ public class Robot extends IterativeRobot {
 	String autoSelected;
 	SendableChooser chooser;
 	Calculator driveCalculator = new TankDriveCalculator();
-	TalonSet leftSet = new TalonSet(RobotConstants.TALON_LEFT_BACK, RobotConstants.TALON_LEFT_FRONT);
-	TalonSet rightSet = new TalonSet(RobotConstants.TALON_RIGHT_BACK, RobotConstants.TALON_RIGHT_FRONT);
+	DriveSide leftSet = new DriveSide(RobotConstants.TALON_LEFT_BACK, RobotConstants.TALON_LEFT_FRONT);
+	DriveSide rightSet = new DriveSide(RobotConstants.TALON_RIGHT_BACK, RobotConstants.TALON_RIGHT_FRONT);
 
 	/**
 	 * This function is run when the robot is first started up and should be
@@ -71,8 +71,8 @@ public class Robot extends IterativeRobot {
 		default:
 			// Put default auto code here
 			Vector2d talonPowers = driveCalculator.compute(new Vector2d(0.1, 0.1));
-			leftSet.sendPowerToTalons(talonPowers.getX());
-			rightSet.sendPowerToTalons(talonPowers.getY());
+			leftSet.pidWrite(talonPowers.getX());
+			rightSet.pidWrite(talonPowers.getY());
 			break;
 		}
 	}
@@ -82,8 +82,8 @@ public class Robot extends IterativeRobot {
 	 */
 	public void teleopPeriodic() {
 		Vector2d talonPowers = driveCalculator.compute(Vectors.fromJoystick(RobotConstants.JOYSTICK_A));
-		leftSet.sendPowerToTalons(talonPowers.getX());
-		rightSet.sendPowerToTalons(talonPowers.getY());
+		leftSet.pidWrite(talonPowers.getX());
+		rightSet.pidWrite(talonPowers.getY());
 	}
 
 	/**
