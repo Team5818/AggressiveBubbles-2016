@@ -22,14 +22,14 @@ public class Arm {
      */
 
     public void setPower(double power) {
-    	this.power = power;
         if (power < maxPower && power > minPower) {
-            RobotConstants.TALON_ARM_MOTOR.set(power);
         } else if (power < minPower) {
-        	RobotConstants.TALON_ARM_MOTOR.set(-.5);;
+        	power = minPower;
         } else {
-        	RobotConstants.TALON_ARM_MOTOR.set(.5);;
+        	power = maxPower;
         }
+    	RobotConstants.TALON_ARM_MOTOR.set(power);
+    	this.power = power; 
     }
 
     /**
