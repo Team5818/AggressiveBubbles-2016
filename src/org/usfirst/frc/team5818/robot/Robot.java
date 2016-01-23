@@ -18,17 +18,18 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  * directory.
  */
 public class Robot extends IterativeRobot {
-
+    
     final String defaultAuto = "Default";
     final String customAuto = "My Auto";
     String autoSelected;
     SendableChooser chooser;
     Calculator driveCalculator = new TankDriveCalculator();
     DriveSide leftSet = new DriveSide(RobotConstants.TALON_LEFT_BACK,
-            RobotConstants.TALON_LEFT_FRONT);
+                                      RobotConstants.TALON_LEFT_FRONT);
     DriveSide rightSet = new DriveSide(RobotConstants.TALON_RIGHT_BACK,
-            RobotConstants.TALON_RIGHT_FRONT);
-
+                                       RobotConstants.TALON_RIGHT_FRONT);
+    Arm arm = new Arm();
+    
     /**
      * This function is run when the robot is first started up and should be
      * used for any initialization code.
@@ -39,7 +40,7 @@ public class Robot extends IterativeRobot {
         chooser.addObject("My Auto", customAuto);
         SmartDashboard.putData("Auto choices", chooser);
     }
-
+    
     /**
      * This autonomous (along with the chooser code above) shows how to select
      * between different autonomous modes using the dashboard. The sendable
@@ -57,11 +58,11 @@ public class Robot extends IterativeRobot {
         // defaultAuto);
         System.out.println("Auto selected: " + autoSelected);
     }
-
+    
     @Override
     public void teleopInit() {
     }
-
+    
     /**
      * This function is called periodically during autonomous
      */
@@ -74,28 +75,32 @@ public class Robot extends IterativeRobot {
             default:
                 // Put default auto code here
                 Vector2d talonPowers =
-                        driveCalculator.compute(new Vector2d(0.1, 0.1));
+                driveCalculator.compute(new Vector2d(0.1, 0.1));
                 leftSet.pidWrite(talonPowers.getX());
                 rightSet.pidWrite(talonPowers.getY());
                 break;
         }
     }
-
+    
     /**
      * This function is called periodically during operator control
      */
     public void teleopPeriodic() {
+        //Driver teleop
         Vector2d talonPowers = driveCalculator
-                .compute(Vectors.fromJoystick(RobotConstants.JOYSTICK_A));
+        .compute(Vectors.fromJoystick(RobotConstants.JOYSTICK_A));
         leftSet.pidWrite(talonPowers.getX());
         rightSet.pidWrite(talonPowers.getY());
+        
+        //Arm teleop
+        arm.armTeleopPeriodic();
     }
-
+    
     /**
      * This function is called periodically during test mode
      */
     public void testPeriodic() {
-
+        
     }
-
+    
 }
