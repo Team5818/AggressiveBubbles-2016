@@ -2,6 +2,7 @@ package org.usfirst.frc.team5818.robot;
 
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.Joystick.ButtonType;
 import edu.wpi.first.wpilibj.Talon;
 
 /**
@@ -23,7 +24,10 @@ public final class RobotConstants {
     public static final Joystick JOYSTICK_D = new Joystick(3);
     
     public static final Encoder ARM_ENCODER = new Encoder(0,1);
-    public static final double ARM_ENCODER_SCALE = 1.0;
+    public static final double ARM_ENCODER_SCALE = 1/375.0;
+	public static final int TRIGGER_BUTTON = ButtonType.kTrigger.value + 1;
+	public static final int ARM_RESET = 8;
+	public static final int PRINT_ANGLE = 7;
 
     private RobotConstants() {
     }

@@ -2,9 +2,10 @@ package org.usfirst.frc.team5818.robot;
 
 public class Arm {
 
+	private static final double MULTIPLIER = 0.5;
     private double power;
-    private double maxPower = .5;
-    private double minPower = -.5;
+    private double maxPower = MULTIPLIER;
+    private double minPower = -MULTIPLIER;
 
     private double angle;
 
@@ -22,14 +23,8 @@ public class Arm {
      */
 
     public void setPower(double power) {
-        if (power < maxPower && power > minPower) {
-        } else if (power < minPower) {
-        	power = minPower;
-        } else {
-        	power = maxPower;
-        }
+
     	RobotConstants.TALON_ARM_MOTOR.set(power);
-    	this.power = power; 
     }
 
     /**
@@ -43,7 +38,7 @@ public class Arm {
     }
 
     public double getEncoderVal() {
-        return RobotConstants.ARM_ENCODER.get();
+        return RobotConstants.ARM_ENCODER.getDistance();
     }
 
     /**
@@ -64,13 +59,14 @@ public class Arm {
      */
 
     public double getAngle() {
-
+    	
+    	this.angle = RobotConstants.ARM_ENCODER.getDistance();
         return this.angle;
     }
     
 	public void armTeleopPeriodic(){
 
-		this.setPower(RobotConstants.JOYSTICK_C.getY());
+		this.setPower(-MULTIPLIER*RobotConstants.JOYSTICK_C.getY());
 	}
 
 }

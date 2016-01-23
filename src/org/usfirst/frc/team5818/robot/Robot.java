@@ -6,7 +6,9 @@ import org.usfirst.frc.team5818.robot.powerpc.TankDriveCalculator;
 import org.usfirst.frc.team5818.robot.util.Vector2d;
 import org.usfirst.frc.team5818.robot.util.Vectors;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.IterativeRobot;
+import edu.wpi.first.wpilibj.Joystick.ButtonType;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -94,6 +96,12 @@ public class Robot extends IterativeRobot {
         
         //Arm teleop
         arm.armTeleopPeriodic();
+        if (RobotConstants.JOYSTICK_C.getRawButton(RobotConstants.ARM_RESET)){
+        	RobotConstants.ARM_ENCODER.reset();
+        }
+        if (RobotConstants.JOYSTICK_C.getRawButton(RobotConstants.PRINT_ANGLE)){
+        	DriverStation.reportError("" + arm.getAngle() + "\n", false);
+        }     
     }
 
     /**
