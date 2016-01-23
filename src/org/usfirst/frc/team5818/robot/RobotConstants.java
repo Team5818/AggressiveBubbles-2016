@@ -14,6 +14,8 @@ public final class RobotConstants {
 	public static final Talon TALON_RIGHT_BACK = new Talon(3);
 	public static final Joystick JOYSTICK_A = new Joystick(0);
 	public static final Joystick JOYSTICK_B = new Joystick(1);
+	public static final Joystick JOYSTICK_C = new Joystick(2);
+	public static final Joystick JOYSTICK_D = new Joystick(3);
 
 	private RobotConstants() {
 	}
