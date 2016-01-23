@@ -1,0 +1,51 @@
+buildscript {
+    repositories {
+        mavenCentral()
+        maven {
+            name "central snapshots"
+            url "https://oss.sonatype.org/content/repositories/snapshots/"
+        }
+        maven {
+            name "techshroom"
+            url "http://techshroom.github.io/downloads/maven"
+        }
+    }
+
+    dependencies {
+        classpath group: 'com.techshroom', name: 'Aversion', version: '1.0.1-SNAPSHOT'
+    }
+}
+apply plugin: 'aversion-util'
+apply plugin: 'idea'
+
+util {
+    javaVersion = '1.8'
+}
+idea.project.languageLevel = util.javaVersion
+
+repositories {
+    mavenCentral()
+    maven {
+        name "central snapshots"
+        url "https://oss.sonatype.org/content/repositories/snapshots/"
+    }
+    maven {
+        name "local files"
+        url "libs"
+    }
+}
+
+dependencies {
+    compile group: 'edu.wpi', name: 'wpilib', version: 'NONE'
+    compile group: 'edu.wpi', name: 'networktables', version: 'NONE'
+
+    testCompile group: 'junit', name: 'junit', version: '4.+'
+}
+
+configure([compileJava, compileTestJava]) {
+    options.compilerArgs += ['-Xlint:all', '-Xlint:-path']
+    options.deprecation = true
+    options.encoding = 'UTF-8'
+    options.incremental = true
+    options.fork = true
+}
