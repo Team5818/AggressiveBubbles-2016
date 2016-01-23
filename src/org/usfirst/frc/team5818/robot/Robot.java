@@ -28,6 +28,7 @@ public class Robot extends IterativeRobot {
             RobotConstants.TALON_LEFT_FRONT);
     DriveSide rightSet = new DriveSide(RobotConstants.TALON_RIGHT_BACK,
             RobotConstants.TALON_RIGHT_FRONT);
+    Arm arm = new Arm();
 
     /**
      * This function is run when the robot is first started up and should be
@@ -85,10 +86,14 @@ public class Robot extends IterativeRobot {
      * This function is called periodically during operator control
      */
     public void teleopPeriodic() {
+    	//Driver teleop
         Vector2d talonPowers = driveCalculator
                 .compute(Vectors.fromJoystick(RobotConstants.JOYSTICK_A));
         leftSet.pidWrite(talonPowers.getX());
         rightSet.pidWrite(talonPowers.getY());
+        
+        //Arm teleop
+        arm.armTeleopPeriodic();
     }
 
     /**

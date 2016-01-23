@@ -8,9 +8,10 @@ public class Arm {
 
     private double angle;
 
-    public Arm() {
-        RobotConstants.ARM_ENCODER.reset();
-    }
+	public Arm(){
+		RobotConstants.ARM_ENCODER.reset();
+		RobotConstants.ARM_ENCODER.setDistancePerPulse(RobotConstants.ARM_ENCODER_SCALE); // Angle per pulse in our case
+	}
 
     /**
      * Sets power of arm, keeping arm power within max and minimum parameters .5
@@ -65,5 +66,9 @@ public class Arm {
     public double getAngle() {
         return this.angle;
     }
+    
+	public void armTeleopPeriodic(){
+		this.setPower(RobotConstants.JOYSTICK_C.getY());
+	}
 
 }

@@ -23,6 +23,7 @@ public final class RobotConstants {
     public static final Joystick JOYSTICK_D = new Joystick(3);
     
     public static final Encoder ARM_ENCODER = new Encoder(0,1);
+    public static final double ARM_ENCODER_SCALE = 1.0;
 
     private RobotConstants() {
     }
