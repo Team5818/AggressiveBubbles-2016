@@ -21,6 +21,8 @@ public final class RobotConstants {
     public static final Joystick JOYSTICK_B = new Joystick(1);
     public static final Joystick JOYSTICK_C = new Joystick(2);
     public static final Joystick JOYSTICK_D = new Joystick(3);
+    
+    public static final Encoder ARM_ENCODER = new Encoder(0,1);
 
     private RobotConstants() {
     }
