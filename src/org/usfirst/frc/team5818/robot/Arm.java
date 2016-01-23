@@ -22,13 +22,13 @@ public class Arm {
      */
 
     public void setPower(double power) {
+    	this.power = power;
         if (power < maxPower && power > minPower) {
-            this.power = power;
             RobotConstants.TALON_ARM_MOTOR.set(power);
         } else if (power < minPower) {
-            this.power = -.5;
+        	RobotConstants.TALON_ARM_MOTOR.set(-.5);;
         } else {
-            this.power = .5;
+        	RobotConstants.TALON_ARM_MOTOR.set(.5);;
         }
     }
 
@@ -64,10 +64,12 @@ public class Arm {
      */
 
     public double getAngle() {
+
         return this.angle;
     }
     
 	public void armTeleopPeriodic(){
+
 		this.setPower(RobotConstants.JOYSTICK_C.getY());
 	}
 
