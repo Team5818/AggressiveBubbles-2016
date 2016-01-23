@@ -1,5 +1,6 @@
 package org.usfirst.frc.team5818.robot;
 
+import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Talon;
 
@@ -23,5 +24,5 @@ public final class RobotConstants {
 
 	private RobotConstants() {
 	}
-
+    
 }

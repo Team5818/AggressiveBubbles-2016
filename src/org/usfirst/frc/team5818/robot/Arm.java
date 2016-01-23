@@ -8,6 +8,10 @@ public class Arm {
 	
 	private double angle;
 	
+	public Arm(){
+		RobotConstants.ARM_ENCODER.reset();
+	}
+	
 	/**
 	 * Sets power of arm, keeping arm power within max and minimum parameters .5 and -.5
 	 * 
@@ -26,6 +30,7 @@ public class Arm {
 		}
 	}
 	
+	
 	/**
 	 * Gets power of arm
 	 * 
@@ -34,6 +39,10 @@ public class Arm {
 	
 	public double getPower(){
 		return this.power;
+	}
+	
+	public double getEncoderVal(){
+		return RobotConstants.ARM_ENCODER.get();
 	}
 	
 	/**
