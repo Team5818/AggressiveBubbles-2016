@@ -1,7 +1,9 @@
 package org.usfirst.frc.team5818.robot;
 
-public class Arm {
+import edu.wpi.first.wpilibj.Encoder;
 
+public class Arm {
+	
     private static final double MULTIPLIER = -1.0;
     private double power;
     private double maxPower = MULTIPLIER;
@@ -70,6 +72,7 @@ public class Arm {
     	this.angle = RobotConstants.ARM_ENCODER.getDistance();
         return this.angle;
     }
+/// Updated upstream
     
     public void aimAdjustLeft(Boolean up){
     	if(up){
@@ -149,6 +152,8 @@ public class Arm {
     	
     }
     
+        
+//// Stashed changes
 	public void armTeleopPeriodic(){
 
 		this.setPower(-MULTIPLIER*RobotConstants.JOYSTICK_C.getY(), 'l');
