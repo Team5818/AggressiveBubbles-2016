@@ -15,7 +15,7 @@ public final class Vectors {
      * @return A new vector of the values
      */
     public static Vector2d fromJoystick(Joystick stick) {
-        return new Vector2d(stick.getX(), stick.getY());
+        return new Vector2d(stick.getX(), -stick.getY());
     }
 
     /**
