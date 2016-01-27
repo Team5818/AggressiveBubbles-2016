@@ -8,7 +8,7 @@ import org.usfirst.frc.team5818.robot.util.Vector2d;
 public final class ArcadeDriveCalculator implements Calculator {
 
     public Vector2d compute(Vector2d in) {
-        double rotateValue = in.getX();
+        double rotateValue = -in.getX();
         double moveValue = in.getY();
 
         // if (reversedTurn) {
