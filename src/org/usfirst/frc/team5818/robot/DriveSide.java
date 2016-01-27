@@ -13,6 +13,7 @@ public class DriveSide implements PIDOutput {
 
     private final CANTalon mainTalon;
     private final CANTalon secondaryTalon;
+    private final boolean inverted;
 
     /**
      * Creates a new DriveSide that controls the talons given.
@@ -26,10 +27,24 @@ public class DriveSide implements PIDOutput {
         }
         this.mainTalon = mainTalon;
         this.secondaryTalon = secondaryTalon;
+        this.inverted = false;
+    }
+    
+    public DriveSide(CANTalon mainTalon, CANTalon secondaryTalon, boolean inverted) {
+        if (mainTalon == null) {
+            throw new IllegalArgumentException("mainTalon cannot be null");
+        }
+        this.mainTalon = mainTalon;
+        this.secondaryTalon = secondaryTalon;
+        this.inverted = inverted;
     }
 
     @Override
     public void pidWrite(double output) {
+        if(inverted)
+        {
+            output *= -1;
+        }
         this.mainTalon.set(output);
         if (this.secondaryTalon != null) {
             this.secondaryTalon.set(output);

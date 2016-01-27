@@ -30,7 +30,7 @@ public class Robot extends IterativeRobot {
     DriveSide leftSet = new DriveSide(RobotConstants.TALON_LEFT_BACK,
             RobotConstants.TALON_LEFT_FRONT);
     DriveSide rightSet = new DriveSide(RobotConstants.TALON_RIGHT_BACK,
-            RobotConstants.TALON_RIGHT_FRONT);
+            RobotConstants.TALON_RIGHT_FRONT, true); // Motors flipped around.
     Arm arm = new Arm();
 
     /**
