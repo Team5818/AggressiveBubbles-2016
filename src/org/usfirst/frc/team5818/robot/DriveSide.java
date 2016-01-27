@@ -5,7 +5,8 @@ import edu.wpi.first.wpilibj.Talon;
 
 /**
  * A talon set holds an arbitrary amount of talons that can be manipulated as a
- * whole set.
+ * whole set. The arbitrary amount of talons that can be manipulated may be an
+ * integer between 1 and 2 inclusive.
  */
 public class DriveSide implements PIDOutput {
 
