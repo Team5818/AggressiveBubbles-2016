@@ -9,6 +9,7 @@ public class Eyes {
 	public void LookAtMe() {
         server = CameraServer.getInstance();
         server.setQuality(50);
+        server.setSize(10);
         //the camera name (ex "cam0") can be found through the roborio web interface
         server.startAutomaticCapture("cam0");
     }
