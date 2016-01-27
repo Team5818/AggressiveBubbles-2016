@@ -1,6 +1,7 @@
 
 package org.usfirst.frc.team5818.robot;
 
+import org.usfirst.frc.team5818.robot.powerpc.ArcadeDriveCalculator;
 import org.usfirst.frc.team5818.robot.powerpc.Calculator;
 import org.usfirst.frc.team5818.robot.powerpc.TankDriveCalculator;
 import org.usfirst.frc.team5818.robot.util.Vector2d;
@@ -25,7 +26,7 @@ public class Robot extends IterativeRobot {
     final String customAuto = "My Auto";
     String autoSelected;
     SendableChooser chooser;
-    Calculator driveCalculator = new TankDriveCalculator();
+    Calculator driveCalculator = new ArcadeDriveCalculator();
     DriveSide leftSet = new DriveSide(RobotConstants.TALON_LEFT_BACK,
             RobotConstants.TALON_LEFT_FRONT);
     DriveSide rightSet = new DriveSide(RobotConstants.TALON_RIGHT_BACK,

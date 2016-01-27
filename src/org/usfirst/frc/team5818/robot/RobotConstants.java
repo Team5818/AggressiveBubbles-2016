@@ -11,17 +11,18 @@ import edu.wpi.first.wpilibj.Talon;
  */
 public final class RobotConstants {
 
-    public static final Talon TALON_LEFT_FRONT = new Talon(0);
-    public static final Talon TALON_LEFT_BACK = new Talon(1);
+	private static final int CAN_OFFSET = 1;
+	
+    public static final CANTalon TALON_LEFT_FRONT = new CANTalon(0 + CAN_OFFSET);
+    public static final CANTalon TALON_LEFT_BACK = new CANTalon(1 + CAN_OFFSET);
 
-    public static final Talon TALON_RIGHT_FRONT = new Talon(2);
-    public static final Talon TALON_RIGHT_BACK = new Talon(3);
+    public static final CANTalon TALON_RIGHT_FRONT = new CANTalon(2 + CAN_OFFSET);
+    public static final CANTalon TALON_RIGHT_BACK = new CANTalon(3 + CAN_OFFSET);
 
-    private static final int CAN_TALON_OFFSET = 1;
     public static final CANTalon TALON_LEFT_ARM_MOTOR =
-            new CANTalon(4 + CAN_TALON_OFFSET);
+            new CANTalon(4 + CAN_OFFSET);
     public static final CANTalon TALON_RIGHT_ARM_MOTOR =
-            new CANTalon(5 + CAN_TALON_OFFSET);
+            new CANTalon(5 + CAN_OFFSET);
 
     public static final Joystick JOYSTICK_A = new Joystick(0);
     public static final Joystick JOYSTICK_B = new Joystick(1);

@@ -1,5 +1,6 @@
 package org.usfirst.frc.team5818.robot;
 
+import edu.wpi.first.wpilibj.CANTalon;
 import edu.wpi.first.wpilibj.PIDOutput;
 import edu.wpi.first.wpilibj.Talon;
 
@@ -10,8 +11,8 @@ import edu.wpi.first.wpilibj.Talon;
  */
 public class DriveSide implements PIDOutput {
 
-    private final Talon mainTalon;
-    private final Talon secondaryTalon;
+    private final CANTalon mainTalon;
+    private final CANTalon secondaryTalon;
 
     /**
      * Creates a new DriveSide that controls the talons given.
@@ -19,7 +20,7 @@ public class DriveSide implements PIDOutput {
      * @param mainTalon
      *            - The first talon to control
      */
-    public DriveSide(Talon mainTalon, Talon secondaryTalon) {
+    public DriveSide(CANTalon mainTalon, CANTalon secondaryTalon) {
         if (mainTalon == null) {
             throw new IllegalArgumentException("mainTalon cannot be null");
         }
