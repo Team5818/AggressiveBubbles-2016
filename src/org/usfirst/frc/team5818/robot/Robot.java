@@ -88,33 +88,38 @@ public class Robot extends IterativeRobot {
      * This function is called periodically during operator control
      */
     public void teleopPeriodic() {
-    	//Driver teleop
+        // Driver teleop
         Vector2d talonPowers = driveCalculator
                 .compute(Vectors.fromJoystick(RobotConstants.JOYSTICK_A));
         leftSet.pidWrite(talonPowers.getX());
         rightSet.pidWrite(talonPowers.getY());
-        
-        //Arm teleop
+
+        // Arm teleop
         arm.armTeleopPeriodic();
-        
-        if (RobotConstants.JOYSTICK_C.getRawButton(RobotConstants.ARM_RESET)){
-        	RobotConstants.ARM_ENCODER.reset();
+
+        if (RobotConstants.JOYSTICK_C.getRawButton(RobotConstants.ARM_RESET)) {
+            RobotConstants.ARM_ENCODER.reset();
         }
-        if (RobotConstants.JOYSTICK_C.getRawButton(RobotConstants.PRINT_ANGLE)){
-        	DriverStation.reportError("" + arm.getAngle() + "\n", false);
+        if (RobotConstants.JOYSTICK_C
+                .getRawButton(RobotConstants.PRINT_ANGLE)) {
+            DriverStation.reportError("" + arm.getAngle() + "\n", false);
         }
-        if(RobotConstants.JOYSTICK_C.getRawButton(RobotConstants.LEFT_UP_ANGLE_BUTTON)){
-        	arm.aimAdjustLeft(true);
+        if (RobotConstants.JOYSTICK_C
+                .getRawButton(RobotConstants.LEFT_UP_ANGLE_BUTTON)) {
+            arm.aimAdjustLeft(true);
         }
-        if(RobotConstants.JOYSTICK_C.getRawButton(RobotConstants.LEFT_DOWN_ANGLE_BUTTON)){
-        	arm.aimAdjustLeft(false);
+        if (RobotConstants.JOYSTICK_C
+                .getRawButton(RobotConstants.LEFT_DOWN_ANGLE_BUTTON)) {
+            arm.aimAdjustLeft(false);
         }
-        if(RobotConstants.JOYSTICK_C.getRawButton(RobotConstants.RIGHT_UP_ANGLE_BUTTON)){
-        	arm.aimAdjustRight(true);
+        if (RobotConstants.JOYSTICK_C
+                .getRawButton(RobotConstants.RIGHT_UP_ANGLE_BUTTON)) {
+            arm.aimAdjustRight(true);
         }
-        if(RobotConstants.JOYSTICK_C.getRawButton(RobotConstants.RIGHT_DOWN_ANGLE_BUTTON)){
-        	arm.aimAdjustRight(false);
-        }  
+        if (RobotConstants.JOYSTICK_C
+                .getRawButton(RobotConstants.RIGHT_DOWN_ANGLE_BUTTON)) {
+            arm.aimAdjustRight(false);
+        }
     }
 
     /**
