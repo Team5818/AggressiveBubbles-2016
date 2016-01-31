@@ -24,12 +24,12 @@ build/
 # custom
 .build/
 .test
+!/libs/edu
 
 # running stuff
 /run/
-
 /.apt_generated/
 
-
-# what
+# thanks FRC
 sysProps.xml
+
