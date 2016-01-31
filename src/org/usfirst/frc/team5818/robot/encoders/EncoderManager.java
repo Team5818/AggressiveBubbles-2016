@@ -1,7 +1,5 @@
 package org.usfirst.frc.team5818.robot.encoders;
 
-import edu.wpi.first.wpilibj.Encoder;
-
 public interface EncoderManager {
 
     static final double DEFAULT_MARGIN_OF_ERROR = 0.001d;

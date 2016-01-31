@@ -3,13 +3,11 @@ package org.usfirst.frc.team5818.robot;
 
 import org.usfirst.frc.team5818.robot.powerpc.ArcadeDriveCalculator;
 import org.usfirst.frc.team5818.robot.powerpc.Calculator;
-import org.usfirst.frc.team5818.robot.powerpc.TankDriveCalculator;
 import org.usfirst.frc.team5818.robot.util.Vector2d;
 import org.usfirst.frc.team5818.robot.util.Vectors;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.IterativeRobot;
-import edu.wpi.first.wpilibj.Joystick.ButtonType;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 

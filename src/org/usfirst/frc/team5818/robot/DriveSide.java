@@ -2,7 +2,6 @@ package org.usfirst.frc.team5818.robot;
 
 import edu.wpi.first.wpilibj.CANTalon;
 import edu.wpi.first.wpilibj.PIDOutput;
-import edu.wpi.first.wpilibj.Talon;
 
 /**
  * A talon set holds an arbitrary amount of talons that can be manipulated as a
@@ -29,8 +28,9 @@ public class DriveSide implements PIDOutput {
         this.secondaryTalon = secondaryTalon;
         this.inverted = false;
     }
-    
-    public DriveSide(CANTalon mainTalon, CANTalon secondaryTalon, boolean inverted) {
+
+    public DriveSide(CANTalon mainTalon, CANTalon secondaryTalon,
+            boolean inverted) {
         if (mainTalon == null) {
             throw new IllegalArgumentException("mainTalon cannot be null");
         }
@@ -41,8 +41,7 @@ public class DriveSide implements PIDOutput {
 
     @Override
     public void pidWrite(double output) {
-        if(inverted)
-        {
+        if (inverted) {
             output *= -1;
         }
         this.mainTalon.set(output);

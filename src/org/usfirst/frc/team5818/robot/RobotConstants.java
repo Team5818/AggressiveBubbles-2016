@@ -4,20 +4,22 @@ import edu.wpi.first.wpilibj.CANTalon;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Joystick.ButtonType;
-import edu.wpi.first.wpilibj.Talon;
 
 /**
  * Controllers for the robot.
  */
 public final class RobotConstants {
 
-	private static final int CAN_OFFSET = 1;
-	
-    public static final CANTalon TALON_LEFT_FRONT = new CANTalon(0 + CAN_OFFSET);
+    private static final int CAN_OFFSET = 1;
+
+    public static final CANTalon TALON_LEFT_FRONT =
+            new CANTalon(0 + CAN_OFFSET);
     public static final CANTalon TALON_LEFT_BACK = new CANTalon(1 + CAN_OFFSET);
 
-    public static final CANTalon TALON_RIGHT_FRONT = new CANTalon(2 + CAN_OFFSET);
-    public static final CANTalon TALON_RIGHT_BACK = new CANTalon(3 + CAN_OFFSET);
+    public static final CANTalon TALON_RIGHT_FRONT =
+            new CANTalon(2 + CAN_OFFSET);
+    public static final CANTalon TALON_RIGHT_BACK =
+            new CANTalon(3 + CAN_OFFSET);
 
     public static final CANTalon TALON_LEFT_ARM_MOTOR =
             new CANTalon(4 + CAN_OFFSET);
