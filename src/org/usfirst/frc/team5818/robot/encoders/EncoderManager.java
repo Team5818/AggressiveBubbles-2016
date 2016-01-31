@@ -84,10 +84,12 @@ public interface EncoderManager {
     }
 
     /**
-     * Returns true iff Math.abs(getGoalDistance) &lt;&lt; errorMargin
+     * Returns true iff Math.abs(getDistanceToCover) &lt;&lt; errorMargin
      * @param errorMargin - Margin of Error, the distance the EncoderManager can be away from the goal and
      * still consider itself done.
-     * @return true iff Math.abs(getGoalDistance) &lt;&lt; errorMargin
+     * @return true iff Math.abs(getDistanceToCover) &lt;&lt; errorMargin
      */
-    boolean isDistanceCovered(double errorMargin);
+    default boolean isDistanceCovered(double errorMargin) {
+        return Math.abs(getDistanceToCover()) < errorMargin;
+    }
 }
