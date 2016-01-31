@@ -4,7 +4,7 @@ import edu.wpi.first.wpilibj.CANTalon;
 import edu.wpi.first.wpilibj.PIDOutput;
 
 /**
- * A talon set holds an arbitrary amount of talons that can be manipulated as a
+ * A drive side is an arbitrary amount of talons that can be manipulated as a
  * whole set. The arbitrary amount of talons that can be manipulated may be an
  * integer between 1 and 2 inclusive.
  */
@@ -19,16 +19,25 @@ public class DriveSide implements PIDOutput {
      * 
      * @param mainTalon
      *            - The first talon to control
+     * @param secondaryTalon
+     *            - The second talon to control
      */
     public DriveSide(CANTalon mainTalon, CANTalon secondaryTalon) {
-        if (mainTalon == null) {
-            throw new IllegalArgumentException("mainTalon cannot be null");
-        }
-        this.mainTalon = mainTalon;
-        this.secondaryTalon = secondaryTalon;
-        this.inverted = false;
+        this(mainTalon, secondaryTalon, false);
     }
 
+    /**
+     * Creates a new DriveSide that controls the talons given, and may be
+     * inverted.
+     * 
+     * @param mainTalon
+     *            - The first talon to control
+     * @param secondaryTalon
+     *            - The second talon to control
+     * @param inverted
+     *            - {@code true} if the argument of {@link #pidWrite(double)}
+     *            should be negated
+     */
     public DriveSide(CANTalon mainTalon, CANTalon secondaryTalon,
             boolean inverted) {
         if (mainTalon == null) {

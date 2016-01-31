@@ -97,11 +97,11 @@ public class Robot extends IterativeRobot {
         // Arm teleop
         arm.armTeleopPeriodic();
 
-        if (RobotConstants.JOYSTICK_C.getRawButton(RobotConstants.ARM_RESET)) {
+        if (RobotConstants.JOYSTICK_C.getRawButton(RobotConstants.ARM_RESET_BUTTON)) {
             RobotConstants.ARM_ENCODER.reset();
         }
         if (RobotConstants.JOYSTICK_C
-                .getRawButton(RobotConstants.PRINT_ANGLE)) {
+                .getRawButton(RobotConstants.PRINT_ANGLE_BUTTON)) {
             DriverStation.reportError("" + arm.getAngle() + "\n", false);
         }
         if (RobotConstants.JOYSTICK_C
