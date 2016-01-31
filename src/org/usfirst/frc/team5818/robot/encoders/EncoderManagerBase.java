@@ -1,5 +1,10 @@
 package org.usfirst.frc.team5818.robot.encoders;
 
+/**
+ * EncoderManager partial implementation that provides shared methods. All
+ * implementations <b>MUST</b> call {@link #setDistanceDriven(double)} when any
+ * distance is driven in order to have this class calculate correct values.
+ */
 public abstract class EncoderManagerBase implements EncoderManager {
 
     private static final double NO_DISTANCE = 0;
@@ -7,8 +12,23 @@ public abstract class EncoderManagerBase implements EncoderManager {
             Double.doubleToLongBits(NO_DISTANCE);
     protected double distanceToDrive;
     protected double distanceDriven;
-    
+
+    private boolean targetIsUndefined() {
+        return Double.doubleToLongBits(distanceToDrive) == NO_DISTANCE_BITS;
+    }
+
+    /**
+     * Sets the distance the robot has driven towards {@link #distanceToDrive}.
+     * For convenience, calls to this are IGNORED instead of being erroneous
+     * when there is no target.
+     * 
+     * @param dist
+     *            - The distance
+     */
     protected void setDistanceDriven(double dist) {
+        if (targetIsUndefined()) {
+            return;
+        }
         distanceDriven = dist;
     }
 
@@ -24,7 +44,7 @@ public abstract class EncoderManagerBase implements EncoderManager {
 
     @Override
     public double getDistanceNotCovered() {
-        if (Double.doubleToLongBits(distanceToDrive) == NO_DISTANCE_BITS) {
+        if (targetIsUndefined()) {
             return 0;
         }
         return distanceToDrive - distanceDriven;
@@ -48,6 +68,9 @@ public abstract class EncoderManagerBase implements EncoderManager {
 
     @Override
     public boolean isDistanceCovered(double errorMargin) {
+        if (targetIsUndefined()) {
+            return true;
+        }
         return getDistanceToCover() < errorMargin;
     }
 
