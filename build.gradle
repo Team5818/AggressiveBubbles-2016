@@ -48,6 +48,15 @@ dependencies {
 eclipse.project.file.beforeMerged { proj ->
     proj.natures.add('edu.wpi.first.wpilib.plugins.core.nature.FRCProjectNature')
 }
+// Load our formatting details
+def formattingProperties = new Properties();
+file('.eclipse_formatter.jdt').withReader { reader ->
+    formattingProperties.load(reader)
+}
+// Add the formatter
+eclipse.jdt.file.withProperties { props -> 
+    props.putAll(formattingProperties);
+}
 
 sourceSets.main.java.srcDirs = ['src']
 sourceSets.main.resources.srcDirs = ['src']
