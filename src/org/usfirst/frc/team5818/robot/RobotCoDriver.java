@@ -8,4 +8,5 @@ public class RobotCoDriver {
             new Joystick(RobotConstants.CODRIVER_FIRST_JOYSTICK_PORT);
     private static final Joystick SECOND_JOYSTICK =
             new Joystick(RobotConstants.CODRIVER_SECOND_JOYSTICK_PORT);
+    
 }

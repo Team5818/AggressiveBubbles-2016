@@ -20,15 +20,12 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  */
 public class Robot extends IterativeRobot {
 
+    public final DriveTrain driveTrain = new DriveTrain();
     final String defaultAuto = "Default";
     final String customAuto = "My Auto";
     String autoSelected;
     SendableChooser chooser;
     Calculator driveCalculator = new ArcadeDriveCalculator();
-    DriveSide leftSet = new DriveSide(RobotConstants.TALON_LEFT_BACK,
-            RobotConstants.TALON_LEFT_FRONT);
-    DriveSide rightSet = new DriveSide(RobotConstants.TALON_RIGHT_BACK,
-            RobotConstants.TALON_RIGHT_FRONT, true); // Motors flipped around.
     Arm arm = new Arm();
 
     /**
@@ -78,8 +75,7 @@ public class Robot extends IterativeRobot {
                 // Put default auto code here
                 Vector2d talonPowers =
                         driveCalculator.compute(new Vector2d(0.1, 0.1));
-                leftSet.pidWrite(talonPowers.getX());
-                rightSet.pidWrite(talonPowers.getY());
+                driveTrain.setPower(talonPowers);
                 break;
         }
     }
@@ -89,37 +85,37 @@ public class Robot extends IterativeRobot {
      */
     public void teleopPeriodic() {
         // Driver teleop
-        Vector2d talonPowers = driveCalculator
-                .compute(Vectors.fromJoystick(RobotConstants.JOYSTICK_A));
-        leftSet.pidWrite(talonPowers.getX());
-        rightSet.pidWrite(talonPowers.getY());
+//        Vector2d talonPowers = driveCalculator
+//                .compute(Vectors.fromJoystick(RobotConstants.JOYSTICK_A));
+//        leftSet.pidWrite(talonPowers.getX());
+//        rightSet.pidWrite(talonPowers.getY());
 
         // Arm teleop
         arm.armTeleopPeriodic();
 
-        if (RobotConstants.JOYSTICK_C.getRawButton(RobotConstants.ARM_RESET_BUTTON)) {
-            RobotConstants.ARM_ENCODER.reset();
-        }
-        if (RobotConstants.JOYSTICK_C
-                .getRawButton(RobotConstants.PRINT_ANGLE_BUTTON)) {
-            DriverStation.reportError("" + arm.getAngle() + "\n", false);
-        }
-        if (RobotConstants.JOYSTICK_C
-                .getRawButton(RobotConstants.LEFT_UP_ANGLE_BUTTON)) {
-            arm.aimAdjustLeft(true);
-        }
-        if (RobotConstants.JOYSTICK_C
-                .getRawButton(RobotConstants.LEFT_DOWN_ANGLE_BUTTON)) {
-            arm.aimAdjustLeft(false);
-        }
-        if (RobotConstants.JOYSTICK_C
-                .getRawButton(RobotConstants.RIGHT_UP_ANGLE_BUTTON)) {
-            arm.aimAdjustRight(true);
-        }
-        if (RobotConstants.JOYSTICK_C
-                .getRawButton(RobotConstants.RIGHT_DOWN_ANGLE_BUTTON)) {
-            arm.aimAdjustRight(false);
-        }
+//        if (RobotConstants.JOYSTICK_C.getRawButton(RobotConstants.ARM_RESET_BUTTON)) {
+//            RobotConstants.ARM_ENCODER.reset();
+//        }
+//        if (RobotConstants.JOYSTICK_C
+//                .getRawButton(RobotConstants.PRINT_ANGLE_BUTTON)) {
+//            DriverStation.reportError("" + arm.getAngle() + "\n", false);
+//        }
+//        if (RobotConstants.JOYSTICK_C
+//                .getRawButton(RobotConstants.LEFT_UP_ANGLE_BUTTON)) {
+//            arm.aimAdjustLeft(true);
+//        }
+//        if (RobotConstants.JOYSTICK_C
+//                .getRawButton(RobotConstants.LEFT_DOWN_ANGLE_BUTTON)) {
+//            arm.aimAdjustLeft(false);
+//        }
+//        if (RobotConstants.JOYSTICK_C
+//                .getRawButton(RobotConstants.RIGHT_UP_ANGLE_BUTTON)) {
+//            arm.aimAdjustRight(true);
+//        }
+//        if (RobotConstants.JOYSTICK_C
+//                .getRawButton(RobotConstants.RIGHT_DOWN_ANGLE_BUTTON)) {
+//            arm.aimAdjustRight(false);
+//        }
     }
 
     /**
