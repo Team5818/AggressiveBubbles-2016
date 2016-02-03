@@ -2,12 +2,12 @@
 *.jar
 
 # eclipse
-.classpath
-.project
-.metadata/
-.settings/
-.recommenders/
-bin/
+/.classpath
+/.project
+/.metadata/
+/.settings/
+/.recommenders/
+/bin/
 
 # (no) idea
 .idea
@@ -16,11 +16,6 @@ bin/
 *.iws
 out/
 
-# gradle
-.gradle/
-build/
-!/gradle/wrapper/gradle-wrapper.jar
-
 # custom
 .build/
 .test
@@ -28,7 +23,6 @@ build/
 
 # running stuff
 /run/
-/.apt_generated/
 
 # thanks FRC
 sysProps.xml
