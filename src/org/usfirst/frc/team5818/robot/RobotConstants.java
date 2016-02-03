@@ -99,6 +99,23 @@ public final class RobotConstants {
      */
     public static final int LEFT_DOWN_ANGLE_BUTTON = 4;
 
+    /**
+     * Port for the main driver's 1st joystick.
+     */
+    public static final int DRIVER_FIRST_JOYSTICK_PORT = 0;
+    /**
+     * Port for the main driver's 2nd joystick.
+     */
+    public static final int DRIVER_SECOND_JOYSTICK_PORT = 1;
+    /**
+     * Port for the co-driver's 1st joystick.
+     */
+    public static final int CODRIVER_FIRST_JOYSTICK_PORT = 2;
+    /**
+     * Port for the co-driver's 2nd joystick.
+     */
+    public static final int CODRIVER_SECOND_JOYSTICK_PORT = 3;
+
     private RobotConstants() {
     }
 
