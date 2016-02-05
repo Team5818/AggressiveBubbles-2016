@@ -1,5 +1,6 @@
 package org.usfirst.frc.team5818.robot;
 
+import org.usfirst.frc.team5818.robot.modules.Module;
 import org.usfirst.frc.team5818.robot.util.Vector2d;
 
 import edu.wpi.first.wpilibj.CANTalon;
@@ -8,7 +9,7 @@ import edu.wpi.first.wpilibj.PIDOutput;
 /**
  * The entire drive thing.
  */
-public class DriveTrain {
+public class DriveTrain implements Module {
 
     private static final CANTalon LEFT_FRONT =
             new CANTalon(RobotConstants.TALON_LEFT_FRONT);
@@ -31,10 +32,22 @@ public class DriveTrain {
     public PIDOutput getRightMotors() {
         return right;
     }
-    
+
     public void setPower(Vector2d power) {
         left.pidWrite(power.getX());
         right.pidWrite(power.getY());
+    }
+
+    @Override
+    public void initModule() {
+    }
+
+    @Override
+    public void teleopPeriodicModule() {
+    }
+
+    @Override
+    public void endModule() {
     }
 
 }
