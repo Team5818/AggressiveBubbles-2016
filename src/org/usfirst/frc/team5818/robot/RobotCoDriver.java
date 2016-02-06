@@ -88,6 +88,10 @@ public class RobotCoDriver implements Module {
         arm.aimAdjustRight(false);
         }
         
+        if(!setAngleMode){
+           arm.setPower(FIRST_JOYSTICK.getY());
+        }
+        
         
         if
         (FIRST_JOYSTICK.getRawButton(RobotConstants.ARM_RESET_BUTTON))

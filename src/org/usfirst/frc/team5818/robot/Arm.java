@@ -32,11 +32,21 @@ public class Arm {
      * @param power
      *            - power value
      */
-
-    public void setPower(double power, char arm) {
+    
+    public void setPower(double power){
         armPID.disable();
         LEFT_ARM.set(power);
         RIGHT_ARM.set(power);
+    }
+
+    public void setPower(double power, char arm) {
+        armPID.disable();
+        if(arm == 'l'){
+        LEFT_ARM.set(power);
+        }
+        if(arm == 'r'){
+        RIGHT_ARM.set(power);
+        }
     }
 
     /**
@@ -133,9 +143,5 @@ public class Arm {
         armPID.enable();
     }
 
-    public void armTeleopPeriodic() {
-        // this.setPower(-MULTIPLIER * RobotConstants.JOYSTICK_C.getY(), 'l');
-        // this.setPower(MULTIPLIER * RobotConstants.JOYSTICK_C.getY(), 'r');
-    }
 
 }
