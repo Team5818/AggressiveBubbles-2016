@@ -1,8 +1,12 @@
 
 package org.usfirst.frc.team5818.robot;
 
-import org.usfirst.frc.team5818.robot.powerpc.ArcadeDriveCalculator;
-import org.usfirst.frc.team5818.robot.powerpc.Calculator;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.usfirst.frc.team5818.robot.calculator.ArcadeDriveCalculator;
+import org.usfirst.frc.team5818.robot.calculator.DriveCalculator;
+import org.usfirst.frc.team5818.robot.modules.Module;
 import org.usfirst.frc.team5818.robot.util.Vector2d;
 import org.usfirst.frc.team5818.robot.util.Vectors;
 
@@ -20,22 +24,33 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  */
 public class Robot extends IterativeRobot {
 
+    public static Robot runningRobot;
+
+    private List<Module> modules = new ArrayList<>();
+
+    private <M extends Module> M addModule(M module) {
+        modules.add(module);
+        return module;
+    }
+
+    /**
+     * The drive train connected to the robot talons.
+     */
+    public final DriveTrain driveTrain = addModule(new DriveTrain());
+    private final RobotDriver driver = addModule(new RobotDriver());
+    private final RobotCoDriver coDriver = addModule(new RobotCoDriver());
     final String defaultAuto = "Default";
     final String customAuto = "My Auto";
     String autoSelected;
     SendableChooser chooser;
-    Calculator driveCalculator = new ArcadeDriveCalculator();
-    DriveSide leftSet = new DriveSide(RobotConstants.TALON_LEFT_BACK,
-            RobotConstants.TALON_LEFT_FRONT);
-    DriveSide rightSet = new DriveSide(RobotConstants.TALON_RIGHT_BACK,
-            RobotConstants.TALON_RIGHT_FRONT, true); // Motors flipped around.
-    Arm arm = new Arm();
 
     /**
      * This function is run when the robot is first started up and should be
      * used for any initialization code.
      */
     public void robotInit() {
+        runningRobot = this;
+        modules.forEach(Module::initModule);
         chooser = new SendableChooser();
         chooser.addDefault("Default Auto", defaultAuto);
         chooser.addObject("My Auto", customAuto);
@@ -76,10 +91,6 @@ public class Robot extends IterativeRobot {
             case defaultAuto:
             default:
                 // Put default auto code here
-                Vector2d talonPowers =
-                        driveCalculator.compute(new Vector2d(0.1, 0.1));
-                leftSet.pidWrite(talonPowers.getX());
-                rightSet.pidWrite(talonPowers.getY());
                 break;
         }
     }
@@ -88,38 +99,7 @@ public class Robot extends IterativeRobot {
      * This function is called periodically during operator control
      */
     public void teleopPeriodic() {
-        // Driver teleop
-        Vector2d talonPowers = driveCalculator
-                .compute(Vectors.fromJoystick(RobotConstants.JOYSTICK_A));
-        leftSet.pidWrite(talonPowers.getX());
-        rightSet.pidWrite(talonPowers.getY());
-
-        // Arm teleop
-        arm.armTeleopPeriodic();
-
-        if (RobotConstants.JOYSTICK_C.getRawButton(RobotConstants.ARM_RESET_BUTTON)) {
-            RobotConstants.ARM_ENCODER.reset();
-        }
-        if (RobotConstants.JOYSTICK_C
-                .getRawButton(RobotConstants.PRINT_ANGLE_BUTTON)) {
-            DriverStation.reportError("" + arm.getAngle() + "\n", false);
-        }
-        if (RobotConstants.JOYSTICK_C
-                .getRawButton(RobotConstants.LEFT_UP_ANGLE_BUTTON)) {
-            arm.aimAdjustLeft(true);
-        }
-        if (RobotConstants.JOYSTICK_C
-                .getRawButton(RobotConstants.LEFT_DOWN_ANGLE_BUTTON)) {
-            arm.aimAdjustLeft(false);
-        }
-        if (RobotConstants.JOYSTICK_C
-                .getRawButton(RobotConstants.RIGHT_UP_ANGLE_BUTTON)) {
-            arm.aimAdjustRight(true);
-        }
-        if (RobotConstants.JOYSTICK_C
-                .getRawButton(RobotConstants.RIGHT_DOWN_ANGLE_BUTTON)) {
-            arm.aimAdjustRight(false);
-        }
+        modules.forEach(Module::teleopPeriodicModule);
     }
 
     /**

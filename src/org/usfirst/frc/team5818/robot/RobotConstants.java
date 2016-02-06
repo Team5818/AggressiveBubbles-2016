@@ -1,8 +1,5 @@
 package org.usfirst.frc.team5818.robot;
 
-import edu.wpi.first.wpilibj.CANTalon;
-import edu.wpi.first.wpilibj.Encoder;
-import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Joystick.ButtonType;
 
 /**
@@ -15,58 +12,40 @@ public final class RobotConstants {
     /**
      * The talon controlling the left-front wheels.
      */
-    public static final CANTalon TALON_LEFT_FRONT =
-            new CANTalon(0 + CAN_OFFSET);
+    public static final int TALON_LEFT_FRONT = 0 + CAN_OFFSET;
     /**
      * The talon controlling the left-back wheels.
      */
-    public static final CANTalon TALON_LEFT_BACK = new CANTalon(1 + CAN_OFFSET);
-
+    public static final int TALON_LEFT_BACK = 1 + CAN_OFFSET;
     /**
      * The talon controlling the right-front wheels.
      */
-    public static final CANTalon TALON_RIGHT_FRONT =
-            new CANTalon(2 + CAN_OFFSET);
+    public static final int TALON_RIGHT_FRONT = 2 + CAN_OFFSET;
     /**
      * The talon controlling the left-back wheels.
      */
-    public static final CANTalon TALON_RIGHT_BACK =
-            new CANTalon(3 + CAN_OFFSET);
+    public static final int TALON_RIGHT_BACK = 3 + CAN_OFFSET;
 
     /**
      * The talon controlling the left arm.
      */
-    public static final CANTalon TALON_LEFT_ARM_MOTOR =
-            new CANTalon(4 + CAN_OFFSET);
+    public static final int TALON_LEFT_ARM_MOTOR = 4 + CAN_OFFSET;
     /**
      * The talon controlling the right arm.
      */
-    public static final CANTalon TALON_RIGHT_ARM_MOTOR =
-            new CANTalon(5 + CAN_OFFSET);
+    public static final int TALON_RIGHT_ARM_MOTOR = 5 + CAN_OFFSET;
 
     /**
-     * Driver 1's 1st joystick.
+     * The aChannel for the arm encoder.
      */
-    public static final Joystick JOYSTICK_A = new Joystick(0);
+    public static final int ARM_ENCODER_CHANNEL_A = 0;
     /**
-     * Driver 1's 2nd joystick.
+     * The bChannel for the arm encoder.
      */
-    public static final Joystick JOYSTICK_B = new Joystick(1);
-    /**
-     * Driver 2's 1st joystick.
-     */
-    public static final Joystick JOYSTICK_C = new Joystick(2);
-    /**
-     * Driver 2's 2nd joystick.
-     */
-    public static final Joystick JOYSTICK_D = new Joystick(3);
+    public static final int ARM_ENCODER_CHANNEL_B = 1;
 
     /**
-     * An encoder that helps control the arm.
-     */
-    public static final Encoder ARM_ENCODER = new Encoder(0, 1);
-    /**
-     * The scale for {@link #ARM_ENCODER}.
+     * The scale for the arm encoder.
      */
     public static final double ARM_ENCODER_SCALE = 1 / 375.0;
 
@@ -98,6 +77,23 @@ public final class RobotConstants {
      * The button that decreases the angle of the left arm.
      */
     public static final int LEFT_DOWN_ANGLE_BUTTON = 4;
+
+    /**
+     * Port for the main driver's 1st joystick.
+     */
+    public static final int DRIVER_FIRST_JOYSTICK_PORT = 0;
+    /**
+     * Port for the main driver's 2nd joystick.
+     */
+    public static final int DRIVER_SECOND_JOYSTICK_PORT = 1;
+    /**
+     * Port for the co-driver's 1st joystick.
+     */
+    public static final int CODRIVER_FIRST_JOYSTICK_PORT = 2;
+    /**
+     * Port for the co-driver's 2nd joystick.
+     */
+    public static final int CODRIVER_SECOND_JOYSTICK_PORT = 3;
 
     private RobotConstants() {
     }
