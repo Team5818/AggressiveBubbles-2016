@@ -17,13 +17,10 @@ public class RobotCoDriver implements Module {
             new Joystick(RobotConstants.CODRIVER_SECOND_JOYSTICK_PORT);
 
     private Arm arm;
-<<<<<<< HEAD
     
     private Shooter shooter;
-=======
     private boolean setAngleMode = false;
->>>>>>> origin/feature/refactor
-
+    
     @Override
     public void initModule() {
         arm = new Arm();
@@ -34,7 +31,6 @@ public class RobotCoDriver implements Module {
     @Override
     public void teleopPeriodicModule() {
         // Arm teleop
-<<<<<<< HEAD
         arm.armTeleopPeriodic();
         
         shooter.teleopPeriodicModule(SECOND_JOYSTICK);
@@ -65,7 +61,6 @@ public class RobotCoDriver implements Module {
         // .getRawButton(RobotConstants.RIGHT_DOWN_ANGLE_BUTTON)) {
         // arm.aimAdjustRight(false);
         // }
-=======
         
        if(FIRST_JOYSTICK
         .getRawButton(RobotConstants.ARM_MODE_TOGGLE_BUTTON)){
@@ -104,7 +99,6 @@ public class RobotCoDriver implements Module {
         DriverStation.reportError("" + arm.getAngle() + "\n", false);
         }
 
->>>>>>> origin/feature/refactor
     }
 
     @Override

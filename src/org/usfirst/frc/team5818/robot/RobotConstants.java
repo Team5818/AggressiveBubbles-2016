@@ -29,11 +29,11 @@ public final class RobotConstants {
     /**
      * The talon controlling the left arm.
      */
-    //public static final int TALON_LEFT_ARM_MOTOR = 4 + CAN_OFFSET;
+    public static final int TALON_LEFT_ARM_MOTOR = 5 + CAN_OFFSET;
     /**
      * The talon controlling the right arm.
      */
-    //public static final int TALON_RIGHT_ARM_MOTOR = 5 + CAN_OFFSET;
+    public static final int TALON_RIGHT_ARM_MOTOR = 7 + CAN_OFFSET;
 
     /**
      * The talon controller for the upper flywheel motor.
