@@ -74,6 +74,10 @@ public class Arm {
 
         return this.angle;
     }
+    
+    public void resetEncoder(){
+        ARM_ENCODER.reset();
+    }
 
     public void aimAdjustLeft(Boolean up) {
         if (up) {
