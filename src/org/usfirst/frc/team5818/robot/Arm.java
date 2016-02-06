@@ -80,6 +80,7 @@ public class Arm {
     }
 
     public void aimAdjustLeft(Boolean up) {
+        armPID.disable();
         if (up) {
             this.setPower(maxPower * -.3, 'l');
             try {
@@ -101,6 +102,7 @@ public class Arm {
     }
 
     public void aimAdjustRight(Boolean up) {
+        armPID.disable();
         if (up) {
             this.setPower(maxPower * .3, 'r');
             try {
