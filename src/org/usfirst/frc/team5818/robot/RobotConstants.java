@@ -59,26 +59,7 @@ public final class RobotConstants {
      * The button known as "trigger" on the joystick.
      */
     public static final int TRIGGER_BUTTON = ButtonType.kTrigger.value + 1;
-    /**
-     * The button that resets the arm offset.
-     */
-    public static final int ARM_RESET_BUTTON = 6;
-    /**
-     * The button that prints the arm offset.
-     */
-    public static final int PRINT_ANGLE_BUTTON = 7;
-    /**
-     * The button that increases the angle the arm.
-     */
-    public static final int UP_ANGLE_BUTTON = 5;
-    /**
-     * The button that decreases the angle of the arm.
-     */
-    public static final int DOWN_ANGLE_BUTTON = 3;
-    /**
-     * toggles arm's controll mode
-     */
-    public static final int ARM_MODE_TOGGLE_BUTTON = 4;
+   
     /**
      * Port for the main driver's 1st joystick.
      */
