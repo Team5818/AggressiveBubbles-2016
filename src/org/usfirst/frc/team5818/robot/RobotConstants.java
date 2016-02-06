@@ -87,7 +87,10 @@ public final class RobotConstants {
      * The button that decreases the angle of the left arm.
      */
     public static final int LEFT_DOWN_ANGLE_BUTTON = 4;
-
+    /**
+     * 
+     */
+    public static final int ARM_MODE_TOGGLE_BUTTON = 9;
     /**
      * Port for the main driver's 1st joystick.
      */
