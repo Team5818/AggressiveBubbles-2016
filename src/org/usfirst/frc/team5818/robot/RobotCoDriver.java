@@ -1,6 +1,7 @@
 package org.usfirst.frc.team5818.robot;
 
 import org.usfirst.frc.team5818.robot.modules.Module;
+import org.usfirst.frc.team5818.robot.modules.Shooter;
 
 import edu.wpi.first.wpilibj.Joystick;
 
@@ -15,16 +16,23 @@ public class RobotCoDriver implements Module {
             new Joystick(RobotConstants.CODRIVER_SECOND_JOYSTICK_PORT);
 
     private Arm arm;
+    
+    private Shooter shooter;
 
     @Override
     public void initModule() {
         arm = new Arm();
+        shooter = new Shooter();
+        shooter.initModule();
     }
 
     @Override
     public void teleopPeriodicModule() {
         // Arm teleop
         arm.armTeleopPeriodic();
+        
+        shooter.teleopPeriodicModule(SECOND_JOYSTICK);
+        
 
         // if
         // (RobotConstants.JOYSTICK_C.getRawButton(RobotConstants.ARM_RESET_BUTTON))

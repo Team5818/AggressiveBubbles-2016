@@ -15,6 +15,7 @@ public class RobotDriver implements Module {
 
     private static final Joystick FIRST_JOYSTICK =
             new Joystick(RobotConstants.DRIVER_FIRST_JOYSTICK_PORT);
+    
     private static final Joystick SECOND_JOYSTICK =
             new Joystick(RobotConstants.DRIVER_SECOND_JOYSTICK_PORT);
 
@@ -27,9 +28,10 @@ public class RobotDriver implements Module {
 
     @Override
     public void teleopPeriodicModule() {
-        Vector2d talonPowers =
-                driveCalculator.compute(Vectors.fromJoystick(FIRST_JOYSTICK));
-        Robot.runningRobot.driveTrain.setPower(talonPowers);
+       // Vector2d talonPowers =
+       //         driveCalculator.compute(Vectors.fromJoystick(FIRST_JOYSTICK));
+       // Robot.runningRobot.driveTrain.setPower(talonPowers);
+        
     }
 
     @Override
