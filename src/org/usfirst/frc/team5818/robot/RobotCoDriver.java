@@ -25,10 +25,11 @@ public class RobotCoDriver implements Module {
     public void teleopPeriodicModule() {
         // Arm teleop
         arm.armTeleopPeriodic();
+        arm.goToAngle((FIRST_JOYSTICK.getThrottle()+1)*45);
 
-        // if
-        // (RobotConstants.JOYSTICK_C.getRawButton(RobotConstants.ARM_RESET_BUTTON))
-        // {
+        //if
+        //(RobotConstants.JOYSTICK_C.getRawButton(RobotConstants.ARM_RESET_BUTTON))
+        //{
         // RobotConstants.ARM_ENCODER.reset();
         // }
         // if (RobotConstants.JOYSTICK_C

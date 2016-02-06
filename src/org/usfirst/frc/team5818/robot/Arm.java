@@ -2,13 +2,15 @@ package org.usfirst.frc.team5818.robot;
 
 import edu.wpi.first.wpilibj.CANTalon;
 import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.PIDController;
 
 public class Arm {
 
     private static final double MULTIPLIER = -1.0;
-    public static final Encoder ARM_ENCODER = new Encoder(RobotConstants.ARM_ENCODER_CHANNEL_A, RobotConstants.ARM_ENCODER_CHANNEL_B);
-    public static final CANTalon LEFT_ARM = new CANTalon(RobotConstants.TALON_LEFT_ARM_MOTOR);
-    public static final CANTalon RIGHT_ARM = new CANTalon(RobotConstants.TALON_RIGHT_ARM_MOTOR);
+    private static final Encoder ARM_ENCODER = new Encoder(RobotConstants.ARM_ENCODER_CHANNEL_A, RobotConstants.ARM_ENCODER_CHANNEL_B);
+    private static final CANTalon LEFT_ARM = new CANTalon(RobotConstants.TALON_LEFT_ARM_MOTOR);
+    private static final CANTalon RIGHT_ARM = new CANTalon(RobotConstants.TALON_RIGHT_ARM_MOTOR);
+    private PIDController armPID = new PIDController(0,0,0, ARM_ENCODER, LEFT_ARM);
     
     private double power;
     private double maxPower = MULTIPLIER;
@@ -32,11 +34,9 @@ public class Arm {
      */
 
     public void setPower(double power, char arm) {
-        //
-        // if (arm == 'r')
-        // RobotConstants.TALON_LEFT_ARM_MOTOR.set(power);
-        // if (arm == 'l')
-        // RobotConstants.TALON_RIGHT_ARM_MOTOR.set(power);
+        armPID.disable();
+        LEFT_ARM.set(power);
+        RIGHT_ARM.set(power);
     }
 
     /**
@@ -50,8 +50,7 @@ public class Arm {
     }
 
     public double getEncoderVal() {
-        return /* fixme */ 0.0;
-        // return RobotConstants.ARM_ENCODER.getDistance();
+        return ARM_ENCODER.getDistance(); //raw value
     }
 
     /**
@@ -73,20 +72,11 @@ public class Arm {
 
     public double getAngle() {
 
-        // this.angle = RobotConstants.ARM_ENCODER.getDistance();
         return this.angle;
     }
 
     public void aimAdjustLeft(Boolean up) {
         if (up) {
-            /*
-             * for(int i = 0; i < 101; i++) this.setPower(maxPower); }
-             */
-            // double angl = this.getAngle();
-            // DriverStation.reportError("" + angl + "\n", false);
-            // while((angl - 400) != angl) {
-            // this.setPower(maxPower);
-            // }
             this.setPower(maxPower * -.3, 'l');
             try {
                 Thread.sleep(200);
@@ -96,14 +86,6 @@ public class Arm {
             }
         }
         if (!up) {
-            /*
-             * for(int i = 0; i < 101; i++) this.setPower(minPower);
-             */
-            // double angl = this.getAngle();
-            // DriverStation.reportError("" + angl + "\n", false);
-            // while((angl + 400) != angl) {
-            // this.setPower(minPower);
-            // }
             this.setPower(minPower * -.3, 'l');
             try {
                 Thread.sleep(200);
@@ -116,14 +98,6 @@ public class Arm {
 
     public void aimAdjustRight(Boolean up) {
         if (up) {
-            /*
-             * for(int i = 0; i < 101; i++) this.setPower(maxPower); }
-             */
-            // double angl = this.getAngle();
-            // DriverStation.reportError("" + angl + "\n", false);
-            // while((angl - 400) != angl) {
-            // this.setPower(maxPower);
-            // }
             this.setPower(maxPower * .3, 'r');
             try {
                 Thread.sleep(200);
@@ -133,14 +107,6 @@ public class Arm {
             }
         }
         if (!up) {
-            /*
-             * for(int i = 0; i < 101; i++) this.setPower(minPower);
-             */
-            // double angl = this.getAngle();
-            // DriverStation.reportError("" + angl + "\n", false);
-            // while((angl + 400) != angl) {
-            // this.setPower(minPower);
-            // }
             this.setPower(minPower * .3, 'r');
             try {
                 Thread.sleep(200);
@@ -153,6 +119,12 @@ public class Arm {
 
     public void stabilize() {
 
+    }
+    
+    public void goToAngle(double objective){
+        armPID.reset();
+        armPID.setSetpoint(objective);
+        armPID.enable();
     }
 
     public void armTeleopPeriodic() {
