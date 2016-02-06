@@ -31,7 +31,6 @@ public class RobotCoDriver implements Module {
     @Override
     public void teleopPeriodicModule() {
         // Arm teleop
-        arm.armTeleopPeriodic();
         
         shooter.teleopPeriodicModule(SECOND_JOYSTICK);
         
