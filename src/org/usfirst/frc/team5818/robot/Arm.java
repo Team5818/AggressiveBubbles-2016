@@ -1,10 +1,15 @@
 package org.usfirst.frc.team5818.robot;
 
+import edu.wpi.first.wpilibj.CANTalon;
 import edu.wpi.first.wpilibj.Encoder;
 
 public class Arm {
 
     private static final double MULTIPLIER = -1.0;
+    public static final Encoder ARM_ENCODER = new Encoder(RobotConstants.ARM_ENCODER_CHANNEL_A, RobotConstants.ARM_ENCODER_CHANNEL_B);
+    public static final CANTalon LEFT_ARM = new CANTalon(RobotConstants.TALON_LEFT_ARM_MOTOR);
+    public static final CANTalon RIGHT_ARM = new CANTalon(RobotConstants.TALON_RIGHT_ARM_MOTOR);
+    
     private double power;
     private double maxPower = MULTIPLIER;
     private double minPower = -MULTIPLIER;
@@ -12,15 +17,11 @@ public class Arm {
     private double angle;
 
     public Arm() {
-        // RobotConstants.ARM_ENCODER.reset();
-        // Angle per pulse in our case
-        // RobotConstants.ARM_ENCODER
-        // .setDistancePerPulse(RobotConstants.ARM_ENCODER_SCALE);
-    }
-
-    public Arm(Encoder e) {
+        ARM_ENCODER.reset();
+        ARM_ENCODER.setDistancePerPulse(RobotConstants.ARM_ENCODER_SCALE); // Angle per pulse in our case
 
     }
+
 
     /**
      * Sets power of left arm, keeping arm power within max and minimum
