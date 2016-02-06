@@ -12,10 +12,10 @@ public class Arm {
     private double angle;
 
     public Arm() {
-        RobotConstants.ARM_ENCODER.reset();
+        // RobotConstants.ARM_ENCODER.reset();
         // Angle per pulse in our case
-        RobotConstants.ARM_ENCODER
-                .setDistancePerPulse(RobotConstants.ARM_ENCODER_SCALE);
+        // RobotConstants.ARM_ENCODER
+        // .setDistancePerPulse(RobotConstants.ARM_ENCODER_SCALE);
     }
 
     public Arm(Encoder e) {
@@ -31,11 +31,11 @@ public class Arm {
      */
 
     public void setPower(double power, char arm) {
-
-        if (arm == 'r')
-            RobotConstants.TALON_LEFT_ARM_MOTOR.set(power);
-        if (arm == 'l')
-            RobotConstants.TALON_RIGHT_ARM_MOTOR.set(power);
+        //
+        // if (arm == 'r')
+        // RobotConstants.TALON_LEFT_ARM_MOTOR.set(power);
+        // if (arm == 'l')
+        // RobotConstants.TALON_RIGHT_ARM_MOTOR.set(power);
     }
 
     /**
@@ -49,7 +49,8 @@ public class Arm {
     }
 
     public double getEncoderVal() {
-        return RobotConstants.ARM_ENCODER.getDistance();
+        return /* fixme */ 0.0;
+        // return RobotConstants.ARM_ENCODER.getDistance();
     }
 
     /**
@@ -71,7 +72,7 @@ public class Arm {
 
     public double getAngle() {
 
-        this.angle = RobotConstants.ARM_ENCODER.getDistance();
+        // this.angle = RobotConstants.ARM_ENCODER.getDistance();
         return this.angle;
     }
 
@@ -154,8 +155,8 @@ public class Arm {
     }
 
     public void armTeleopPeriodic() {
-        this.setPower(-MULTIPLIER * RobotConstants.JOYSTICK_C.getY(), 'l');
-        this.setPower(MULTIPLIER * RobotConstants.JOYSTICK_C.getY(), 'r');
+        // this.setPower(-MULTIPLIER * RobotConstants.JOYSTICK_C.getY(), 'l');
+        // this.setPower(MULTIPLIER * RobotConstants.JOYSTICK_C.getY(), 'r');
     }
 
 }

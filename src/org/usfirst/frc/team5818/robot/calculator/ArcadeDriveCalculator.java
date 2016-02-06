@@ -1,11 +1,12 @@
-package org.usfirst.frc.team5818.robot.powerpc;
+package org.usfirst.frc.team5818.robot.calculator;
 
 import org.usfirst.frc.team5818.robot.util.Vector2d;
 
 /**
  * A Calculator that computes values for arcade drive.
  */
-public final class ArcadeDriveCalculator implements Calculator {
+public enum ArcadeDriveCalculator implements DriveCalculator {
+    INSTANCE;
 
     public Vector2d compute(Vector2d in) {
         double rotateValue = -in.getX();

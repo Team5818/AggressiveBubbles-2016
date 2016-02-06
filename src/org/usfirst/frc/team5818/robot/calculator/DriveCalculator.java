@@ -1,4 +1,4 @@
-package org.usfirst.frc.team5818.robot.powerpc;
+package org.usfirst.frc.team5818.robot.calculator;
 
 import org.usfirst.frc.team5818.robot.util.Vector2d;
 
@@ -6,7 +6,7 @@ import org.usfirst.frc.team5818.robot.util.Vector2d;
  * Calculators map raw power values (from joysticks or provided in auto) to
  * talon power.
  */
-public interface Calculator {
+public interface DriveCalculator {
 
     /**
      * Converts raw power to talon power.
