@@ -27,13 +27,9 @@ public final class RobotConstants {
     public static final int TALON_RIGHT_BACK = 3 + CAN_OFFSET;
 
     /**
-     * The talon controlling the left arm.
+     * The talon controlling the arm.
      */
-    public static final int TALON_LEFT_ARM_MOTOR = 5 + CAN_OFFSET;
-    /**
-     * The talon controlling the right arm.
-     */
-    public static final int TALON_RIGHT_ARM_MOTOR = 7 + CAN_OFFSET;
+    public static final int TALON_ARM_MOTOR = 5 + CAN_OFFSET;
 
     /**
      * The talon controller for the upper flywheel motor.
@@ -66,31 +62,23 @@ public final class RobotConstants {
     /**
      * The button that resets the arm offset.
      */
-    public static final int ARM_RESET_BUTTON = 8;
+    public static final int ARM_RESET_BUTTON = 6;
     /**
      * The button that prints the arm offset.
      */
     public static final int PRINT_ANGLE_BUTTON = 7;
     /**
-     * The button that increases the angle the right arm.
+     * The button that increases the angle the arm.
      */
-    public static final int RIGHT_UP_ANGLE_BUTTON = 5;
+    public static final int UP_ANGLE_BUTTON = 5;
     /**
-     * The button that decreases the angle of the right arm.
+     * The button that decreases the angle of the arm.
      */
-    public static final int RIGHT_DOWN_ANGLE_BUTTON = 3;
+    public static final int DOWN_ANGLE_BUTTON = 3;
     /**
-     * The button that increases the angle the left arm.
+     * toggles arm's controll mode
      */
-    public static final int LEFT_UP_ANGLE_BUTTON = 6;
-    /**
-     * The button that decreases the angle of the left arm.
-     */
-    public static final int LEFT_DOWN_ANGLE_BUTTON = 4;
-    /**
-     * 
-     */
-    public static final int ARM_MODE_TOGGLE_BUTTON = 9;
+    public static final int ARM_MODE_TOGGLE_BUTTON = 4;
     /**
      * Port for the main driver's 1st joystick.
      */

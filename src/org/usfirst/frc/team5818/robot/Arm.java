@@ -8,9 +8,8 @@ public class Arm {
 
     private static final double MULTIPLIER = -1.0;
     private static final Encoder ARM_ENCODER = new Encoder(RobotConstants.ARM_ENCODER_CHANNEL_A, RobotConstants.ARM_ENCODER_CHANNEL_B);
-    private static final CANTalon LEFT_ARM = new CANTalon(RobotConstants.TALON_LEFT_ARM_MOTOR);
-    private static final CANTalon RIGHT_ARM = new CANTalon(RobotConstants.TALON_RIGHT_ARM_MOTOR);
-    private PIDController armPID = new PIDController(0,0,0, ARM_ENCODER, LEFT_ARM);
+    private static final CANTalon ARM_MOTOR = new CANTalon(RobotConstants.TALON_ARM_MOTOR);
+    private PIDController armPID = new PIDController(0,0,0, ARM_ENCODER, ARM_MOTOR);
     
     private double power;
     private double maxPower = MULTIPLIER;
@@ -35,19 +34,9 @@ public class Arm {
     
     public void setPower(double power){
         armPID.disable();
-        LEFT_ARM.set(power);
-        RIGHT_ARM.set(power);
+        ARM_MOTOR.set(power);
     }
 
-    public void setPower(double power, char arm) {
-        armPID.disable();
-        if(arm == 'l'){
-        LEFT_ARM.set(power);
-        }
-        if(arm == 'r'){
-        RIGHT_ARM.set(power);
-        }
-    }
 
     /**
      * Gets power of arm
@@ -89,10 +78,10 @@ public class Arm {
         ARM_ENCODER.reset();
     }
 
-    public void aimAdjustLeft(Boolean up) {
+    public void aimAdjust(Boolean up) {
         armPID.disable();
         if (up) {
-            this.setPower(maxPower * -.3, 'l');
+            this.setPower(maxPower * -.3);
             try {
                 Thread.sleep(200);
             } catch (InterruptedException e) {
@@ -101,7 +90,7 @@ public class Arm {
             }
         }
         if (!up) {
-            this.setPower(minPower * -.3, 'l');
+            this.setPower(minPower * -.3);
             try {
                 Thread.sleep(200);
             } catch (InterruptedException e) {
@@ -111,27 +100,6 @@ public class Arm {
         }
     }
 
-    public void aimAdjustRight(Boolean up) {
-        armPID.disable();
-        if (up) {
-            this.setPower(maxPower * .3, 'r');
-            try {
-                Thread.sleep(200);
-            } catch (InterruptedException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
-        }
-        if (!up) {
-            this.setPower(minPower * .3, 'r');
-            try {
-                Thread.sleep(200);
-            } catch (InterruptedException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
-        }
-    }
 
     public void stabilize() {
 

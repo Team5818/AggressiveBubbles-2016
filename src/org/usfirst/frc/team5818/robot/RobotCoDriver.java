@@ -34,32 +34,6 @@ public class RobotCoDriver implements Module {
         
         shooter.teleopPeriodicModule(SECOND_JOYSTICK);
         
-
-        // if
-        // (RobotConstants.JOYSTICK_C.getRawButton(RobotConstants.ARM_RESET_BUTTON))
-        // {
-        // RobotConstants.ARM_ENCODER.reset();
-        // }
-        // if (RobotConstants.JOYSTICK_C
-        // .getRawButton(RobotConstants.PRINT_ANGLE_BUTTON)) {
-        // DriverStation.reportError("" + arm.getAngle() + "\n", false);
-        // }
-        // if (RobotConstants.JOYSTICK_C
-        // .getRawButton(RobotConstants.LEFT_UP_ANGLE_BUTTON)) {
-        // arm.aimAdjustLeft(true);
-        // }
-        // if (RobotConstants.JOYSTICK_C
-        // .getRawButton(RobotConstants.LEFT_DOWN_ANGLE_BUTTON)) {
-        // arm.aimAdjustLeft(false);
-        // }
-        // if (RobotConstants.JOYSTICK_C
-        // .getRawButton(RobotConstants.RIGHT_UP_ANGLE_BUTTON)) {
-        // arm.aimAdjustRight(true);
-        // }
-        // if (RobotConstants.JOYSTICK_C
-        // .getRawButton(RobotConstants.RIGHT_DOWN_ANGLE_BUTTON)) {
-        // arm.aimAdjustRight(false);
-        // }
         
        if(FIRST_JOYSTICK
         .getRawButton(RobotConstants.ARM_MODE_TOGGLE_BUTTON)){
@@ -71,21 +45,14 @@ public class RobotCoDriver implements Module {
         arm.goToAngle((FIRST_JOYSTICK.getThrottle()+1)*45);
         }
         else if(FIRST_JOYSTICK
-        .getRawButton(RobotConstants.LEFT_UP_ANGLE_BUTTON)) {
-        arm.aimAdjustLeft(true);
+        .getRawButton(RobotConstants.UP_ANGLE_BUTTON)) {
+        arm.aimAdjust(true);
         }
         else if (FIRST_JOYSTICK
-        .getRawButton(RobotConstants.LEFT_DOWN_ANGLE_BUTTON)) {
-        arm.aimAdjustLeft(false);
+        .getRawButton(RobotConstants.DOWN_ANGLE_BUTTON)) {
+        arm.aimAdjust(false);
         }
-        else if (FIRST_JOYSTICK
-        .getRawButton(RobotConstants.RIGHT_UP_ANGLE_BUTTON)) {
-        arm.aimAdjustRight(true);
-        }
-        else if (FIRST_JOYSTICK
-        .getRawButton(RobotConstants.RIGHT_DOWN_ANGLE_BUTTON)) {
-        arm.aimAdjustRight(false);
-        }
+
         
         if(!setAngleMode){
            arm.setPower(FIRST_JOYSTICK.getY());
