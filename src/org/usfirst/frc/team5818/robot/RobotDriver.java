@@ -3,6 +3,8 @@ package org.usfirst.frc.team5818.robot;
 import org.usfirst.frc.team5818.robot.calculator.ArcadeDriveCalculator;
 import org.usfirst.frc.team5818.robot.calculator.DriveCalculator;
 import org.usfirst.frc.team5818.robot.modules.Module;
+import org.usfirst.frc.team5818.robot.util.Vector2d;
+import org.usfirst.frc.team5818.robot.util.Vectors;
 
 import edu.wpi.first.wpilibj.Joystick;
 
@@ -26,9 +28,9 @@ public class RobotDriver implements Module {
 
     @Override
     public void teleopPeriodicModule() {
-        // Vector2d talonPowers =
-        // driveCalculator.compute(Vectors.fromJoystick(FIRST_JOYSTICK));
-        // Robot.runningRobot.driveTrain.setPower(talonPowers);
+        Vector2d talonPowers =
+                driveCalculator.compute(Vectors.fromJoystick(FIRST_JOYSTICK));
+        Robot.runningRobot.driveTrain.setPower(talonPowers);
 
     }
 
