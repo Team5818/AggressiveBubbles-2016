@@ -35,12 +35,12 @@ public final class RobotConstants {
      * The talon controller for the upper flywheel motor.
      */
     public static final int TALON_FLYWHEEL_UPPER = 6 + CAN_OFFSET;
-    
+
     /**
      * The talon controller for the lower flywheel motor.
      */
     public static final int TALON_FLYWHEEL_LOWER = 4 + CAN_OFFSET;
-    
+
     /**
      * The aChannel for the arm encoder.
      */
@@ -59,7 +59,7 @@ public final class RobotConstants {
      * The button known as "trigger" on the joystick.
      */
     public static final int TRIGGER_BUTTON = ButtonType.kTrigger.value + 1;
-   
+
     /**
      * Port for the main driver's 1st joystick.
      */

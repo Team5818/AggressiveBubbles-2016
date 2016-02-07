@@ -4,14 +4,9 @@ package org.usfirst.frc.team5818.robot;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.usfirst.frc.team5818.robot.calculator.ArcadeDriveCalculator;
-import org.usfirst.frc.team5818.robot.calculator.DriveCalculator;
 import org.usfirst.frc.team5818.robot.modules.Module;
 import org.usfirst.frc.team5818.robot.modules.Shooter;
-import org.usfirst.frc.team5818.robot.util.Vector2d;
-import org.usfirst.frc.team5818.robot.util.Vectors;
 
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
