@@ -18,6 +18,7 @@ out/
 
 # custom
 .build/
+/build/
 .test
 !/libs/edu
 
