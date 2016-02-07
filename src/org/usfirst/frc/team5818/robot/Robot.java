@@ -20,6 +20,9 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  */
 public class Robot extends IterativeRobot {
 
+    /**
+     * The instance of this {@link Robot} that is currently running.
+     */
     public static Robot runningRobot;
 
     private List<Module> modules = new ArrayList<>();
