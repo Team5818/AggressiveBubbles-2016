@@ -7,6 +7,7 @@ import java.util.List;
 import org.usfirst.frc.team5818.robot.calculator.ArcadeDriveCalculator;
 import org.usfirst.frc.team5818.robot.calculator.DriveCalculator;
 import org.usfirst.frc.team5818.robot.modules.Module;
+import org.usfirst.frc.team5818.robot.modules.Shooter;
 import org.usfirst.frc.team5818.robot.util.Vector2d;
 import org.usfirst.frc.team5818.robot.util.Vectors;
 
@@ -39,6 +40,7 @@ public class Robot extends IterativeRobot {
     public final DriveTrain driveTrain = addModule(new DriveTrain());
     private final RobotDriver driver = addModule(new RobotDriver());
     private final RobotCoDriver coDriver = addModule(new RobotCoDriver());
+    private final Shooter shooter = addModule(new Shooter());
     final String defaultAuto = "Default";
     final String customAuto = "My Auto";
     String autoSelected;

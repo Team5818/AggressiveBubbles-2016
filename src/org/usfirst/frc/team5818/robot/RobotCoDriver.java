@@ -1,7 +1,6 @@
 package org.usfirst.frc.team5818.robot;
 
 import org.usfirst.frc.team5818.robot.modules.Module;
-import org.usfirst.frc.team5818.robot.modules.Shooter;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
@@ -18,49 +17,16 @@ public class RobotCoDriver implements Module {
 
     private Arm arm;
     
-    private Shooter shooter;
     private boolean setAngleMode = false;
     
     @Override
     public void initModule() {
         arm = new Arm();
-        shooter = new Shooter();
-        shooter.initModule();
     }
 
     @Override
     public void teleopPeriodicModule() {
-        // Arm teleop
-        
-        shooter.teleopPeriodicModule(SECOND_JOYSTICK);
-        
-
-        // if
-        // (RobotConstants.JOYSTICK_C.getRawButton(RobotConstants.ARM_RESET_BUTTON))
-        // {
-        // RobotConstants.ARM_ENCODER.reset();
-        // }
-        // if (RobotConstants.JOYSTICK_C
-        // .getRawButton(RobotConstants.PRINT_ANGLE_BUTTON)) {
-        // DriverStation.reportError("" + arm.getAngle() + "\n", false);
-        // }
-        // if (RobotConstants.JOYSTICK_C
-        // .getRawButton(RobotConstants.LEFT_UP_ANGLE_BUTTON)) {
-        // arm.aimAdjustLeft(true);
-        // }
-        // if (RobotConstants.JOYSTICK_C
-        // .getRawButton(RobotConstants.LEFT_DOWN_ANGLE_BUTTON)) {
-        // arm.aimAdjustLeft(false);
-        // }
-        // if (RobotConstants.JOYSTICK_C
-        // .getRawButton(RobotConstants.RIGHT_UP_ANGLE_BUTTON)) {
-        // arm.aimAdjustRight(true);
-        // }
-        // if (RobotConstants.JOYSTICK_C
-        // .getRawButton(RobotConstants.RIGHT_DOWN_ANGLE_BUTTON)) {
-        // arm.aimAdjustRight(false);
-        // }
-        
+                
        if(FIRST_JOYSTICK
         .getRawButton(RobotConstants.ARM_MODE_TOGGLE_BUTTON)){
            setAngleMode = !setAngleMode;
