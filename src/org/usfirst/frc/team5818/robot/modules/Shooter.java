@@ -81,7 +81,7 @@ public class Shooter implements Module {
     private double flyLowerSpeed = defaultSpeed;
     
     private boolean printVolocitiesEnc = false;
-    private boolean printSpeeds = true;
+    private boolean printSpeeds = false;
     private boolean printButtons = false;
     
     
