@@ -1,4 +1,5 @@
 # package
+*.class
 *.jar
 
 # eclipse
