@@ -50,6 +50,9 @@ public class Arm {
         return this.power;
     }
 
+    /**
+     * @return angle measured by encoder
+     */
     public double getEncoderVal() {
         return ARM_ENCODER.getDistance(); //raw value
     }
@@ -109,6 +112,9 @@ public class Arm {
     }
 
 
+    /**
+     * don't know what this is supposed to do
+     */
     public void stabilize() {
 
     }
