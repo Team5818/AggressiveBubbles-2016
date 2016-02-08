@@ -1,8 +1,8 @@
 package org.usfirst.frc.team5818.robot;
 
-import org.usfirst.frc.team5818.robot.calculator.ArcadeDriveCalculator;
-import org.usfirst.frc.team5818.robot.calculator.DriveCalculator;
 import org.usfirst.frc.team5818.robot.modules.Module;
+import org.usfirst.frc.team5818.robot.modules.drivetrain.ArcadeDriveCalculator;
+import org.usfirst.frc.team5818.robot.modules.drivetrain.DriveCalculator;
 import org.usfirst.frc.team5818.robot.util.Vector2d;
 import org.usfirst.frc.team5818.robot.util.Vectors;
 

@@ -1,4 +1,6 @@
-package org.usfirst.frc.team5818.robot;
+package org.usfirst.frc.team5818.robot.modules;
+
+import org.usfirst.frc.team5818.robot.RobotConstants;
 
 import edu.wpi.first.wpilibj.CANTalon;
 import edu.wpi.first.wpilibj.Encoder;

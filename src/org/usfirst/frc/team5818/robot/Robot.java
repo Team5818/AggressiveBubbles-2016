@@ -4,8 +4,10 @@ package org.usfirst.frc.team5818.robot;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.usfirst.frc.team5818.robot.modules.Eyes;
 import org.usfirst.frc.team5818.robot.modules.Module;
 import org.usfirst.frc.team5818.robot.modules.Shooter;
+import org.usfirst.frc.team5818.robot.modules.drivetrain.DriveTrain;
 
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
