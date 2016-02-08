@@ -1,21 +1,32 @@
 package org.usfirst.frc.team5818.robot.modules;
 
-import org.usfirst.frc.team5818.robot.RobotConstants;
-
 import edu.wpi.first.wpilibj.CANTalon;
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.Joystick;
 
+/**
+ * This is the class that handles all the control on the  motors directly through
+ * the CANTalon objects. It will also "set the speed using a PID loop"(unavailable currently),
+ * show the actual speed, and be able to directly set the power.
+ * 
+ * Any direct communication with the motor controllers related to the flywheel should 
+ * go through this class.
+ *
+ */
 public class FlyWheel implements Module{
     
+    /**
+     * The CANTalon motor controller for the upper wheel.
+     */
     private final CANTalon talonFlyUpper;
+    
+    /**
+     * The CANTalon motor controller for the lower flywheel.
+     */
     private final CANTalon talonFlyLower;
     
     /**
      * Weather the flywheel is running or not.
      */
     private boolean running = true;
-    
     
     /**
      * The current set speed for the upper flywheel.
@@ -27,10 +38,17 @@ public class FlyWheel implements Module{
      */
     private double flyLowerPower = 0;
     
-    public FlyWheel(CANTalon talonU, CANTalon talonL)
-    {
+    /**
+     * 
+     * @param talonU The upper CANTalon motor on the flywheel
+     * @param talonL The lower CANTalon motor on the flywheel
+     */
+    public FlyWheel(CANTalon talonU, CANTalon talonL) {
+        
         talonFlyUpper = talonU;
         talonFlyLower = talonL;
+        
+        talonFlyLower.setInverted(true);
     }
     
     /**
@@ -46,13 +64,12 @@ public class FlyWheel implements Module{
     @Override
     public void teleopPeriodicModule() {
 
-        if(running)
-        {
+        if(running) {
+            
             talonFlyUpper.set(flyUpperPower);
-            talonFlyLower.set(flyLowerPower * (-1));
-        }
-        else
-        {
+            talonFlyLower.set(flyLowerPower);
+        } else {
+            
             talonFlyUpper.set(0);
             talonFlyLower.set(0);
         }
@@ -63,13 +80,21 @@ public class FlyWheel implements Module{
         
     }
     
-    public void startFlyWheels()
-    {
+    /**
+     * Sets the running state of the flywheel to true. This will not set change
+     * the speed, it will only set an indicator for the program loop to take care of.
+     */
+    public void startFlyWheels() {
+        
         running = true;
     }
     
-    public void stopFlyWheels()
-    {
+    /**
+     * Sets the running state of the flywheel to false. This will not set change
+     * the speed, it will only set an indicator for the program loop to take care of.
+     */
+    public void stopFlyWheels() {
+        
         running = false;
     }
     
@@ -175,7 +200,7 @@ public class FlyWheel implements Module{
      */
     public double getMotorLowerRawEnc() {
         
-        return talonFlyLower.getEncVelocity() * (-1);
+        return talonFlyLower.getEncVelocity();
     }
 
 

@@ -12,6 +12,15 @@ import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.Victor;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
+/**
+ * This is the shooter class that controls the motion of the shooter.
+ * It commands the flywheel object that controls the flywheel motors.
+ * 
+ * This class should be the only class that communicates with the flywheel.
+ * Any other commands or communication to the flywheel motors should come 
+ * through this class and this class only.
+ *
+ */
 public class Shooter implements Module {
     
     /**
@@ -26,12 +35,21 @@ public class Shooter implements Module {
      */
     private CANTalon talonFlyLower = new CANTalon(RobotConstants.TALON_FLYWHEEL_LOWER);
     
+    /**
+     * The number formatter for the outputting numbers as strings.
+     */
     NumberFormat formatter = new DecimalFormat("#0.00");
     
+    /**
+     * The flywheel object that controls the motion of the flywheel.
+     */
     private final FlyWheel flyWheel;
     
-    public Shooter()
-    {
+    /**
+     * Initiates the flyWheel object to the correct talons so that it can be controlled.
+     */
+    public Shooter() {
+        
         flyWheel = new FlyWheel(talonFlyUpper, talonFlyLower);
     }
     
@@ -47,8 +65,6 @@ public class Shooter implements Module {
         double flyLP = SmartDashboard.getNumber("DB/Slider 0");
         double flyUP = SmartDashboard.getNumber("DB/Slider 1");
         
-        boolean onBut = SmartDashboard.getBoolean("DB/Button 0");
-        
         flyWheel.setFlyUpperPower(flyUP);
         flyWheel.setFlyLowerPower(flyLP);
         
@@ -59,6 +75,7 @@ public class Shooter implements Module {
         
         flyWheel.teleopPeriodicModule();
     }
+    
     @Override
     public void endModule() {
         
