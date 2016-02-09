@@ -15,7 +15,6 @@ public class DriveSide implements PIDOutput {
     private final boolean inverted;
     private static final double powerLimit = 0.5;
     private static final boolean cubeCurve = true;
-    
 
     /**
      * Creates a new DriveSide that controls the talons given.
@@ -56,15 +55,13 @@ public class DriveSide implements PIDOutput {
         if (inverted) {
             output *= -1;
         }
-        
-        if(cubeCurve)
+
+        if (cubeCurve)
             output = output * output * output;
-        
-        if(output > powerLimit)
-            output = powerLimit;
-        if(output < -powerLimit)
-            output = -powerLimit;
-        
+
+        // Limit output.
+        output = Math.signum(output) * Math.min(Math.abs(output), powerLimit);
+
         this.mainTalon.set(output);
         if (this.secondaryTalon != null) {
             this.secondaryTalon.set(output);
