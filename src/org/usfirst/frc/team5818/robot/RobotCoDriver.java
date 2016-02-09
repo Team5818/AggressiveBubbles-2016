@@ -1,13 +1,36 @@
 package org.usfirst.frc.team5818.robot;
 
+import org.usfirst.frc.team5818.robot.modules.Arm;
 import org.usfirst.frc.team5818.robot.modules.Module;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
 
 /**
  * The secondary robot driver. Responsible for the arm.
  */
 public class RobotCoDriver implements Module {
+
+    /**
+     * The button that resets the arm offset.
+     */
+    public static final int ARM_RESET_BUTTON = 6;
+    /**
+     * The button that prints the arm offset.
+     */
+    public static final int PRINT_ANGLE_BUTTON = 7;
+    /**
+     * The button that increases the angle the arm.
+     */
+    public static final int UP_ANGLE_BUTTON = 5;
+    /**
+     * The button that decreases the angle of the arm.
+     */
+    public static final int DOWN_ANGLE_BUTTON = 3;
+    /**
+     * toggles arm's controll mode
+     */
+    public static final int ARM_MODE_TOGGLE_BUTTON = 4;
 
     private static final Joystick FIRST_JOYSTICK =
             new Joystick(RobotConstants.CODRIVER_FIRST_JOYSTICK_PORT);
@@ -16,6 +39,8 @@ public class RobotCoDriver implements Module {
 
     private Arm arm;
 
+    private boolean setAngleMode = false;
+
     @Override
     public void initModule() {
         arm = new Arm();
@@ -23,34 +48,31 @@ public class RobotCoDriver implements Module {
 
     @Override
     public void teleopPeriodicModule() {
-        // Arm teleop
-        arm.armTeleopPeriodic();
 
-        // if
-        // (RobotConstants.JOYSTICK_C.getRawButton(RobotConstants.ARM_RESET_BUTTON))
-        // {
-        // RobotConstants.ARM_ENCODER.reset();
-        // }
-        // if (RobotConstants.JOYSTICK_C
-        // .getRawButton(RobotConstants.PRINT_ANGLE_BUTTON)) {
-        // DriverStation.reportError("" + arm.getAngle() + "\n", false);
-        // }
-        // if (RobotConstants.JOYSTICK_C
-        // .getRawButton(RobotConstants.LEFT_UP_ANGLE_BUTTON)) {
-        // arm.aimAdjustLeft(true);
-        // }
-        // if (RobotConstants.JOYSTICK_C
-        // .getRawButton(RobotConstants.LEFT_DOWN_ANGLE_BUTTON)) {
-        // arm.aimAdjustLeft(false);
-        // }
-        // if (RobotConstants.JOYSTICK_C
-        // .getRawButton(RobotConstants.RIGHT_UP_ANGLE_BUTTON)) {
-        // arm.aimAdjustRight(true);
-        // }
-        // if (RobotConstants.JOYSTICK_C
-        // .getRawButton(RobotConstants.RIGHT_DOWN_ANGLE_BUTTON)) {
-        // arm.aimAdjustRight(false);
-        // }
+        if (FIRST_JOYSTICK.getRawButton(ARM_MODE_TOGGLE_BUTTON)) {
+            setAngleMode = !setAngleMode;
+        }
+        // arm.armTeleopPeriodic(); don't use in setAngleMode
+
+        if (setAngleMode) {
+            arm.goToAngle((FIRST_JOYSTICK.getThrottle() + 1) * 45);
+        } else if (FIRST_JOYSTICK.getRawButton(UP_ANGLE_BUTTON)) {
+            arm.aimAdjust(true);
+        } else if (FIRST_JOYSTICK.getRawButton(DOWN_ANGLE_BUTTON)) {
+            arm.aimAdjust(false);
+        }
+
+        if (!setAngleMode) {
+            arm.setPower(FIRST_JOYSTICK.getY());
+        }
+
+        if (FIRST_JOYSTICK.getRawButton(ARM_RESET_BUTTON)) {
+            arm.resetEncoder();
+        }
+        if (FIRST_JOYSTICK.getRawButton(PRINT_ANGLE_BUTTON)) {
+            DriverStation.reportError("" + arm.getAngle() + "\n", false);
+        }
+
     }
 
     @Override

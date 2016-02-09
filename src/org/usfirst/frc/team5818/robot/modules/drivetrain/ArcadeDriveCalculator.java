@@ -1,11 +1,14 @@
-package org.usfirst.frc.team5818.robot.calculator;
+package org.usfirst.frc.team5818.robot.modules.drivetrain;
 
 import org.usfirst.frc.team5818.robot.util.Vector2d;
 
 /**
- * A Calculator that computes values for arcade drive.
+ * A {@link DriveCalculator} that computes values for arcade drive.
  */
 public enum ArcadeDriveCalculator implements DriveCalculator {
+    /**
+     * The only instance of this calculator.
+     */
     INSTANCE;
 
     public Vector2d compute(Vector2d in) {

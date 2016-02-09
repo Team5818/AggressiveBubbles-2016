@@ -1,4 +1,4 @@
-package org.usfirst.frc.team5818.robot;
+package org.usfirst.frc.team5818.robot.modules.drivetrain;
 
 import edu.wpi.first.wpilibj.CANTalon;
 import edu.wpi.first.wpilibj.PIDOutput;
@@ -13,6 +13,9 @@ public class DriveSide implements PIDOutput {
     private final CANTalon mainTalon;
     private final CANTalon secondaryTalon;
     private final boolean inverted;
+    private static final double powerLimit = 0.5;
+    private static final boolean cubeCurve = true;
+    
 
     /**
      * Creates a new DriveSide that controls the talons given.
@@ -53,6 +56,15 @@ public class DriveSide implements PIDOutput {
         if (inverted) {
             output *= -1;
         }
+        
+        if(cubeCurve)
+            output = output * output * output;
+        
+        if(output > powerLimit)
+            output = powerLimit;
+        if(output < -powerLimit)
+            output = -powerLimit;
+        
         this.mainTalon.set(output);
         if (this.secondaryTalon != null) {
             this.secondaryTalon.set(output);

@@ -4,13 +4,11 @@ package org.usfirst.frc.team5818.robot;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.usfirst.frc.team5818.robot.calculator.ArcadeDriveCalculator;
-import org.usfirst.frc.team5818.robot.calculator.DriveCalculator;
+import org.usfirst.frc.team5818.robot.modules.Eyes;
 import org.usfirst.frc.team5818.robot.modules.Module;
-import org.usfirst.frc.team5818.robot.util.Vector2d;
-import org.usfirst.frc.team5818.robot.util.Vectors;
+import org.usfirst.frc.team5818.robot.modules.Shooter;
+import org.usfirst.frc.team5818.robot.modules.drivetrain.DriveTrain;
 
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -24,6 +22,9 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  */
 public class Robot extends IterativeRobot {
 
+    /**
+     * The instance of this {@link Robot} that is currently running.
+     */
     public static Robot runningRobot;
 
     private List<Module> modules = new ArrayList<>();
@@ -39,6 +40,7 @@ public class Robot extends IterativeRobot {
     public final DriveTrain driveTrain = addModule(new DriveTrain());
     private final RobotDriver driver = addModule(new RobotDriver());
     private final RobotCoDriver coDriver = addModule(new RobotCoDriver());
+    private final Shooter shooter = addModule(new Shooter());
     final String defaultAuto = "Default";
     final String customAuto = "My Auto";
     String autoSelected;

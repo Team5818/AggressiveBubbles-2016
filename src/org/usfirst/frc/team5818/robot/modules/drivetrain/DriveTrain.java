@@ -1,5 +1,6 @@
-package org.usfirst.frc.team5818.robot;
+package org.usfirst.frc.team5818.robot.modules.drivetrain;
 
+import org.usfirst.frc.team5818.robot.RobotConstants;
 import org.usfirst.frc.team5818.robot.modules.Module;
 import org.usfirst.frc.team5818.robot.util.Vector2d;
 
@@ -25,14 +26,27 @@ public class DriveTrain implements Module {
     private final DriveSide right =
             new DriveSide(RIGHT_FRONT, RIGHT_BACK, true);
 
+    /**
+     * @return the {@link PIDOutput} for the left side
+     */
     public PIDOutput getLeftMotors() {
         return left;
     }
 
+    /**
+     * @return the {@link PIDOutput} for the right side
+     */
     public PIDOutput getRightMotors() {
         return right;
     }
 
+    /**
+     * Sets the power based on the {@link Vector2d} {@code x} and {@code y}.
+     * 
+     * @param power
+     *            - The vector containing power values. Left is
+     *            {@link Vector2d#getX()} and right is {@link Vector2d#getY()}
+     */
     public void setPower(Vector2d power) {
         left.pidWrite(power.getX());
         right.pidWrite(power.getY());
