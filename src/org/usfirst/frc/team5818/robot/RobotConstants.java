@@ -49,6 +49,15 @@ public final class RobotConstants {
      * The bChannel for the arm encoder.
      */
     public static final int ARM_ENCODER_CHANNEL_B = 1;
+    
+    /**
+     * The channel for the left drive encoder.
+     */
+    public static final int LEFT_DRIVE_ENCODER_CHANNEL = 2;
+    /**
+     * The channel for the right drive encoder.
+     */
+    public static final int RIGHT_DRIVE_ENCODER_CHANNEL = 3;
 
     /**
      * The scale for the arm encoder.
