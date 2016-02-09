@@ -2,7 +2,6 @@ package org.usfirst.frc.team5818.robot;
 
 import org.usfirst.frc.team5818.robot.modules.Module;
 import org.usfirst.frc.team5818.robot.modules.drivetrain.ArcadeDriveCalculator;
-import org.usfirst.frc.team5818.robot.modules.drivetrain.DriveCalculator;
 import org.usfirst.frc.team5818.robot.modules.drivetrain.TankDriveCalculator;
 import org.usfirst.frc.team5818.robot.util.Vector2d;
 import org.usfirst.frc.team5818.robot.util.Vectors;
@@ -14,9 +13,13 @@ import edu.wpi.first.wpilibj.Joystick;
  */
 public class RobotDriver implements Module {
 
-    public static final int DRIVE_TYPE_TWOSTICK_ARCADE = 0;
-    public static final int DRIVE_TYPE_TWOSTICK_TANK = 1;
-    public static final int DRIVE_TYPE_ONESTICK_ARCADE = 2;
+    private enum DriveType {
+        TANK, ARCADE;
+    }
+
+    private enum InputMode {
+        ONE_STICK, TWO_STICKS;
+    }
 
     public static final int BUT_TWOSTICK_ARCADE = 6;
     public static final int BUT_TWOSTICK_TANK = 7;
@@ -30,12 +33,8 @@ public class RobotDriver implements Module {
     private static final Joystick SECOND_JOYSTICK =
             new Joystick(RobotConstants.DRIVER_SECOND_JOYSTICK_PORT);
 
-    private static final DriveCalculator driveCalculator =
-            ArcadeDriveCalculator.INSTANCE;
-    private static final DriveCalculator tankDriveCalculator =
-            TankDriveCalculator.INSTANCE;
-
-    private int driveType;
+    private DriveType driveType = DriveType.TANK;
+    private InputMode inputMode = InputMode.ONE_STICK;
 
     private boolean invertThrottle = false;
 
@@ -46,40 +45,51 @@ public class RobotDriver implements Module {
     @Override
     public void teleopPeriodicModule() {
 
-        if (FIRST_JOYSTICK.getRawButton(BUT_TWOSTICK_ARCADE))
-            driveType = DRIVE_TYPE_TWOSTICK_ARCADE;
-        else if (FIRST_JOYSTICK.getRawButton(BUT_TWOSTICK_TANK))
-            driveType = DRIVE_TYPE_TWOSTICK_TANK;
-        else if (FIRST_JOYSTICK.getRawButton(BUT_ONESTICK_ARCADE))
-            driveType = DRIVE_TYPE_ONESTICK_ARCADE;
+        if (FIRST_JOYSTICK.getRawButton(BUT_TWOSTICK_ARCADE)) {
+            Robot.runningRobot.driveTrainController
+                    .setDriveCalculator(ArcadeDriveCalculator.INSTANCE);
+            driveType = DriveType.ARCADE;
+            inputMode = InputMode.TWO_STICKS;
+        } else if (FIRST_JOYSTICK.getRawButton(BUT_TWOSTICK_TANK)) {
+            Robot.runningRobot.driveTrainController
+                    .setDriveCalculator(TankDriveCalculator.INSTANCE);
+            driveType = DriveType.TANK;
+            inputMode = InputMode.TWO_STICKS;
+        } else if (FIRST_JOYSTICK.getRawButton(BUT_ONESTICK_ARCADE)) {
+            Robot.runningRobot.driveTrainController
+                    .setDriveCalculator(ArcadeDriveCalculator.INSTANCE);
+            driveType = DriveType.ARCADE;
+            inputMode = InputMode.ONE_STICK;
+        }
 
         if (FIRST_JOYSTICK.getRawButton(BUT_INVERT))
             invertThrottle = true;
         else if (FIRST_JOYSTICK.getRawButton(BUT_NO_INVERT))
             invertThrottle = false;
 
-        Vector2d talonPowers = driveCalculator
-                .compute(Vectors.fromJoystick(FIRST_JOYSTICK, invertThrottle));
-        ;
+        Vector2d thePowersThatBe;
 
-        switch (driveType) {
-            case DRIVE_TYPE_TWOSTICK_ARCADE:
-                talonPowers = driveCalculator.compute(Vectors.fromJoystick(
-                        FIRST_JOYSTICK, SECOND_JOYSTICK, invertThrottle));
+        switch (inputMode) {
+            case ONE_STICK:
+                thePowersThatBe =
+                        Vectors.fromJoystick(FIRST_JOYSTICK, invertThrottle);
                 break;
-            case DRIVE_TYPE_TWOSTICK_TANK:
-                talonPowers = tankDriveCalculator
-                        .compute(Vectors.fromJoystickTank(FIRST_JOYSTICK,
-                                SECOND_JOYSTICK, invertThrottle));
+            case TWO_STICKS:
+                if (driveType == DriveType.TANK) {
+                    thePowersThatBe = Vectors.fromJoystickTank(FIRST_JOYSTICK,
+                            SECOND_JOYSTICK, invertThrottle);
+                } else {
+                    thePowersThatBe = Vectors.fromJoystick(FIRST_JOYSTICK,
+                            SECOND_JOYSTICK, invertThrottle);
+                }
                 break;
-            case DRIVE_TYPE_ONESTICK_ARCADE:
-                talonPowers = driveCalculator.compute(
-                        Vectors.fromJoystick(FIRST_JOYSTICK, invertThrottle));
-                break;
+            default:
+                throw new IllegalStateException(
+                        "Don't know what mode " + inputMode + " does");
         }
 
-        Robot.runningRobot.driveTrain.setPower(talonPowers);
-
+        Robot.runningRobot.driveTrainController
+                .recalculateAndSetPower(thePowersThatBe);
     }
 
     @Override

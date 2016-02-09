@@ -29,14 +29,14 @@ public class DriveTrain implements Module {
     /**
      * @return the {@link PIDOutput} for the left side
      */
-    public PIDOutput getLeftMotors() {
+    public DriveSide getLeftMotors() {
         return left;
     }
 
     /**
      * @return the {@link PIDOutput} for the right side
      */
-    public PIDOutput getRightMotors() {
+    public DriveSide getRightMotors() {
         return right;
     }
 

@@ -7,7 +7,10 @@ import java.util.List;
 import org.usfirst.frc.team5818.robot.modules.Eyes;
 import org.usfirst.frc.team5818.robot.modules.Module;
 import org.usfirst.frc.team5818.robot.modules.Shooter;
+import org.usfirst.frc.team5818.robot.modules.drivetrain.ArcadeDriveCalculator;
+import org.usfirst.frc.team5818.robot.modules.drivetrain.DriveCalculator;
 import org.usfirst.frc.team5818.robot.modules.drivetrain.DriveTrain;
+import org.usfirst.frc.team5818.robot.modules.drivetrain.DriveTrainController;
 
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -38,6 +41,11 @@ public class Robot extends IterativeRobot {
      * The drive train connected to the robot talons.
      */
     public final DriveTrain driveTrain = addModule(new DriveTrain());
+    /**
+     * A helper for the {@link #driveTrain}.
+     */
+    public final DriveTrainController driveTrainController =
+            new DriveTrainController(ArcadeDriveCalculator.INSTANCE);
     private final RobotDriver driver = addModule(new RobotDriver());
     private final RobotCoDriver coDriver = addModule(new RobotCoDriver());
     private final Shooter shooter = addModule(new Shooter());
