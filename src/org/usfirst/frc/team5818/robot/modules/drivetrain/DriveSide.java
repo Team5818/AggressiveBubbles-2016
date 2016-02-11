@@ -2,9 +2,10 @@ package org.usfirst.frc.team5818.robot.modules.drivetrain;
 
 import org.usfirst.frc.team5818.robot.RobotConstants;
 import org.usfirst.frc.team5818.robot.encoders.EncoderManagerBase;
+import org.usfirst.frc.team5818.robot.util.PIDSourceBase;
 
 import edu.wpi.first.wpilibj.CANTalon;
-import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.CANTalon.FeedbackDevice;
 import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.PIDOutput;
 import edu.wpi.first.wpilibj.PIDSource;
@@ -16,36 +17,29 @@ import edu.wpi.first.wpilibj.PIDSource;
  */
 public class DriveSide extends EncoderManagerBase implements PIDOutput {
 
-    private static final double powerLimit = 0.5;
-    private static final boolean cubeCurve = true;
+    private static final double POWER_LIMIT = 0.5;
 
     private final CANTalon mainTalon;
     private final CANTalon secondaryTalon;
-    private final Encoder encoder;
     private final boolean inverted;
-    private PIDController pidLoop;
+    private final PIDController pidLoop;
 
     /**
      * Creates a new DriveSide that controls the talons given.
      * 
-     * @param encoder
-     *            - The encoder for this side
      * @param mainTalon
      *            - The first talon to control
      * @param secondaryTalon
      *            - The second talon to control
      */
-    public DriveSide(Encoder encoder, CANTalon mainTalon,
-            CANTalon secondaryTalon) {
-        this(encoder, mainTalon, secondaryTalon, false);
+    public DriveSide(CANTalon mainTalon, CANTalon secondaryTalon) {
+        this(mainTalon, secondaryTalon, false);
     }
 
     /**
      * Creates a new DriveSide that controls the talons given, and may be
      * inverted.
      * 
-     * @param encoder
-     *            - The encoder for this side
      * @param mainTalon
      *            - The first talon to control
      * @param secondaryTalon
@@ -54,19 +48,30 @@ public class DriveSide extends EncoderManagerBase implements PIDOutput {
      *            - {@code true} if the argument of {@link #pidWrite(double)}
      *            should be negated
      */
-    public DriveSide(Encoder encoder, CANTalon mainTalon,
-            CANTalon secondaryTalon, boolean inverted) {
+    public DriveSide(CANTalon mainTalon, CANTalon secondaryTalon,
+            boolean inverted) {
         if (mainTalon == null) {
             throw new IllegalArgumentException("mainTalon cannot be null");
         }
-        if (encoder == null) {
-            throw new IllegalArgumentException("encoder cannot be null");
-        }
-        this.encoder = encoder;
         this.mainTalon = mainTalon;
         this.secondaryTalon = secondaryTalon;
         this.inverted = inverted;
-        encoder.setDistancePerPulse(RobotConstants.ROBOT_ENCODER_SCALE);
+        pidLoop = new PIDController(RobotConstants.PID_LOOP_P_TERM,
+                RobotConstants.PID_LOOP_I_TERM, RobotConstants.PID_LOOP_D_TERM,
+                new PIDSourceBase() {
+
+                    @Override
+                    public double pidGet() {
+                        return mainTalon.getPosition();
+                    }
+
+                }, this);
+        configureEncoderTalon();
+    }
+
+    private void configureEncoderTalon() {
+        mainTalon.setFeedbackDevice(FeedbackDevice.QuadEncoder);
+        mainTalon.setPosition(0);
     }
 
     @Override
@@ -75,11 +80,8 @@ public class DriveSide extends EncoderManagerBase implements PIDOutput {
             output *= -1;
         }
 
-        if (cubeCurve)
-            output = output * output * output;
-
         // Limit output.
-        output = Math.signum(output) * Math.min(Math.abs(output), powerLimit);
+        output = Math.signum(output) * Math.min(Math.abs(output), POWER_LIMIT);
 
         this.mainTalon.set(output);
         if (this.secondaryTalon != null) {
@@ -89,22 +91,14 @@ public class DriveSide extends EncoderManagerBase implements PIDOutput {
 
     @Override
     public void setDriveDistance(double dist) {
-        encoder.reset();
+        mainTalon.setPosition(0);
         super.setDriveDistance(dist);
+        pidLoop.setSetpoint(dist);
     }
 
     @Override
     public double getEncPosAbs() {
-        return encoder.getDistance();
-    }
-
-    public void createPIDLoop(PIDSource source) {
-        if (pidLoop != null) {
-            pidLoop.free();
-        }
-        pidLoop = new PIDController(RobotConstants.PID_LOOP_P_TERM,
-                RobotConstants.PID_LOOP_I_TERM, RobotConstants.PID_LOOP_D_TERM,
-                source, this);
+        return mainTalon.getPosition();
     }
 
     @Override
