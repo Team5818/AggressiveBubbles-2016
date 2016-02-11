@@ -39,8 +39,6 @@ public class RobotCoDriver implements Module {
 
     private Arm arm;
 
-    private boolean setAngleMode = false;
-
     @Override
     public void initModule() {
         arm = new Arm();
@@ -50,20 +48,17 @@ public class RobotCoDriver implements Module {
     public void teleopPeriodicModule() {
 
         if (FIRST_JOYSTICK.getRawButton(ARM_MODE_TOGGLE_BUTTON)) {
-            setAngleMode = !setAngleMode;
+            arm.toggleMode();
         }
-        // arm.armTeleopPeriodic(); don't use in setAngleMode
+        
+        arm.setPower(FIRST_JOYSTICK.getY());
+        arm.setTarget(FIRST_JOYSTICK.getY());
 
-        if (setAngleMode) {
-            arm.goToAngle((FIRST_JOYSTICK.getThrottle() + 1) * 45);
-        } else if (FIRST_JOYSTICK.getRawButton(UP_ANGLE_BUTTON)) {
+        if (FIRST_JOYSTICK.getRawButton(UP_ANGLE_BUTTON)) {
             arm.aimAdjust(true);
-        } else if (FIRST_JOYSTICK.getRawButton(DOWN_ANGLE_BUTTON)) {
+        } 
+        if (FIRST_JOYSTICK.getRawButton(DOWN_ANGLE_BUTTON)) {
             arm.aimAdjust(false);
-        }
-
-        if (!setAngleMode) {
-            arm.setPower(FIRST_JOYSTICK.getY());
         }
 
         if (FIRST_JOYSTICK.getRawButton(ARM_RESET_BUTTON)) {

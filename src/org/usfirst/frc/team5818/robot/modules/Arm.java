@@ -6,7 +6,7 @@ import edu.wpi.first.wpilibj.CANTalon;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.PIDController;
 
-public class Arm {
+public class Arm implements Module{
 
     private static final double MULTIPLIER = -1.0;
     private static final Encoder ARM_ENCODER =
@@ -23,6 +23,9 @@ public class Arm {
     private double minPower = -.3;
 
     private double angle;
+    private boolean setAngleMode = false;
+    
+    private double targetAngle;
 
     public Arm() {
         ARM_ENCODER.reset();
@@ -36,6 +39,26 @@ public class Arm {
         armPID.setOutputRange(minPower, maxPower);
 
     }
+    
+    public void setMode(boolean angleMode){
+        setAngleMode = angleMode;
+    }
+    
+    public boolean getMode(){
+        return setAngleMode;
+    }
+    
+    public void toggleMode(){
+        setAngleMode = !setAngleMode;
+    }
+    
+    public void setTarget(double target){
+        targetAngle = target;
+    }
+    
+    public double getTarget(){
+        return targetAngle;
+    }
 
     /**
      * Sets power of arm, keeping arm power within max and minimum parameters .5
@@ -45,9 +68,18 @@ public class Arm {
      *            - power value
      */
 
-    public void setPower(double power) {
+    public void writePower() {
         armPID.disable();
         ARM_MOTOR.set(power);
+    }
+    
+    public void writePower(double power){
+        armPID.disable();
+        ARM_MOTOR.set(power);
+    }
+    
+    public void setPower(double val){
+        power = val;
     }
 
     /**
@@ -101,24 +133,26 @@ public class Arm {
      *            moves arm slightly up or down
      */
     public void aimAdjust(Boolean up) {
-        if (up) {
-            this.setPower(maxPower);
-            try {
-                Thread.sleep(200);
-            } catch (InterruptedException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
+        if(!setAngleMode){
+            if (up) {
+                this.writePower(maxPower);
+                try {
+                    Thread.sleep(200);
+                } catch (InterruptedException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
             }
-        }
-        if (!up) {
-            this.setPower(minPower);
-            try {
-                Thread.sleep(200);
-            } catch (InterruptedException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
+            if (!up) {
+                this.writePower(minPower);
+                try {
+                    Thread.sleep(200);
+                } catch (InterruptedException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
             }
-        }
+        }        
     }
 
     /**
@@ -136,6 +170,27 @@ public class Arm {
         armPID.reset();
         armPID.setSetpoint(objective);
         armPID.enable();
+    }
+
+    @Override
+    public void initModule() {
+        
+    }
+
+    @Override
+    public void teleopPeriodicModule() {
+        if(setAngleMode){
+            goToAngle(targetAngle);
+        }
+        else{
+            writePower();
+        }   
+    }
+
+    @Override
+    public void endModule() {
+        // TODO Auto-generated method stub
+        
     }
 
 }
