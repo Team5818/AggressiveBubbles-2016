@@ -61,31 +61,36 @@ public class Arm implements Module{
     }
 
     /**
-     * Sets power of arm, keeping arm power within max and minimum parameters .5
-     * and -.5
+     * Sets power of motor to power variable 
      * 
-     * @param power
-     *            - power value
      */
 
     public void writePower() {
         armPID.disable();
         ARM_MOTOR.set(power);
     }
+    /**
+     * sets power of motor to specified value
+     * @param power- motor value
+     */
     
     public void writePower(double power){
         armPID.disable();
         ARM_MOTOR.set(power);
     }
+    /**
+     * sets power variable to specified value
+     * @param val- power value
+     */
     
     public void setPower(double val){
         power = val;
     }
 
     /**
-     * Gets power of arm
+     * Gets power variable
      * 
-     * @return power of arm
+     * @return power variable
      */
 
     public double getPower() {
@@ -130,7 +135,7 @@ public class Arm implements Module{
 
     /**
      * @param up
-     *            moves arm slightly up or down
+     *            moves arm slightly up or down, doesn't work in setPowerMode
      */
     public void aimAdjust(Boolean up) {
         if(!setAngleMode){
@@ -178,6 +183,11 @@ public class Arm implements Module{
     }
 
     @Override
+    /**
+     * called during teleop
+     * in angle mode, goes to target angle
+     * in regular mode, sets power to power value
+     */
     public void teleopPeriodicModule() {
         if(setAngleMode){
             goToAngle(targetAngle);

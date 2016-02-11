@@ -4,6 +4,7 @@ package org.usfirst.frc.team5818.robot;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.usfirst.frc.team5818.robot.modules.Arm;
 import org.usfirst.frc.team5818.robot.modules.Eyes;
 import org.usfirst.frc.team5818.robot.modules.Module;
 import org.usfirst.frc.team5818.robot.modules.Shooter;
@@ -49,6 +50,7 @@ public class Robot extends IterativeRobot {
     private final RobotDriver driver = addModule(new RobotDriver());
     private final RobotCoDriver coDriver = addModule(new RobotCoDriver());
     private final Shooter shooter = addModule(new Shooter());
+    private final Arm arm = addModule(new Arm());
     final String defaultAuto = "Default";
     final String customAuto = "My Auto";
     String autoSelected;
