@@ -8,7 +8,6 @@ import org.usfirst.frc.team5818.robot.modules.Eyes;
 import org.usfirst.frc.team5818.robot.modules.Module;
 import org.usfirst.frc.team5818.robot.modules.Shooter;
 import org.usfirst.frc.team5818.robot.modules.drivetrain.ArcadeDriveCalculator;
-import org.usfirst.frc.team5818.robot.modules.drivetrain.DriveCalculator;
 import org.usfirst.frc.team5818.robot.modules.drivetrain.DriveTrain;
 import org.usfirst.frc.team5818.robot.modules.drivetrain.DriveTrainController;
 
@@ -45,7 +44,8 @@ public class Robot extends IterativeRobot {
      * A helper for the {@link #driveTrain}.
      */
     public final DriveTrainController driveTrainController =
-            new DriveTrainController(ArcadeDriveCalculator.INSTANCE);
+            new DriveTrainController(driveTrain,
+                    ArcadeDriveCalculator.INSTANCE);
     private final RobotDriver driver = addModule(new RobotDriver());
     private final RobotCoDriver coDriver = addModule(new RobotCoDriver());
     private final Shooter shooter = addModule(new Shooter());
@@ -84,6 +84,7 @@ public class Robot extends IterativeRobot {
         // autoSelected = SmartDashboard.getString("Auto Selector",
         // defaultAuto);
         System.out.println("Auto selected: " + autoSelected);
+        driveTrainController.rotateDegrees(90, true);
     }
 
     @Override

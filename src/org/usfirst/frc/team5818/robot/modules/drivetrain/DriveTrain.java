@@ -5,6 +5,7 @@ import org.usfirst.frc.team5818.robot.modules.Module;
 import org.usfirst.frc.team5818.robot.util.Vector2d;
 
 import edu.wpi.first.wpilibj.CANTalon;
+import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.PIDOutput;
 
 /**
@@ -20,11 +21,18 @@ public class DriveTrain implements Module {
             new CANTalon(RobotConstants.TALON_RIGHT_FRONT);
     private static final CANTalon RIGHT_BACK =
             new CANTalon(RobotConstants.TALON_RIGHT_BACK);
+    private static final Encoder LEFT_ENCODER =
+            new Encoder(RobotConstants.LEFT_DRIVE_ENCODER_CHANNEL_A,
+                    RobotConstants.LEFT_DRIVE_ENCODER_CHANNEL_B);
+    private static final Encoder RIGHT_ENCODER =
+            new Encoder(RobotConstants.RIGHT_DRIVE_ENCODER_CHANNEL_A,
+                    RobotConstants.RIGHT_DRIVE_ENCODER_CHANNEL_B);
 
-    private final DriveSide left = new DriveSide(LEFT_FRONT, LEFT_BACK, false);
+    private final DriveSide left =
+            new DriveSide(LEFT_ENCODER, LEFT_FRONT, LEFT_BACK, false);
     // Right motors are reversed.
     private final DriveSide right =
-            new DriveSide(RIGHT_FRONT, RIGHT_BACK, true);
+            new DriveSide(RIGHT_ENCODER, RIGHT_FRONT, RIGHT_BACK, true);
 
     /**
      * @return the {@link PIDOutput} for the left side
