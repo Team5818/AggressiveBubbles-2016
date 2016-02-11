@@ -1,10 +1,13 @@
 package org.usfirst.frc.team5818.robot.modules.drivetrain;
 
+import org.usfirst.frc.team5818.robot.RobotConstants;
 import org.usfirst.frc.team5818.robot.encoders.EncoderManagerBase;
 
 import edu.wpi.first.wpilibj.CANTalon;
 import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.PIDOutput;
+import edu.wpi.first.wpilibj.PIDSource;
 
 /**
  * A drive side is an arbitrary amount of talons that can be manipulated as a
@@ -20,6 +23,7 @@ public class DriveSide extends EncoderManagerBase implements PIDOutput {
     private final CANTalon secondaryTalon;
     private final Encoder encoder;
     private final boolean inverted;
+    private PIDController pidLoop;
 
     /**
      * Creates a new DriveSide that controls the talons given.
@@ -62,6 +66,7 @@ public class DriveSide extends EncoderManagerBase implements PIDOutput {
         this.mainTalon = mainTalon;
         this.secondaryTalon = secondaryTalon;
         this.inverted = inverted;
+        encoder.setDistancePerPulse(RobotConstants.ROBOT_ENCODER_SCALE);
     }
 
     @Override
@@ -91,6 +96,15 @@ public class DriveSide extends EncoderManagerBase implements PIDOutput {
     @Override
     public double getEncPosAbs() {
         return encoder.getDistance();
+    }
+
+    public void createPIDLoop(PIDSource source) {
+        if (pidLoop != null) {
+            pidLoop.free();
+        }
+        pidLoop = new PIDController(RobotConstants.PID_LOOP_P_TERM,
+                RobotConstants.PID_LOOP_I_TERM, RobotConstants.PID_LOOP_D_TERM,
+                source, this);
     }
 
     @Override

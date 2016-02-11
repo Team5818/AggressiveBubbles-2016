@@ -11,6 +11,7 @@ import org.usfirst.frc.team5818.robot.modules.drivetrain.ArcadeDriveCalculator;
 import org.usfirst.frc.team5818.robot.modules.drivetrain.DriveTrain;
 import org.usfirst.frc.team5818.robot.modules.drivetrain.DriveTrainController;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -84,7 +85,7 @@ public class Robot extends IterativeRobot {
         // autoSelected = SmartDashboard.getString("Auto Selector",
         // defaultAuto);
         System.out.println("Auto selected: " + autoSelected);
-        driveTrainController.rotateDegrees(90, true);
+        // driveTrainController.rotateDegrees(90, true);
     }
 
     @Override
@@ -95,6 +96,10 @@ public class Robot extends IterativeRobot {
      * This function is called periodically during autonomous
      */
     public void autonomousPeriodic() {
+        DriverStation.reportError(
+                driveTrain.getLeftMotors().getEncPosAbs() + ";"
+                        + driveTrain.getRightMotors().getEncPosAbs() + "\n",
+                false);
         switch (autoSelected) {
             case customAuto:
                 // Put custom auto code here

@@ -43,7 +43,7 @@ public class RobotCoDriver implements Module {
 
     @Override
     public void initModule() {
-        arm = new Arm();
+        //arm = new Arm();
     }
 
     @Override

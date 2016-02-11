@@ -1,7 +1,12 @@
 package org.usfirst.frc.team5818.robot.modules.drivetrain;
 
+import org.usfirst.frc.team5818.robot.RobotConstants;
+import org.usfirst.frc.team5818.robot.util.ConstantPIDSource;
 import org.usfirst.frc.team5818.robot.util.MathUtil;
 import org.usfirst.frc.team5818.robot.util.Vector2d;
+
+import edu.wpi.first.wpilibj.PIDController;
+import edu.wpi.first.wpilibj.PIDSource;
 
 /**
  * Wraps around {@link DriveTrain} to help drive certain distances and control
@@ -9,7 +14,7 @@ import org.usfirst.frc.team5818.robot.util.Vector2d;
  */
 public class DriveTrainController {
 
-    private static final double ROBOT_WIDTH_IN_FEET = 0;
+    private static final double ROBOT_WIDTH_IN_FEET = 2.3;
 
     private final DriveTrain driveTrain;
     private DriveCalculator driveCalculator;
@@ -61,6 +66,10 @@ public class DriveTrainController {
         double distance = MathUtil.distanceOfArc(ROBOT_WIDTH_IN_FEET, degrees);
         driveTrain.getLeftMotors().setDriveDistance(distance);
         driveTrain.getRightMotors().setDriveDistance(-distance);
+        ConstantPIDSource left = new ConstantPIDSource(0.1);
+        ConstantPIDSource right = new ConstantPIDSource(-0.1);
+        driveTrain.getLeftMotors().createPIDLoop(left);
+        driveTrain.getRightMotors().createPIDLoop(right);
     }
 
 }

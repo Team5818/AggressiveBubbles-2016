@@ -34,7 +34,7 @@ public abstract class EncoderManagerBase implements EncoderManager {
 
     @Override
     public void setDriveDistance(double dist) {
-        if (-DEFAULT_MARGIN_OF_ERROR < dist || dist < DEFAULT_MARGIN_OF_ERROR) {
+        if (DEFAULT_MARGIN_OF_ERROR >= Math.abs(dist)) {
             throw new IllegalArgumentException(
                     "Cannot drive nowhere. To reset, use resetDistance().");
         }

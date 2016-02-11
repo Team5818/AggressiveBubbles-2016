@@ -49,23 +49,27 @@ public final class RobotConstants {
      * The bChannel for the arm encoder.
      */
     public static final int ARM_ENCODER_CHANNEL_B = 1;
-    
+
     /**
      * The aChannel for the left drive encoder.
      */
-    public static final int LEFT_DRIVE_ENCODER_CHANNEL_A = 2;
+    public static final int LEFT_DRIVE_ENCODER_CHANNEL_A =
+            TALON_LEFT_FRONT - CAN_OFFSET;
     /**
      * The bChannel for the left drive encoder.
      */
-    public static final int LEFT_DRIVE_ENCODER_CHANNEL_B = 4;
+    public static final int LEFT_DRIVE_ENCODER_CHANNEL_B =
+            TALON_LEFT_BACK - CAN_OFFSET;
     /**
      * The aChannel for the right drive encoder.
      */
-    public static final int RIGHT_DRIVE_ENCODER_CHANNEL_A = 5;
+    public static final int RIGHT_DRIVE_ENCODER_CHANNEL_A =
+            TALON_RIGHT_FRONT - CAN_OFFSET;
     /**
      * The bChannel for the right drive encoder.
      */
-    public static final int RIGHT_DRIVE_ENCODER_CHANNEL_B = 6;
+    public static final int RIGHT_DRIVE_ENCODER_CHANNEL_B =
+            TALON_RIGHT_BACK - CAN_OFFSET;
 
     /**
      * The scale for the arm encoder.
@@ -93,6 +97,14 @@ public final class RobotConstants {
      * Port for the co-driver's 2nd joystick.
      */
     public static final int CODRIVER_SECOND_JOYSTICK_PORT = 3;
+
+    public static final double PID_LOOP_P_TERM = 0;
+
+    public static final double PID_LOOP_I_TERM = 0;
+
+    public static final double PID_LOOP_D_TERM = 0;
+
+    public static final double ROBOT_ENCODER_SCALE = 1 / 60d;
 
     private RobotConstants() {
     }
