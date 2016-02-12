@@ -5,6 +5,7 @@ import org.usfirst.frc.team5818.robot.modules.Module;
 import org.usfirst.frc.team5818.robot.util.Vector2d;
 
 import edu.wpi.first.wpilibj.CANTalon;
+import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.PIDOutput;
 
 /**

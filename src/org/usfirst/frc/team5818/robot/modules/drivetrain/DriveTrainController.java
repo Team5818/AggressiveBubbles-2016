@@ -1,7 +1,5 @@
 package org.usfirst.frc.team5818.robot.modules.drivetrain;
 
-import org.usfirst.frc.team5818.robot.Robot;
-import org.usfirst.frc.team5818.robot.encoders.EncoderManager;
 import org.usfirst.frc.team5818.robot.util.MathUtil;
 import org.usfirst.frc.team5818.robot.util.Vector2d;
 
@@ -11,27 +9,14 @@ import org.usfirst.frc.team5818.robot.util.Vector2d;
  */
 public class DriveTrainController {
 
-    private static final double ROBOT_WIDTH_IN_FEET = 0;
+    private static final double ROBOT_WIDTH_IN_FEET = 2.3;
 
-    private final DriveTrain driveTrain = Robot.runningRobot.driveTrain;
+    private final DriveTrain driveTrain;
     private DriveCalculator driveCalculator;
 
-    private EncoderManager tmp() {
-        // TODO change + inline when DriveTrain implements EncoderManager
-        return (EncoderManager) driveTrain;
-    }
-
-    private EncoderManager tmp1() {
-        // TODO change + inline when DriveSide implements EncoderManager
-        return (EncoderManager) driveTrain.getLeftMotors();
-    }
-
-    private EncoderManager tmp2() {
-        // TODO change + inline when DriveSide implements EncoderManager
-        return (EncoderManager) driveTrain.getRightMotors();
-    }
-
-    public DriveTrainController(DriveCalculator driveCalculator) {
+    public DriveTrainController(DriveTrain driveTrain,
+            DriveCalculator driveCalculator) {
+        this.driveTrain = driveTrain;
         setDriveCalculator(driveCalculator);
     }
 
@@ -43,7 +28,8 @@ public class DriveTrainController {
     }
 
     public void driveToTargetXFeetAway(double feet) {
-        tmp().setDriveDistance(feet);
+        driveTrain.getLeftMotors().setDriveDistance(feet);
+        driveTrain.getRightMotors().setDriveDistance(feet);
     }
 
     public void setPowerDirectly(Vector2d power) {
@@ -73,8 +59,8 @@ public class DriveTrainController {
         // To rotate X degrees, simply move left side forward by W
         // and move right side backwards by W
         double distance = MathUtil.distanceOfArc(ROBOT_WIDTH_IN_FEET, degrees);
-        tmp1().setDriveDistance(distance);
-        tmp2().setDriveDistance(-distance);
+        driveTrain.getLeftMotors().setDriveDistance(distance);
+        driveTrain.getRightMotors().setDriveDistance(-distance);
     }
 
 }

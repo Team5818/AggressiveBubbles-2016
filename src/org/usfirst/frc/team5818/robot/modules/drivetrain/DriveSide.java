@@ -1,6 +1,12 @@
 package org.usfirst.frc.team5818.robot.modules.drivetrain;
 
+import org.usfirst.frc.team5818.robot.RobotConstants;
+import org.usfirst.frc.team5818.robot.encoders.EncoderManager;
+import org.usfirst.frc.team5818.robot.util.PIDSourceBase;
+
 import edu.wpi.first.wpilibj.CANTalon;
+import edu.wpi.first.wpilibj.CANTalon.FeedbackDevice;
+import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.PIDOutput;
 
 /**
@@ -8,13 +14,14 @@ import edu.wpi.first.wpilibj.PIDOutput;
  * whole set. The arbitrary amount of talons that can be manipulated may be an
  * integer between 1 and 2 inclusive.
  */
-public class DriveSide implements PIDOutput {
+public class DriveSide implements EncoderManager, PIDOutput {
+
+    private static final double POWER_LIMIT = 0.5;
 
     private final CANTalon mainTalon;
     private final CANTalon secondaryTalon;
     private final boolean inverted;
-    private static final double powerLimit = 0.5;
-    private static final boolean cubeCurve = true;
+    private final PIDController pidLoop;
 
     /**
      * Creates a new DriveSide that controls the talons given.
@@ -48,6 +55,22 @@ public class DriveSide implements PIDOutput {
         this.mainTalon = mainTalon;
         this.secondaryTalon = secondaryTalon;
         this.inverted = inverted;
+        pidLoop = new PIDController(RobotConstants.PID_LOOP_P_TERM,
+                RobotConstants.PID_LOOP_I_TERM, RobotConstants.PID_LOOP_D_TERM,
+                new PIDSourceBase() {
+
+                    @Override
+                    public double pidGet() {
+                        return mainTalon.getPosition();
+                    }
+
+                }, this);
+        configureEncoderTalon();
+    }
+
+    private void configureEncoderTalon() {
+        mainTalon.setFeedbackDevice(FeedbackDevice.QuadEncoder);
+        mainTalon.setPosition(0);
     }
 
     @Override
@@ -56,16 +79,24 @@ public class DriveSide implements PIDOutput {
             output *= -1;
         }
 
-        if (cubeCurve)
-            output = output * output * output;
-
         // Limit output.
-        output = Math.signum(output) * Math.min(Math.abs(output), powerLimit);
+        output = Math.signum(output) * Math.min(Math.abs(output), POWER_LIMIT);
 
         this.mainTalon.set(output);
         if (this.secondaryTalon != null) {
             this.secondaryTalon.set(output);
         }
+    }
+
+    @Override
+    public void setDriveDistance(double dist) {
+        mainTalon.setPosition(0);
+        pidLoop.setSetpoint(dist);
+    }
+
+    @Override
+    public double getEncPosAbs() {
+        return mainTalon.getPosition();
     }
 
 }
