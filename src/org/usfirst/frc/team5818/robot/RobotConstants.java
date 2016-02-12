@@ -51,27 +51,6 @@ public final class RobotConstants {
     public static final int ARM_ENCODER_CHANNEL_B = 1;
 
     /**
-     * The aChannel for the left drive encoder.
-     */
-    public static final int LEFT_DRIVE_ENCODER_CHANNEL_A =
-            TALON_LEFT_FRONT - CAN_OFFSET;
-    /**
-     * The bChannel for the left drive encoder.
-     */
-    public static final int LEFT_DRIVE_ENCODER_CHANNEL_B =
-            TALON_LEFT_BACK - CAN_OFFSET;
-    /**
-     * The aChannel for the right drive encoder.
-     */
-    public static final int RIGHT_DRIVE_ENCODER_CHANNEL_A =
-            TALON_RIGHT_FRONT - CAN_OFFSET;
-    /**
-     * The bChannel for the right drive encoder.
-     */
-    public static final int RIGHT_DRIVE_ENCODER_CHANNEL_B =
-            TALON_RIGHT_BACK - CAN_OFFSET;
-
-    /**
      * The scale for the arm encoder.
      */
     public static final double ARM_ENCODER_SCALE = 1 / 375.0;
@@ -104,7 +83,8 @@ public final class RobotConstants {
 
     public static final double PID_LOOP_D_TERM = 0;
 
-    public static final double ROBOT_ENCODER_SCALE = 1 / 60d;
+    // inches/rotation
+    public static final double ROBOT_ENCODER_SCALE = 0.02843601895734597;
 
     private RobotConstants() {
     }

@@ -53,19 +53,19 @@ public class RobotCoDriver implements Module {
 
     private Arm arm;
 
-    private Shooter shooter;
+    private Shooter shooter = new Shooter();
     private boolean setAngleMode = false;
 
     @Override
     public void initModule() {
-        //arm = new Arm();
+        arm = new Arm();
     }
 
     @Override
     public void teleopPeriodicModule() {
         // Arm teleop
 
-        shooter.teleopPeriodicModule();
+        //shooter.teleopPeriodicModule();
 
         if (FIRST_JOYSTICK.getRawButton(ENTER_PID_BUTTON)) {
             setAngleMode = true;

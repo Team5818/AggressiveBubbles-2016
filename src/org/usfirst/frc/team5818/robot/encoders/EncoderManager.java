@@ -14,6 +14,14 @@ public interface EncoderManager {
     double getEncPosAbs();
 
     /**
+     * Get the position of this EncoderManager's encoder in absolute terms, with
+     * no conversions.
+     * 
+     * @return absolute position of the Encoder.
+     */
+    double getEncPosRaw();
+
+    /**
      * Sets the distance for the encoder to move. If used, this assumes that the
      * EncoderManager will regularly be fed getPowerAccordingToDistance(time) in
      * order to keep updated.

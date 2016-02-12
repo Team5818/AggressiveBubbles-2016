@@ -9,7 +9,7 @@ import org.usfirst.frc.team5818.robot.util.Vector2d;
  */
 public class DriveTrainController {
 
-    private static final double ROBOT_WIDTH_IN_FEET = 2.3;
+    private static final double ROBOT_WIDTH_IN_INCHES = 2.3 * 12;
 
     private final DriveTrain driveTrain;
     private DriveCalculator driveCalculator;
@@ -58,7 +58,7 @@ public class DriveTrainController {
     private void rotateNormalizedDegrees(double degrees) {
         // To rotate X degrees, simply move left side forward by W
         // and move right side backwards by W
-        double distance = MathUtil.distanceOfArc(ROBOT_WIDTH_IN_FEET, degrees);
+        double distance = MathUtil.distanceOfArc(ROBOT_WIDTH_IN_INCHES, degrees);
         driveTrain.getLeftMotors().setDriveDistance(distance);
         driveTrain.getRightMotors().setDriveDistance(-distance);
     }

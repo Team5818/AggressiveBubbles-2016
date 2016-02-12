@@ -1,5 +1,7 @@
 package org.usfirst.frc.team5818.robot;
 
+import org.usfirst.frc.team5818.robot.commands.DriveForwardSlowlyCommand;
+import org.usfirst.frc.team5818.robot.commands.ResetEncoderCommand;
 import org.usfirst.frc.team5818.robot.modules.Module;
 import org.usfirst.frc.team5818.robot.modules.drivetrain.ArcadeDriveCalculator;
 import org.usfirst.frc.team5818.robot.modules.drivetrain.TankDriveCalculator;
@@ -7,6 +9,7 @@ import org.usfirst.frc.team5818.robot.util.Vector2d;
 import org.usfirst.frc.team5818.robot.util.Vectors;
 
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.buttons.JoystickButton;
 
 /**
  * The primary robot driver. Responsible for driving the robot.
@@ -40,6 +43,11 @@ public class RobotDriver implements Module {
 
     @Override
     public void initModule() {
+        JoystickButton resetEncoder = new JoystickButton(FIRST_JOYSTICK, 10);
+        resetEncoder.whenPressed(new ResetEncoderCommand());
+        JoystickButton driveForwardSlowly =
+                new JoystickButton(FIRST_JOYSTICK, 3);
+        driveForwardSlowly.whileHeld(new DriveForwardSlowlyCommand());
     }
 
     @Override

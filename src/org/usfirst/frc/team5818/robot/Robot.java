@@ -14,6 +14,7 @@ import org.usfirst.frc.team5818.robot.modules.drivetrain.DriveTrainController;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.IterativeRobot;
+import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -98,10 +99,15 @@ public class Robot extends IterativeRobot {
      * This function is called periodically during autonomous
      */
     public void autonomousPeriodic() {
-        DriverStation.reportError(
-                driveTrain.getLeftMotors().getEncPosAbs() + ";"
-                        + driveTrain.getRightMotors().getEncPosAbs() + "\n",
-                false);
+        Scheduler.getInstance().run();
+        SmartDashboard.putString("DB/String 0",
+                String.valueOf(driveTrain.getLeftMotors().getEncPosAbs()));
+        SmartDashboard.putString("DB/String 1",
+                String.valueOf(driveTrain.getLeftMotors().getEncPosRaw()));
+        SmartDashboard.putString("DB/String 2",
+                String.valueOf(driveTrain.getRightMotors().getEncPosAbs()));
+        SmartDashboard.putString("DB/String 3",
+                String.valueOf(driveTrain.getRightMotors().getEncPosRaw()));
         switch (autoSelected) {
             case customAuto:
                 // Put custom auto code here
@@ -117,6 +123,7 @@ public class Robot extends IterativeRobot {
      * This function is called periodically during operator control
      */
     public void teleopPeriodic() {
+        Scheduler.getInstance().run();
         modules.forEach(Module::teleopPeriodicModule);
     }
 

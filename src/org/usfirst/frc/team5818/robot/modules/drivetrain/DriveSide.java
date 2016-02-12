@@ -96,6 +96,11 @@ public class DriveSide implements EncoderManager, PIDOutput {
 
     @Override
     public double getEncPosAbs() {
+        return mainTalon.getPosition() * RobotConstants.ROBOT_ENCODER_SCALE;
+    }
+
+    @Override
+    public double getEncPosRaw() {
         return mainTalon.getPosition();
     }
 
