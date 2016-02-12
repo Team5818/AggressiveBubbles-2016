@@ -5,12 +5,13 @@ import org.usfirst.frc.team5818.robot.modules.Shooter;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * The secondary robot driver. Responsible for the arm.
  */
 public class RobotCoDriver implements Module {
-    
+
     /**
      * The button that resets the arm offset.
      */
@@ -38,7 +39,7 @@ public class RobotCoDriver implements Module {
     /**
      * goes to 45 degrees
      */
-    public static final int FORTY_FIVE_BUTTON = 9;
+    public static final int GO_TO_ANGLE_BUTTON = 9;
     /**
      * returns error from arm PID
      */
@@ -50,10 +51,10 @@ public class RobotCoDriver implements Module {
             new Joystick(RobotConstants.CODRIVER_SECOND_JOYSTICK_PORT);
 
     private Arm arm;
-    
+
     private Shooter shooter;
     private boolean setAngleMode = false;
-    
+
     @Override
     public void initModule() {
         arm = new Arm();
@@ -64,59 +65,52 @@ public class RobotCoDriver implements Module {
     @Override
     public void teleopPeriodicModule() {
         // Arm teleop
-        
+
         shooter.teleopPeriodicModule(SECOND_JOYSTICK);
-        
-        
-       if(FIRST_JOYSTICK
-        .getRawButton(ENTER_PID_BUTTON)){
-           setAngleMode = true;
-           if(setAngleMode){
-               DriverStation.reportError("Entering PID Mode", false);
-           }
-       }
-       
-       if(FIRST_JOYSTICK
-         .getRawButton(EXIT_PID_BUTTON)){
-           setAngleMode = false;
-           if(setAngleMode){
-               DriverStation.reportError("Exiting PID Mode", false);
-           }
-       }
-        //arm.armTeleopPeriodic(); don't use in setAngleMode
-        
-        if(setAngleMode){
-        //arm.goToAngle((FIRST_JOYSTICK.getThrottle()+1)*45);
-            if(FIRST_JOYSTICK.getRawButton(FORTY_FIVE_BUTTON)){
-                arm.goToAngle(45);
+
+        if (FIRST_JOYSTICK.getRawButton(ENTER_PID_BUTTON)) {
+            setAngleMode = true;
+            if (setAngleMode) {
+                DriverStation.reportError("Entering PID Mode", false);
             }
-            if(FIRST_JOYSTICK.getRawButton(ERROR_BUTTON)){
-                DriverStation.reportError("" + arm.getError() + "\n", false);
-            }
-        }
-        else if(FIRST_JOYSTICK
-        .getRawButton(UP_ANGLE_BUTTON)) {
-        arm.aimAdjust(true);
-        }
-        else if (FIRST_JOYSTICK
-        .getRawButton(DOWN_ANGLE_BUTTON)) {
-        arm.aimAdjust(false);
         }
 
-        
-        if(!setAngleMode){
-           arm.setPower(FIRST_JOYSTICK.getY());
+        if (FIRST_JOYSTICK.getRawButton(EXIT_PID_BUTTON)) {
+            setAngleMode = false;
+            if (setAngleMode) {
+                DriverStation.reportError("Exiting PID Mode", false);
+            }
         }
-        
-        
-        if
-        (FIRST_JOYSTICK.getRawButton(ARM_RESET_BUTTON))
-        {
-        arm.resetEncoder();
+        // arm.armTeleopPeriodic(); don't use in setAngleMode
+
+        if (setAngleMode) {
+            double target;
+            try {
+                 target = Double.valueOf(SmartDashboard.getString("DB/String 0"));
+            } catch (Exception e) {
+                throw e;
+            }
+            if (FIRST_JOYSTICK.getRawButton(GO_TO_ANGLE_BUTTON)) {
+                arm.goToAngle(target);
+            }
+            if (FIRST_JOYSTICK.getRawButton(ERROR_BUTTON)) {
+                DriverStation.reportError("" + arm.getError() + "\n", false);
+            }
+        } else if (FIRST_JOYSTICK.getRawButton(UP_ANGLE_BUTTON)) {
+            arm.aimAdjust(true);
+        } else if (FIRST_JOYSTICK.getRawButton(DOWN_ANGLE_BUTTON)) {
+            arm.aimAdjust(false);
         }
-        if (FIRST_JOYSTICK
-        .getRawButton(PRINT_ANGLE_BUTTON)) {
-        DriverStation.reportError("" + arm.getEncoderVal() + "\n", false);
+
+        if (!setAngleMode) {
+            arm.setPower(FIRST_JOYSTICK.getY());
+        }
+
+        if (FIRST_JOYSTICK.getRawButton(ARM_RESET_BUTTON)) {
+            arm.resetEncoder();
+        }
+        if (FIRST_JOYSTICK.getRawButton(PRINT_ANGLE_BUTTON)) {
+            DriverStation.reportError("" + arm.getEncoderVal() + "\n", false);
         }
 
     }
