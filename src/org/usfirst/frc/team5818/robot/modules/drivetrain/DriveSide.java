@@ -1,21 +1,20 @@
 package org.usfirst.frc.team5818.robot.modules.drivetrain;
 
 import org.usfirst.frc.team5818.robot.RobotConstants;
-import org.usfirst.frc.team5818.robot.encoders.EncoderManagerBase;
+import org.usfirst.frc.team5818.robot.encoders.EncoderManager;
 import org.usfirst.frc.team5818.robot.util.PIDSourceBase;
 
 import edu.wpi.first.wpilibj.CANTalon;
 import edu.wpi.first.wpilibj.CANTalon.FeedbackDevice;
 import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.PIDOutput;
-import edu.wpi.first.wpilibj.PIDSource;
 
 /**
  * A drive side is an arbitrary amount of talons that can be manipulated as a
  * whole set. The arbitrary amount of talons that can be manipulated may be an
  * integer between 1 and 2 inclusive.
  */
-public class DriveSide extends EncoderManagerBase implements PIDOutput {
+public class DriveSide implements EncoderManager, PIDOutput {
 
     private static final double POWER_LIMIT = 0.5;
 
@@ -92,28 +91,12 @@ public class DriveSide extends EncoderManagerBase implements PIDOutput {
     @Override
     public void setDriveDistance(double dist) {
         mainTalon.setPosition(0);
-        super.setDriveDistance(dist);
         pidLoop.setSetpoint(dist);
     }
 
     @Override
     public double getEncPosAbs() {
         return mainTalon.getPosition();
-    }
-
-    @Override
-    public double getEncDelta() {
-        return 0;
-    }
-
-    @Override
-    public double peekEncDelta() {
-        return 0;
-    }
-
-    @Override
-    public double getPowerAccordingToDistance(double time) {
-        return 0;
     }
 
 }
