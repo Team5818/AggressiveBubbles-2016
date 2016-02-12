@@ -44,7 +44,6 @@ public class RobotCoDriver implements Module {
     /**
      * returns error from arm PID
      */
-    public static final int ARM_MODE_TOGGLE_BUTTON = 4;
     public static final int ERROR_BUTTON = 1;
 
     private static final Joystick FIRST_JOYSTICK =
