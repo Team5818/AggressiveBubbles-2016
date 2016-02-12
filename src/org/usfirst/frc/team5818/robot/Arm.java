@@ -1,19 +1,21 @@
 package org.usfirst.frc.team5818.robot;
 
+import org.usfirst.frc.team5818.robot.modules.Module;
+
 import edu.wpi.first.wpilibj.CANTalon;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.PIDController;
 
-public class Arm {
+public class Arm{
 
     private static final double MULTIPLIER = -1.0;
     private static final Encoder ARM_ENCODER = new Encoder(RobotConstants.ARM_ENCODER_CHANNEL_A, RobotConstants.ARM_ENCODER_CHANNEL_B);
     private static final CANTalon ARM_MOTOR = new CANTalon(RobotConstants.TALON_ARM_MOTOR);
-    private PIDController armPID = new PIDController(.1, .1, .1, ARM_ENCODER, ARM_MOTOR);
+    private PIDController armPID = new PIDController(-.3, 0, 0, ARM_ENCODER, ARM_MOTOR);
     
     private double power;
-    private double maxPower = .3;  //max and min power are for PID and aim adjusts
-    private double minPower = -.3;
+    private double maxPower = .5;  //max and min power are for PID and aim adjusts
+    private double minPower = -.5;
 
     private double angle;
 
@@ -117,6 +119,14 @@ public class Arm {
      */
     public void stabilize() {
 
+    }
+    
+    /**
+     * returns error from PID controller
+     */
+    
+    public double getError(){
+        return armPID.getError();
     }
     
     /**

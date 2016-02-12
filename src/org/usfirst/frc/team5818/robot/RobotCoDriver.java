@@ -14,7 +14,7 @@ public class RobotCoDriver implements Module {
     /**
      * The button that resets the arm offset.
      */
-    public static final int ARM_RESET_BUTTON = 6;
+    public static final int ARM_RESET_BUTTON = 8;
     /**
      * The button that prints the arm offset.
      */
@@ -28,11 +28,21 @@ public class RobotCoDriver implements Module {
      */
     public static final int DOWN_ANGLE_BUTTON = 3;
     /**
-     * toggles arm's controll mode
+     * puts arm in PID mode
      */
-    public static final int ARM_MODE_TOGGLE_BUTTON = 4;
-    
-    
+    public static final int ENTER_PID_BUTTON = 4;
+    /**
+     * takes arm out of PID mode
+     */
+    public static final int EXIT_PID_BUTTON = 6;
+    /**
+     * goes to 45 degrees
+     */
+    public static final int FORTY_FIVE_BUTTON = 9;
+    /**
+     * returns error from arm PID
+     */
+    public static final int ERROR_BUTTON = 1;
 
     private static final Joystick FIRST_JOYSTICK =
             new Joystick(RobotConstants.CODRIVER_FIRST_JOYSTICK_PORT);
@@ -59,13 +69,30 @@ public class RobotCoDriver implements Module {
         
         
        if(FIRST_JOYSTICK
-        .getRawButton(ARM_MODE_TOGGLE_BUTTON)){
-           setAngleMode = !setAngleMode;
+        .getRawButton(ENTER_PID_BUTTON)){
+           setAngleMode = true;
+           if(setAngleMode){
+               DriverStation.reportError("Entering PID Mode", false);
+           }
+       }
+       
+       if(FIRST_JOYSTICK
+         .getRawButton(EXIT_PID_BUTTON)){
+           setAngleMode = false;
+           if(setAngleMode){
+               DriverStation.reportError("Exiting PID Mode", false);
+           }
        }
         //arm.armTeleopPeriodic(); don't use in setAngleMode
         
         if(setAngleMode){
-        arm.goToAngle((FIRST_JOYSTICK.getThrottle()+1)*45);
+        //arm.goToAngle((FIRST_JOYSTICK.getThrottle()+1)*45);
+            if(FIRST_JOYSTICK.getRawButton(FORTY_FIVE_BUTTON)){
+                arm.goToAngle(45);
+            }
+            if(FIRST_JOYSTICK.getRawButton(ERROR_BUTTON)){
+                DriverStation.reportError("" + arm.getError() + "\n", false);
+            }
         }
         else if(FIRST_JOYSTICK
         .getRawButton(UP_ANGLE_BUTTON)) {
@@ -89,7 +116,7 @@ public class RobotCoDriver implements Module {
         }
         if (FIRST_JOYSTICK
         .getRawButton(PRINT_ANGLE_BUTTON)) {
-        DriverStation.reportError("" + arm.getAngle() + "\n", false);
+        DriverStation.reportError("" + arm.getEncoderVal() + "\n", false);
         }
 
     }
