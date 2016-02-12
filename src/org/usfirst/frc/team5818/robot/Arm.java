@@ -1,4 +1,4 @@
-package org.usfirst.frc.team5818.robot.modules;
+package org.usfirst.frc.team5818.robot;
 
 import org.usfirst.frc.team5818.robot.RobotConstants;
 
@@ -6,7 +6,7 @@ import edu.wpi.first.wpilibj.CANTalon;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.PIDController;
 
-public class Arm implements Module {
+public class Arm{
 
     private static final double MULTIPLIER = -1.0;
     private static final Encoder ARM_ENCODER = new Encoder(RobotConstants.ARM_ENCODER_CHANNEL_A, RobotConstants.ARM_ENCODER_CHANNEL_B);
@@ -137,21 +137,6 @@ public class Arm implements Module {
         armPID.reset();
         armPID.setSetpoint(objective);
         armPID.enable();
-    }
-
-
-    @Override
-    public void initModule() {
-    }
-
-
-    @Override
-    public void teleopPeriodicModule() {
-    }
-
-
-    @Override
-    public void endModule() {
     }
 
 
