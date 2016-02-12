@@ -29,3 +29,4 @@ out/
 # thanks FRC
 sysProps.xml
 
+*.class
