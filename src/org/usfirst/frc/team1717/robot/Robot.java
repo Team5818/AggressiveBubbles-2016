@@ -1,10 +1,10 @@
-package org.usfirst.frc.team5818.robot;
+package org.usfirst.frc.team1717.robot;
 
 import edu.wpi.first.wpilibj.RobotBase;
 import team5818.robot.RobotCommon;
 
 /**
- * Robot for 5818 mode.
+ * Robot for 1717 mode.
  */
 public class Robot extends RobotBase {
 
