@@ -1,11 +1,10 @@
 package org.usfirst.frc.team5818.robot.modules;
 
-import org.usfirst.frc.team5818.robot.RobotConstants;
-
 import edu.wpi.first.wpilibj.CANTalon;
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.Joystick;
 
+/**
+ *
+ */
 public class FlyWheel implements Module{
     
     private final CANTalon talonFlyUpper;
@@ -16,6 +15,10 @@ public class FlyWheel implements Module{
      */
     private boolean running = true;
     
+    /**
+     * Weather to use PID loop to set the speed.
+     */
+    private boolean usingPID = true;
     
     /**
      * The current set speed for the upper flywheel.
@@ -27,10 +30,41 @@ public class FlyWheel implements Module{
      */
     private double flyLowerPower = 0;
     
-    public FlyWheel(CANTalon talonU, CANTalon talonL)
-    {
+    /**
+     * The PID constants for the upper and lower motors.
+     */
+    private double lKp = 1;
+
+    private double lKi = 1;
+
+    private double lKd = 1;
+
+    private double uKp = 1;
+
+    private double uKi = 1;
+
+    private double uKd = 1;
+    
+    private double flyLowerSetVelocity;
+    
+    private double flyUpperSetVelocity;
+    
+    private double closeLoopRampRate = 0;
+    
+    private int izone = 10;
+    
+    /**
+     * sets the final talon fields to the given values.
+     * @param talonU The upper CANTalon motor controller.
+     * @param talonL The lower CANTalon motor controller.
+     */
+    public FlyWheel(CANTalon talonU, CANTalon talonL) {
         talonFlyUpper = talonU;
         talonFlyLower = talonL;
+        talonFlyLower.reverseOutput(true);
+        
+        talonFlyUpper.setPID(uKp, uKi, uKd, flyUpperSetVelocity, izone, closeLoopRampRate, 0);
+        talonFlyLower.setPID(lKp, lKi, lKd, flyLowerSetVelocity, izone, closeLoopRampRate, 0);
     }
     
     /**
@@ -40,19 +74,28 @@ public class FlyWheel implements Module{
      */
     @Override
     public void initModule() {
-               
+        
+        
     }
 
     @Override
     public void teleopPeriodicModule() {
 
-        if(running)
-        {
-            talonFlyUpper.set(flyUpperPower);
-            talonFlyLower.set(flyLowerPower * (-1));
-        }
-        else
-        {
+        if(running) {
+            
+            if(usingPID) {
+                
+                talonFlyLower.setF(flyLowerSetVelocity);
+                talonFlyUpper.setF(flyUpperSetVelocity);
+                
+                
+            } else {
+                
+                talonFlyUpper.set(flyUpperPower);
+                talonFlyLower.set(flyLowerPower);
+            }
+        } else {
+            
             talonFlyUpper.set(0);
             talonFlyLower.set(0);
         }
@@ -63,14 +106,29 @@ public class FlyWheel implements Module{
         
     }
     
-    public void startFlyWheels()
-    {
-        running = true;
+    /**
+     * Sets the variable that defines the flywheel as running or not.
+     * This will not directly change anything in the system, it will
+     * only set an identifier in the program main loop to start or stop 
+     * the flywheels.
+     * 
+     * @param running weather or not to have the system run.
+     */
+    public void setFlyWheelsRunning(boolean running) {
+        
+        this.running = running;
     }
     
-    public void stopFlyWheels()
-    {
-        running = false;
+    /**
+     * Sets weather to use a PID loop on the current system or not.
+     * If set to true setVelocity methods should be used to change
+     * the motion of the flywheel. If false setPower methods should
+     * be used instead/
+     * @param upid
+     */
+    public void usingPID(boolean upid) {
+        
+        usingPID = upid;
     }
     
     
@@ -125,6 +183,50 @@ public class FlyWheel implements Module{
     }
     
     /**
+     * Sets the desired rps for the PID loop to use when setting the power.
+     * This only works when in PID mode.
+     * 
+     * @param Velocity the desired velocity.
+     */
+    public void setFlyUpperVelocity(double Velocity) {
+        
+        flyUpperSetVelocity = Velocity;
+    }
+    
+    /**
+     * Sets the desired rps for the PID loop to use when setting the power.
+     * This only works when in PID mode.
+     * 
+     * @param Velocity the desired velocity.
+     */
+    public void setFlyLowerVelocity(double Velocity) {
+        
+        flyLowerSetVelocity = Velocity;
+    }
+    
+    /**
+     * Returns the desired velocity in the PID loop, not the
+     * actual velocity in the system.
+     * 
+     * @return The desired velocity by the PID loop.
+     */
+    public double getFlyUpperVelocity() {
+        
+        return flyUpperSetVelocity;
+    }
+    
+    /**
+     * Returns the desired velocity in the PID loop, not the
+     * actual velocity in the system.
+     * 
+     * @return The desired velocity by the PID loop.
+     */
+    public double getFlyLowerVelocity() {
+        
+        return flyLowerSetVelocity;
+    }
+    
+    /**
      * Returns the Revolotion Per Second of the actual wheel.
      * 
      * @return Revolotions Per Second
@@ -175,7 +277,57 @@ public class FlyWheel implements Module{
      */
     public double getMotorLowerRawEnc() {
         
-        return talonFlyLower.getEncVelocity() * (-1);
+        return talonFlyLower.getEncVelocity();
+    }
+    
+    public void setLowerKp(double k)
+    {
+        talonFlyLower.setP(k);
+    }
+    
+    public void setLowerKi(double k)
+    {
+        talonFlyLower.setI(k);
+    }
+    
+    public void setLowerKd(double k)
+    {
+        talonFlyLower.setD(k);
+    }
+    
+    public void setLowerKf(double k)
+    {
+        talonFlyLower.setF(k);
+    }
+    
+    public void setUpperKp(double k)
+    {
+        talonFlyUpper.setP(k);
+    }
+    
+    public void setUpperKi(double k)
+    {
+        talonFlyUpper.setI(k);
+    }
+    
+    public void setUpperKd(double k)
+    {
+        talonFlyUpper.setD(k);
+    }
+    
+    public void setUpperKf(double k)
+    {
+        talonFlyUpper.setF(k);
+    }
+    
+    public void setLowerIZone(int k)
+    {
+        talonFlyLower.setIZone(izone);
+    }
+    
+    public void setUpperIZone(int k)
+    {
+        talonFlyUpper.setIZone(k);
     }
 
 

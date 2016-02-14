@@ -8,6 +8,10 @@ import org.usfirst.frc.team5818.robot.RobotConstants;
 import edu.wpi.first.wpilibj.CANTalon;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
+/**
+ * 
+ *
+ */
 public class Shooter implements Module {
     
     /**
@@ -22,10 +26,17 @@ public class Shooter implements Module {
      */
     private CANTalon talonFlyLower = new CANTalon(RobotConstants.TALON_FLYWHEEL_LOWER);
     
+    /**
+     * The number formatter for printing numbers to the console so that they
+     * don't get too long to read.
+     */
     NumberFormat formatter = new DecimalFormat("#0.00");
     
     private final FlyWheel flyWheel;
     
+    /**
+     * Initializes the flywheel class with the proper talon objects to control.
+     */
     public Shooter()
     {
         flyWheel = new FlyWheel(talonFlyUpper, talonFlyLower);
@@ -42,8 +53,6 @@ public class Shooter implements Module {
         
         double flyLP = SmartDashboard.getNumber("DB/Slider 0");
         double flyUP = SmartDashboard.getNumber("DB/Slider 1");
-        
-        boolean onBut = SmartDashboard.getBoolean("DB/Button 0");
         
         flyWheel.setFlyUpperPower(flyUP);
         flyWheel.setFlyLowerPower(flyLP);
