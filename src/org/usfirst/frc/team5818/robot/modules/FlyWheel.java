@@ -18,7 +18,7 @@ public class FlyWheel implements Module{
     /**
      * Weather to use PID loop to set the speed.
      */
-    private boolean usingPID = true;
+    private boolean usingPID = false;
     
     /**
      * The current set speed for the upper flywheel.

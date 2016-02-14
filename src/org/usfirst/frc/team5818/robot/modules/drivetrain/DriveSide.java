@@ -12,6 +12,7 @@ public class DriveSide implements PIDOutput {
 
     private final CANTalon mainTalon;
     private final CANTalon secondaryTalon;
+    private final CANTalon thirdTalon;
     private final boolean inverted;
     private static final double powerLimit = 0.5;
     private static final boolean cubeCurve = true;
@@ -25,8 +26,8 @@ public class DriveSide implements PIDOutput {
      * @param secondaryTalon
      *            - The second talon to control
      */
-    public DriveSide(CANTalon mainTalon, CANTalon secondaryTalon) {
-        this(mainTalon, secondaryTalon, false);
+    public DriveSide(CANTalon mainTalon, CANTalon secondaryTalon, CANTalon thirdTalon) {
+        this(mainTalon, secondaryTalon, thirdTalon, false);
     }
 
     /**
@@ -37,17 +38,20 @@ public class DriveSide implements PIDOutput {
      *            - The first talon to control
      * @param secondaryTalon
      *            - The second talon to control
+     * @param secondaryTalon
+     *            - The third talon to control
      * @param inverted
      *            - {@code true} if the argument of {@link #pidWrite(double)}
      *            should be negated
      */
-    public DriveSide(CANTalon mainTalon, CANTalon secondaryTalon,
+    public DriveSide(CANTalon mainTalon, CANTalon secondaryTalon, CANTalon thirdTalon,
             boolean inverted) {
         if (mainTalon == null) {
             throw new IllegalArgumentException("mainTalon cannot be null");
         }
         this.mainTalon = mainTalon;
         this.secondaryTalon = secondaryTalon;
+        this.thirdTalon = thirdTalon;
         this.inverted = inverted;
     }
 
@@ -68,6 +72,9 @@ public class DriveSide implements PIDOutput {
         this.mainTalon.set(output);
         if (this.secondaryTalon != null) {
             this.secondaryTalon.set(output);
+        }
+        if (this.thirdTalon != null) {
+            this.thirdTalon.set(output);
         }
     }
 

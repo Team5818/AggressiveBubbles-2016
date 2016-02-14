@@ -16,15 +16,20 @@ public class DriveTrain implements Module {
             new CANTalon(RobotConstants.TALON_LEFT_FRONT);
     private static final CANTalon LEFT_BACK =
             new CANTalon(RobotConstants.TALON_LEFT_BACK);
+    private static final CANTalon LEFT_TOP =
+            new CANTalon(RobotConstants.TALON_LEFT_TOP);
+    
     private static final CANTalon RIGHT_FRONT =
             new CANTalon(RobotConstants.TALON_RIGHT_FRONT);
     private static final CANTalon RIGHT_BACK =
             new CANTalon(RobotConstants.TALON_RIGHT_BACK);
+    private static final CANTalon RIGHT_TOP =
+            new CANTalon(RobotConstants.TALON_RIGHT_TOP);
 
-    private final DriveSide left = new DriveSide(LEFT_FRONT, LEFT_BACK, false);
+    private final DriveSide left = new DriveSide(LEFT_FRONT, LEFT_BACK, LEFT_TOP, false);
     // Right motors are reversed.
     private final DriveSide right =
-            new DriveSide(RIGHT_FRONT, RIGHT_BACK, true);
+            new DriveSide(RIGHT_FRONT, RIGHT_BACK, RIGHT_TOP, true);
 
     /**
      * @return the {@link PIDOutput} for the left side

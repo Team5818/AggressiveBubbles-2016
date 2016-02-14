@@ -10,36 +10,43 @@ public final class RobotConstants {
     private static final int CAN_OFFSET = 1;
 
     /**
-     * The talon controlling the left-front wheels.
+     * The right train motor that is closer to the front.
      */
-    public static final int TALON_LEFT_FRONT = 0 + CAN_OFFSET;
+    public static final int TALON_RIGHT_FRONT = 1;
     /**
-     * The talon controlling the left-back wheels.
+     * The right train motor that is closer to the top.
      */
-    public static final int TALON_LEFT_BACK = 1 + CAN_OFFSET;
+    public static final int TALON_RIGHT_TOP = 2;
     /**
-     * The talon controlling the right-front wheels.
+     * The right train motor that is closer to the back.
      */
-    public static final int TALON_RIGHT_FRONT = 2 + CAN_OFFSET;
+    public static final int TALON_RIGHT_BACK = 3;
     /**
-     * The talon controlling the left-back wheels.
+     * The left train motor that is closer to the front.
      */
-    public static final int TALON_RIGHT_BACK = 3 + CAN_OFFSET;
-
+    public static final int TALON_LEFT_FRONT = 4;
+    /**
+     * The left train motor that is closer to the top.
+     */
+    public static final int TALON_LEFT_TOP = 5;
+    /**
+     * The left train motor that is closer to the back.
+     */
+    public static final int TALON_LEFT_BACK = 6;
     /**
      * The talon controlling the arm.
      */
-    public static final int TALON_ARM_MOTOR = 5 + CAN_OFFSET;
+    public static final int TALON_ARM_MOTOR = 7;
 
     /**
      * The talon controller for the upper flywheel motor.
      */
-    public static final int TALON_FLYWHEEL_UPPER = 6 + CAN_OFFSET;
+    public static final int TALON_FLYWHEEL_UPPER = 8;
 
     /**
      * The talon controller for the lower flywheel motor.
      */
-    public static final int TALON_FLYWHEEL_LOWER = 4 + CAN_OFFSET;
+    public static final int TALON_FLYWHEEL_LOWER = 9;
 
     /**
      * The aChannel for the arm encoder.
