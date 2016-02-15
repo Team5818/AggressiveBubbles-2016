@@ -50,7 +50,7 @@ public class RobotCommon extends IterativeRobot {
     private final RobotDriver driver = addModule(new RobotDriver());
     private final RobotCoDriver coDriver = addModule(new RobotCoDriver());
     private final Shooter shooter = addModule(new Shooter());
-    private final Arm arm = addModule(new Arm());
+    public final Arm arm = addModule(new Arm());
     final String defaultAuto = "Default";
     final String customAuto = "My Auto";
     String autoSelected;

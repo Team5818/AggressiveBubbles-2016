@@ -10,6 +10,7 @@ public class Arm implements Module {
     private static final double MULTIPLIER = -1.0;
     private static final Encoder ARM_ENCODER = new Encoder(RobotConstants.ARM_ENCODER_CHANNEL_A, RobotConstants.ARM_ENCODER_CHANNEL_B);
     private static final CANTalon ARM_MOTOR = new CANTalon(RobotConstants.TALON_ARM_MOTOR);
+    private static final CANTalon COLLECTOR_MOTOR = new CANTalon(RobotConstants.TALON_COLLECTOR_MOTOR);
     private PIDController armPID = new PIDController(-.3, 0, 0, ARM_ENCODER, ARM_MOTOR);
     
     private double power;
@@ -39,7 +40,13 @@ public class Arm implements Module {
         armPID.disable();
         ARM_MOTOR.set(power);
     }
-
+    /**
+     * Sets power collector 
+     */
+    
+    public void setCollectorPower(double power){
+        COLLECTOR_MOTOR.set(power);
+    }
 
     /**
      * Gets power of arm
@@ -138,6 +145,13 @@ public class Arm implements Module {
         armPID.enable();
     }
 
+    public boolean onTarget(){
+        return armPID.onTarget();
+    }
+    
+    public void disablePID(){
+        armPID.disable();
+    }
 
     @Override
     public void initModule() {
