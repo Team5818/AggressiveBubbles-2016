@@ -85,7 +85,7 @@ public class RobotCoDriver implements Module {
             double target;
             try {
                 target = Double
-                        .valueOf(SmartDashboard.getString("DB/String 0"));
+                        .valueOf(SmartDashboard.getString("DB/String 8"));
             } catch (Exception e) {
                 throw e;
             }
