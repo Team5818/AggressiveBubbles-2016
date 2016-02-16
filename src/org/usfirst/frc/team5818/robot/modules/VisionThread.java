@@ -6,7 +6,7 @@ public class VisionThread implements Runnable, Module {
 
     private boolean isRunning = false;
     private boolean cvRunning = false;
-    ComputerVision See;
+    public ComputerVision See;
     private Thread captureThread;
 
     public VisionThread() {

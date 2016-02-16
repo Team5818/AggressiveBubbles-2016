@@ -2,7 +2,6 @@ package org.usfirst.frc.team5818.robot;
 
 import org.usfirst.frc.team5818.robot.modules.Arm;
 import org.usfirst.frc.team5818.robot.modules.Module;
-
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
 
@@ -31,6 +30,14 @@ public class RobotCoDriver implements Module {
      * toggles arm's controll mode
      */
     public static final int ARM_MODE_TOGGLE_BUTTON = 4;
+    /**
+     * toggles camera feed
+     */
+    public static final int Camera1_TOGGLE_BUTTON = 4;
+    /**
+     * toggles camera feed
+     */
+    public static final int Camera2_TOGGLE_BUTTON = 5;
 
     private static final Joystick FIRST_JOYSTICK =
             new Joystick(RobotConstants.CODRIVER_FIRST_JOYSTICK_PORT);
@@ -71,6 +78,12 @@ public class RobotCoDriver implements Module {
         }
         if (FIRST_JOYSTICK.getRawButton(PRINT_ANGLE_BUTTON)) {
             DriverStation.reportError("" + arm.getAngle() + "\n", false);
+        }
+        if (SECOND_JOYSTICK.getRawButton(Camera1_TOGGLE_BUTTON)) {
+            Robot.runningRobot.Eyes.See.ChangeFeed(1);
+        }
+        if (SECOND_JOYSTICK.getRawButton(Camera2_TOGGLE_BUTTON)) {
+            Robot.runningRobot.Eyes.See.ChangeFeed(2);
         }
 
     }

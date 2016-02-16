@@ -4,7 +4,6 @@ package org.usfirst.frc.team5818.robot;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.usfirst.frc.team5818.robot.modules.Eyes;
 import org.usfirst.frc.team5818.robot.modules.Module;
 import org.usfirst.frc.team5818.robot.modules.Shooter;
 import org.usfirst.frc.team5818.robot.modules.VisionThread;
@@ -39,10 +38,10 @@ public class Robot extends IterativeRobot {
      * The drive train connected to the robot talons.
      */
     public final DriveTrain driveTrain = addModule(new DriveTrain());
-    private final RobotDriver driver = addModule(new RobotDriver());
-    private final RobotCoDriver coDriver = addModule(new RobotCoDriver());
-    private final Shooter shooter = addModule(new Shooter());
-    private final VisionThread Eyes = addModule(new VisionThread());
+    public final RobotDriver driver = addModule(new RobotDriver());
+    public final RobotCoDriver coDriver = addModule(new RobotCoDriver());
+    public final Shooter shooter = addModule(new Shooter());
+    public final VisionThread Eyes = addModule(new VisionThread());
     final String defaultAuto = "Default";
     final String customAuto = "My Auto";
     String autoSelected;
@@ -59,7 +58,6 @@ public class Robot extends IterativeRobot {
         chooser.addDefault("Default Auto", defaultAuto);
         chooser.addObject("My Auto", customAuto);
         SmartDashboard.putData("Auto choices", chooser);
-        new Eyes().LookAtMe();
     }
 
     /**
