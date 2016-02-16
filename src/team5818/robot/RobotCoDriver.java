@@ -57,7 +57,7 @@ public class RobotCoDriver implements Module {
 
     @Override
     public void initModule() {
-        arm = new Arm();
+        arm = RobotCommon.runningRobot.arm;
     }
 
     @Override
@@ -109,7 +109,7 @@ public class RobotCoDriver implements Module {
             //arm.resetEncoder();
         }
         if (FIRST_JOYSTICK.getRawButton(PRINT_ANGLE_BUTTON)) {
-            DriverStation.reportError("" + arm.getAngle() + "\n", false);
+            SmartDashboard.putString("DB/String 7", "" + arm.getPotentiometerVal());
         }
 
     }

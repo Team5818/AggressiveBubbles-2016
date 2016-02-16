@@ -42,7 +42,7 @@ public final class RobotConstants {
      * talon controlling collector
      */
     
-    public static final int TALON_COLLECTOR_MOTOR = 6 + CAN_OFFSET;
+    public static final int TALON_COLLECTOR_MOTOR = 7 + CAN_OFFSET;
 
     /**
      * The talon controller for the upper flywheel motor.
@@ -59,10 +59,13 @@ public final class RobotConstants {
      */
     public static final int ARM_POTENTIOMETER_CHANNEL = 0;
     /**
-     * The scale for the arm encoder.
+     * The scale for the arm potentiometer.
      */
-    public static final double ARM_POTENTIOMETER_SCALE = 1;
-
+    public static final double ARM_POTENTIOMETER_SCALE = .0657;
+    /**
+     * intercept for arm potentiometer
+     */
+    public static final double ARM_POTENTIOMETER_INTERCEPT = -70.15;
     /**
      * The button known as "trigger" on the joystick.
      */

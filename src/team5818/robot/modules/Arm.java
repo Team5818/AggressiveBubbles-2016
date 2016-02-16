@@ -10,7 +10,7 @@ public class Arm implements Module {
 
     private static final double MULTIPLIER = -1.0;
     private static final AnalogInput ARM_POTENTIOMETER = new AnalogInput(RobotConstants.ARM_POTENTIOMETER_CHANNEL);
-    private static final CANTalon ARM_MOTOR = new CANTalon(RobotConstants.TALON_ARM_MOTOR);
+    private static final CANTalon ARM_MOTOR = new CANTalon(5);
     private static final CANTalon COLLECTOR_MOTOR = new CANTalon(RobotConstants.TALON_COLLECTOR_MOTOR);
     private PIDController armPID = new PIDController(-.3, 0, 0, ARM_POTENTIOMETER, ARM_MOTOR);
     
@@ -63,7 +63,7 @@ public class Arm implements Module {
      * @return angle measured by encoder
      */
     public double getPotentiometerVal() {
-        return ARM_POTENTIOMETER.getValue(); 
+        return ARM_POTENTIOMETER.getValue() * RobotConstants.ARM_POTENTIOMETER_SCALE + RobotConstants.ARM_POTENTIOMETER_INTERCEPT; 
         }
 
     /**
@@ -85,7 +85,7 @@ public class Arm implements Module {
 
     public double getAngle() {
 
-        return ARM_POTENTIOMETER.getValue() * RobotConstants.ARM_POTENTIOMETER_SCALE;
+        return this.angle;
     }
     
     /**
