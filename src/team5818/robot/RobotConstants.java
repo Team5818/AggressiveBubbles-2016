@@ -55,18 +55,13 @@ public final class RobotConstants {
     public static final int TALON_FLYWHEEL_LOWER = 4 + CAN_OFFSET;
 
     /**
-     * The aChannel for the arm encoder.
+     * The channel for the arm potentiometer.
      */
-    public static final int ARM_ENCODER_CHANNEL_A = 0;
-    /**
-     * The bChannel for the arm encoder.
-     */
-    public static final int ARM_ENCODER_CHANNEL_B = 1;
-
+    public static final int ARM_POTENTIOMETER_CHANNEL = 0;
     /**
      * The scale for the arm encoder.
      */
-    public static final double ARM_ENCODER_SCALE = 1 / 375.0;
+    public static final double ARM_POTENTIOMETER_SCALE = 1;
 
     /**
      * The button known as "trigger" on the joystick.

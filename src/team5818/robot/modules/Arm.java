@@ -1,5 +1,6 @@
 package team5818.robot.modules;
 
+import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.CANTalon;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.PIDController;
@@ -8,10 +9,10 @@ import team5818.robot.RobotConstants;
 public class Arm implements Module {
 
     private static final double MULTIPLIER = -1.0;
-    private static final Encoder ARM_ENCODER = new Encoder(RobotConstants.ARM_ENCODER_CHANNEL_A, RobotConstants.ARM_ENCODER_CHANNEL_B);
+    private static final AnalogInput ARM_POTENTIOMETER = new AnalogInput(RobotConstants.ARM_POTENTIOMETER_CHANNEL);
     private static final CANTalon ARM_MOTOR = new CANTalon(RobotConstants.TALON_ARM_MOTOR);
     private static final CANTalon COLLECTOR_MOTOR = new CANTalon(RobotConstants.TALON_COLLECTOR_MOTOR);
-    private PIDController armPID = new PIDController(-.3, 0, 0, ARM_ENCODER, ARM_MOTOR);
+    private PIDController armPID = new PIDController(-.3, 0, 0, ARM_POTENTIOMETER, ARM_MOTOR);
     
     private double power;
     private double maxPower = .5;  //max and min power are for PID and aim adjusts
@@ -20,8 +21,8 @@ public class Arm implements Module {
     private double angle;
 
     public Arm() {
-        ARM_ENCODER.reset();
-        ARM_ENCODER.setDistancePerPulse(RobotConstants.ARM_ENCODER_SCALE); // Angle per pulse in our case
+        //ARM_ENCODER.reset();
+        //ARM_ENCODER.setDistancePerPulse(RobotConstants.ARM_ENCODER_SCALE); // Angle per pulse in our case
         ARM_MOTOR.setInverted(true);
         armPID.setOutputRange(minPower,maxPower);
 
@@ -61,9 +62,9 @@ public class Arm implements Module {
     /**
      * @return angle measured by encoder
      */
-    public double getEncoderVal() {
-        return ARM_ENCODER.getDistance(); //raw value
-    }
+    public double getPotentiometerVal() {
+        return ARM_POTENTIOMETER.getValue(); 
+        }
 
     /**
      * Sets arm angle
@@ -84,15 +85,15 @@ public class Arm implements Module {
 
     public double getAngle() {
 
-        return this.angle;
+        return ARM_POTENTIOMETER.getValue() * RobotConstants.ARM_POTENTIOMETER_SCALE;
     }
     
     /**
      * sets encoder val to zero
      */
-    public void resetEncoder(){
-        ARM_ENCODER.reset();
-    }
+    //public void resetEncoder(){
+    //    ARM_ENCODER.reset();
+    //}
 
     /**
      * @param up
@@ -139,7 +140,8 @@ public class Arm implements Module {
      * @param objective
      * PIDs to the given objective
      */
-    public void goToAngle(double objective){
+    public void goToAngle(double objectiveAngle){
+        double objective =  objectiveAngle / RobotConstants.ARM_POTENTIOMETER_SCALE;
         armPID.reset();
         armPID.setSetpoint(objective);
         armPID.enable();

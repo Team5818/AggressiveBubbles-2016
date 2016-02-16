@@ -106,7 +106,7 @@ public class RobotCoDriver implements Module {
         }
 
         if (FIRST_JOYSTICK.getRawButton(ARM_RESET_BUTTON)) {
-            arm.resetEncoder();
+            //arm.resetEncoder();
         }
         if (FIRST_JOYSTICK.getRawButton(PRINT_ANGLE_BUTTON)) {
             DriverStation.reportError("" + arm.getAngle() + "\n", false);
