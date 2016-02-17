@@ -96,9 +96,16 @@ public class DriveSide implements EncoderManager, PIDOutput {
         }
     }
 
-    public void dumpPower(CANTalon talon) {
-//        SmartDashboard.putString("DB/String " + talon.getDeviceID(),
-//                "" + talon.get());
+    public double dumpPower(CANTalon talon) {
+        return talon.get();
+    }
+    
+    public double dumpPower(int talonNum) {
+        CANTalon talon;
+        if(talonNum == 3) { talon = this.thirdTalon;}
+        if(talonNum == 2) { talon = this.secondaryTalon;}
+        else { talon = this.mainTalon;}
+        return talon.get();
     }
 
     @Override

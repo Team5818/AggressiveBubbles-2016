@@ -6,6 +6,7 @@ import team5818.robot.commands.DriveForwardSlowlyCommand;
 import team5818.robot.commands.ResetEncoderCommand;
 import team5818.robot.modules.Module;
 import team5818.robot.modules.drivetrain.ArcadeDriveCalculator;
+import team5818.robot.modules.drivetrain.DriveTrain;
 import team5818.robot.modules.drivetrain.TankDriveCalculator;
 import team5818.robot.util.Vector2d;
 import team5818.robot.util.Vectors;
@@ -22,6 +23,10 @@ public class RobotDriver implements Module {
     private enum InputMode {
         ONE_STICK, TWO_STICKS;
     }
+    
+    public static final int BUT_DEBUG = 3;
+    public static final int debugCycleTicks = 30;
+    public static int currTicks = 0;
 
     public static final int BUT_TWOSTICK_ARCADE = 6;
     public static final int BUT_TWOSTICK_TANK = 7;
@@ -52,6 +57,17 @@ public class RobotDriver implements Module {
     @Override
     public void teleopPeriodicModule() {
 
+        if(FIRST_JOYSTICK.getRawButton(BUT_DEBUG))
+        {
+            currTicks = (currTicks + 1)%debugCycleTicks;
+            if(currTicks == 0)
+            {
+                DriveTrain dt = RobotCommon.runningRobot.driveTrain;
+                
+                System.out.println("LP: " + dt.getLeftMotors().dumpPower(1) + " RP: " + dt.getRightMotors().dumpPower(1));
+            }
+        }
+        
         if (FIRST_JOYSTICK.getRawButton(BUT_TWOSTICK_ARCADE)) {
             RobotCommon.runningRobot.driveTrainController
                     .setDriveCalculator(ArcadeDriveCalculator.INSTANCE);
