@@ -9,13 +9,13 @@ import org.usfirst.frc.team5818.robot.Robot;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
 import edu.wpi.first.wpilibj.command.Scheduler;
-import edu.wpi.first.wpilibj.hal.PDPJNI;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import team5818.robot.modules.Arm;
-import team5818.robot.modules.Eyes;
+import team5818.robot.modules.ComputerVision;
 import team5818.robot.modules.Module;
 import team5818.robot.modules.Shooter;
+import team5818.robot.modules.VisionThread;
 import team5818.robot.modules.drivetrain.ArcadeDriveCalculator;
 import team5818.robot.modules.drivetrain.DriveTrain;
 import team5818.robot.modules.drivetrain.DriveTrainController;
@@ -50,6 +50,7 @@ public class RobotCommon extends IterativeRobot {
     private final RobotDriver driver = addModule(new RobotDriver());
     private final RobotCoDriver coDriver = addModule(new RobotCoDriver());
     private final Shooter shooter = addModule(new Shooter());
+    public final VisionThread vision = addModule(new VisionThread());
     public final Arm arm = addModule(new Arm());
     final String defaultAuto = "Default";
     final String customAuto = "My Auto";
@@ -68,7 +69,6 @@ public class RobotCommon extends IterativeRobot {
         chooser.addObject("My Auto", customAuto);
         SmartDashboard.putData("Auto choices", chooser);
         panel = new PowerDistributionPanel();
-        new Eyes().LookAtMe();
     }
 
     /**
@@ -126,18 +126,6 @@ public class RobotCommon extends IterativeRobot {
     public void teleopPeriodic() {
         Scheduler.getInstance().run();
         modules.forEach(Module::teleopPeriodicModule);
-        String data = SmartDashboard.getString("DB/String 0");
-        try {
-            int talon = Integer.parseInt(data);
-            driveTrain.runTalon(talon);
-        } catch (Exception e) {
-        }
-        SmartDashboard.putString("DB/String 1", "" + panel.getCurrent(2));
-        SmartDashboard.putString("DB/String 2", "" + panel.getCurrent(1));
-        SmartDashboard.putString("DB/String 3", "" + panel.getCurrent(0));
-        SmartDashboard.putString("DB/String 4", "" + panel.getCurrent(15));
-        SmartDashboard.putString("DB/String 5", "" + panel.getCurrent(13));
-        SmartDashboard.putString("DB/String 6", "" + panel.getCurrent(12));
     }
 
     /**

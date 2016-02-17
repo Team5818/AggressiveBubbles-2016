@@ -5,7 +5,7 @@ import team5818.robot.RobotCommon;
 import team5818.robot.util.Vector2d;
 
 public class DriveForwardSlowlyCommand extends Command {
-    
+
     private boolean hasRun;
 
     @Override

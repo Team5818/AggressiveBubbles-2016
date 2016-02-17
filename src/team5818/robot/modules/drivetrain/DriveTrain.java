@@ -2,7 +2,6 @@ package team5818.robot.modules.drivetrain;
 
 import edu.wpi.first.wpilibj.CANTalon;
 import edu.wpi.first.wpilibj.PIDOutput;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import team5818.robot.RobotConstants;
 import team5818.robot.modules.Module;
 import team5818.robot.util.Vector2d;
@@ -53,7 +52,6 @@ public class DriveTrain implements Module {
      *            {@link Vector2d#getX()} and right is {@link Vector2d#getY()}
      */
     public void setPower(Vector2d power) {
-        //SmartDashboard.putString("DB/String 7", power.toString());
         left.pidWrite(power.getX());
         right.pidWrite(power.getY());
     }
@@ -68,27 +66,6 @@ public class DriveTrain implements Module {
 
     @Override
     public void endModule() {
-    }
-
-    public void runTalon(int talon) {
-        if (talon == 0) {
-            LEFT_FRONT.set(0.25);
-        }
-        if (talon == 1) {
-            LEFT_MIDDLE.set(0.25);
-        }
-        if (talon == 2) {
-            LEFT_BACK.set(0.25);
-        }
-        if (talon == 3) {
-            RIGHT_FRONT.set(0.25);
-        }
-        if (talon == 4) {
-            RIGHT_MIDDLE.set(0.25);
-        }
-        if (talon == 5) {
-            RIGHT_BACK.set(0.25);
-        }
     }
 
 }

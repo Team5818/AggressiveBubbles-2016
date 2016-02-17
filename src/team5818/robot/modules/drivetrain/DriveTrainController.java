@@ -58,7 +58,8 @@ public class DriveTrainController {
     private void rotateNormalizedDegrees(double degrees) {
         // To rotate X degrees, simply move left side forward by W
         // and move right side backwards by W
-        double distance = MathUtil.distanceOfArc(ROBOT_WIDTH_IN_INCHES, degrees);
+        double distance =
+                MathUtil.distanceOfArc(ROBOT_WIDTH_IN_INCHES, degrees);
         driveTrain.getLeftMotors().setDriveDistance(distance);
         driveTrain.getRightMotors().setDriveDistance(-distance);
     }

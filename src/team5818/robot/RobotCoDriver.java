@@ -64,7 +64,7 @@ public class RobotCoDriver implements Module {
     public void teleopPeriodicModule() {
         // Arm teleop
 
-        //shooter.teleopPeriodicModule();
+        // shooter.teleopPeriodicModule();
 
         if (FIRST_JOYSTICK.getRawButton(ENTER_PID_BUTTON)) {
             setAngleMode = true;
@@ -106,10 +106,11 @@ public class RobotCoDriver implements Module {
         }
 
         if (FIRST_JOYSTICK.getRawButton(ARM_RESET_BUTTON)) {
-            //arm.resetEncoder();
+            // arm.resetEncoder();
         }
         if (FIRST_JOYSTICK.getRawButton(PRINT_ANGLE_BUTTON)) {
-            SmartDashboard.putString("DB/String 7", "" + arm.getPotentiometerVal());
+            SmartDashboard.putString("DB/String 7",
+                    "" + arm.getPotentiometerVal());
         }
 
     }

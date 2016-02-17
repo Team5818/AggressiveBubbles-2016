@@ -2,12 +2,11 @@ package team5818.robot.modules.drivetrain;
 
 import edu.wpi.first.wpilibj.CANTalon;
 import edu.wpi.first.wpilibj.CANTalon.FeedbackDevice;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.PIDController;
+import edu.wpi.first.wpilibj.PIDOutput;
 import team5818.robot.RobotConstants;
 import team5818.robot.encoders.EncoderManager;
 import team5818.robot.util.PIDSourceBase;
-import edu.wpi.first.wpilibj.PIDController;
-import edu.wpi.first.wpilibj.PIDOutput;
 
 /**
  * A drive side is an arbitrary amount of talons that can be manipulated as a
@@ -99,12 +98,17 @@ public class DriveSide implements EncoderManager, PIDOutput {
     public double dumpPower(CANTalon talon) {
         return talon.get();
     }
-    
+
     public double dumpPower(int talonNum) {
         CANTalon talon;
-        if(talonNum == 3) { talon = this.thirdTalon;}
-        if(talonNum == 2) { talon = this.secondaryTalon;}
-        else { talon = this.mainTalon;}
+        if (talonNum == 3) {
+            talon = this.thirdTalon;
+        }
+        if (talonNum == 2) {
+            talon = this.secondaryTalon;
+        } else {
+            talon = this.mainTalon;
+        }
         return talon.get();
     }
 

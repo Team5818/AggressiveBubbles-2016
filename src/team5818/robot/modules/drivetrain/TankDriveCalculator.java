@@ -10,11 +10,11 @@ public enum TankDriveCalculator implements DriveCalculator {
      * The only instance of the calculator.
      */
     INSTANCE;
-    
+
     public Vector2d compute(Vector2d in) {
-       
+
         double leftMotorSpeed = in.getX();
-        double rightMotorSpeed = in.getY(); 
+        double rightMotorSpeed = in.getY();
         return new Vector2d(leftMotorSpeed, rightMotorSpeed);
     }
 

@@ -3,10 +3,6 @@ package team5818.robot.modules;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.Talon;
-import edu.wpi.first.wpilibj.Victor;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import team5818.robot.RobotConstants;
 import team5818.robot.util.CANTalonWithPIDModes;
@@ -45,7 +41,7 @@ public class Shooter implements Module {
      * The flywheel object that controls the motion of the flywheel.
      */
     private final FlyWheel wheelU, wheelL;
-    
+
     private boolean hasStartedPID = false;
 
     /**
@@ -56,7 +52,7 @@ public class Shooter implements Module {
 
         wheelU = new FlyWheel(talonU, false, false);
         wheelL = new FlyWheel(talonL, false, true);
-        
+
     }
 
     @Override
@@ -64,7 +60,7 @@ public class Shooter implements Module {
 
         wheelU.initModule();
         wheelL.initModule();
-        
+
     }
 
     @Override
@@ -72,39 +68,36 @@ public class Shooter implements Module {
 
         double vt = SmartDashboard.getNumber("DB/Slider 1");
         double vb = SmartDashboard.getNumber("DB/Slider 1");
-        //TODO now actually make it set the velocity using a pid loop.
-        
-        if(SmartDashboard.getBoolean("DB/Button 1")) {
-            
-            if(!hasStartedPID) {
-                
+        // TODO now actually make it set the velocity using a pid loop.
+
+        if (SmartDashboard.getBoolean("DB/Button 1")) {
+
+            if (!hasStartedPID) {
+
                 wheelU.setSetVelocity(vt);
                 wheelU.setSetVelocity(vb);
-                
+
             }
-            
-        }
-        else
-        {
+
+        } else {
             hasStartedPID = false;
         }
-        
-        
-        //double flyLP = SmartDashboard.getNumber("DB/Slider 0");
-        //double flyUP = SmartDashboard.getNumber("DB/Slider 1");
-        
-        //wheelU.setPower(flyUP);
-        //wheelL.setPower(flyLP);
 
-        //Get rid of conflict in robotcommon to use commented code.
-        //SmartDashboard.putString("DB/String 0", "LowerRPS = " +
-        //formatter.format(wheelL.getRPS()));
-        //SmartDashboard.putString("DB/String 5", "UpperRPS = " +
-        //formatter.format(wheelU.getRPS()));
+        // double flyLP = SmartDashboard.getNumber("DB/Slider 0");
+        // double flyUP = SmartDashboard.getNumber("DB/Slider 1");
+
+        // wheelU.setPower(flyUP);
+        // wheelL.setPower(flyLP);
+
+        // Get rid of conflict in robotcommon to use commented code.
+        // SmartDashboard.putString("DB/String 0", "LowerRPS = " +
+        // formatter.format(wheelL.getRPS()));
+        // SmartDashboard.putString("DB/String 5", "UpperRPS = " +
+        // formatter.format(wheelU.getRPS()));
 
         wheelU.teleopPeriodicModule();
         wheelL.teleopPeriodicModule();
-        
+
     }
 
     @Override
@@ -112,7 +105,7 @@ public class Shooter implements Module {
 
         wheelU.endModule();
         wheelL.endModule();
-        
+
     }
 
 }

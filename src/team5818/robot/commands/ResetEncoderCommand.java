@@ -12,7 +12,8 @@ public class ResetEncoderCommand extends Command {
     @Override
     protected void execute() {
         RobotCommon.runningRobot.driveTrain.getLeftMotors().setDriveDistance(0);
-        RobotCommon.runningRobot.driveTrain.getRightMotors().setDriveDistance(0);
+        RobotCommon.runningRobot.driveTrain.getRightMotors()
+                .setDriveDistance(0);
     }
 
     @Override

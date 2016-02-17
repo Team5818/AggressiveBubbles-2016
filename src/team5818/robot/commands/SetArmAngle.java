@@ -1,30 +1,28 @@
 package team5818.robot.commands;
 
-import org.usfirst.frc.team5818.robot.Robot;
-
 import edu.wpi.first.wpilibj.command.Command;
-import team5818.robot.modules.Arm;
 import team5818.robot.RobotCommon;
+import team5818.robot.modules.Arm;
 
 public class SetArmAngle extends Command {
-    
+
     public double targetAngle;
     public Arm arm;
-    
-    public SetArmAngle(double angle){
-        
+
+    public SetArmAngle(double angle) {
+
         targetAngle = angle;
         arm = RobotCommon.runningRobot.arm;
     }
-    
+
     @Override
-    protected void initialize() {    
+    protected void initialize() {
         arm.goToAngle(targetAngle);
     }
 
     @Override
     protected void execute() {
-    
+
     }
 
     @Override
@@ -34,7 +32,7 @@ public class SetArmAngle extends Command {
 
     @Override
     protected void end() {
-        arm.disablePID(); 
+        arm.disablePID();
     }
 
     @Override

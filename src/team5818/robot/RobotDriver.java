@@ -23,7 +23,7 @@ public class RobotDriver implements Module {
     private enum InputMode {
         ONE_STICK, TWO_STICKS;
     }
-    
+
     public static final int BUT_DEBUG = 3;
     public static final int debugCycleTicks = 30;
     public static int currTicks = 0;
@@ -57,17 +57,16 @@ public class RobotDriver implements Module {
     @Override
     public void teleopPeriodicModule() {
 
-        if(FIRST_JOYSTICK.getRawButton(BUT_DEBUG))
-        {
-            currTicks = (currTicks + 1)%debugCycleTicks;
-            if(currTicks == 0)
-            {
+        if (FIRST_JOYSTICK.getRawButton(BUT_DEBUG)) {
+            currTicks = (currTicks + 1) % debugCycleTicks;
+            if (currTicks == 0) {
                 DriveTrain dt = RobotCommon.runningRobot.driveTrain;
-                
-                System.out.println("LP: " + dt.getLeftMotors().dumpPower(1) + " RP: " + dt.getRightMotors().dumpPower(1));
+
+                System.out.println("LP: " + dt.getLeftMotors().dumpPower(1)
+                        + " RP: " + dt.getRightMotors().dumpPower(1));
             }
         }
-        
+
         if (FIRST_JOYSTICK.getRawButton(BUT_TWOSTICK_ARCADE)) {
             RobotCommon.runningRobot.driveTrainController
                     .setDriveCalculator(ArcadeDriveCalculator.INSTANCE);

@@ -3,7 +3,6 @@ package team5818.robot.util;
 import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.PIDSourceType;
 
 public class JoystickPIDSource extends PIDSourceBase {
 
