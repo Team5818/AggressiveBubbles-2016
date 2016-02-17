@@ -7,52 +7,50 @@ import edu.wpi.first.wpilibj.Joystick.ButtonType;
  */
 public final class RobotConstants {
 
-    private static final int CAN_OFFSET = 1;
-
     /**
      * The talon controlling the left-front wheels.
      */
-    public static final int TALON_LEFT_FRONT = 4 + CAN_OFFSET;
+    public static final int TALON_LEFT_FRONT = 5;
     /**
      * The talon controlling the left-front wheels.
      */
-    public static final int TALON_LEFT_MIDDLE = 3 + CAN_OFFSET;
+    public static final int TALON_LEFT_MIDDLE = 4;
     /**
      * The talon controlling the left-back wheels.
      */
-    public static final int TALON_LEFT_BACK = 5 + CAN_OFFSET;
+    public static final int TALON_LEFT_BACK = 6;
     /**
      * The talon controlling the right-front wheels.
      */
-    public static final int TALON_RIGHT_FRONT = 1 + CAN_OFFSET;
+    public static final int TALON_RIGHT_FRONT = 2;
     /**
      * The talon controlling the right-front wheels.
      */
-    public static final int TALON_RIGHT_MIDDLE = 0 + CAN_OFFSET;
+    public static final int TALON_RIGHT_MIDDLE = 1;
     /**
      * The talon controlling the right-back wheels.
      */
-    public static final int TALON_RIGHT_BACK = 2 + CAN_OFFSET;
+    public static final int TALON_RIGHT_BACK = 3;
 
     /**
      * The talon controlling the arm.
      */
-    public static final int TALON_ARM_MOTOR = 5 + CAN_OFFSET;
+    public static final int TALON_ARM_MOTOR = 5;
     /**
      * talon controlling collector
      */
     
-    public static final int TALON_COLLECTOR_MOTOR = 7 + CAN_OFFSET;
+    public static final int TALON_COLLECTOR_MOTOR = 7;
 
     /**
      * The talon controller for the upper flywheel motor.
      */
-    public static final int TALON_FLYWHEEL_UPPER = 6 + CAN_OFFSET;
+    public static final int TALON_FLYWHEEL_UPPER = 6;
 
     /**
      * The talon controller for the lower flywheel motor.
      */
-    public static final int TALON_FLYWHEEL_LOWER = 4 + CAN_OFFSET;
+    public static final int TALON_FLYWHEEL_LOWER = 8;
 
     /**
      * The channel for the arm potentiometer.

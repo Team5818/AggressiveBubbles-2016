@@ -26,14 +26,14 @@ public class Shooter implements Module {
      * The Talon motor controller class that controls the upper fly wheel in the
      * shooter mechanism.
      */
-    private CANTalon talonFlyUpper =
+    private CANTalon talonU =
             new CANTalon(RobotConstants.TALON_FLYWHEEL_UPPER);
 
     /**
      * The Talon motor controller class that controls the upper fly wheel in the
      * shooter mechanism.
      */
-    private CANTalon talonFlyLower =
+    private CANTalon talonL =
             new CANTalon(RobotConstants.TALON_FLYWHEEL_LOWER);
 
     /**
@@ -44,7 +44,7 @@ public class Shooter implements Module {
     /**
      * The flywheel object that controls the motion of the flywheel.
      */
-    private final FlyWheel flyWheel;
+    private final FlyWheel wheelU, wheelL;
 
     /**
      * Initiates the flyWheel object to the correct talons so that it can be
@@ -52,13 +52,17 @@ public class Shooter implements Module {
      */
     public Shooter() {
 
-        flyWheel = new FlyWheel(talonFlyUpper, talonFlyLower);
+        wheelU = new FlyWheel(talonU, false, false);
+        wheelL = new FlyWheel(talonL, false, true);
+        
     }
 
     @Override
     public void initModule() {
 
-        flyWheel.initModule();
+        wheelU.initModule();
+        wheelL.initModule();
+        
     }
 
     @Override
@@ -67,25 +71,26 @@ public class Shooter implements Module {
         double flyLP = SmartDashboard.getNumber("DB/Slider 0");
         double flyUP = SmartDashboard.getNumber("DB/Slider 1");
 
-        flyWheel.setFlyUpperPower(flyUP);
-        flyWheel.setFlyLowerPower(flyLP);
+        wheelU.setPower(flyUP);
+        wheelL.setPower(flyLP);
 
-        // SmartDashboard.putString("DB/String 0", "LowerRPS = " +
-        // formatter.format(flyWheel.getFlyLowerRPS()));
-        // SmartDashboard.putString("DB/String 5", "UpperRPS = " +
-        // formatter.format(flyWheel.getFlyUpperRPS()));
-        // SmartDashboard.putString("DB/String 1", "LowerP = " +
-        // formatter.format(flyWheel.getFlyLowerPower()));
-        // SmartDashboard.putString("DB/String 6", "UpperP = " +
-        // formatter.format(flyWheel.getFlyUpperPower()));
+        //Get rid of conflict in robotcommon to use commented code.
+        //SmartDashboard.putString("DB/String 0", "LowerRPS = " +
+        //formatter.format(wheelL.getRPS()));
+        //SmartDashboard.putString("DB/String 5", "UpperRPS = " +
+        //formatter.format(wheelU.getRPS()));
 
-        flyWheel.teleopPeriodicModule();
+        wheelU.teleopPeriodicModule();
+        wheelL.teleopPeriodicModule();
+        
     }
 
     @Override
     public void endModule() {
 
-        flyWheel.endModule();
+        wheelU.endModule();
+        wheelL.endModule();
+        
     }
 
 }

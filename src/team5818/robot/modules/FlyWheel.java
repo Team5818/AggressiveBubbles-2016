@@ -16,12 +16,7 @@ public class FlyWheel implements Module{
     /**
      * The CANTalon motor controller for the upper wheel.
      */
-    private final CANTalon talonFlyUpper;
-    
-    /**
-     * The CANTalon motor controller for the lower flywheel.
-     */
-    private final CANTalon talonFlyLower;
+    private final CANTalon talon;
     
     /**
      * Weather the flywheel is running or not.
@@ -31,24 +26,33 @@ public class FlyWheel implements Module{
     /**
      * The current set speed for the upper flywheel.
      */
-    private double flyUpperPower = 0;
+    private double power = 0;
     
     /**
-     * The current set speed for the lower flywheel.
+     * The gearbox ratio between the motor shaft to the wheel.
      */
-    private double flyLowerPower = 0;
+    private double gearBoxRatio = 24 / 60;
+    
+    private boolean usingPID = false;
     
     /**
      * 
-     * @param talonU The upper CANTalon motor on the flywheel
-     * @param talonL The lower CANTalon motor on the flywheel
+     * @param talon The upper CANTalon motor on the flywheel
+     * @param reversed Specifies weather to reverse the sensor and output of the motor.
      */
-    public FlyWheel(CANTalon talonU, CANTalon talonL) {
+    public FlyWheel(CANTalon talon, boolean usingPID, boolean reversed) {
         
-        talonFlyUpper = talonU;
-        talonFlyLower = talonL;
+        this.talon = talon;
+        this.usingPID = usingPID;
         
-        talonFlyLower.setInverted(true);
+        if(usingPID)
+            talon.changeControlMode(CANTalon.TalonControlMode.Speed);
+        else
+            talon.changeControlMode(CANTalon.TalonControlMode.Voltage);
+        
+        talon.enableControl();
+        talon.reverseOutput(reversed);
+        talon.reverseSensor(reversed);
     }
     
     /**
@@ -66,12 +70,11 @@ public class FlyWheel implements Module{
 
         if(running) {
             
-            talonFlyUpper.set(flyUpperPower);
-            talonFlyLower.set(flyLowerPower);
+            talon.set(power);
+            
         } else {
             
-            talonFlyUpper.set(0);
-            talonFlyLower.set(0);
+            talon.set(0);
         }
     }
 
@@ -84,7 +87,7 @@ public class FlyWheel implements Module{
      * Sets the running state of the flywheel to true. This will not set change
      * the speed, it will only set an indicator for the program loop to take care of.
      */
-    public void startFlyWheels() {
+    public void start() {
         
         running = true;
     }
@@ -93,11 +96,22 @@ public class FlyWheel implements Module{
      * Sets the running state of the flywheel to false. This will not set change
      * the speed, it will only set an indicator for the program loop to take care of.
      */
-    public void stopFlyWheels() {
+    public void stop() {
         
         running = false;
     }
     
+    public void enablePID()
+    {
+        talon.changeControlMode(CANTalon.TalonControlMode.Speed);
+        talon.enableControl();
+    }
+    
+    public void disablePID()
+    {
+        talon.changeControlMode(CANTalon.TalonControlMode.Voltage);
+        talon.enableControl();
+    }
     
     /**
      * Directly sets the power of the upper motor to the specified number. Ranging from
@@ -105,28 +119,13 @@ public class FlyWheel implements Module{
      * 
      * @param power the power desired to be set, from 1 to -1
      */
-    public void setFlyUpperPower(double power) {
+    public void setPower(double power) {
         
         if(power > 1)
             power = 1;
         if(power < -1)
             power = -1;
-        flyUpperPower = power;
-    }
-    
-    /**
-     * Directly sets the power of the lower motor to the specified number. Ranging from
-     * 1 to -1 having 1 cause the ball to move forward. 
-     * 
-     * @param power the power desired to be set, from 1 to -1
-     */
-    public void setFlyLowerPower(double power) {
-        
-        if(power > 1)
-            power = 1;
-        if(power < -1)
-            power = -1;
-        flyLowerPower = power;
+        this.power = power;
     }
     
     /**
@@ -134,36 +133,9 @@ public class FlyWheel implements Module{
      * 
      * @return The power of the upper fly wheel.
      */
-    public double getFlyUpperPower() {
+    public double getPower() {
         
-        return flyUpperPower;
-    }
-    
-    /**
-     * Returns the power to be set to the lower flywheel.
-     * 
-     * @return The power of the lower fly wheel.
-     */
-    public double getFlyLowerPower() {
-        
-        return flyLowerPower;
-    }
-    
-    /**
-     * Returns the Revolotion Per Second of the actual wheel.
-     * 
-     * @return Revolotions Per Second
-     */
-    public double getFlyUpperRPS() {
-        
-        //conver motor to ticks per second
-        double motorTPS = getMotorUpperRawEnc() * 10;
-        //convert motor to revolotions per second.
-        double motorRPS = motorTPS / 6;
-        //convert to wheel gear ratio.
-        double wheelRPS = motorRPS * 24 / 60;
-        
-        return wheelRPS;
+        return power;
     }
     
     /**
@@ -171,36 +143,9 @@ public class FlyWheel implements Module{
      * 
      * @return Revolotions Per Second
      */
-    public double getFlyLowerRPS() {
+    public double getRPS() {
         
-        //conver motor to ticks per second
-        double motorTPS = getMotorLowerRawEnc() * 10;
-        //convert motor to revolotions per second.
-        double motorRPS = motorTPS / 6;
-        //convert to wheel gear ratio.
-        double wheelRPS = motorRPS * 24 / 60;
-        
-        return wheelRPS;
-    }
-    
-    /**
-     * Returns the number of ticks per 100ms where there are 6 ticks per revolution.
-     * 
-     * @return Number of ticks per 100ms.
-     */
-    public double getMotorUpperRawEnc() {
-        
-        return talonFlyUpper.getEncVelocity();
-    }
-    
-    /**
-     * Returns the number of ticks per 100ms where there are 6 ticks per revolution.
-     * 
-     * @return Number of ticks per 100ms.
-     */
-    public double getMotorLowerRawEnc() {
-        
-        return talonFlyLower.getEncVelocity();
+        return talon.getEncVelocity() * 10 / 6 * gearBoxRatio;
     }
 
 
