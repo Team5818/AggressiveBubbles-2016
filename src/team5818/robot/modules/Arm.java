@@ -4,12 +4,14 @@ import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.CANTalon;
 import edu.wpi.first.wpilibj.PIDController;
 import team5818.robot.RobotConstants;
+import team5818.robot.util.ScaledAnalogIn;
 
 public class Arm implements Module {
 
     private static final double MULTIPLIER = -1.0;
-    private static final AnalogInput ARM_POTENTIOMETER =
-            new AnalogInput(RobotConstants.ARM_POTENTIOMETER_CHANNEL);
+    private static final ScaledAnalogIn ARM_POTENTIOMETER =
+            new ScaledAnalogIn(RobotConstants.ARM_POTENTIOMETER_CHANNEL,
+                    RobotConstants.ARM_POTENTIOMETER_SCALE, RobotConstants.ARM_POTENTIOMETER_INTERCEPT);
     private static final CANTalon ARM_MOTOR = new CANTalon(5);
     private static final CANTalon COLLECTOR_MOTOR =
             new CANTalon(RobotConstants.TALON_COLLECTOR_MOTOR);
