@@ -4,6 +4,7 @@ import edu.wpi.first.wpilibj.CANTalon;
 import edu.wpi.first.wpilibj.CANTalon.FeedbackDevice;
 import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.PIDOutput;
+import edu.wpi.first.wpilibj.PIDSourceType;
 import team5818.robot.RobotConstants;
 import team5818.robot.encoders.EncoderManager;
 import team5818.robot.util.PIDSourceBase;
@@ -13,13 +14,17 @@ import team5818.robot.util.PIDSourceBase;
  * whole set. The arbitrary amount of talons that can be manipulated may be an
  * integer between 1 and 3 inclusive.
  */
-public class DriveSide implements EncoderManager, PIDOutput {
+public class DriveSide implements EncoderManager, PIDOutput, MovingControl {
+
+    private static final double DEFAULT_MAX_POWER = 1.0;
 
     private final CANTalon mainTalon;
     private final CANTalon secondaryTalon;
     private final CANTalon thirdTalon;
     private final boolean inverted;
     private final PIDController pidLoop;
+    private final PIDSourceBase pidSource;
+    private double maxPower = DEFAULT_MAX_POWER;
 
     /**
      * Creates a new DriveSide that controls the talons given.
@@ -61,7 +66,7 @@ public class DriveSide implements EncoderManager, PIDOutput {
         this.inverted = inverted;
         pidLoop = new PIDController(RobotConstants.PID_LOOP_P_TERM,
                 RobotConstants.PID_LOOP_I_TERM, RobotConstants.PID_LOOP_D_TERM,
-                new PIDSourceBase() {
+                pidSource = new PIDSourceBase() {
 
                     @Override
                     public double pidGet() {
@@ -69,6 +74,7 @@ public class DriveSide implements EncoderManager, PIDOutput {
                     }
 
                 }, this);
+        pidLoop.disable();
         configureEncoderTalon();
     }
 
@@ -114,8 +120,7 @@ public class DriveSide implements EncoderManager, PIDOutput {
 
     @Override
     public void setDriveDistance(double dist) {
-        mainTalon.setPosition(0);
-        pidLoop.setSetpoint(dist);
+        pidLoop.setSetpoint(getEncPosAbs() + dist);
     }
 
     @Override
@@ -126,6 +131,30 @@ public class DriveSide implements EncoderManager, PIDOutput {
     @Override
     public double getEncPosRaw() {
         return mainTalon.getPosition();
+    }
+
+    @Override
+    public void setPower(double power) {
+        this.maxPower = DEFAULT_MAX_POWER;
+        pidLoop.disable();
+        // Delegate to power.
+        pidWrite(power);
+    }
+
+    @Override
+    public void setVelocity(double vel) {
+        this.maxPower = DEFAULT_MAX_POWER;
+        pidSource.setPIDSourceType(PIDSourceType.kRate);
+        pidLoop.setSetpoint(vel);
+        pidLoop.enable();
+    }
+
+    @Override
+    public void setDriveDistance(double dist, double maxPower) {
+        this.maxPower = maxPower;
+        pidSource.setPIDSourceType(PIDSourceType.kDisplacement);
+        pidLoop.setSetpoint(getEncPosAbs() + dist);
+        pidLoop.enable();
     }
 
 }
