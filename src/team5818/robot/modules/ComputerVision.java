@@ -4,6 +4,7 @@ import com.ni.vision.NIVision;
 import com.ni.vision.NIVision.Image;
 
 import edu.wpi.first.wpilibj.CameraServer;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.vision.USBCamera;
 
 public class ComputerVision {
@@ -15,35 +16,45 @@ public class ComputerVision {
     Image frame;
 
     public ComputerVision() {
-        cam = new USBCamera("cam1");
-        cam2 = new USBCamera("cam2");
-        currcam = cam;
-
-        if (cam != null || cam2 != null) {
-
-            cam.setSize(640, 360);
-            cam.setFPS(30);
-            cam.updateSettings();
-            cam.openCamera();
-
-            cam2.setSize(320, 240);
-            cam2.setFPS(30);
-            cam2.updateSettings();
-            cam2.openCamera();
-
+        try {
+            cam = new USBCamera("cam1");
+            cam2 = new USBCamera("cam2");
+            currcam = cam;
+    
+            if (cam != null || cam2 != null) {
+    
+                cam.setSize(640, 360);
+                cam.setFPS(30);
+                cam.updateSettings();
+                cam.openCamera();
+    
+                cam2.setSize(320, 240);
+                cam2.setFPS(30);
+                cam2.updateSettings();
+                cam2.openCamera();
+    
+            }
+    
+            frame = NIVision.imaqCreateImage(NIVision.ImageType.IMAGE_RGB, 0);
+    
+            // the camera name (ex "cam0") can be found through the roborio web
+            // interface
+    
+            // session = NIVision.IMAQdxOpenCamera("cam1",
+            // NIVision.IMAQdxCameraControlMode.CameraControlModeController);
+            // NIVision.IMAQdxConfigureGrab(session);
+            // NIVision.IMAQdxStartAcquisition(session);
+    
+            currcam.startCapture();
+        } catch(Exception e) {
+            
+            DriverStation.reportError("Either both or one of the cameras are not attached.", false);
+            try {
+                throw new Exception("Could not connect to camera ports on Robot");
+            } catch (Exception e1) {
+                e1.printStackTrace();
+            }
         }
-
-        frame = NIVision.imaqCreateImage(NIVision.ImageType.IMAGE_RGB, 0);
-
-        // the camera name (ex "cam0") can be found through the roborio web
-        // interface
-
-        // session = NIVision.IMAQdxOpenCamera("cam1",
-        // NIVision.IMAQdxCameraControlMode.CameraControlModeController);
-        // NIVision.IMAQdxConfigureGrab(session);
-        // NIVision.IMAQdxStartAcquisition(session);
-
-        currcam.startCapture();
 
     }
 

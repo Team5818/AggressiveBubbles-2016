@@ -66,16 +66,16 @@ public class Shooter implements Module {
     @Override
     public void teleopPeriodicModule() {
 
-        double vt = SmartDashboard.getNumber("DB/Slider 1");
-        double vb = SmartDashboard.getNumber("DB/Slider 1");
+        double flyU = SmartDashboard.getNumber("DB/Slider 0");
+        double flyL = SmartDashboard.getNumber("DB/Slider 1");
         // TODO now actually make it set the velocity using a pid loop.
 
         if (SmartDashboard.getBoolean("DB/Button 1")) {
 
             if (!hasStartedPID) {
 
-                wheelU.setSetVelocity(vt);
-                wheelU.setSetVelocity(vb);
+                wheelU.setSetVelocity(flyU);
+                wheelU.setSetVelocity(flyL);
 
             }
 
@@ -83,17 +83,14 @@ public class Shooter implements Module {
             hasStartedPID = false;
         }
 
-        // double flyLP = SmartDashboard.getNumber("DB/Slider 0");
-        // double flyUP = SmartDashboard.getNumber("DB/Slider 1");
-
-        // wheelU.setPower(flyUP);
-        // wheelL.setPower(flyLP);
-
+        //wheelU.setPower(flyU);
+        //wheelL.setPower(flyL);
+        
         // Get rid of conflict in robotcommon to use commented code.
-        // SmartDashboard.putString("DB/String 0", "LowerRPS = " +
-        // formatter.format(wheelL.getRPS()));
-        // SmartDashboard.putString("DB/String 5", "UpperRPS = " +
-        // formatter.format(wheelU.getRPS()));
+        //SmartDashboard.putString("DB/String 0", "LowerRPS = " +
+        //formatter.format(wheelL.getRPS()));
+        //SmartDashboard.putString("DB/String 5", "UpperRPS = " +
+        //formatter.format(wheelU.getRPS()));
 
         wheelU.teleopPeriodicModule();
         wheelL.teleopPeriodicModule();

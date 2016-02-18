@@ -1,5 +1,7 @@
 package team5818.robot.modules;
 
+import edu.wpi.first.wpilibj.DriverStation;
+
 public class VisionThread implements Runnable, Module {
 
     private boolean isRunning = false;
@@ -8,11 +10,20 @@ public class VisionThread implements Runnable, Module {
     private Thread captureThread;
 
     public VisionThread() {
-        See = new ComputerVision();
-        cvRunning = true;
-        isRunning = true;
-        captureThread = new Thread(this);
-        captureThread.setName("Camera Capture Thread");
+        try
+        {
+            See = new ComputerVision();
+            cvRunning = true;
+            isRunning = true;
+            captureThread = new Thread(this);
+            captureThread.setName("Camera Capture Thread");
+        }
+        catch(Exception e)
+        {
+            DriverStation.reportError("Could not create a Vision Thread", false);
+            cvRunning = false;
+            isRunning = true;
+        }
     }
 
     @Override
@@ -38,8 +49,8 @@ public class VisionThread implements Runnable, Module {
 
     @Override
     public void initModule() {
-        // TODO Auto-generated method stub
-        captureThread.start();
+        if(captureThread != null)
+            captureThread.start();
 
     }
 
