@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.usfirst.frc.team5818.robot.Robot;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
 import edu.wpi.first.wpilibj.command.Scheduler;
@@ -49,7 +50,7 @@ public class RobotCommon extends IterativeRobot {
                     ArcadeDriveCalculator.INSTANCE);
     private final RobotDriver driver = addModule(new RobotDriver());
     private final RobotCoDriver coDriver = addModule(new RobotCoDriver());
-    private final Shooter shooter = addModule(new Shooter());
+    public final Shooter shooter = addModule(new Shooter());
     public final VisionThread vision = addModule(new VisionThread());
     public final Arm arm = addModule(new Arm());
     final String defaultAuto = "Default";
@@ -92,6 +93,7 @@ public class RobotCommon extends IterativeRobot {
 
     @Override
     public void teleopInit() {
+        
     }
 
     /**
@@ -99,14 +101,6 @@ public class RobotCommon extends IterativeRobot {
      */
     public void autonomousPeriodic() {
         Scheduler.getInstance().run();
-        SmartDashboard.putString("DB/String 0",
-                String.valueOf(driveTrain.getLeftMotors().getEncPosAbs()));
-        SmartDashboard.putString("DB/String 1",
-                String.valueOf(driveTrain.getLeftMotors().getEncPosRaw()));
-        SmartDashboard.putString("DB/String 2",
-                String.valueOf(driveTrain.getRightMotors().getEncPosAbs()));
-        SmartDashboard.putString("DB/String 3",
-                String.valueOf(driveTrain.getRightMotors().getEncPosRaw()));
         switch (autoSelected) {
             case customAuto:
                 // Put custom auto code here
