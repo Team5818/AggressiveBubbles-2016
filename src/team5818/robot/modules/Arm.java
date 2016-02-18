@@ -10,7 +10,8 @@ public class Arm implements Module {
     private static final double MULTIPLIER = -1.0;
     private static final AnalogInput ARM_POTENTIOMETER =
             new AnalogInput(RobotConstants.ARM_POTENTIOMETER_CHANNEL);
-    private static final CANTalon ARM_MOTOR = new CANTalon(5);
+    private static final CANTalon ARM_MOTOR =
+            new CANTalon(RobotConstants.TALON_ARM_MOTOR);
     private static final CANTalon COLLECTOR_MOTOR =
             new CANTalon(RobotConstants.TALON_COLLECTOR_MOTOR);
     private PIDController armPID =

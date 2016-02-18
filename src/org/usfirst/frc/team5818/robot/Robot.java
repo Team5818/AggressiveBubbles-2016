@@ -8,6 +8,10 @@ import team5818.robot.RobotCommon;
  */
 public class Robot extends RobotBase {
 
+    static {
+        System.setProperty("ROBOT", "5818");
+    }
+
     private final RobotCommon robot = new RobotCommon();
 
     @Override
