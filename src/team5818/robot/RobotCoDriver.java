@@ -45,9 +45,9 @@ public class RobotCoDriver implements Module {
     public static final int GO_TO_ANGLE_BUTTON = 9;
     
     public static final int BUT_STARTPID = 12;
-    public static final int BUT_STOPPID = 12;
+    public static final int BUT_STOPPID = 11;
     
-    public static final int BUT_PRINT_RPS = 11;
+    public static final int BUT_PRINT_RPS = 10;
     
     private boolean hasStartedPID = false;
     private boolean hasStopedPID = false;
@@ -135,14 +135,7 @@ public class RobotCoDriver implements Module {
          */
         if(SECOND_JOYSTICK.getRawButton(BUT_STARTPID)) {
             if(!hasStartedPID) {
-                double kp = SmartDashboard.getNumber("DB/Slider 1");
-                double ki = SmartDashboard.getNumber("DB/Slider 2");
-                double kd = SmartDashboard.getNumber("DB/Slider 3");
-                RobotCommon.runningRobot.shooter.setPID(kp, ki, kd);
-                NumberFormat formatter = new DecimalFormat("#0.00");
-
-                double flyVal = SmartDashboard.getNumber("DB/Slider 0");
-                RobotCommon.runningRobot.shooter.setFlywheelPower(flyVal);
+                RobotCommon.runningRobot.shooter.setFlywheelVelocity(100);
                 hasStartedPID = true;
             }
         } else {
@@ -150,42 +143,57 @@ public class RobotCoDriver implements Module {
             hasStartedPID = false;
         }
         
+        
         if(SECOND_JOYSTICK.getRawButton(BUT_STOPPID)) {
             if(!hasStopedPID) {
-                double flyVal = SmartDashboard.getNumber("DB/Slider 0");
-                RobotCommon.runningRobot.shooter.setFlywheelPower(flyVal);
+                RobotCommon.runningRobot.shooter.setFlywheelPower(0);
+                
                 hasStopedPID = true;
             }
         } else {
             
             hasStopedPID = false;
         }
+        SmartDashboard.putNumber("Lower Flywheel RPS", RobotCommon.runningRobot.shooter.getLowerFlywheel().getRPS());
         
+        /*
         if(SECOND_JOYSTICK.getRawButton(BUT_PRINT_RPS)) {
             if(!hasPrintedRPS) {
-                double kp = SmartDashboard.getNumber("DB/Slider 1");
-                double ki = SmartDashboard.getNumber("DB/Slider 2");
-                double kd = SmartDashboard.getNumber("DB/Slider 3");
-                RobotCommon.runningRobot.shooter.setPID(kp, ki, kd);
-                NumberFormat formatter = new DecimalFormat("#0.00");
-
-                SmartDashboard.putString("DB/String 0", 
-                        "RPS = " + formatter.format(RobotCommon.runningRobot.shooter.getLowerFlywheel().getRPS()));
-                double flyVal = SmartDashboard.getNumber("DB/Slider 0");
-                RobotCommon.runningRobot.shooter.setFlywheelPower(flyVal);
                 hasStartedPID = true;
             }
         } else {
             
             hasPrintedRPS = false;
         }
-        
+        */
 
     }
 
     @Override
     public void endModule() {
         arm = null;
+    }
+
+    @Override
+    public void initTest() {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    public void initTeleop() {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    public void initAutonomous() {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    public void testPeriodic() {
     }
 
 }

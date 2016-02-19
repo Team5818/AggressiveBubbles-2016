@@ -5,6 +5,9 @@ import java.text.NumberFormat;
 
 import edu.wpi.first.wpilibj.CANTalon;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.PIDSource;
+import edu.wpi.first.wpilibj.livewindow.LiveWindow;
+import edu.wpi.first.wpilibj.livewindow.LiveWindowSendable;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import team5818.robot.RobotConstants;
 
@@ -51,12 +54,12 @@ public class Shooter implements Module {
 
         wheelU = new FlyWheel(talonU, false);
         wheelL = new FlyWheel(talonL, true);
-
+        
     }
 
     @Override
     public void initModule() {
-
+        
     }
 
     @Override
@@ -71,7 +74,7 @@ public class Shooter implements Module {
     
     public void setPID(double kp, double ki, double kd)
     {
-        wheelU.setPID(kp, ki, kd);
+        //wheelU.setPID(kp, ki, kd);
         wheelL.setPID(kp, ki, kd);   
     }
     
@@ -92,7 +95,7 @@ public class Shooter implements Module {
      */
     public void setFlywheelVelocity(double vel)
     {
-        wheelU.setVelocity(vel);
+        //wheelU.setVelocity(vel);
         wheelL.setVelocity(vel);
     }
     
@@ -107,9 +110,39 @@ public class Shooter implements Module {
         wheelL.setPower(pow);
     }
     
+    public FlyWheel getUpperFlywheel()
+    {
+        return wheelU;
+    }
+    
     public FlyWheel getLowerFlywheel()
     {
         return wheelL;
+    }
+
+    @Override
+    public void initTest() {
+        LiveWindow.addActuator("Lower Flywheel", "PID", wheelL.getPIDController());
+        LiveWindow.addActuator("Lower Flywheel", "Talon", talonL);
+        
+    }
+
+    @Override
+    public void initTeleop() {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    public void initAutonomous() {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    public void testPeriodic() {
+        // TODO Auto-generated method stub
+        
     }
 
 }

@@ -176,4 +176,28 @@ public class Arm implements Module {
     public void endModule() {
     }
 
+    @Override
+    public void initTest() {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    public void initTeleop() {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    public void initAutonomous() {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    public void testPeriodic() {
+        // TODO Auto-generated method stub
+        
+    }
+
 }

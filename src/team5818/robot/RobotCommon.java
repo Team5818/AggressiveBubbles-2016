@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
 import edu.wpi.first.wpilibj.command.Scheduler;
+import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import team5818.robot.modules.Arm;
@@ -25,7 +26,9 @@ import team5818.robot.modules.drivetrain.DriveTrainController;
  * Run from {@link Robot}.
  */
 public class RobotCommon extends IterativeRobot {
-
+    static {
+        System.setProperty("ROBOT", "1717");
+    }
     /**
      * The instance of this {@link RobotCommon} that is currently running.
      */
@@ -70,6 +73,7 @@ public class RobotCommon extends IterativeRobot {
         chooser.addObject("My Auto", customAuto);
         SmartDashboard.putData("Auto choices", chooser);
         panel = new PowerDistributionPanel();
+        LiveWindow.setEnabled(true);
     }
 
     /**
@@ -84,6 +88,7 @@ public class RobotCommon extends IterativeRobot {
      * SendableChooser make sure to add them to the chooser code above as well.
      */
     public void autonomousInit() {
+        modules.forEach(Module::initAutonomous);
         autoSelected = (String) chooser.getSelected();
         // autoSelected = SmartDashboard.getString("Auto Selector",
         // defaultAuto);
@@ -93,7 +98,7 @@ public class RobotCommon extends IterativeRobot {
 
     @Override
     public void teleopInit() {
-        
+        modules.forEach(Module::initTeleop);
     }
 
     /**
@@ -126,7 +131,7 @@ public class RobotCommon extends IterativeRobot {
      * This function is called periodically during test mode
      */
     public void testPeriodic() {
-
+        modules.forEach(Module::testPeriodic);
     }
 
 }

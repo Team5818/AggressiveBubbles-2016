@@ -3,7 +3,11 @@ package team5818.robot.modules;
 import edu.wpi.first.wpilibj.CANTalon;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PIDController;
+import edu.wpi.first.wpilibj.PIDOutput;
+import edu.wpi.first.wpilibj.PIDSource;
+import edu.wpi.first.wpilibj.PIDSourceType;
 import edu.wpi.first.wpilibj.command.PIDSubsystem;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * This is the class that handles all the control on the motors directly through
@@ -15,7 +19,7 @@ import edu.wpi.first.wpilibj.command.PIDSubsystem;
  * should go through this class.
  *
  */
-public class FlyWheel extends PIDSubsystem {
+public class FlyWheel implements PIDSource, PIDOutput{
 
     /**
      * The CANTalonWithPIDModes motor controller for the upper wheel.
@@ -40,8 +44,11 @@ public class FlyWheel extends PIDSubsystem {
      * constant izone = Integration Zone for when to cut off the integral klrr =
      * Closed Loop Ramp Rate constant.
      */
-    public static final double KP = 0, KI = 0, KD = 0, KIZONE = 0, KCLRR = 0;
+    public static final double KP = 0.0001, KI = 0.0001, KD = 0.0001, KIZONE = 0.0001, KCLRR = 0.0001;
 
+    private PIDController pid;
+    
+    
     /**
      * 
      * @param talon
@@ -51,15 +58,15 @@ public class FlyWheel extends PIDSubsystem {
      *            motor.
      */
     public FlyWheel(CANTalon talon, boolean reversed) {
-        super(KP, KI, KD, 1.0 / MAX_VELOCITY);
-        setAbsoluteTolerance(0.005);
+        pid = new PIDController(KP, KI, KD, 1.0 / MAX_VELOCITY, this, this);
+        pid.setAbsoluteTolerance(0.05 * MAX_VELOCITY);
         this.talon = talon;
         this.inverted = reversed;
     }
     
     public void setPID(double kp, double ki, double kd)
     {
-        this.getPIDController().setPID(kp, ki, kd);
+        pid.setPID(kp, ki, kd);
     }
     
     /**
@@ -69,9 +76,8 @@ public class FlyWheel extends PIDSubsystem {
      *            the desired velocity
      */
     public void setVelocity(double vel) {
-        setSetpoint(vel);
-        DriverStation.reportError(vel + "\n", false);
-        enable();
+        pid.setSetpoint(vel);
+        pid.enable();
     }
 
     /**
@@ -83,13 +89,8 @@ public class FlyWheel extends PIDSubsystem {
      */
     public void setPower(double pow) {
 
-        disable();
-        if (pow > 1)
-            pow = 1;
-        if (pow < -1)
-            pow = -1;
+        pid.disable();
         set(pow);
-        DriverStation.reportError(pow + "\n", false);
     }
 
     /**
@@ -111,28 +112,33 @@ public class FlyWheel extends PIDSubsystem {
      */
     public double getRPS() {
         
-        double ticks = talon.getEncVelocity();
+        double rps = talon.getEncVelocity() * 10.0 / 6.0 * gearBoxRatio;
         if(inverted)
-            ticks *= -1;
-        
-        return ticks * 10.0 / 6.0 * gearBoxRatio;
+            rps *= -1;
+        return rps;
+    }
+    
+    public PIDController getPIDController()
+    {
+        return pid;
     }
 
     @Override
-    protected double returnPIDInput() {
+    public void setPIDSourceType(PIDSourceType pidSource) {}
+
+    @Override
+    public PIDSourceType getPIDSourceType() {
+        return PIDSourceType.kRate;
+    }
+
+    @Override
+    public double pidGet() {
         return getRPS();
     }
 
     @Override
-    protected void usePIDOutput(double output) {
+    public void pidWrite(double output) {
         set(output);
-    }
-
-    /**
-     * Not implemented
-     */
-    @Override
-    protected void initDefaultCommand() {
         
     }
 
