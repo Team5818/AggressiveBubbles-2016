@@ -133,7 +133,7 @@ public class RobotCoDriver implements Module {
          * Button 10 will stop the PID by setting the velocity to 0.
          * Button 11 will print the RPS of the lower motor.
          */
-        if(FIRST_JOYSTICK.getRawButton(BUT_STARTPID)) {
+        if(SECOND_JOYSTICK.getRawButton(BUT_STARTPID)) {
             if(!hasStartedPID) {
                 double kp = SmartDashboard.getNumber("DB/Slider 1");
                 double ki = SmartDashboard.getNumber("DB/Slider 2");
@@ -150,7 +150,7 @@ public class RobotCoDriver implements Module {
             hasStartedPID = false;
         }
         
-        if(FIRST_JOYSTICK.getRawButton(BUT_STOPPID)) {
+        if(SECOND_JOYSTICK.getRawButton(BUT_STOPPID)) {
             if(!hasStopedPID) {
                 double flyVal = SmartDashboard.getNumber("DB/Slider 0");
                 RobotCommon.runningRobot.shooter.setFlywheelPower(flyVal);
@@ -161,7 +161,7 @@ public class RobotCoDriver implements Module {
             hasStopedPID = false;
         }
         
-        if(FIRST_JOYSTICK.getRawButton(BUT_PRINT_RPS)) {
+        if(SECOND_JOYSTICK.getRawButton(BUT_PRINT_RPS)) {
             if(!hasPrintedRPS) {
                 double kp = SmartDashboard.getNumber("DB/Slider 1");
                 double ki = SmartDashboard.getNumber("DB/Slider 2");
