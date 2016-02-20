@@ -3,21 +3,20 @@ package team5818.robot.modules;
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.CANTalon;
 import edu.wpi.first.wpilibj.PIDController;
+import edu.wpi.first.wpilibj.PIDSource;
+import edu.wpi.first.wpilibj.PIDSourceType;
 import team5818.robot.RobotConstants;
-import team5818.robot.util.ScaledAnalogIn;
 
-public class Arm implements Module {
+public class Arm implements Module, PIDSource{
 
-    private static final ScaledAnalogIn ARM_POTENTIOMETER =
-            new ScaledAnalogIn(RobotConstants.ARM_POTENTIOMETER_CHANNEL,
-                    RobotConstants.ARM_POTENTIOMETER_SCALE, 
-                    RobotConstants.ARM_POTENTIOMETER_INTERCEPT);
+    private static final AnalogInput ARM_POTENTIOMETER =
+            new AnalogInput(RobotConstants.ARM_POTENTIOMETER_CHANNEL);
     private static final CANTalon ARM_MOTOR = new CANTalon(RobotConstants.TALON_ARM_MOTOR);
 
     private static final CANTalon COLLECTOR_MOTOR =
             new CANTalon(RobotConstants.TALON_COLLECTOR_MOTOR);
     private PIDController armPID =
-            new PIDController(-.3, 0, 0, ARM_POTENTIOMETER, ARM_MOTOR);
+            new PIDController(.008, .0005, 0, this, ARM_MOTOR);
 
     private double power;
     private double maxPower = .5; // max and min power are for PID and aim
@@ -70,9 +69,9 @@ public class Arm implements Module {
      * @return angle measured by encoder
      */
     public double getPotentiometerVal() {
-        return ARM_POTENTIOMETER.getValue()
-                * RobotConstants.ARM_POTENTIOMETER_SCALE
-                + RobotConstants.ARM_POTENTIOMETER_INTERCEPT;
+       double a1 =  ARM_POTENTIOMETER.getValue() * RobotConstants.ARM_POTENTIOMETER_SCALE;
+       double aFinal = a1 + RobotConstants.ARM_POTENTIOMETER_INTERCEPT;
+       return aFinal;
     }
 
     /**
@@ -149,10 +148,9 @@ public class Arm implements Module {
      *            PIDs to the given objective
      */
     public void goToAngle(double objectiveAngle) {
-        double objective =
-                objectiveAngle / RobotConstants.ARM_POTENTIOMETER_SCALE;
+
         armPID.reset();
-        armPID.setSetpoint(objective);
+        armPID.setSetpoint(objectiveAngle);
         armPID.enable();
     }
 
@@ -198,6 +196,21 @@ public class Arm implements Module {
     public void testPeriodic() {
         // TODO Auto-generated method stub
         
+    }
+
+    @Override
+    public void setPIDSourceType(PIDSourceType pidSource) {
+                
+    }
+
+    @Override
+    public PIDSourceType getPIDSourceType() {
+        return PIDSourceType.kDisplacement;
+    }
+
+    @Override
+    public double pidGet() {
+        return getPotentiometerVal();
     }
 
 }
