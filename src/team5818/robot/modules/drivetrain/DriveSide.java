@@ -17,17 +17,6 @@ import team5818.robot.util.PIDSourceBase;
  */
 public class DriveSide implements EncoderManager, PIDOutput, MovingControl {
 
-    /**
-     * The gearbox ratio on in units of output/input shafts.
-     */
-    private static final double GEAR_RATIO = 168.0 / 3000.0;
-    /**
-     * the radius of the wheel in units of inches.
-     */
-    private static final double WHEEL_RADIUS = 4.5;
-    
-    private static final double WHEEL_DIAMETER = 2 * Math.PI * WHEEL_RADIUS;
-    
     private static final double DEFAULT_MAX_POWER = 1.0;
 
     private final CANTalon mainTalon;

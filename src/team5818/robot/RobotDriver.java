@@ -57,7 +57,6 @@ public class RobotDriver implements Module {
         DriveSide leftDriveSide = RobotCommon.runningRobot.driveTrain.getLeftMotors();
         DriveSide rightDriveSide = RobotCommon.runningRobot.driveTrain.getLeftMotors();
         
-        
         LiveWindow.addActuator("DriveSide", "Left", leftDriveSide.getPIDController());
         LiveWindow.addActuator("DriveSide", "Right", leftDriveSide.getPIDController());
         
