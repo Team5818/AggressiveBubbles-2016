@@ -1,5 +1,8 @@
 package team5818.robot;
 
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
+
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -40,6 +43,16 @@ public class RobotCoDriver implements Module {
      * goes to 45 degrees
      */
     public static final int GO_TO_ANGLE_BUTTON = 9;
+    
+    public static final int BUT_STARTPID = 12;
+    public static final int BUT_STOPPID = 12;
+    
+    public static final int BUT_PRINT_RPS = 11;
+    
+    private boolean hasStartedPID = false;
+    private boolean hasStopedPID = false;
+    private boolean hasPrintedRPS = false;
+    
     /**
      * returns error from arm PID
      */
@@ -58,14 +71,14 @@ public class RobotCoDriver implements Module {
     @Override
     public void initModule() {
         arm = RobotCommon.runningRobot.arm;
+        
+        
     }
 
     @Override
     public void teleopPeriodicModule() {
         // Arm teleop
-
-        // shooter.teleopPeriodicModule();
-
+        
         if (FIRST_JOYSTICK.getRawButton(ENTER_PID_BUTTON)) {
             setAngleMode = true;
             if (setAngleMode) {
@@ -112,6 +125,61 @@ public class RobotCoDriver implements Module {
             SmartDashboard.putString("DB/String 7",
                     "" + arm.getPotentiometerVal());
         }
+        
+        /* Flywheel Testing Stuff */
+        /*
+         * Button 12 will set the PID loop with the constants on 
+         * slider 1, 2, and 3 as p, i, and d.
+         * Button 10 will stop the PID by setting the velocity to 0.
+         * Button 11 will print the RPS of the lower motor.
+         */
+        if(SECOND_JOYSTICK.getRawButton(BUT_STARTPID)) {
+            if(!hasStartedPID) {
+                double kp = SmartDashboard.getNumber("DB/Slider 1");
+                double ki = SmartDashboard.getNumber("DB/Slider 2");
+                double kd = SmartDashboard.getNumber("DB/Slider 3");
+                RobotCommon.runningRobot.shooter.setPID(kp, ki, kd);
+                NumberFormat formatter = new DecimalFormat("#0.00");
+
+                double flyVal = SmartDashboard.getNumber("DB/Slider 0");
+                RobotCommon.runningRobot.shooter.setFlywheelPower(flyVal);
+                hasStartedPID = true;
+            }
+        } else {
+            
+            hasStartedPID = false;
+        }
+        
+        if(SECOND_JOYSTICK.getRawButton(BUT_STOPPID)) {
+            if(!hasStopedPID) {
+                double flyVal = SmartDashboard.getNumber("DB/Slider 0");
+                RobotCommon.runningRobot.shooter.setFlywheelPower(flyVal);
+                hasStopedPID = true;
+            }
+        } else {
+            
+            hasStopedPID = false;
+        }
+        
+        if(SECOND_JOYSTICK.getRawButton(BUT_PRINT_RPS)) {
+            if(!hasPrintedRPS) {
+                double kp = SmartDashboard.getNumber("DB/Slider 1");
+                double ki = SmartDashboard.getNumber("DB/Slider 2");
+                double kd = SmartDashboard.getNumber("DB/Slider 3");
+                RobotCommon.runningRobot.shooter.setPID(kp, ki, kd);
+                NumberFormat formatter = new DecimalFormat("#0.00");
+
+                SmartDashboard.putString("DB/String 0", 
+                        "RPS = " + formatter.format(RobotCommon.runningRobot.shooter.getLowerFlywheel().getRPS()));
+                double flyVal = SmartDashboard.getNumber("DB/Slider 0");
+                RobotCommon.runningRobot.shooter.setFlywheelPower(flyVal);
+                hasStartedPID = true;
+            }
+        } else {
+            
+            hasPrintedRPS = false;
+        }
+        
 
     }
 

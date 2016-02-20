@@ -11,18 +11,29 @@ import team5818.robot.util.Vector2d;
  */
 public class DriveTrain implements Module {
 
+    private static final boolean SIX_TALONS = System.getProperty("ROBOT").equals("5818");
     private static final CANTalon LEFT_FRONT =
             new CANTalon(RobotConstants.TALON_LEFT_FRONT);
-    private static final CANTalon LEFT_MIDDLE =
-            new CANTalon(RobotConstants.TALON_LEFT_MIDDLE);
+    private static final CANTalon LEFT_MIDDLE;
     private static final CANTalon LEFT_BACK =
             new CANTalon(RobotConstants.TALON_LEFT_BACK);
     private static final CANTalon RIGHT_FRONT =
             new CANTalon(RobotConstants.TALON_RIGHT_FRONT);
-    private static final CANTalon RIGHT_MIDDLE =
-            new CANTalon(RobotConstants.TALON_RIGHT_MIDDLE);
+    private static final CANTalon RIGHT_MIDDLE;
     private static final CANTalon RIGHT_BACK =
             new CANTalon(RobotConstants.TALON_RIGHT_BACK);
+    static {
+        CANTalon lm = null;
+        if (SIX_TALONS) {
+            lm = new CANTalon(RobotConstants.TALON_LEFT_MIDDLE);
+        }
+        CANTalon rm = null;
+        if (SIX_TALONS) {
+            rm = new CANTalon(RobotConstants.TALON_RIGHT_MIDDLE);
+        }
+        LEFT_MIDDLE = lm;
+        RIGHT_MIDDLE = rm;
+    }
 
     private final DriveSide left =
             new DriveSide(LEFT_FRONT, LEFT_MIDDLE, LEFT_BACK, false);

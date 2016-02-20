@@ -1,7 +1,9 @@
 package team5818.robot.modules;
 
+import edu.wpi.first.wpilibj.CANTalon;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PIDController;
-import team5818.robot.util.CANTalonWithPIDModes;
+import edu.wpi.first.wpilibj.command.PIDSubsystem;
 
 /**
  * This is the class that handles all the control on the motors directly through
@@ -13,46 +15,32 @@ import team5818.robot.util.CANTalonWithPIDModes;
  * should go through this class.
  *
  */
-public class FlyWheel implements Module {
+public class FlyWheel extends PIDSubsystem {
 
     /**
      * The CANTalonWithPIDModes motor controller for the upper wheel.
      */
-    private final CANTalonWithPIDModes talon;
-
-    private PIDController pid;
-
-    /**
-     * Weather the flywheel is running or not.
-     */
-    private boolean running = true;
-
-    /**
-     * The current set speed for the upper flywheel.
-     */
-    private double power = 0;
-
+    private final CANTalon talon;
+    
     /**
      * The gearbox ratio between the motor shaft to the wheel.
      */
-    private double gearBoxRatio = 24 / 60;
-
+    //TODO fix this number
+    private double gearBoxRatio = 24.0 / 60;
+    
     /**
-     * Weather to use PID on the CANTalonWithPIDModes or use setPower.
+     * Weather to invert the output and sensor output.
      */
-    private boolean usingPID = false;
-
-    /**
-     * The velocity set to have the PID loop use as it's setPoint.
-     */
-    private double setVelocity = 0;
+    private boolean inverted = false;
+    
+    public static final double MAX_VELOCITY = 240;
 
     /**
      * The constants for the PID loop. kp = P constant ki = I constant kd = D
      * constant izone = Integration Zone for when to cut off the integral klrr =
      * Closed Loop Ramp Rate constant.
      */
-    private double kp, ki, kd, kizone, kclrr;
+    public static final double KP = 0, KI = 0, KD = 0, KIZONE = 0, KCLRR = 0;
 
     /**
      * 
@@ -62,126 +50,28 @@ public class FlyWheel implements Module {
      *            Specifies weather to reverse the sensor and output of the
      *            motor.
      */
-    public FlyWheel(CANTalonWithPIDModes talon, boolean usingPID,
-            boolean reversed) {
-
+    public FlyWheel(CANTalon talon, boolean reversed) {
+        super(KP, KI, KD, 1.0 / MAX_VELOCITY);
+        setAbsoluteTolerance(0.005);
         this.talon = talon;
-
-        // TODO tune the following values.
-        kp = 1;
-        ki = 1;
-        kd = 1;
-        kizone = 1;
-        kclrr = 1;
-
-        pid = new PIDController(kp, ki, kd, talon, talon);
-
-        if (usingPID)
-            enablePID();
-        else
-            disablePID();
-
-        // TODO doesn't actually work, not sure why. Make it work.
-        talon.reverseOutput(reversed);
-        // TODO doesn't actually work, not sure why. Make it work.
-        talon.reverseSensor(reversed);
+        this.inverted = reversed;
     }
-
-    /**
-     * This is the initialization method for the Shooter. This initializes the
-     * flywheel motor controllers to the correct channels.
-     */
-    @Override
-    public void initModule() {
-
+    
+    public void setPID(double kp, double ki, double kd)
+    {
+        this.getPIDController().setPID(kp, ki, kd);
     }
-
-    @Override
-    public void teleopPeriodicModule() {
-
-        if (running) {
-
-            if (!usingPID)
-                talon.set(power);
-
-        } else {
-
-            talon.set(0);
-        }
-    }
-
-    @Override
-    public void endModule() {
-        stop();
-        disablePID();
-        talon.disableControl();
-    }
-
-    /**
-     * Sets the running state of the flywheel to true. This will not set change
-     * the speed, it will only set an indicator for the program loop to take
-     * care of.
-     */
-    public void start() {
-
-        running = true;
-        enablePID();
-    }
-
-    /**
-     * Sets the running state of the flywheel to false. This will not set change
-     * the speed, it will only set an indicator for the program loop to take
-     * care of.
-     */
-    public void stop() {
-
-        running = false;
-        disablePID();
-        setSetVelocity(0);
-    }
-
-    /**
-     * enables all dependences for using a PID loop.
-     */
-    public void enablePID() {
-        if (!usingPID) {
-            usingPID = true;
-            pid.enable();
-
-        }
-    }
-
-    /**
-     * disables all dependences when in PID mode so that you can safely use
-     * directly set the power.
-     */
-    public void disablePID() {
-        if (usingPID) {
-
-            usingPID = false;
-            pid.disable();
-        }
-    }
-
+    
     /**
      * Only works for when PID is enabled through enablePID method.
      * 
      * @param setVelocity
      *            the desired velocity
-     * @return returns weather it actually set the velocity, or it didn't
-     *         because PID is not enabled.
      */
-    public void setSetVelocity(double setVelocity) {
-        enablePID();
-        pid.setSetpoint(setVelocity);
-
-    }
-
-    /**
-     * @return The current desired velocity from the PID loop.
-     */
-    public double getSetVelocity() {
-        return setVelocity;
+    public void setVelocity(double vel) {
+        setSetpoint(vel);
+        DriverStation.reportError(vel + "\n", false);
+        enable();
     }
 
     /**
@@ -191,35 +81,59 @@ public class FlyWheel implements Module {
      * @param power
      *            the power desired to be set, from 1 to -1
      */
-    public void setPower(double power) {
+    public void setPower(double pow) {
 
-        disablePID();
-
-        if (power > 1)
-            power = 1;
-        if (power < -1)
-            power = -1;
-        this.power = power;
+        disable();
+        if (pow > 1)
+            pow = 1;
+        if (pow < -1)
+            pow = -1;
+        set(pow);
+        DriverStation.reportError(pow + "\n", false);
     }
 
     /**
-     * Returns the power to be set to the upper flywheel.
-     * 
-     * @return The power of the upper fly wheel.
+     * Sets the power to the actual motor. This will invert the power
+     * if it needs to be inverted.
+     * @param output the desired value to be set to the motor.
      */
-    public double getPower() {
-
-        return power;
+    private void set(double output)
+    {
+        if(inverted)
+            output *= -1;
+        talon.set(output);
     }
-
+    
     /**
      * Returns the Revolotions Per Second of the actual wheel.
      * 
      * @return Revolotions Per Second
      */
     public double getRPS() {
+        
+        double ticks = talon.getEncVelocity();
+        if(inverted)
+            ticks *= -1;
+        
+        return ticks * 10.0 / 6.0 * gearBoxRatio;
+    }
 
-        return talon.getEncVelocity() * 10 / 6 * gearBoxRatio;
+    @Override
+    protected double returnPIDInput() {
+        return getRPS();
+    }
+
+    @Override
+    protected void usePIDOutput(double output) {
+        set(output);
+    }
+
+    /**
+     * Not implemented
+     */
+    @Override
+    protected void initDefaultCommand() {
+        
     }
 
 }

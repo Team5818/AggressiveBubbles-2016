@@ -12,7 +12,8 @@ public class Arm implements Module {
             new ScaledAnalogIn(RobotConstants.ARM_POTENTIOMETER_CHANNEL,
                     RobotConstants.ARM_POTENTIOMETER_SCALE, 
                     RobotConstants.ARM_POTENTIOMETER_INTERCEPT);
-    private static final CANTalon ARM_MOTOR = new CANTalon(5);
+    private static final CANTalon ARM_MOTOR = new CANTalon(RobotConstants.TALON_ARM_MOTOR);
+
     private static final CANTalon COLLECTOR_MOTOR =
             new CANTalon(RobotConstants.TALON_COLLECTOR_MOTOR);
     private PIDController armPID =
