@@ -4,6 +4,7 @@ import edu.wpi.first.wpilibj.CANTalon;
 import edu.wpi.first.wpilibj.CANTalon.FeedbackDevice;
 import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.PIDOutput;
+import edu.wpi.first.wpilibj.PIDSource;
 import edu.wpi.first.wpilibj.PIDSourceType;
 import team5818.robot.RobotConstants;
 import team5818.robot.encoders.EncoderManager;
@@ -16,6 +17,17 @@ import team5818.robot.util.PIDSourceBase;
  */
 public class DriveSide implements EncoderManager, PIDOutput, MovingControl {
 
+    /**
+     * The gearbox ratio on in units of output/input shafts.
+     */
+    private static final double GEAR_RATIO = 168.0 / 3000.0;
+    /**
+     * the radius of the wheel in units of inches.
+     */
+    private static final double WHEEL_RADIUS = 4.5;
+    
+    private static final double WHEEL_DIAMETER = 2 * Math.PI * WHEEL_RADIUS;
+    
     private static final double DEFAULT_MAX_POWER = 1.0;
 
     private final CANTalon mainTalon;
@@ -24,7 +36,7 @@ public class DriveSide implements EncoderManager, PIDOutput, MovingControl {
     private final boolean inverted;
     private final PIDController pidLoop;
     private final PIDSourceBase pidSource;
-    private double maxPower = DEFAULT_MAX_POWER;
+    
 
     /**
      * Creates a new DriveSide that controls the talons given.
@@ -70,7 +82,10 @@ public class DriveSide implements EncoderManager, PIDOutput, MovingControl {
 
                     @Override
                     public double pidGet() {
-                        return mainTalon.getPosition();
+                        if(this.getPIDSourceType() == PIDSourceType.kRate)
+                            return getVelocity();
+                        return getEncPosAbs();
+                        
                     }
 
                 }, this);
@@ -132,27 +147,45 @@ public class DriveSide implements EncoderManager, PIDOutput, MovingControl {
     public double getEncPosRaw() {
         return mainTalon.getPosition();
     }
+    
+    /**
+     * The velocity of the wheel in units of Inches/Seconds.
+     * @return Velocity of wheels in Inches/Seconds.
+     */
+    public double getVelocity() {
+        double vel  = mainTalon.getEncVelocity() * 10.0 * RobotConstants.ROBOT_ENCODER_SCALE;
+        return vel;
+    }
+    
+    public PIDController getPIDController()
+    {
+        return pidLoop;
+    }
 
     @Override
     public void setPower(double power) {
-        this.maxPower = DEFAULT_MAX_POWER;
         pidLoop.disable();
         // Delegate to power.
         pidWrite(power);
     }
-
+    
+    /**
+     * Sets the speed of the motor. The ratio calculates using the gearbox
+     * of ratios and wheel size.
+     * @param vel The desired velocity in inches per second.
+     */
     @Override
     public void setVelocity(double vel) {
-        this.maxPower = DEFAULT_MAX_POWER;
         pidSource.setPIDSourceType(PIDSourceType.kRate);
+        pidLoop.setOutputRange(-DEFAULT_MAX_POWER, DEFAULT_MAX_POWER);
         pidLoop.setSetpoint(vel);
         pidLoop.enable();
     }
 
     @Override
     public void setDriveDistance(double dist, double maxPower) {
-        this.maxPower = maxPower;
         pidSource.setPIDSourceType(PIDSourceType.kDisplacement);
+        pidLoop.setOutputRange(-maxPower, maxPower);
         pidLoop.setSetpoint(getEncPosAbs() + dist);
         pidLoop.enable();
     }

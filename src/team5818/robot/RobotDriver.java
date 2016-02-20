@@ -2,10 +2,12 @@ package team5818.robot;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
+import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import team5818.robot.commands.DriveForwardSlowlyCommand;
 import team5818.robot.commands.ResetEncoderCommand;
 import team5818.robot.modules.Module;
 import team5818.robot.modules.drivetrain.ArcadeDriveCalculator;
+import team5818.robot.modules.drivetrain.DriveSide;
 import team5818.robot.modules.drivetrain.DriveTrain;
 import team5818.robot.modules.drivetrain.TankDriveCalculator;
 import team5818.robot.util.Vector2d;
@@ -52,6 +54,13 @@ public class RobotDriver implements Module {
         JoystickButton driveForwardSlowly =
                 new JoystickButton(FIRST_JOYSTICK, 3);
         driveForwardSlowly.whileHeld(new DriveForwardSlowlyCommand());
+        DriveSide leftDriveSide = RobotCommon.runningRobot.driveTrain.getLeftMotors();
+        DriveSide rightDriveSide = RobotCommon.runningRobot.driveTrain.getLeftMotors();
+        
+        
+        LiveWindow.addActuator("DriveSide", "Left", leftDriveSide.getPIDController());
+        LiveWindow.addActuator("DriveSide", "Right", leftDriveSide.getPIDController());
+        
     }
 
     @Override
@@ -120,7 +129,7 @@ public class RobotDriver implements Module {
 
     @Override
     public void initTest() {
-        // TODO Auto-generated method stub
+        
         
     }
 
