@@ -95,16 +95,8 @@ public class RobotCoDriver implements Module {
         // arm.armTeleopPeriodic(); don't use in setAngleMode
 
         if (setAngleMode) {
-            double target;
-            try {
-                target = Double
-                        .valueOf(SmartDashboard.getString("DB/String 8"));
-            } catch (Exception e) {
-                throw e;
-            }
-            if (FIRST_JOYSTICK.getRawButton(GO_TO_ANGLE_BUTTON)) {
-                arm.goToAngle(target);
-            }
+            double target = 45*(1-FIRST_JOYSTICK.getThrottle());
+            arm.goToAngle(target);
             if (FIRST_JOYSTICK.getRawButton(ERROR_BUTTON)) {
                 DriverStation.reportError("" + arm.getError() + "\n", false);
             }
