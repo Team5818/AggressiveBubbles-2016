@@ -92,7 +92,9 @@ public final class RobotConstants {
 
     public static final double PID_LOOP_D_TERM = 0;
 
-    // inches/tick
+    /**
+     * inches/tick
+     */
     public static final double ROBOT_ENCODER_SCALE = 0.02843601895734597;
 
     private RobotConstants() {
