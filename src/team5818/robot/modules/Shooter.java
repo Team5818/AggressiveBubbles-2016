@@ -59,7 +59,8 @@ public class Shooter implements Module {
 
     @Override
     public void initModule() {
-        
+        LiveWindow.addActuator("Lower Flywheel", "PID", wheelL.getPIDController());
+        LiveWindow.addActuator("Lower Flywheel", "Talon", talonL);
     }
 
     @Override
@@ -122,8 +123,6 @@ public class Shooter implements Module {
 
     @Override
     public void initTest() {
-        LiveWindow.addActuator("Lower Flywheel", "PID", wheelL.getPIDController());
-        LiveWindow.addActuator("Lower Flywheel", "Talon", talonL);
         
     }
 

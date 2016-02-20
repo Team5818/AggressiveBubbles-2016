@@ -86,9 +86,9 @@ public final class RobotConstants {
      */
     public static final int CODRIVER_SECOND_JOYSTICK_PORT = 3;
 
-    public static final double PID_LOOP_P_TERM = 0;
+    public static final double PID_LOOP_P_TERM = 0.001;
 
-    public static final double PID_LOOP_I_TERM = 0;
+    public static final double PID_LOOP_I_TERM = 0.0007;
 
     public static final double PID_LOOP_D_TERM = 0;
 

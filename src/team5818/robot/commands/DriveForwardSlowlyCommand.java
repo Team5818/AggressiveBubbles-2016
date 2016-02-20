@@ -1,11 +1,14 @@
 package team5818.robot.commands;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.tables.TableKeyNotDefinedException;
 import team5818.robot.RobotCommon;
-import team5818.robot.util.Vector2d;
 
 public class DriveForwardSlowlyCommand extends Command {
 
+    private boolean hasStarted;
     private boolean hasRun;
 
     @Override
@@ -14,18 +17,27 @@ public class DriveForwardSlowlyCommand extends Command {
 
     @Override
     protected void execute() {
-        RobotCommon.runningRobot.driveTrain.setPower(new Vector2d(0.25, 0.25));
+        hasStarted = true;
+        try {
+            RobotCommon.runningRobot.driveTrain.getRightMotors()
+                    .setDriveDistance(
+                            Double.valueOf(
+                                    SmartDashboard.getString("DB/String 0")),
+                            0.5);
+        } catch (NumberFormatException e) {
+        } catch (TableKeyNotDefinedException what) {
+            DriverStation.reportError("what " + what.getMessage(), false);
+        }
         hasRun = true;
     }
 
     @Override
     protected boolean isFinished() {
-        return hasRun;
+        return hasStarted && hasRun;
     }
 
     @Override
     protected void end() {
-        RobotCommon.runningRobot.driveTrain.setPower(new Vector2d(0, 0));
     }
 
     @Override
