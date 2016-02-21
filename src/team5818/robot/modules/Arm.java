@@ -7,11 +7,12 @@ import edu.wpi.first.wpilibj.PIDSource;
 import edu.wpi.first.wpilibj.PIDSourceType;
 import team5818.robot.RobotConstants;
 
-public class Arm implements Module, PIDSource{
+public class Arm implements Module, PIDSource {
 
     private static final AnalogInput ARM_POTENTIOMETER =
             new AnalogInput(RobotConstants.ARM_POTENTIOMETER_CHANNEL);
-    private static final CANTalon ARM_MOTOR = new CANTalon(RobotConstants.TALON_ARM_MOTOR);
+    private static final CANTalon ARM_MOTOR =
+            new CANTalon(RobotConstants.TALON_ARM_MOTOR);
 
     private static final CANTalon COLLECTOR_MOTOR =
             new CANTalon(RobotConstants.TALON_COLLECTOR_MOTOR);
@@ -69,9 +70,10 @@ public class Arm implements Module, PIDSource{
      * @return angle measured by encoder
      */
     public double getPotentiometerVal() {
-       double a1 =  ARM_POTENTIOMETER.getValue() * RobotConstants.ARM_POTENTIOMETER_SCALE;
-       double aFinal = a1 + RobotConstants.ARM_POTENTIOMETER_INTERCEPT;
-       return aFinal;
+        double a1 = ARM_POTENTIOMETER.getValue()
+                * RobotConstants.ARM_POTENTIOMETER_SCALE;
+        double aFinal = a1 + RobotConstants.ARM_POTENTIOMETER_INTERCEPT;
+        return aFinal;
     }
 
     /**
@@ -113,7 +115,6 @@ public class Arm implements Module, PIDSource{
             try {
                 Thread.sleep(200);
             } catch (InterruptedException e) {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
             }
         }
@@ -122,7 +123,6 @@ public class Arm implements Module, PIDSource{
             try {
                 Thread.sleep(200);
             } catch (InterruptedException e) {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
             }
         }
@@ -176,31 +176,27 @@ public class Arm implements Module, PIDSource{
 
     @Override
     public void initTest() {
-        // TODO Auto-generated method stub
-        
+
     }
 
     @Override
     public void initTeleop() {
-        // TODO Auto-generated method stub
-        
+
     }
 
     @Override
     public void initAutonomous() {
-        // TODO Auto-generated method stub
-        
+
     }
 
     @Override
     public void testPeriodic() {
-        // TODO Auto-generated method stub
-        
+
     }
 
     @Override
     public void setPIDSourceType(PIDSourceType pidSource) {
-                
+
     }
 
     @Override

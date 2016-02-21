@@ -10,17 +10,15 @@ public class VisionThread implements Runnable, Module {
     private Thread captureThread;
 
     public VisionThread() {
-        try
-        {
+        try {
             See = new ComputerVision();
             cvRunning = true;
             isRunning = true;
             captureThread = new Thread(this);
             captureThread.setName("Camera Capture Thread");
-        }
-        catch(Exception e)
-        {
-            DriverStation.reportError("Could not create a Vision Thread", false);
+        } catch (Exception e) {
+            DriverStation.reportError("Could not create a Vision Thread",
+                    false);
             cvRunning = false;
             isRunning = true;
         }
@@ -49,45 +47,39 @@ public class VisionThread implements Runnable, Module {
 
     @Override
     public void initModule() {
-        if(captureThread != null)
+        if (captureThread != null)
             captureThread.start();
 
     }
 
     @Override
     public void teleopPeriodicModule() {
-        // TODO Auto-generated method stub
 
     }
 
     @Override
     public void endModule() {
-        // TODO Auto-generated method stub
 
     }
 
     @Override
     public void initTest() {
-        // TODO Auto-generated method stub
-        
+
     }
 
     @Override
     public void initTeleop() {
-        // TODO Auto-generated method stub
-        
+
     }
 
     @Override
     public void initAutonomous() {
-        // TODO Auto-generated method stub
-        
+
     }
 
     @Override
     public void testPeriodic() {
-        // TODO Auto-generated method stub
-        
+
     }
 
 }

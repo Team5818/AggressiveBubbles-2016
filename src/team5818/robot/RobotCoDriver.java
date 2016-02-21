@@ -1,8 +1,5 @@
 package team5818.robot;
 
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
-
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -43,16 +40,16 @@ public class RobotCoDriver implements Module {
      * goes to 45 degrees
      */
     public static final int GO_TO_ANGLE_BUTTON = 9;
-    
+
     public static final int BUT_STARTPID = 12;
     public static final int BUT_STOPPID = 11;
-    
+
     public static final int BUT_PRINT_RPS = 10;
-    
+
     private boolean hasStartedPID = false;
     private boolean hasStopedPID = false;
     private boolean hasPrintedRPS = false;
-    
+
     /**
      * returns error from arm PID
      */
@@ -70,14 +67,13 @@ public class RobotCoDriver implements Module {
     @Override
     public void initModule() {
         arm = RobotCommon.runningRobot.arm;
-        
-        
+
     }
 
     @Override
     public void teleopPeriodicModule() {
         // Arm teleop
-        
+
         if (FIRST_JOYSTICK.getRawButton(ENTER_PID_BUTTON)) {
             setAngleMode = true;
             if (setAngleMode) {
@@ -94,7 +90,7 @@ public class RobotCoDriver implements Module {
         // arm.armTeleopPeriodic(); don't use in setAngleMode
 
         if (setAngleMode) {
-            double target = 45*(1-FIRST_JOYSTICK.getThrottle());
+            double target = 45 * (1 - FIRST_JOYSTICK.getThrottle());
             arm.goToAngle(target);
             if (FIRST_JOYSTICK.getRawButton(ERROR_BUTTON)) {
                 DriverStation.reportError("" + arm.getError() + "\n", false);
@@ -116,50 +112,44 @@ public class RobotCoDriver implements Module {
             SmartDashboard.putString("DB/String 7",
                     "" + arm.getPotentiometerVal());
         }
-        
+
         /* Flywheel Testing Stuff */
         /*
-         * Button 12 will set the PID loop with the constants on 
-         * slider 1, 2, and 3 as p, i, and d.
-         * Button 10 will stop the PID by setting the velocity to 0.
-         * Button 11 will print the RPS of the lower motor.
+         * Button 12 will set the PID loop with the constants on slider 1, 2,
+         * and 3 as p, i, and d. Button 10 will stop the PID by setting the
+         * velocity to 0. Button 11 will print the RPS of the lower motor.
          */
-        if(SECOND_JOYSTICK.getRawButton(BUT_STARTPID)) {
-            if(!hasStartedPID) {
+        if (SECOND_JOYSTICK.getRawButton(BUT_STARTPID)) {
+            if (!hasStartedPID) {
                 SetFlywheelVelocity setFlyVel = new SetFlywheelVelocity(100);
                 setFlyVel.start();
                 hasStartedPID = true;
             }
         } else {
-            
+
             hasStartedPID = false;
         }
-        
-        
-        if(SECOND_JOYSTICK.getRawButton(BUT_STOPPID)) {
-            if(!hasStopedPID) {
+
+        if (SECOND_JOYSTICK.getRawButton(BUT_STOPPID)) {
+            if (!hasStopedPID) {
                 RobotCommon.runningRobot.lowerFlywheel.setPower(0);
                 RobotCommon.runningRobot.lowerFlywheel.setPower(0);
-                
+
                 hasStopedPID = true;
             }
         } else {
-            
+
             hasStopedPID = false;
         }
-        SmartDashboard.putNumber("Lower Flywheel RPS", RobotCommon.runningRobot.lowerFlywheel.getRPS());
-        SmartDashboard.putNumber("Upper Flywheel RPS", RobotCommon.runningRobot.upperFlywheel.getRPS());
-        
+        SmartDashboard.putNumber("Lower Flywheel RPS",
+                RobotCommon.runningRobot.shooter.getLowerFlywheel().getRPS());
+
         /*
-        if(SECOND_JOYSTICK.getRawButton(BUT_PRINT_RPS)) {
-            if(!hasPrintedRPS) {
-                hasStartedPID = true;
-            }
-        } else {
-            
-            hasPrintedRPS = false;
-        }
-        */
+         * if(SECOND_JOYSTICK.getRawButton(BUT_PRINT_RPS)) { if(!hasPrintedRPS)
+         * { hasStartedPID = true; } } else {
+         * 
+         * hasPrintedRPS = false; }
+         */
 
     }
 
@@ -170,20 +160,17 @@ public class RobotCoDriver implements Module {
 
     @Override
     public void initTest() {
-        // TODO Auto-generated method stub
-        
+
     }
 
     @Override
     public void initTeleop() {
-        // TODO Auto-generated method stub
-        
+
     }
 
     @Override
     public void initAutonomous() {
-        // TODO Auto-generated method stub
-        
+
     }
 
     @Override

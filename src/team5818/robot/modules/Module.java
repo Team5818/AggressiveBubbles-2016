@@ -13,13 +13,12 @@ public interface Module {
      * Called first right before a robot enters a state. Such as teleopInit.
      */
     public void initModule();
-    
+
     public void initTest();
-    
+
     public void initTeleop();
-    
+
     public void initAutonomous();
-    
 
     /**
      * The periodic method for this module. Should not be used unless very
@@ -27,7 +26,7 @@ public interface Module {
      * module should do.
      */
     public void teleopPeriodicModule();
-    
+
     public void testPeriodic();
 
     /**

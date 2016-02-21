@@ -7,7 +7,6 @@ import edu.wpi.first.wpilibj.CANTalon;
 import edu.wpi.first.wpilibj.CANTalon.FeedbackDevice;
 import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.PIDOutput;
-import edu.wpi.first.wpilibj.PIDSource;
 import edu.wpi.first.wpilibj.PIDSourceType;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import team5818.robot.RobotConstants;
@@ -26,8 +25,9 @@ public class DriveSide implements EncoderManager, PIDOutput, MovingControl {
     private final CANTalon mainTalon;
     private final CANTalon secondaryTalon;
     private final CANTalon thirdTalon;
-    private final PIDController pidLoop;
     private final PIDSourceBase pidSource;
+    private PIDController pidLoop;
+    private int cyclesUntilAttemptStop;
 
     /**
      * Creates a new DriveSide that controls the talons given.
@@ -74,26 +74,34 @@ public class DriveSide implements EncoderManager, PIDOutput, MovingControl {
                 });
 
         this.mainTalon.reverseSensor(inverted);
+        pidSource = new PIDSourceBase() {
 
-        pidLoop = new PIDController(RobotConstants.PID_LOOP_P_TERM,
-                RobotConstants.PID_LOOP_I_TERM, RobotConstants.PID_LOOP_D_TERM,
-                pidSource = new PIDSourceBase() {
+            @Override
+            public double pidGet() {
+                double val;
+                if (this.getPIDSourceType() == PIDSourceType.kRate) {
+                    val = getVelocity();
+                } else {
+                    val = getEncPosAbs();
+                }
+                return val;
+            }
 
-                    @Override
-                    public double pidGet() {
-                        double val;
-                        if (this.getPIDSourceType() == PIDSourceType.kRate) {
-                            val = getVelocity();
-                        } else {
-                            val = getEncPosAbs();
-                        }
-                        SmartDashboard.putNumber("RightVals", val);
-                        return val;
-                    }
+        };
 
-                }, this);
+        resetPIDLoop();
         pidLoop.disable();
         configureEncoderTalon();
+    }
+
+    private void resetPIDLoop() {
+        if (pidLoop != null) {
+            pidLoop.reset();
+            pidLoop.free();
+        }
+        pidLoop = new PIDController(RobotConstants.DISTANCE_PID_LOOP_P_TERM,
+                RobotConstants.DISTANCE_PID_LOOP_I_TERM,
+                RobotConstants.DISTANCE_PID_LOOP_D_TERM, pidSource, this);
     }
 
     private void configureEncoderTalon() {
@@ -134,7 +142,7 @@ public class DriveSide implements EncoderManager, PIDOutput, MovingControl {
 
     @Override
     public void setDriveDistance(double dist) {
-        pidLoop.setSetpoint(getEncPosAbs() + dist);
+        setDriveDistance(dist, DEFAULT_MAX_POWER);
     }
 
     @Override
@@ -155,6 +163,9 @@ public class DriveSide implements EncoderManager, PIDOutput, MovingControl {
     public double getVelocity() {
         double vel = mainTalon.getEncVelocity() * 10.0
                 * RobotConstants.ROBOT_ENCODER_SCALE;
+        if (mainTalon.getInverted()) {
+            vel = -vel;
+        }
         return vel;
     }
 
@@ -178,21 +189,67 @@ public class DriveSide implements EncoderManager, PIDOutput, MovingControl {
      */
     @Override
     public void setVelocity(double vel) {
+        vel = Math.min(RobotConstants.MAX_VELOCITY,
+                Math.max(-RobotConstants.MAX_VELOCITY, vel));
+        resetPIDLoop();
+        pidLoop.setPID(RobotConstants.VELOCITY_PID_LOOP_P_TERM,
+                RobotConstants.VELOCITY_PID_LOOP_I_TERM,
+                RobotConstants.VELOCITY_PID_LOOP_D_TERM);
+        setPIDFromSmart();
+        pidWrite(RobotConstants.ONE_OVER_MAX_VEL * vel);
+        try {
+            Thread.sleep(100);
+        } catch (InterruptedException e) {
+        }
         pidSource.setPIDSourceType(PIDSourceType.kRate);
         pidLoop.setOutputRange(-DEFAULT_MAX_POWER, DEFAULT_MAX_POWER);
+        pidLoop.setContinuous();
         pidLoop.setSetpoint(vel);
         pidLoop.enable();
     }
 
     @Override
     public void setDriveDistance(double dist, double maxPower) {
-        pidLoop.disable();
+        resetPIDLoop();
+        pidLoop.setPID(RobotConstants.DISTANCE_PID_LOOP_P_TERM,
+                RobotConstants.DISTANCE_PID_LOOP_I_TERM,
+                RobotConstants.DISTANCE_PID_LOOP_D_TERM);
+        // setPIDFromSmart();
+        cyclesUntilAttemptStop = 5;
         pidSource.setPIDSourceType(PIDSourceType.kDisplacement);
         pidLoop.setOutputRange(-maxPower, maxPower);
-        mainTalon.setEncPosition(0);
+        mainTalon.setPosition(0);
+        pidLoop.setContinuous();
         pidLoop.setSetpoint(dist);
-        pidLoop.setPercentTolerance(80);
+        SmartDashboard.putNumber("distance", dist);
         pidLoop.enable();
+    }
+
+    public void setPIDFromSmart() {
+        try {
+            double p = Double.parseDouble(SmartDashboard.getString("pS",
+                    "" + RobotConstants.VELOCITY_PID_LOOP_P_TERM));
+            double i = Double.parseDouble(SmartDashboard.getString("iS",
+                    "" + RobotConstants.VELOCITY_PID_LOOP_I_TERM));
+            double d = Double.parseDouble(SmartDashboard.getString("dS",
+                    "" + RobotConstants.VELOCITY_PID_LOOP_D_TERM));
+            double f =
+                    Double.parseDouble(SmartDashboard.getString("fS", "0.0"));
+            pidLoop.setPID(p, i, d, f);
+        } catch (NumberFormatException e) {
+        }
+    }
+
+    public void attemptStopIfOnTarget() {
+        cyclesUntilAttemptStop = Math.max(0, cyclesUntilAttemptStop - 1);
+        if (cyclesUntilAttemptStop <= 0) {
+            try {
+                if (pidLoop.onTarget()) {
+                    pidLoop.disable();
+                }
+            } catch (Exception e) {
+            }
+        }
     }
 
 }

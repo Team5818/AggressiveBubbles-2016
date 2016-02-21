@@ -3,7 +3,8 @@ package team5818.robot;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
-import team5818.robot.commands.DriveForwardSlowlyCommand;
+import team5818.robot.commands.DriveForwardCommand;
+import team5818.robot.commands.DriveVelocityCommand;
 import team5818.robot.commands.ResetEncoderCommand;
 import team5818.robot.modules.Module;
 import team5818.robot.modules.drivetrain.ArcadeDriveCalculator;
@@ -53,7 +54,9 @@ public class RobotDriver implements Module {
         resetEncoder.whenPressed(new ResetEncoderCommand());
         JoystickButton driveForwardSlowly =
                 new JoystickButton(FIRST_JOYSTICK, 3);
-        driveForwardSlowly.whenActive(new DriveForwardSlowlyCommand());
+        JoystickButton fallSpeedAhead = new JoystickButton(FIRST_JOYSTICK, 2);
+        driveForwardSlowly.whenActive(new DriveVelocityCommand());
+        fallSpeedAhead.whileHeld(new DriveForwardCommand());
         DriveSide leftDriveSide =
                 RobotCommon.runningRobot.driveTrain.getLeftMotors();
         DriveSide rightDriveSide =
@@ -137,13 +140,11 @@ public class RobotDriver implements Module {
 
     @Override
     public void initTeleop() {
-        // TODO Auto-generated method stub
 
     }
 
     @Override
     public void initAutonomous() {
-        // TODO Auto-generated method stub
 
     }
 

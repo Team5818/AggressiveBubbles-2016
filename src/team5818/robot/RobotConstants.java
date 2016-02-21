@@ -86,12 +86,22 @@ public final class RobotConstants {
      */
     public static final int CODRIVER_SECOND_JOYSTICK_PORT = 3;
 
-    public static final double PID_LOOP_P_TERM = 0.001;
+    public static final double DISTANCE_PID_LOOP_P_TERM = 0.12;
 
-    public static final double PID_LOOP_I_TERM = 0.0007;
+    public static final double DISTANCE_PID_LOOP_I_TERM = 0.00000001;
 
-    public static final double PID_LOOP_D_TERM = 0;
+    public static final double DISTANCE_PID_LOOP_D_TERM = 0.05;
 
+    public static final double VELOCITY_PID_LOOP_P_TERM = 0.12;
+
+    public static final double VELOCITY_PID_LOOP_I_TERM = 0.00000001;
+
+    public static final double VELOCITY_PID_LOOP_D_TERM = 0.05;
+
+    public static final double MAX_VELOCITY = 175;
+    public static final double ONE_OVER_MAX_VEL = 1 / MAX_VELOCITY;
+
+    // TODO recalcute
     /**
      * inches/tick
      */

@@ -1,6 +1,5 @@
 package team5818.robot.commands;
 
-import edu.wpi.first.wpilibj.CANTalon;
 import edu.wpi.first.wpilibj.command.Command;
 import team5818.robot.RobotCommon;
 import team5818.robot.modules.FlyWheel;
@@ -21,7 +20,7 @@ public class SetFlywheelVelocity extends Command {
     
     private static final FlyWheel flyUp = RobotCommon.runningRobot.upperFlywheel;
     private static final FlyWheel flyLo = RobotCommon.runningRobot.lowerFlywheel;
-    
+
     /**
      * @param vel The velocity desired to be set in units of 
      */
@@ -29,16 +28,17 @@ public class SetFlywheelVelocity extends Command {
     {
         velocity = vel;
     }
-    
+
     @Override
     protected void initialize() {
-        
+
         flyUp.setVelocity(upVel);
         flyUp.setVelocity(lowVel);
     }
 
     @Override
     protected void execute() {
+
     }
 
     @Override
@@ -55,9 +55,7 @@ public class SetFlywheelVelocity extends Command {
     @Override
     protected void interrupted() {
         end();
-        
+
     }
-    
-    
 
 }

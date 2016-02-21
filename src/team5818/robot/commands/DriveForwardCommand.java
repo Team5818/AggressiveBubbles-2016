@@ -2,11 +2,17 @@ package team5818.robot.commands;
 
 import edu.wpi.first.wpilibj.command.Command;
 import team5818.robot.RobotCommon;
+import team5818.robot.util.Vector2d;
 
-public class DriveForwardSlowlyCommand extends Command {
+public class DriveForwardCommand extends Command {
 
     private boolean hasStarted;
     private boolean hasRun;
+
+    @Override
+    public synchronized void start() {
+        RobotCommon.runningRobot.driveTrain.setPower(new Vector2d(0, 1));
+    }
 
     @Override
     protected void initialize() {
@@ -15,8 +21,6 @@ public class DriveForwardSlowlyCommand extends Command {
     @Override
     protected void execute() {
         hasStarted = true;
-        RobotCommon.runningRobot.driveTrainController
-                .driveToTargetXInchesAway(5);
         hasRun = true;
     }
 
@@ -26,11 +30,18 @@ public class DriveForwardSlowlyCommand extends Command {
     }
 
     @Override
+    public synchronized void cancel() {
+        end();
+    }
+
+    @Override
     protected void end() {
+        RobotCommon.runningRobot.driveTrain.setPower(new Vector2d(0, 0));
     }
 
     @Override
     protected void interrupted() {
+        end();
     }
 
 }
