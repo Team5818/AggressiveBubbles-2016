@@ -8,6 +8,7 @@ import team5818.robot.commands.Collect;
 import team5818.robot.commands.SetFlyWheelVelocity;
 import team5818.robot.commands.ShootHigh;
 import team5818.robot.modules.Arm;
+import team5818.robot.modules.Collector;
 import team5818.robot.modules.FlyWheel;
 import team5818.robot.modules.Module;
 
@@ -68,6 +69,7 @@ public class RobotCoDriver implements Module {
     private Collect collect;
     private FlyWheel lowerFlywheel;
     private FlyWheel upperFlywheel;
+    private Collector collector;
     private Arm arm;
     private SetFlyWheelVelocity setFlyVelocity;
     private ShootHigh shootHigh;
@@ -77,6 +79,7 @@ public class RobotCoDriver implements Module {
     @Override
     public void initModule() {
         arm = RobotCommon.runningRobot.arm;
+        collector = RobotCommon.runningRobot.collector;
         lowerFlywheel = RobotCommon.runningRobot.lowerFlywheel;
         upperFlywheel = RobotCommon.runningRobot.upperFlywheel;
         collect = new Collect();
@@ -140,7 +143,7 @@ public class RobotCoDriver implements Module {
         }
         if (FIRST_JOYSTICK.getRawButton(BUT_PRINT_ANGLE)) {
             SmartDashboard.putString("DB/String 7",
-                    "" + arm.getPotentiometerVal());
+                    "" + arm.getAngle());
         }
         
         
@@ -180,13 +183,13 @@ public class RobotCoDriver implements Module {
          *  Button 1 (Trigger): Collect Command
          */
         if(FIRST_JOYSTICK.getRawButton(BUT_COLLECT)) {
-            arm.setCollectorPower(Collect.MAX_COLLECT_POWER);
+            collector.setPower((Collect.MAX_COLLECT_POWER));
             //if(hasStartedCollect) {
             //    hasStartedCollect = true;
             //    collect.start();
             //}
         } else {
-            arm.setCollectorPower(0);
+            collector.setPower(0);
             hasStartedCollect = false;
         }
         

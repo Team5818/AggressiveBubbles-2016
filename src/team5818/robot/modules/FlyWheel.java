@@ -16,7 +16,7 @@ import edu.wpi.first.wpilibj.PIDSourceType;
  * should go through this class.
  *
  */
-public class FlyWheel implements PIDSource, PIDOutput {
+public class FlyWheel implements PIDSource, PIDOutput, Module {
 
     /**
      * The CANTalonWithPIDModes motor controller for the upper wheel.
@@ -136,6 +136,48 @@ public class FlyWheel implements PIDSource, PIDOutput {
     public void pidWrite(double output) {
         set(output);
 
+    }
+
+    @Override
+    public void initModule() {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    public void initTest() {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    public void initTeleop() {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    public void initAutonomous() {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    public void teleopPeriodicModule() {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    public void testPeriodic() {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    public void endModule() {
+        // TODO Auto-generated method stub
+        
     }
 
 }

@@ -3,12 +3,13 @@ package team5818.robot.commands;
 import edu.wpi.first.wpilibj.command.Command;
 import team5818.robot.RobotCommon;
 import team5818.robot.modules.Arm;
+import team5818.robot.modules.Collector;
 
 public class ShootHigh extends Command {
     public static final double shootVelocity = 144;
     
     private SetFlyWheelVelocity setFlyVelocity;
-    private Arm arm;
+    private Collector collector;
     
     /**
      * The time when the command starts in nano seconds.
@@ -23,7 +24,7 @@ public class ShootHigh extends Command {
     
     public ShootHigh(SetFlyWheelVelocity sfv) {
         setFlyVelocity = sfv;
-        arm = RobotCommon.runningRobot.arm;
+        collector = RobotCommon.runningRobot.collector;
     }
     
     public ShootHigh()
@@ -35,7 +36,7 @@ public class ShootHigh extends Command {
     @Override
     protected void initialize() {
         setFlyVelocity.setVelocity(shootVelocity);
-        arm.setCollectorPower(Collect.COLLECT_POWER);
+        collector.setPower((Collect.COLLECT_POWER));
         zeroTime = System.nanoTime();
         //TODO make ShootHigh move arm to angle using PID.
     }
