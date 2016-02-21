@@ -18,13 +18,17 @@ import team5818.robot.modules.Module;
 public class RobotCoDriver implements Module {
 
     /**
-     * The button that resets the arm offset.
-     */
-    public static final int BUT_ARM_RESET = 8;
-    /**
-     * The button that prints the arm offset.
+     * The button that prints the arm angle.
      */
     public static final int BUT_PRINT_ANGLE = 7;
+    /**
+     * goes to high shooting angle degrees
+     */
+    public static final int BUT_HIGH_ANGLE = 8;
+    /**
+     * goes to 0 degrees
+     */
+    public static final int BUT_ZERO_DEG = 9;
     /**
      * The button that increases the angle the arm.
      */
@@ -41,16 +45,12 @@ public class RobotCoDriver implements Module {
      * takes arm out of PID mode
      */
     public static final int BUT_EXIT_PID = 6;
-    /**
-     * goes to 45 degrees
-     */
-    public static final int GO_TO_ANGLE_BUTTON = 9;
 
     public static final int BUT_START_FLYWHEEL = 12;
     public static final int BUT_STOP_FLYWHEEL = 11;
     public static final int BUT_COLLECT = 1;
     public static final int BUT_SHOOT_HIGH = 1;
-    
+
     private boolean hasStartedCollect = false;
     private boolean hasStartedShoot = false;
     private boolean hasStartedFlywheel = false;
@@ -65,7 +65,7 @@ public class RobotCoDriver implements Module {
             new Joystick(RobotConstants.CODRIVER_FIRST_JOYSTICK_PORT);
     private static final Joystick SECOND_JOYSTICK =
             new Joystick(RobotConstants.CODRIVER_SECOND_JOYSTICK_PORT);
-    
+
     private Collect collect;
     private FlyWheel lowerFlywheel;
     private FlyWheel upperFlywheel;
@@ -74,7 +74,7 @@ public class RobotCoDriver implements Module {
     private SetFlyWheelVelocity setFlyVelocity;
     private ShootHigh shootHigh;
 
-    private boolean setAngleMode = false;
+    private boolean pidMode = false;
 
     @Override
     public void initModule() {
@@ -85,78 +85,74 @@ public class RobotCoDriver implements Module {
         collect = new Collect();
         shootHigh = new ShootHigh();
         setFlyVelocity = new SetFlyWheelVelocity();
-        LiveWindow.addActuator("Flywheel", "Lower PID", lowerFlywheel.getPIDController());
-        LiveWindow.addActuator("Flywheel", "Upper PID", upperFlywheel.getPIDController());
-        LiveWindow.addActuator("Flywheel", "Lower PID", lowerFlywheel.getPIDController());
-        LiveWindow.addActuator("Flywheel", "Upper PID", upperFlywheel.getPIDController());
-        
+        LiveWindow.addActuator("Flywheel", "Lower PID",
+                lowerFlywheel.getPIDController());
+        LiveWindow.addActuator("Flywheel", "Upper PID",
+                upperFlywheel.getPIDController());
+        LiveWindow.addActuator("Flywheel", "Lower PID",
+                lowerFlywheel.getPIDController());
+        LiveWindow.addActuator("Flywheel", "Upper PID",
+                upperFlywheel.getPIDController());
+
     }
 
     @Override
     public void teleopPeriodicModule() {
-        /* Arm teleop 
-         * FIRST JoyStick:
-         *  Button 9: Got To Angle if PID enabled.
-         *  Button 4: Enter PID
-         *  Button 6: Exit PID
-         *  Button 3: Down Angle
-         *  Button 5: Up Angle
-         *  Button 8: Arm Reset
-         *  Button 7: Print Angle
-         *  Y Axis  : Set Power Arm if PID disabled
+        /*
+         * Arm teleop FIRST JoyStick: Button 8: Go to high shooting position
+         * Button 9: Go to zero degrees Button 4: Enter PID Button 6: Exit PID
+         * Button 3: Down Angle Button 5: Up Angle Button 7: Print Angle Y Axis
+         * : Set Power Arm if PID disabled
          */
-        //TODO Get rid of RobotCoDriver arm PID test code.
+        // TODO Get rid of RobotCoDriver arm PID test code.
         if (FIRST_JOYSTICK.getRawButton(BUT_ENTER_PID)) {
-            setAngleMode = true;
-            if (setAngleMode) {
-                DriverStation.reportError("Entering PID Mode", false);
-            }
+            pidMode = true;
+            DriverStation.reportError("Entering PID Mode", false);
         }
 
         if (FIRST_JOYSTICK.getRawButton(BUT_EXIT_PID)) {
-            setAngleMode = false;
-            if (setAngleMode) {
-                DriverStation.reportError("Exiting PID Mode", false);
-            }
+            pidMode = false;
+            DriverStation.reportError("Exiting PID Mode", false);
         }
-        
-        // arm.armTeleopPeriodic(); don't use in setAngleMode
 
-        if (setAngleMode) {
+        if (FIRST_JOYSTICK.getRawButton(BUT_PRINT_ANGLE)) {
+            SmartDashboard.putString("DB/String 7", "" + arm.getAngle());
+        }
+
+        if (pidMode) {
             double target = 45 * (1 - FIRST_JOYSTICK.getThrottle());
             arm.goToAngle(target);
             if (FIRST_JOYSTICK.getRawButton(ERROR_BUTTON)) {
                 DriverStation.reportError("" + arm.getError() + "\n", false);
             }
-        } else if (FIRST_JOYSTICK.getRawButton(BUT_UP_ANGLE)) {
-            arm.aimAdjust(true);
-        } else if (FIRST_JOYSTICK.getRawButton(BUT_DOWN_ANGLE)) {
-            arm.aimAdjust(false);
         }
 
-        if (!setAngleMode) {
+        if (!pidMode) {
+
             arm.setPower(FIRST_JOYSTICK.getY());
+            if (FIRST_JOYSTICK.getRawButton(BUT_UP_ANGLE)) {
+                arm.aimAdjust(true);
+            }
+            if (FIRST_JOYSTICK.getRawButton(BUT_DOWN_ANGLE)) {
+                arm.aimAdjust(false);
+            }
+            if (FIRST_JOYSTICK.getRawButton(BUT_HIGH_ANGLE)) {
+                arm.goToAngle(60);
+            }
+            if (FIRST_JOYSTICK.getRawButton(BUT_ZERO_DEG)) {
+                arm.goToAngle(0);
+            }
         }
 
-        if (FIRST_JOYSTICK.getRawButton(BUT_ARM_RESET)) {
-            // arm.resetEncoder();
-        }
-        if (FIRST_JOYSTICK.getRawButton(BUT_PRINT_ANGLE)) {
-            SmartDashboard.putString("DB/String 7",
-                    "" + arm.getAngle());
-        }
-        
-        
         /* Flywheel Code Stuff */
-        /* Second Joysick:
-         *  Button 12: Start Flywheel
-         *  Button 11: Stop Flywheel
+        /*
+         * Second Joysick: Button 12: Start Flywheel Button 11: Stop Flywheel
          */
-        if(SECOND_JOYSTICK.getRawButton(BUT_START_FLYWHEEL)) {
-            if(!hasStartedFlywheel) {
-                    double v = 144;
-                    setFlyVelocity.setVelocity(v);
-                    setFlyVelocity.start();
+        if (SECOND_JOYSTICK.getRawButton(BUT_START_FLYWHEEL)) {
+            if (!hasStartedFlywheel) {
+                double v = 144;
+                setFlyVelocity.setVelocity(v);
+                setFlyVelocity.start();
                 hasStartedFlywheel = true;
             }
         } else {
@@ -175,41 +171,42 @@ public class RobotCoDriver implements Module {
 
             hasStopedFlywheel = false;
         }
-        SmartDashboard.putNumber("Lower Flywheel RPS", RobotCommon.runningRobot.lowerFlywheel.getRPS());
-        SmartDashboard.putNumber("Upper Flywheel RPS", RobotCommon.runningRobot.upperFlywheel.getRPS());
-        
-        /* Collector Code Stuff
-         * First Joystick
-         *  Button 1 (Trigger): Collect Command
+        SmartDashboard.putNumber("Lower Flywheel RPS",
+                RobotCommon.runningRobot.lowerFlywheel.getRPS());
+        SmartDashboard.putNumber("Upper Flywheel RPS",
+                RobotCommon.runningRobot.upperFlywheel.getRPS());
+
+        /*
+         * Collector Code Stuff First Joystick Button 1 (Trigger): Collect
+         * Command
          */
-        if(FIRST_JOYSTICK.getRawButton(BUT_COLLECT)) {
+        if (FIRST_JOYSTICK.getRawButton(BUT_COLLECT)) {
             collector.setPower((Collect.MAX_COLLECT_POWER));
-            //if(hasStartedCollect) {
-            //    hasStartedCollect = true;
-            //    collect.start();
-            //}
+            // if(hasStartedCollect) {
+            // hasStartedCollect = true;
+            // collect.start();
+            // }
         } else {
             collector.setPower(0);
             hasStartedCollect = false;
         }
-        
-        /* Shooter Code Stuff
-         * Second Joystick:
-         *  Button 1 (Trigger): Shooter Command
+
+        /*
+         * Shooter Code Stuff Second Joystick: Button 1 (Trigger): Shooter
+         * Command
          */
-        if(SECOND_JOYSTICK.getRawButton(BUT_SHOOT_HIGH))
-        {
-            if(hasStartedShoot) {
+        if (SECOND_JOYSTICK.getRawButton(BUT_SHOOT_HIGH)) {
+            if (hasStartedShoot) {
                 hasStartedShoot = true;
-                //if(!shootHigh.isRunning())
-                //    shootHigh.start();
+                // if(!shootHigh.isRunning())
+                // shootHigh.start();
             }
             lowerFlywheel.setVelocity(144);
             upperFlywheel.setVelocity(144);
-        } else{
+        } else {
             hasStartedShoot = false;
-            //if (!shootHigh.isRunning()) {
-            //}
+            // if (!shootHigh.isRunning()) {
+            // }
             lowerFlywheel.setPower(0);
             upperFlywheel.setPower(0);
         }
