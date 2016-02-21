@@ -2,6 +2,9 @@ package team5818.robot.modules.drivetrain;
 
 import edu.wpi.first.wpilibj.CANTalon;
 import edu.wpi.first.wpilibj.PIDOutput;
+import edu.wpi.first.wpilibj.Preferences;
+import edu.wpi.first.wpilibj.livewindow.LiveWindow;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import team5818.robot.RobotConstants;
 import team5818.robot.modules.Module;
 import team5818.robot.util.Vector2d;
@@ -11,7 +14,8 @@ import team5818.robot.util.Vector2d;
  */
 public class DriveTrain implements Module {
 
-    private static final boolean SIX_TALONS = System.getProperty("ROBOT").equals("5818");
+    private static final boolean SIX_TALONS =
+            Preferences.getInstance().getBoolean("sixTalons", false);
     private static final CANTalon LEFT_FRONT =
             new CANTalon(RobotConstants.TALON_LEFT_FRONT);
     private static final CANTalon LEFT_MIDDLE;
@@ -69,10 +73,42 @@ public class DriveTrain implements Module {
 
     @Override
     public void initModule() {
+        LiveWindow.addActuator("Left", "Front", LEFT_FRONT);
+        if (SIX_TALONS) {
+            LiveWindow.addActuator("Left", "Middle", LEFT_MIDDLE);
+        }
+        LiveWindow.addActuator("Left", "Back", LEFT_BACK);
+        LiveWindow.addActuator("Right", "Front", RIGHT_FRONT);
+        if (SIX_TALONS) {
+            LiveWindow.addActuator("Right", "Middle", RIGHT_MIDDLE);
+        }
+        LiveWindow.addActuator("Right", "Back", RIGHT_BACK);
     }
 
     @Override
     public void teleopPeriodicModule() {
+        try {
+            double p = Double.parseDouble(SmartDashboard.getString("pS",
+                    "" + RobotConstants.PID_LOOP_P_TERM));
+            double i = Double.parseDouble(SmartDashboard.getString("iS",
+                    "" + RobotConstants.PID_LOOP_I_TERM));
+            double d = Double.parseDouble(SmartDashboard.getString("dS",
+                    "" + RobotConstants.PID_LOOP_D_TERM));
+            right.getPIDController().setPID(p, i, d);
+        } catch (NumberFormatException e) {
+        }
+        try {
+            if (left.getPIDController().onTarget()) {
+                left.getPIDController().disable();
+            }
+        } catch (Exception e) {
+        }
+        try {
+            if (right.getPIDController().onTarget()) {
+                right.getPIDController().disable();
+            }
+        } catch (Exception e) {
+        }
     }
 
     @Override
@@ -81,26 +117,25 @@ public class DriveTrain implements Module {
 
     @Override
     public void initTest() {
-        // TODO Auto-generated method stub
-        
     }
 
     @Override
     public void initTeleop() {
-        // TODO Auto-generated method stub
-        
+        SmartDashboard.putString("pS", "" + RobotConstants.PID_LOOP_P_TERM);
+        SmartDashboard.putString("iS", "" + RobotConstants.PID_LOOP_I_TERM);
+        SmartDashboard.putString("dS", "" + RobotConstants.PID_LOOP_D_TERM);
     }
 
     @Override
     public void initAutonomous() {
         // TODO Auto-generated method stub
-        
+
     }
 
     @Override
     public void testPeriodic() {
         // TODO Auto-generated method stub
-        
+
     }
 
 }

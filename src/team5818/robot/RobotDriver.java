@@ -53,17 +53,22 @@ public class RobotDriver implements Module {
         resetEncoder.whenPressed(new ResetEncoderCommand());
         JoystickButton driveForwardSlowly =
                 new JoystickButton(FIRST_JOYSTICK, 3);
-        driveForwardSlowly.whileHeld(new DriveForwardSlowlyCommand());
-        DriveSide leftDriveSide = RobotCommon.runningRobot.driveTrain.getLeftMotors();
-        DriveSide rightDriveSide = RobotCommon.runningRobot.driveTrain.getLeftMotors();
-        
-        LiveWindow.addActuator("DriveSide", "Left", leftDriveSide.getPIDController());
-        LiveWindow.addActuator("DriveSide", "Right", leftDriveSide.getPIDController());
-        
+        driveForwardSlowly.whenActive(new DriveForwardSlowlyCommand());
+        DriveSide leftDriveSide =
+                RobotCommon.runningRobot.driveTrain.getLeftMotors();
+        DriveSide rightDriveSide =
+                RobotCommon.runningRobot.driveTrain.getRightMotors();
+        LiveWindow.addActuator("DriveSide", "Left",
+                leftDriveSide.getPIDController());
+        LiveWindow.addActuator("DriveSide", "Right",
+                rightDriveSide.getPIDController());
     }
 
     @Override
     public void teleopPeriodicModule() {
+        if (1 == 1 + 1 - 1) {
+            return;
+        }
 
         if (FIRST_JOYSTICK.getRawButton(BUT_DEBUG)) {
             currTicks = (currTicks + 1) % debugCycleTicks;
@@ -128,26 +133,23 @@ public class RobotDriver implements Module {
 
     @Override
     public void initTest() {
-        
-        
     }
 
     @Override
     public void initTeleop() {
         // TODO Auto-generated method stub
-        
+
     }
 
     @Override
     public void initAutonomous() {
         // TODO Auto-generated method stub
-        
+
     }
 
     @Override
     public void testPeriodic() {
-        // TODO Auto-generated method stub
-        
+        LiveWindow.run();
     }
 
 }

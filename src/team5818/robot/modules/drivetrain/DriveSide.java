@@ -1,11 +1,15 @@
 package team5818.robot.modules.drivetrain;
 
+import java.util.Objects;
+import java.util.stream.Stream;
+
 import edu.wpi.first.wpilibj.CANTalon;
 import edu.wpi.first.wpilibj.CANTalon.FeedbackDevice;
 import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.PIDOutput;
 import edu.wpi.first.wpilibj.PIDSource;
 import edu.wpi.first.wpilibj.PIDSourceType;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import team5818.robot.RobotConstants;
 import team5818.robot.encoders.EncoderManager;
 import team5818.robot.util.PIDSourceBase;
@@ -22,10 +26,8 @@ public class DriveSide implements EncoderManager, PIDOutput, MovingControl {
     private final CANTalon mainTalon;
     private final CANTalon secondaryTalon;
     private final CANTalon thirdTalon;
-    private final boolean inverted;
     private final PIDController pidLoop;
     private final PIDSourceBase pidSource;
-    
 
     /**
      * Creates a new DriveSide that controls the talons given.
@@ -64,17 +66,29 @@ public class DriveSide implements EncoderManager, PIDOutput, MovingControl {
         this.mainTalon = mainTalon;
         this.secondaryTalon = secondaryTalon;
         this.thirdTalon = thirdTalon;
-        this.inverted = inverted;
+
+        Stream.of(this.mainTalon, this.secondaryTalon, this.thirdTalon)
+                .filter(Objects::nonNull).forEach(talon -> {
+                    talon.setInverted(inverted);
+                    talon.reverseOutput(inverted);
+                });
+
+        this.mainTalon.reverseSensor(inverted);
+
         pidLoop = new PIDController(RobotConstants.PID_LOOP_P_TERM,
                 RobotConstants.PID_LOOP_I_TERM, RobotConstants.PID_LOOP_D_TERM,
                 pidSource = new PIDSourceBase() {
 
                     @Override
                     public double pidGet() {
-                        if(this.getPIDSourceType() == PIDSourceType.kRate)
-                            return getVelocity();
-                        return getEncPosAbs();
-                        
+                        double val;
+                        if (this.getPIDSourceType() == PIDSourceType.kRate) {
+                            val = getVelocity();
+                        } else {
+                            val = getEncPosAbs();
+                        }
+                        SmartDashboard.putNumber("RightVals", val);
+                        return val;
                     }
 
                 }, this);
@@ -89,10 +103,6 @@ public class DriveSide implements EncoderManager, PIDOutput, MovingControl {
 
     @Override
     public void pidWrite(double output) {
-        if (inverted) {
-            output *= -1;
-        }
-
         this.mainTalon.set(output);
         dumpPower(this.mainTalon);
         if (this.secondaryTalon != null) {
@@ -136,18 +146,19 @@ public class DriveSide implements EncoderManager, PIDOutput, MovingControl {
     public double getEncPosRaw() {
         return mainTalon.getPosition();
     }
-    
+
     /**
      * The velocity of the wheel in units of Inches/Seconds.
+     * 
      * @return Velocity of wheels in Inches/Seconds.
      */
     public double getVelocity() {
-        double vel  = mainTalon.getEncVelocity() * 10.0 * RobotConstants.ROBOT_ENCODER_SCALE;
+        double vel = mainTalon.getEncVelocity() * 10.0
+                * RobotConstants.ROBOT_ENCODER_SCALE;
         return vel;
     }
-    
-    public PIDController getPIDController()
-    {
+
+    public PIDController getPIDController() {
         return pidLoop;
     }
 
@@ -157,11 +168,13 @@ public class DriveSide implements EncoderManager, PIDOutput, MovingControl {
         // Delegate to power.
         pidWrite(power);
     }
-    
+
     /**
-     * Sets the speed of the motor. The ratio calculates using the gearbox
-     * of ratios and wheel size.
-     * @param vel The desired velocity in inches per second.
+     * Sets the speed of the motor. The ratio calculates using the gearbox of
+     * ratios and wheel size.
+     * 
+     * @param vel
+     *            The desired velocity in inches per second.
      */
     @Override
     public void setVelocity(double vel) {
@@ -173,9 +186,12 @@ public class DriveSide implements EncoderManager, PIDOutput, MovingControl {
 
     @Override
     public void setDriveDistance(double dist, double maxPower) {
+        pidLoop.disable();
         pidSource.setPIDSourceType(PIDSourceType.kDisplacement);
         pidLoop.setOutputRange(-maxPower, maxPower);
-        pidLoop.setSetpoint(getEncPosAbs() + dist);
+        mainTalon.setEncPosition(0);
+        pidLoop.setSetpoint(dist);
+        pidLoop.setPercentTolerance(80);
         pidLoop.enable();
     }
 
