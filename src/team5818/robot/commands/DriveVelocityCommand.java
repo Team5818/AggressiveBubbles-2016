@@ -10,6 +10,11 @@ public class DriveVelocityCommand extends Command {
 
     private boolean hasStarted;
     private boolean hasRun;
+    private double velocity = 0;
+
+    public void setVelocity(double vel) {
+        velocity = vel;
+    }
 
     @Override
     protected void initialize() {
@@ -18,13 +23,8 @@ public class DriveVelocityCommand extends Command {
     @Override
     protected void execute() {
         hasStarted = true;
-        try {
-            RobotCommon.runningRobot.driveTrain.getRightMotors().setVelocity(
-                    Double.valueOf(SmartDashboard.getString("DB/String 0")));
-        } catch (NumberFormatException e) {
-        } catch (TableKeyNotDefinedException what) {
-            DriverStation.reportError("what " + what.getMessage(), false);
-        }
+        RobotCommon.runningRobot.driveTrain.getRightMotors()
+                .setVelocity(velocity);
         hasRun = true;
     }
 

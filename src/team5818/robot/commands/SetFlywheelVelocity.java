@@ -16,7 +16,7 @@ public class SetFlyWheelVelocity extends Command {
     private double backSpin = 0;
     private double upVel = velocity - velocity*backSpin;
     private double lowVel = velocity + velocity*backSpin;
-    
+    private boolean hasStarted = false;
     
     private static final FlyWheel flyUp = RobotCommon.runningRobot.upperFlywheel;
     private static final FlyWheel flyLo = RobotCommon.runningRobot.lowerFlywheel;
@@ -30,14 +30,15 @@ public class SetFlyWheelVelocity extends Command {
 
     @Override
     protected void initialize() {
-
-        flyUp.setVelocity(upVel);
-        flyUp.setVelocity(lowVel);
     }
 
     @Override
     protected void execute() {
-
+        if(!hasStarted) {
+            hasStarted = true;
+            flyUp.setVelocity(upVel);
+            flyUp.setVelocity(lowVel);
+        }
     }
 
     @Override
@@ -47,6 +48,7 @@ public class SetFlyWheelVelocity extends Command {
 
     @Override
     protected void end() {
+        hasStarted = false;
         flyUp.setPower(0);
         flyLo.setPower(0);
     }

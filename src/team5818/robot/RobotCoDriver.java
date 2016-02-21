@@ -1,5 +1,10 @@
 package team5818.robot;
 
+import java.text.Format;
+import java.util.Formatter;
+
+import javax.swing.text.NumberFormatter;
+
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
@@ -49,7 +54,7 @@ public class RobotCoDriver implements Module {
     public static final int BUT_STOP_FLYWHEEL = 11;
     public static final int BUT_COLLECT = 1;
     public static final int BUT_SHOOT_HIGH = 1;
-    
+
     private boolean hasStartedCollect = false;
     private boolean hasStartedShoot = false;
     private boolean hasStartedFlywheel = false;
@@ -64,7 +69,7 @@ public class RobotCoDriver implements Module {
             new Joystick(RobotConstants.CODRIVER_FIRST_JOYSTICK_PORT);
     private static final Joystick SECOND_JOYSTICK =
             new Joystick(RobotConstants.CODRIVER_SECOND_JOYSTICK_PORT);
-    
+
     private Collect collect;
     private FlyWheel lowerFlywheel;
     private FlyWheel upperFlywheel;
@@ -73,6 +78,7 @@ public class RobotCoDriver implements Module {
     private ShootHigh shootHigh;
 
     private boolean setAngleMode = false;
+    private boolean hasStopedCollect = false;
 
     @Override
     public void initModule() {
@@ -82,27 +88,27 @@ public class RobotCoDriver implements Module {
         collect = new Collect();
         shootHigh = new ShootHigh();
         setFlyVelocity = new SetFlyWheelVelocity();
-        LiveWindow.addActuator("Flywheel", "Lower PID", lowerFlywheel.getPIDController());
-        LiveWindow.addActuator("Flywheel", "Upper PID", upperFlywheel.getPIDController());
-        LiveWindow.addActuator("Flywheel", "Lower PID", lowerFlywheel.getPIDController());
-        LiveWindow.addActuator("Flywheel", "Upper PID", upperFlywheel.getPIDController());
-        
+        LiveWindow.addActuator("Flywheel", "Lower PID",
+                lowerFlywheel.getPIDController());
+        LiveWindow.addActuator("Flywheel", "Upper PID",
+                upperFlywheel.getPIDController());
+        LiveWindow.addActuator("Flywheel", "Lower PID",
+                lowerFlywheel.getPIDController());
+        LiveWindow.addActuator("Flywheel", "Upper PID",
+                upperFlywheel.getPIDController());
+
     }
 
     @Override
     public void teleopPeriodicModule() {
-        /* Arm teleop 
-         * FIRST JoyStick:
-         *  Button 9: Got To Angle if PID enabled.
-         *  Button 4: Enter PID
-         *  Button 6: Exit PID
-         *  Button 3: Down Angle
-         *  Button 5: Up Angle
-         *  Button 8: Arm Reset
-         *  Button 7: Print Angle
-         *  Y Axis  : Set Power Arm if PID disabled
+        /* Arm Teleop Code Stuff */
+        /*
+         * FIRST JoyStick: Button 9: Got To Angle if PID enabled. Button 4:
+         * Enter PID. Button 6: Exit PID. Button 3: Down Angle. Button 5: Up
+         * Angle. Button 8: Arm Reset. Button 7: Print Angle. Y Axis : Set Power
+         * Arm if PID disabled.
          */
-        //TODO Get rid of RobotCoDriver arm PID test code.
+        // TODO Get rid of RobotCoDriver arm PID test code.
         if (FIRST_JOYSTICK.getRawButton(BUT_ENTER_PID)) {
             setAngleMode = true;
             if (setAngleMode) {
@@ -116,7 +122,7 @@ public class RobotCoDriver implements Module {
                 DriverStation.reportError("Exiting PID Mode", false);
             }
         }
-        
+
         // arm.armTeleopPeriodic(); don't use in setAngleMode
 
         if (setAngleMode) {
@@ -142,73 +148,43 @@ public class RobotCoDriver implements Module {
             SmartDashboard.putString("DB/String 7",
                     "" + arm.getPotentiometerVal());
         }
-        
-        
+
         /* Flywheel Code Stuff */
-        /* Second Joysick:
-         *  Button 12: Start Flywheel
-         *  Button 11: Stop Flywheel
+        /*
+         * Second Joysick: Button 1 (Trigger): Spin up flywheel.
          */
-        if(SECOND_JOYSTICK.getRawButton(BUT_START_FLYWHEEL)) {
-            if(!hasStartedFlywheel) {
-                    double v = 144;
-                    setFlyVelocity.setVelocity(v);
-                    setFlyVelocity.start();
+        if (SECOND_JOYSTICK.getRawButton(BUT_START_FLYWHEEL)) {
+            if (!hasStartedFlywheel) {
                 hasStartedFlywheel = true;
+                hasStopedFlywheel = false;
+                double v = 144;
+                setFlyVelocity.setVelocity(v);
+                setFlyVelocity.start();
             }
         } else {
-
-            hasStartedFlywheel = false;
-        }
-
-        if (SECOND_JOYSTICK.getRawButton(BUT_STOP_FLYWHEEL)) {
             if (!hasStopedFlywheel) {
-                RobotCommon.runningRobot.lowerFlywheel.setPower(0);
-                RobotCommon.runningRobot.lowerFlywheel.setPower(0);
-
                 hasStopedFlywheel = true;
+                setFlyVelocity.cancel();
             }
-        } else {
+        }
 
-            hasStopedFlywheel = false;
-        }
-        SmartDashboard.putNumber("Lower Flywheel RPS", RobotCommon.runningRobot.lowerFlywheel.getRPS());
-        SmartDashboard.putNumber("Upper Flywheel RPS", RobotCommon.runningRobot.upperFlywheel.getRPS());
-        
-        /* Collector Code Stuff
-         * First Joystick
-         *  Button 1 (Trigger): Collect Command
+        /*
+         * Collector Code Stuff First - Joystick Button 1 (Trigger): Collect
+         * Command
          */
-        if(FIRST_JOYSTICK.getRawButton(BUT_COLLECT)) {
+        if (FIRST_JOYSTICK.getRawButton(BUT_COLLECT)) {
             arm.setCollectorPower(Collect.MAX_COLLECT_POWER);
-            //if(hasStartedCollect) {
-            //    hasStartedCollect = true;
-            //    collect.start();
-            //}
-        } else {
-            arm.setCollectorPower(0);
-            hasStartedCollect = false;
-        }
-        
-        /* Shooter Code Stuff
-         * Second Joystick:
-         *  Button 1 (Trigger): Shooter Command
-         */
-        if(SECOND_JOYSTICK.getRawButton(BUT_SHOOT_HIGH))
-        {
-            if(hasStartedShoot) {
-                hasStartedShoot = true;
-                //if(!shootHigh.isRunning())
-                //    shootHigh.start();
+            if (hasStartedCollect) {
+                hasStopedCollect = false;
+                hasStartedCollect = true;
+                collect.start();
             }
-            lowerFlywheel.setVelocity(144);
-            upperFlywheel.setVelocity(144);
-        } else{
-            hasStartedShoot = false;
-            //if (!shootHigh.isRunning()) {
-            //}
-            lowerFlywheel.setPower(0);
-            upperFlywheel.setPower(0);
+        } else {
+            hasStartedCollect = false;
+            if (!hasStopedCollect ) {
+                hasStopedCollect = true;
+                collect.cancel();
+            }
         }
 
     }

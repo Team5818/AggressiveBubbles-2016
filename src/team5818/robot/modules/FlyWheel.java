@@ -26,7 +26,8 @@ public class FlyWheel implements PIDSource, PIDOutput {
     /**
      * The gearbox ratio between the motor shaft to the wheel.
      */
-    private double gearBoxRatio = 40 / 16;
+    private final double gearBoxRatio;
+    public final double maxVelocity;
 
     /**
      * Weather to invert the output and sensor output.
@@ -52,8 +53,12 @@ public class FlyWheel implements PIDSource, PIDOutput {
      * @param reversed
      *            Specifies weather to reverse the sensor and output of the
      *            motor.
+     * @param gearRatio
+     *            The gearRatio on the flywheel. output/input
      */
-    public FlyWheel(CANTalon talon, boolean reversed) {
+    public FlyWheel(CANTalon talon, double gearRatio, double maxVel, boolean reversed) {
+        gearBoxRatio = gearRatio;
+        maxVelocity = maxVel;
         pid = new PIDController(KP, KI, KD, 1.0 / MAX_VELOCITY, this, this);
         pid.setAbsoluteTolerance(0.05 * MAX_VELOCITY);
         this.talon = talon;
