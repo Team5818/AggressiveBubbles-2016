@@ -4,11 +4,13 @@ import edu.wpi.first.wpilibj.CANTalon;
 import edu.wpi.first.wpilibj.command.Command;
 import team5818.robot.RobotCommon;
 import team5818.robot.RobotConstants;
+import team5818.robot.modules.Collector;
 
 public class Collect extends Command {
 
     public static final double MAX_COLLECT_POWER = 1;
     public static final double COLLECT_POWER = 0.6;
+    private Collector collector;
     
     private double endSequanceZeroTime;
     /**
@@ -25,13 +27,14 @@ public class Collect extends Command {
     
     @Override
     protected void initialize() {
-        RobotCommon.runningRobot.arm.setCollectorPower(COLLECT_POWER);
+        collector = RobotCommon.runningRobot.collector;
+        collector.setPower(MAX_COLLECT_POWER);
         zeroTime = System.nanoTime();
     }
 
     @Override
     protected void execute() {
-        if(RobotCommon.runningRobot.arm.isCollectorStaling() || hasStartedEndSequance)
+        if(collector.isStalled() || hasStartedEndSequance)
         {
             endSequance();
         }
@@ -41,12 +44,12 @@ public class Collect extends Command {
     {
         if(!hasStartedEndSequance) {
             hasStartedEndSequance = true;
-            RobotCommon.runningRobot.arm.setCollectorPower(-COLLECT_POWER/2);
+            collector.setPower(-COLLECT_POWER/2);
             endSequanceZeroTime = System.nanoTime();
         } else {
             double deltaTime = System.nanoTime() - endSequanceZeroTime;
             if(deltaTime >= ballFeedOutTime) {
-                RobotCommon.runningRobot.arm.setCollectorPower(0);
+                collector.setPower(0);
                 hasFinished  = true;
             }
         }   
@@ -63,7 +66,7 @@ public class Collect extends Command {
 
     @Override
     protected void end() {
-        RobotCommon.runningRobot.arm.setCollectorPower(0);
+       collector.setPower(0);
     }
 
     @Override

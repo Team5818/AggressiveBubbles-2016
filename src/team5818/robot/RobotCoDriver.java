@@ -13,6 +13,7 @@ import team5818.robot.commands.Collect;
 import team5818.robot.commands.SetFlyWheelVelocity;
 import team5818.robot.commands.ShootHigh;
 import team5818.robot.modules.Arm;
+import team5818.robot.modules.Collector;
 import team5818.robot.modules.FlyWheel;
 import team5818.robot.modules.Module;
 
@@ -73,6 +74,7 @@ public class RobotCoDriver implements Module {
     private Collect collect;
     private FlyWheel lowerFlywheel;
     private FlyWheel upperFlywheel;
+    private Collector collector;
     private Arm arm;
     private SetFlyWheelVelocity setFlyVelocity;
     private ShootHigh shootHigh;
@@ -83,6 +85,7 @@ public class RobotCoDriver implements Module {
     @Override
     public void initModule() {
         arm = RobotCommon.runningRobot.arm;
+        collector = RobotCommon.runningRobot.collector;
         lowerFlywheel = RobotCommon.runningRobot.lowerFlywheel;
         upperFlywheel = RobotCommon.runningRobot.upperFlywheel;
         collect = new Collect();
@@ -145,8 +148,7 @@ public class RobotCoDriver implements Module {
             // arm.resetEncoder();
         }
         if (FIRST_JOYSTICK.getRawButton(BUT_PRINT_ANGLE)) {
-            SmartDashboard.putString("DB/String 7",
-                    "" + arm.getPotentiometerVal());
+            SmartDashboard.putString("DB/String 7", "" + arm.getAngle());
         }
 
         /* Flywheel Code Stuff */
@@ -173,17 +175,17 @@ public class RobotCoDriver implements Module {
          * Command
          */
         if (FIRST_JOYSTICK.getRawButton(BUT_COLLECT)) {
-            arm.setCollectorPower(Collect.MAX_COLLECT_POWER);
+            collector.setPower((Collect.MAX_COLLECT_POWER));
             if (hasStartedCollect) {
-                hasStopedCollect = false;
-                hasStartedCollect = true;
-                collect.start();
+                // hasStopedCollect = false;
+                // hasStartedCollect = true;
+                // collect.start();
             }
         } else {
             hasStartedCollect = false;
-            if (!hasStopedCollect ) {
+            if (!hasStopedCollect) {
                 hasStopedCollect = true;
-                collect.cancel();
+                collector.setPower(0);
             }
         }
 

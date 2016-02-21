@@ -3,22 +3,23 @@ package team5818.robot.commands;
 import edu.wpi.first.wpilibj.command.Command;
 import team5818.robot.RobotCommon;
 import team5818.robot.modules.Arm;
+import team5818.robot.modules.Collector;
 
 public class ShootLow extends Command {
 
-    private Arm arm;
+    private Collector collector;
     
     private double zeroTime;
     private double maxShootTime = 4 * 1E9;
     
     public ShootLow()
     {
-        arm = RobotCommon.runningRobot.arm;
+        collector = RobotCommon.runningRobot.collector;
     }
     
     @Override
     protected void initialize() {
-        arm.setCollectorPower(-Collect.MAX_COLLECT_POWER);
+        collector.setPower(-Collect.MAX_COLLECT_POWER);
         zeroTime = System.nanoTime();
     }
 
@@ -36,7 +37,7 @@ public class ShootLow extends Command {
 
     @Override
     protected void end() {
-        arm.setCollectorPower(0);
+        collector.setPower(0);
     }
 
     @Override
