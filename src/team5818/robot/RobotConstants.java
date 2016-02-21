@@ -39,7 +39,6 @@ public final class RobotConstants {
     /**
      * talon controlling collector
      */
-
     public static final int TALON_COLLECTOR_MOTOR = 7;
 
     /**

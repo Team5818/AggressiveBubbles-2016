@@ -1,6 +1,7 @@
 package team5818.robot.modules;
 
 import edu.wpi.first.wpilibj.AnalogInput;
+import edu.wpi.first.wpilibj.CANSpeedController.ControlMode;
 import edu.wpi.first.wpilibj.CANTalon;
 import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.PIDSource;
@@ -24,6 +25,10 @@ public class Arm implements Module, PIDSource{
     private double minPower = -.5;
 
     private double angle;
+    /**
+     * 
+     */
+    private double collectorStallCurrent = 41;
 
     public Arm() {
         // ARM_ENCODER.reset();
@@ -53,6 +58,18 @@ public class Arm implements Module, PIDSource{
 
     public void setCollectorPower(double power) {
         COLLECTOR_MOTOR.set(power);
+    }
+    
+    /**
+     * Checks weather the collector motor is stalling.
+     * @return Returns true if collector motor is stalling
+     */
+    public boolean isCollectorStaling()
+    {
+        double threshold = collectorStallCurrent - 10;
+        if(COLLECTOR_MOTOR.getOutputCurrent() > threshold)
+            return true;
+        return false;
     }
 
     /**

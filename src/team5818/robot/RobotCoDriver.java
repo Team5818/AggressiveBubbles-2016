@@ -6,6 +6,7 @@ import java.text.NumberFormat;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import team5818.robot.commands.Collect;
 import team5818.robot.commands.SetFlywheelVelocity;
 import team5818.robot.modules.Arm;
 import team5818.robot.modules.Module;
@@ -46,9 +47,10 @@ public class RobotCoDriver implements Module {
     
     public static final int BUT_STARTPID = 12;
     public static final int BUT_STOPPID = 11;
-    
     public static final int BUT_PRINT_RPS = 10;
+    public static final int BUT_COLLECT = 1;
     
+    private boolean hasStartedCollect = false;
     private boolean hasStartedPID = false;
     private boolean hasStopedPID = false;
     private boolean hasPrintedRPS = false;
@@ -62,7 +64,9 @@ public class RobotCoDriver implements Module {
             new Joystick(RobotConstants.CODRIVER_FIRST_JOYSTICK_PORT);
     private static final Joystick SECOND_JOYSTICK =
             new Joystick(RobotConstants.CODRIVER_SECOND_JOYSTICK_PORT);
-
+    
+    private Collect collect;
+    //TODO make flywheel a field
     private Arm arm;
 
     private boolean setAngleMode = false;
@@ -70,7 +74,7 @@ public class RobotCoDriver implements Module {
     @Override
     public void initModule() {
         arm = RobotCommon.runningRobot.arm;
-        
+        collect = new Collect();
         
     }
 
@@ -126,7 +130,8 @@ public class RobotCoDriver implements Module {
          */
         if(SECOND_JOYSTICK.getRawButton(BUT_STARTPID)) {
             if(!hasStartedPID) {
-                SetFlywheelVelocity setFlyVel = new SetFlywheelVelocity(100);
+                double v = 100;
+                SetFlywheelVelocity setFlyVel = new SetFlywheelVelocity(v);
                 setFlyVel.start();
                 hasStartedPID = true;
             }
@@ -150,16 +155,13 @@ public class RobotCoDriver implements Module {
         SmartDashboard.putNumber("Lower Flywheel RPS", RobotCommon.runningRobot.lowerFlywheel.getRPS());
         SmartDashboard.putNumber("Upper Flywheel RPS", RobotCommon.runningRobot.upperFlywheel.getRPS());
         
-        /*
-        if(SECOND_JOYSTICK.getRawButton(BUT_PRINT_RPS)) {
-            if(!hasPrintedRPS) {
-                hasStartedPID = true;
+        if(SECOND_JOYSTICK.getRawButton(BUT_COLLECT)) {
+            if(hasStartedCollect) {
+                collect.cancel();
+                collect.start();
             }
-        } else {
-            
-            hasPrintedRPS = false;
         }
-        */
+            
 
     }
 
