@@ -142,7 +142,7 @@ public class RobotCoDriver implements Module {
             hasStopedPID = false;
         }
         SmartDashboard.putNumber("Lower Flywheel RPS",
-                RobotCommon.runningRobot.shooter.getLowerFlywheel().getRPS());
+                RobotCommon.runningRobot.lowerFlywheel.getRPS());
 
         /*
          * if(SECOND_JOYSTICK.getRawButton(BUT_PRINT_RPS)) { if(!hasPrintedRPS)
