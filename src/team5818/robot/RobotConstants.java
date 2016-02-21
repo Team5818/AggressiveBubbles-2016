@@ -35,7 +35,11 @@ public final class RobotConstants {
     /**
      * The talon controlling the arm.
      */
-    public static final int TALON_ARM_MOTOR = 12;
+    public static final int TALON_FIRST_ARM_MOTOR = 12;
+    /**
+     * The talon controlling the arm.
+     */
+    public static final int TALON_SECOND_ARM_MOTOR = 7;
     /**
      * talon controlling collector
      */

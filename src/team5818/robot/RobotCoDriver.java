@@ -180,12 +180,13 @@ public class RobotCoDriver implements Module {
          *  Button 1 (Trigger): Collect Command
          */
         if(FIRST_JOYSTICK.getRawButton(BUT_COLLECT)) {
-            if(hasStartedCollect) {
-                hasStartedCollect = true;
-                collect.cancel();
-                collect.start();
-            }
+            arm.setCollectorPower(Collect.MAX_COLLECT_POWER);
+            //if(hasStartedCollect) {
+            //    hasStartedCollect = true;
+            //    collect.start();
+            //}
         } else {
+            arm.setCollectorPower(0);
             hasStartedCollect = false;
         }
         
@@ -197,13 +198,17 @@ public class RobotCoDriver implements Module {
         {
             if(hasStartedShoot) {
                 hasStartedShoot = true;
-                if(!shootHigh.isRunning())
-                    shootHigh.start();
+                //if(!shootHigh.isRunning())
+                //    shootHigh.start();
             }
+            lowerFlywheel.setVelocity(144);
+            upperFlywheel.setVelocity(144);
         } else{
-            if (!shootHigh.isRunning()) {
-                hasStartedShoot = false;
-            }
+            hasStartedShoot = false;
+            //if (!shootHigh.isRunning()) {
+            //}
+            lowerFlywheel.setPower(0);
+            upperFlywheel.setPower(0);
         }
 
     }

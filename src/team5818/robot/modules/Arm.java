@@ -3,22 +3,28 @@ package team5818.robot.modules;
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.CANSpeedController.ControlMode;
 import edu.wpi.first.wpilibj.CANTalon;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PIDController;
+import edu.wpi.first.wpilibj.PIDOutput;
 import edu.wpi.first.wpilibj.PIDSource;
 import edu.wpi.first.wpilibj.PIDSourceType;
 import team5818.robot.RobotConstants;
 
-public class Arm implements Module, PIDSource {
-    //TODO redesign arm to use encoder on final robot.
-    private static final AnalogInput ARM_POTENTIOMETER =
-            new AnalogInput(RobotConstants.ARM_POTENTIOMETER_CHANNEL);
-    private static final CANTalon ARM_MOTOR =
-            new CANTalon(RobotConstants.TALON_ARM_MOTOR);
+public class Arm implements Module, PIDSource, PIDOutput {
 
-    private static final CANTalon COLLECTOR_MOTOR =
+    // TODO redesign arm to use encoder on final robot.
+    private static final AnalogInput armPotentiometer =
+            new AnalogInput(RobotConstants.ARM_POTENTIOMETER_CHANNEL);
+    private static final CANTalon firstArmMotor =
+            new CANTalon(RobotConstants.TALON_FIRST_ARM_MOTOR);
+    private static final CANTalon secondArmMotor =
+            new CANTalon(RobotConstants.TALON_SECOND_ARM_MOTOR);
+
+    private static final CANTalon collectorMotor =
             new CANTalon(RobotConstants.TALON_COLLECTOR_MOTOR);
+    //TODO have the PID use both motors for arm.
     private PIDController armPID =
-            new PIDController(.008, .0005, 0, this, ARM_MOTOR);
+            new PIDController(.008, .0005, 0, this, firstArmMotor);
 
     private double power;
     private double maxPower = .5; // max and min power are for PID and aim
@@ -27,7 +33,7 @@ public class Arm implements Module, PIDSource {
 
     private double angle;
     /**
-     * 
+     * The current at which the collector motor will stall.
      */
     private double collectorStallCurrent = 41;
 
@@ -35,40 +41,42 @@ public class Arm implements Module, PIDSource {
         // ARM_ENCODER.reset();
         // ARM_ENCODER.setDistancePerPulse(RobotConstants.ARM_ENCODER_SCALE); //
         // Angle per pulse in our case
-        ARM_MOTOR.setInverted(true);
+        firstArmMotor.setInverted(true);
+        if (secondArmMotor != null)
+            secondArmMotor.setInverted(false);
         armPID.setOutputRange(minPower, maxPower);
 
     }
 
     /**
-     * Sets power of arm, keeping arm power within max and minimum parameters .5
-     * and -.5
+     * Sets power to arm motors
      * 
      * @param power
-     *            - power value
+     *            The power value
      */
-
     public void setPower(double power) {
         armPID.disable();
-        ARM_MOTOR.set(power);
+        firstArmMotor.set(power);
+        if (secondArmMotor != null) {
+            secondArmMotor.set(power);
+        }
     }
 
     /**
      * Sets power collector
      */
-
     public void setCollectorPower(double power) {
-        COLLECTOR_MOTOR.set(power);
+        collectorMotor.set(power);
     }
-    
+
     /**
      * Checks weather the collector motor is stalling.
+     * 
      * @return Returns true if collector motor is stalling
      */
-    public boolean isCollectorStaling()
-    {
+    public boolean isCollectorStaling() {
         double threshold = collectorStallCurrent - 10;
-        if(COLLECTOR_MOTOR.getOutputCurrent() > threshold)
+        if (collectorMotor.getOutputCurrent() > threshold)
             return true;
         return false;
     }
@@ -87,7 +95,7 @@ public class Arm implements Module, PIDSource {
      * @return angle measured by encoder
      */
     public double getPotentiometerVal() {
-        double a1 = ARM_POTENTIOMETER.getValue()
+        double a1 = armPotentiometer.getValue()
                 * RobotConstants.ARM_POTENTIOMETER_SCALE;
         double aFinal = a1 + RobotConstants.ARM_POTENTIOMETER_INTERCEPT;
         return aFinal;
@@ -224,6 +232,12 @@ public class Arm implements Module, PIDSource {
     @Override
     public double pidGet() {
         return getPotentiometerVal();
+    }
+
+    @Override
+    public void pidWrite(double output) {
+        this.setPower(output);
+
     }
 
 }
