@@ -26,8 +26,7 @@ public class FlyWheel implements PIDSource, PIDOutput {
     /**
      * The gearbox ratio between the motor shaft to the wheel.
      */
-    // TODO fix this number
-    private double gearBoxRatio = 24.0 / 60;
+    private double gearBoxRatio = 40 / 16;
 
     /**
      * Weather to invert the output and sensor output.

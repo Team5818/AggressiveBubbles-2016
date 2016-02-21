@@ -35,7 +35,7 @@ public final class RobotConstants {
     /**
      * The talon controlling the arm.
      */
-    public static final int TALON_ARM_MOTOR = 9;
+    public static final int TALON_ARM_MOTOR = 12;
     /**
      * talon controlling collector
      */
@@ -44,7 +44,7 @@ public final class RobotConstants {
     /**
      * The talon controller for the upper flywheel motor.
      */
-    public static final int TALON_FLYWHEEL_UPPER = 6;
+    public static final int TALON_FLYWHEEL_UPPER = 11;
 
     /**
      * The talon controller for the lower flywheel motor.
@@ -100,9 +100,9 @@ public final class RobotConstants {
     public static final double MAX_VELOCITY = 175;
     public static final double ONE_OVER_MAX_VEL = 1 / MAX_VELOCITY;
 
-    // TODO recalcute
+    // TODO redo the math for ROBOT_ENCODER_SCALE
     /**
-     * inches/tick
+     * The encoder scale to convert to inches/tick.
      */
     public static final double ROBOT_ENCODER_SCALE = 0.02843601895734597;
 

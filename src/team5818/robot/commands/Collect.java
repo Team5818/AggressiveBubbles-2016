@@ -7,9 +7,8 @@ import team5818.robot.RobotConstants;
 
 public class Collect extends Command {
 
-    private static final CANTalon talon = new CANTalon(RobotConstants.TALON_COLLECTOR_MOTOR);
-    
-    private static final double power = 0.6;
+    public static final double MAX_COLLECT_POWER = 1;
+    public static final double COLLECT_POWER = 0.6;
     
     private double endSequanceZeroTime;
     /**
@@ -17,14 +16,17 @@ public class Collect extends Command {
      */
     //TODO tune the ballFeedOutTime number to the correct timing.
     private double ballFeedOutTime = 0.4 * 1E9;
+    private double maxCollectTime = 4 * 1E9;
+    private double zeroTime;
+    
     private boolean hasStartedEndSequance = false;
-
     private boolean hasFinished = false;
     
     
     @Override
     protected void initialize() {
-        RobotCommon.runningRobot.arm.setCollectorPower(power);
+        RobotCommon.runningRobot.arm.setCollectorPower(COLLECT_POWER);
+        zeroTime = System.nanoTime();
     }
 
     @Override
@@ -39,7 +41,7 @@ public class Collect extends Command {
     {
         if(!hasStartedEndSequance) {
             hasStartedEndSequance = true;
-            RobotCommon.runningRobot.arm.setCollectorPower(-power/2);
+            RobotCommon.runningRobot.arm.setCollectorPower(-COLLECT_POWER/2);
             endSequanceZeroTime = System.nanoTime();
         } else {
             double deltaTime = System.nanoTime() - endSequanceZeroTime;
@@ -52,6 +54,10 @@ public class Collect extends Command {
 
     @Override
     protected boolean isFinished() {
+        if(System.nanoTime() - zeroTime >= maxCollectTime) {
+            end();
+            return true;
+        }
         return hasFinished;
     }
 

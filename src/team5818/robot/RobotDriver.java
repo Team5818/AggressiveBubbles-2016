@@ -52,12 +52,12 @@ public class RobotDriver implements Module {
     public void initModule() {
         JoystickButton resetEncoder = new JoystickButton(FIRST_JOYSTICK, 10);
         resetEncoder.whenPressed(new ResetEncoderCommand());
-        // JoystickButton driveForwardSlowly =
-        // new JoystickButton(FIRST_JOYSTICK, 3);
-        // JoystickButton fallSpeedAhead = new JoystickButton(FIRST_JOYSTICK,
-        // 2);
-        // driveForwardSlowly.whenActive(new DriveVelocityCommand());
-        // fallSpeedAhead.whileHeld(new DriveForwardCommand());
+        JoystickButton driveForwardSlowly =
+        new JoystickButton(FIRST_JOYSTICK, 3);
+        JoystickButton fallSpeedAhead = new JoystickButton(FIRST_JOYSTICK,
+        2);
+        driveForwardSlowly.whenActive(new DriveVelocityCommand());
+        fallSpeedAhead.whileHeld(new DriveForwardCommand());
         DriveSide leftDriveSide =
                 RobotCommon.runningRobot.driveTrain.getLeftMotors();
         DriveSide rightDriveSide =

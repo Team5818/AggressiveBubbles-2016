@@ -9,7 +9,7 @@ import edu.wpi.first.wpilibj.PIDSourceType;
 import team5818.robot.RobotConstants;
 
 public class Arm implements Module, PIDSource {
-
+    //TODO redesign arm to use encoder on final robot.
     private static final AnalogInput ARM_POTENTIOMETER =
             new AnalogInput(RobotConstants.ARM_POTENTIOMETER_CHANNEL);
     private static final CANTalon ARM_MOTOR =
