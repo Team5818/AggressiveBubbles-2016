@@ -6,9 +6,9 @@ import java.text.NumberFormat;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import team5818.robot.commands.SetFlywheelVelocity;
 import team5818.robot.modules.Arm;
 import team5818.robot.modules.Module;
-import team5818.robot.modules.Shooter;
 
 /**
  * The secondary robot driver. Responsible for the arm.
@@ -65,7 +65,6 @@ public class RobotCoDriver implements Module {
 
     private Arm arm;
 
-    private Shooter shooter = new Shooter();
     private boolean setAngleMode = false;
 
     @Override
@@ -127,7 +126,8 @@ public class RobotCoDriver implements Module {
          */
         if(SECOND_JOYSTICK.getRawButton(BUT_STARTPID)) {
             if(!hasStartedPID) {
-                RobotCommon.runningRobot.shooter.setFlywheelVelocity(100);
+                SetFlywheelVelocity setFlyVel = new SetFlywheelVelocity(100);
+                setFlyVel.start();
                 hasStartedPID = true;
             }
         } else {
@@ -138,7 +138,8 @@ public class RobotCoDriver implements Module {
         
         if(SECOND_JOYSTICK.getRawButton(BUT_STOPPID)) {
             if(!hasStopedPID) {
-                RobotCommon.runningRobot.shooter.setFlywheelPower(0);
+                RobotCommon.runningRobot.lowerFlywheel.setPower(0);
+                RobotCommon.runningRobot.lowerFlywheel.setPower(0);
                 
                 hasStopedPID = true;
             }
@@ -146,7 +147,8 @@ public class RobotCoDriver implements Module {
             
             hasStopedPID = false;
         }
-        SmartDashboard.putNumber("Lower Flywheel RPS", RobotCommon.runningRobot.shooter.getLowerFlywheel().getRPS());
+        SmartDashboard.putNumber("Lower Flywheel RPS", RobotCommon.runningRobot.lowerFlywheel.getRPS());
+        SmartDashboard.putNumber("Upper Flywheel RPS", RobotCommon.runningRobot.upperFlywheel.getRPS());
         
         /*
         if(SECOND_JOYSTICK.getRawButton(BUT_PRINT_RPS)) {

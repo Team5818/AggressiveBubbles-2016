@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.usfirst.frc.team5818.robot.Robot;
 
+import edu.wpi.first.wpilibj.CANTalon;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
@@ -15,8 +16,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import team5818.robot.modules.Arm;
 import team5818.robot.modules.ComputerVision;
+import team5818.robot.modules.FlyWheel;
 import team5818.robot.modules.Module;
-import team5818.robot.modules.Shooter;
 import team5818.robot.modules.VisionThread;
 import team5818.robot.modules.drivetrain.ArcadeDriveCalculator;
 import team5818.robot.modules.drivetrain.DriveTrain;
@@ -53,7 +54,8 @@ public class RobotCommon extends IterativeRobot {
                     ArcadeDriveCalculator.INSTANCE);
     private final RobotDriver driver = addModule(new RobotDriver());
     private final RobotCoDriver coDriver = addModule(new RobotCoDriver());
-    public final Shooter shooter = addModule(new Shooter());
+    public final FlyWheel lowerFlywheel = new FlyWheel(new CANTalon(RobotConstants.TALON_FLYWHEEL_LOWER), true);
+    public final FlyWheel upperFlywheel = new FlyWheel(new CANTalon(RobotConstants.TALON_FLYWHEEL_UPPER), false);
     public final VisionThread vision = addModule(new VisionThread());
     public final Arm arm = addModule(new Arm());
     final String defaultAuto = "Default";
