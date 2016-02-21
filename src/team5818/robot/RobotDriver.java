@@ -3,7 +3,8 @@ package team5818.robot;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
-import team5818.robot.commands.DriveForwardSlowlyCommand;
+import team5818.robot.commands.DriveForwardCommand;
+import team5818.robot.commands.DriveVelocityCommand;
 import team5818.robot.commands.ResetEncoderCommand;
 import team5818.robot.modules.Module;
 import team5818.robot.modules.drivetrain.ArcadeDriveCalculator;
@@ -51,9 +52,12 @@ public class RobotDriver implements Module {
     public void initModule() {
         JoystickButton resetEncoder = new JoystickButton(FIRST_JOYSTICK, 10);
         resetEncoder.whenPressed(new ResetEncoderCommand());
-        JoystickButton driveForwardSlowly =
-                new JoystickButton(FIRST_JOYSTICK, 3);
-        driveForwardSlowly.whenActive(new DriveForwardSlowlyCommand());
+        // JoystickButton driveForwardSlowly =
+        // new JoystickButton(FIRST_JOYSTICK, 3);
+        // JoystickButton fallSpeedAhead = new JoystickButton(FIRST_JOYSTICK,
+        // 2);
+        // driveForwardSlowly.whenActive(new DriveVelocityCommand());
+        // fallSpeedAhead.whileHeld(new DriveForwardCommand());
         DriveSide leftDriveSide =
                 RobotCommon.runningRobot.driveTrain.getLeftMotors();
         DriveSide rightDriveSide =
@@ -66,10 +70,6 @@ public class RobotDriver implements Module {
 
     @Override
     public void teleopPeriodicModule() {
-        if (1 == 1 + 1 - 1) {
-            return;
-        }
-
         if (FIRST_JOYSTICK.getRawButton(BUT_DEBUG)) {
             currTicks = (currTicks + 1) % debugCycleTicks;
             if (currTicks == 0) {
@@ -137,13 +137,11 @@ public class RobotDriver implements Module {
 
     @Override
     public void initTeleop() {
-        // TODO Auto-generated method stub
 
     }
 
     @Override
     public void initAutonomous() {
-        // TODO Auto-generated method stub
 
     }
 

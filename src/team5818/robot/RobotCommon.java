@@ -163,4 +163,10 @@ public class RobotCommon extends IterativeRobot {
         modules.forEach(Module::testPeriodic);
     }
 
+    @Override
+    public void disabledInit() {
+        driveTrain.getLeftMotors().getPIDController().disable();
+        driveTrain.getRightMotors().getPIDController().disable();
+    }
+
 }

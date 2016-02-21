@@ -27,9 +27,9 @@ public class DriveTrainController {
         this.driveCalculator = driveCalculator;
     }
 
-    public void driveToTargetXFeetAway(double feet) {
-        driveTrain.getLeftMotors().setDriveDistance(feet);
-        driveTrain.getRightMotors().setDriveDistance(feet);
+    public void driveToTargetXInchesAway(double inches) {
+        driveTrain.getLeftMotors().setDriveDistance(inches);
+        driveTrain.getRightMotors().setDriveDistance(inches);
     }
 
     public void setPowerDirectly(Vector2d power) {
