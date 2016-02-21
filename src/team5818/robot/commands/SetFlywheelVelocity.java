@@ -4,7 +4,7 @@ import edu.wpi.first.wpilibj.command.Command;
 import team5818.robot.RobotCommon;
 import team5818.robot.modules.FlyWheel;
 
-public class SetFlywheelVelocity extends Command {
+public class SetFlyWheelVelocity extends Command {
 
     /**
      * The velocity to set the flywheel to.
@@ -20,11 +20,10 @@ public class SetFlywheelVelocity extends Command {
     
     private static final FlyWheel flyUp = RobotCommon.runningRobot.upperFlywheel;
     private static final FlyWheel flyLo = RobotCommon.runningRobot.lowerFlywheel;
-
     /**
      * @param vel The velocity desired to be set in units of 
      */
-    public SetFlywheelVelocity(double vel)
+    public void setVelocity(double vel)
     {
         velocity = vel;
     }
