@@ -7,8 +7,12 @@ import team5818.robot.modules.Collector;
 
 public class ShootHigh extends Command {
     public static final double shootVelocity = 144;
+    public static final double shootAngle = 60;
+    private boolean finished;
     
     private SetFlyWheelVelocity setFlyVelocity;
+    private SetArmAngle setArmAngle;
+    
     private Collector collector;
     
     /**
@@ -35,15 +39,19 @@ public class ShootHigh extends Command {
     
     @Override
     protected void initialize() {
+        setArmAngle = new SetArmAngle(shootAngle);
+        setArmAngle.start();
         setFlyVelocity.setVelocity(shootVelocity);
-        collector.setPower((Collect.COLLECT_POWER));
+        setFlyVelocity.start();
         zeroTime = System.nanoTime();
         //TODO make ShootHigh move arm to angle using PID.
     }
 
     @Override
     protected void execute() {
-
+        if(setArmAngle.isFinished() && setFlyVelocity.isFinished()){
+            collector.setPower(Collect.COLLECT_POWER);
+        }
     }
 
     @Override

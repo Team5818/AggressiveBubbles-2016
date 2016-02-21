@@ -93,7 +93,7 @@ public class Arm implements Module, PIDSource, PIDOutput {
 
     /**
      * returns error from PID controller
-     * @return  eroor
+     * @return  error
      */
 
     public double getError() {
