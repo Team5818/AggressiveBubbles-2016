@@ -39,17 +39,17 @@ public final class RobotConstants {
     /**
      * talon controlling collector
      */
-    public static final int TALON_COLLECTOR_MOTOR = 7;
+    public static final int TALON_COLLECTOR_MOTOR = 10;
 
     /**
      * The talon controller for the upper flywheel motor.
      */
-    public static final int TALON_FLYWHEEL_UPPER = 10;
+    public static final int TALON_FLYWHEEL_UPPER = 6;
 
     /**
      * The talon controller for the lower flywheel motor.
      */
-    public static final int TALON_FLYWHEEL_LOWER = 8;
+    public static final int TALON_FLYWHEEL_LOWER = 9;
 
     /**
      * The channel for the arm potentiometer.
