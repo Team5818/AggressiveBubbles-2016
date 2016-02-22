@@ -60,14 +60,6 @@ public final class RobotConstants {
      */
     public static final int ARM_POTENTIOMETER_CHANNEL = 0;
     /**
-     * The scale for the arm potentiometer.
-     */
-    public static final double ARM_POTENTIOMETER_SCALE = .0657;
-    /**
-     * intercept for arm potentiometer
-     */
-    public static final double ARM_POTENTIOMETER_INTERCEPT = -70.15;
-    /**
      * The button known as "trigger" on the joystick.
      */
     public static final int TRIGGER_BUTTON = ButtonType.kTrigger.value + 1;
