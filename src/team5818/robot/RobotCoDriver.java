@@ -7,6 +7,7 @@ import javax.swing.text.NumberFormatter;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.buttons.JoystickButton;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import team5818.robot.commands.Collect;
@@ -51,24 +52,23 @@ public class RobotCoDriver implements Module {
      */
     public static final int GO_TO_ANGLE_BUTTON = 9;
 
-    public static final int BUT_START_FLYWHEEL = 12;
-    public static final int BUT_STOP_FLYWHEEL = 11;
-    public static final int BUT_COLLECT = 1;
-    public static final int BUT_SHOOT_HIGH = 1;
-
-    private boolean hasStartedCollect = false;
-    private boolean hasStartedShoot = false;
-    private boolean hasStartedFlywheel = false;
-    private boolean hasStopedFlywheel = false;
-
     /**
      * returns error from arm PID
      */
     public static final int ERROR_BUTTON = 1;
+    
+    /**
+     * Button starts the flywheel.
+     */
+    private static final int BUT_START_FLYWHEEL = 1;
+    /**
+     * Button stops the flywheel.
+     */
+    private static final int BUT_STOP_FLYWHEEL = 2;
 
-    private static final Joystick FIRST_JOYSTICK =
+    private static final Joystick firstJoystick =
             new Joystick(RobotConstants.CODRIVER_FIRST_JOYSTICK_PORT);
-    private static final Joystick SECOND_JOYSTICK =
+    private static final Joystick secondJoystick =
             new Joystick(RobotConstants.CODRIVER_SECOND_JOYSTICK_PORT);
 
     private Collect collect;
@@ -76,11 +76,8 @@ public class RobotCoDriver implements Module {
     private FlyWheel upperFlywheel;
     private Collector collector;
     private Arm arm;
-    private SetFlywheelVelocity setFlyVelocity;
-    private ShootHigh shootHigh;
 
     private boolean setAngleMode = false;
-    private boolean hasStopedCollect = false;
 
     @Override
     public void initModule() {
@@ -89,17 +86,17 @@ public class RobotCoDriver implements Module {
         lowerFlywheel = RobotCommon.runningRobot.lowerFlywheel;
         upperFlywheel = RobotCommon.runningRobot.upperFlywheel;
         collect = new Collect();
-        shootHigh = new ShootHigh();
-        setFlyVelocity = new SetFlywheelVelocity(144);
-        LiveWindow.addActuator("Flywheel", "Lower PID",
-                lowerFlywheel.getPIDController());
-        LiveWindow.addActuator("Flywheel", "Upper PID",
-                upperFlywheel.getPIDController());
-        LiveWindow.addActuator("Flywheel", "Lower PID",
-                lowerFlywheel.getPIDController());
-        LiveWindow.addActuator("Flywheel", "Upper PID",
-                upperFlywheel.getPIDController());
 
+        LiveWindow.addActuator("Flywheel", "Lower PID",
+                lowerFlywheel.getPIDController());
+        LiveWindow.addActuator("Flywheel", "Upper PID",
+                upperFlywheel.getPIDController());
+        
+        JoystickButton butStartFlywheel = new JoystickButton(firstJoystick, BUT_START_FLYWHEEL);
+        butStartFlywheel.whenPressed(new SetFlywheelVelocity(144));
+        JoystickButton butStopFlywheel = new JoystickButton(firstJoystick, BUT_STOP_FLYWHEEL);
+        butStopFlywheel.whenPressed(new SetFlywheelVelocity(0));
+        
     }
 
     @Override
@@ -112,14 +109,14 @@ public class RobotCoDriver implements Module {
          * Arm if PID disabled.
          */
         // TODO Get rid of RobotCoDriver arm PID test code.
-        if (FIRST_JOYSTICK.getRawButton(BUT_ENTER_PID)) {
+        if (firstJoystick.getRawButton(BUT_ENTER_PID)) {
             setAngleMode = true;
             if (setAngleMode) {
                 DriverStation.reportError("Entering PID Mode", false);
             }
         }
 
-        if (FIRST_JOYSTICK.getRawButton(BUT_EXIT_PID)) {
+        if (firstJoystick.getRawButton(BUT_EXIT_PID)) {
             setAngleMode = false;
             if (setAngleMode) {
                 DriverStation.reportError("Exiting PID Mode", false);
@@ -129,51 +126,33 @@ public class RobotCoDriver implements Module {
         // arm.armTeleopPeriodic(); don't use in setAngleMode
 
         if (setAngleMode) {
-            double target = 45 * (1 - FIRST_JOYSTICK.getThrottle());
+            double target = 45 * (1 - firstJoystick.getThrottle());
             arm.goToAngle(target);
-            if (FIRST_JOYSTICK.getRawButton(ERROR_BUTTON)) {
+            if (firstJoystick.getRawButton(ERROR_BUTTON)) {
                 DriverStation.reportError("" + arm.getError() + "\n", false);
             }
-        } else if (FIRST_JOYSTICK.getRawButton(BUT_UP_ANGLE)) {
+        } else if (firstJoystick.getRawButton(BUT_UP_ANGLE)) {
             arm.aimAdjust(true);
-        } else if (FIRST_JOYSTICK.getRawButton(BUT_DOWN_ANGLE)) {
+        } else if (firstJoystick.getRawButton(BUT_DOWN_ANGLE)) {
             arm.aimAdjust(false);
         }
 
         if (!setAngleMode) {
-            arm.setPower(FIRST_JOYSTICK.getY());
+            arm.setPower(firstJoystick.getY());
         }
 
-        if (FIRST_JOYSTICK.getRawButton(BUT_ARM_RESET)) {
+        if (firstJoystick.getRawButton(BUT_ARM_RESET)) {
             // arm.resetEncoder();
         }
-        if (FIRST_JOYSTICK.getRawButton(BUT_PRINT_ANGLE)) {
+        if (firstJoystick.getRawButton(BUT_PRINT_ANGLE)) {
             SmartDashboard.putString("DB/String 7", "" + arm.getAngle());
-        }
-
-        /* Flywheel Code Stuff */
-        /*
-         * Second Joysick: Button 1 (Trigger): Spin up flywheel.
-         */
-        if (SECOND_JOYSTICK.getRawButton(BUT_START_FLYWHEEL)) {
-            if (!hasStartedFlywheel) {
-                hasStartedFlywheel = true;
-                hasStopedFlywheel = false;
-                double v = 144;
-                setFlyVelocity.start();
-            }
-        } else {
-            if (!hasStopedFlywheel) {
-                hasStopedFlywheel = true;
-                setFlyVelocity.cancel();
-            }
         }
 
         /*
          * Collector Code Stuff First - Joystick Button 1 (Trigger): Collect
          * Command
          */
-        collector.setPower((SECOND_JOYSTICK.getY()));
+        collector.setPower((secondJoystick.getY()));
     }
 
     @Override

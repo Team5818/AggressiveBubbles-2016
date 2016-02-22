@@ -18,6 +18,8 @@ import edu.wpi.first.wpilibj.PIDSourceType;
  */
 public class FlyWheel implements PIDSource, PIDOutput, Module {
 
+    public static double TOLERANCE = 10;
+
     /**
      * The CANTalonWithPIDModes motor controller for the upper wheel.
      */
@@ -41,8 +43,7 @@ public class FlyWheel implements PIDSource, PIDOutput, Module {
      * constant izone = Integration Zone for when to cut off the integral klrr =
      * Closed Loop Ramp Rate constant.
      */
-    public static final double KP = 0.0001, KI = 0.0001, KD = 0.0001,
-            KIZONE = 0.0001, KCLRR = 0.0001;
+    public static final double KP = 0.005, KI = 0.01, KD = 0.01;
 
     private PIDController pid;
 
@@ -60,7 +61,7 @@ public class FlyWheel implements PIDSource, PIDOutput, Module {
         gearBoxRatio = gearRatio;
         maxVelocity = maxVel;
         pid = new PIDController(KP, KI, KD, 1.0 / MAX_VELOCITY, this, this);
-        pid.setAbsoluteTolerance(0.05 * MAX_VELOCITY);
+        pid.setAbsoluteTolerance(TOLERANCE);
         this.talon = talon;
         this.inverted = reversed;
     }
@@ -76,6 +77,7 @@ public class FlyWheel implements PIDSource, PIDOutput, Module {
      *            the desired velocity
      */
     public void setVelocity(double vel) {
+        pid.reset();
         pid.setSetpoint(vel);
         pid.enable();
     }
