@@ -31,9 +31,7 @@ public class SetArmAngle extends Command {
     }
 
     @Override
-    protected void end() {
-        arm.disablePID();
-    }
+    protected void end() {}
 
     @Override
     protected void interrupted() {

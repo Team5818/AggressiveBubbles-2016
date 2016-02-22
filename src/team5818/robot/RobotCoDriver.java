@@ -2,9 +2,11 @@ package team5818.robot;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.buttons.JoystickButton;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import team5818.robot.commands.Collect;
+import team5818.robot.commands.SetArmAngle;
 import team5818.robot.commands.SetFlyWheelVelocity;
 import team5818.robot.commands.ShootHigh;
 import team5818.robot.modules.Arm;
@@ -22,13 +24,17 @@ public class RobotCoDriver implements Module {
      */
     public static final int BUT_PRINT_ANGLE = 7;
     /**
-     * goes to high shooting angle degrees
+     * goes to angle specified by throttle
      */
-    public static final int BUT_HIGH_ANGLE = 8;
+    JoystickButton BUT_THROTTLE_ANGLE = new JoystickButton(FIRST_JOYSTICK, 8);
+    /**
+     * goes to high shooting angle 
+     */
+    JoystickButton BUT_HIGH_ANGLE = new JoystickButton(FIRST_JOYSTICK, 5);
     /**
      * goes to 0 degrees
      */
-    public static final int BUT_ZERO_DEG = 9;
+    JoystickButton BUT_ZERO_DEG = new JoystickButton(FIRST_JOYSTICK, 3);
     /**
      * The button that increases the angle the arm.
      */
@@ -121,10 +127,9 @@ public class RobotCoDriver implements Module {
 
         if (pidMode) {
             double target = 45 * (1 - FIRST_JOYSTICK.getThrottle());
-            arm.goToAngle(target);
-            if (FIRST_JOYSTICK.getRawButton(ERROR_BUTTON)) {
-                DriverStation.reportError("" + arm.getError() + "\n", false);
-            }
+            BUT_THROTTLE_ANGLE.whenPressed(new SetArmAngle(target));
+            BUT_HIGH_ANGLE.whenPressed(new SetArmAngle(60));
+            BUT_ZERO_DEG.whenPressed(new SetArmAngle(0));
         }
 
         if (!pidMode) {
@@ -135,12 +140,6 @@ public class RobotCoDriver implements Module {
             }
             if (FIRST_JOYSTICK.getRawButton(BUT_DOWN_ANGLE)) {
                 arm.aimAdjust(false);
-            }
-            if (FIRST_JOYSTICK.getRawButton(BUT_HIGH_ANGLE)) {
-                arm.goToAngle(60);
-            }
-            if (FIRST_JOYSTICK.getRawButton(BUT_ZERO_DEG)) {
-                arm.goToAngle(0);
             }
         }
 

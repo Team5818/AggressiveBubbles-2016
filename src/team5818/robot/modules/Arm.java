@@ -39,6 +39,7 @@ public class Arm implements Module, PIDSource, PIDOutput {
         if (secondArmMotor != null)
             secondArmMotor.setInverted(false);
         armPID.setOutputRange(minPower, maxPower);
+        armPID.setAbsoluteTolerance(5);
 
     }
 
@@ -115,7 +116,8 @@ public class Arm implements Module, PIDSource, PIDOutput {
      * @return whether PID has reached target
      */
     public boolean onTarget() {
-        return armPID.onTarget();
+        boolean finished = armPID.onTarget();
+        return finished;
     }
 
     /**
