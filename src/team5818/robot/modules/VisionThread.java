@@ -17,7 +17,7 @@ public class VisionThread implements Runnable, Module {
             captureThread = new Thread(this);
             captureThread.setName("Camera Capture Thread");
         } catch (Exception e) {
-            DriverStation.reportError("Could not create a Vision Thread",
+            DriverStation.reportError("Could not create a Vision Thread\n",
                     false);
             cvRunning = false;
             isRunning = true;

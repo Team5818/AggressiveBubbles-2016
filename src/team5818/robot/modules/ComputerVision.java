@@ -49,11 +49,11 @@ public class ComputerVision {
         } catch (Exception e) {
 
             DriverStation.reportError(
-                    "Either both or one of the cameras are not attached.",
+                    "Either both or one of the cameras are not attached.\n",
                     false);
             try {
                 throw new Exception(
-                        "Could not connect to camera ports on Robot");
+                        "Could not connect to camera ports on Robot\n");
             } catch (Exception e1) {
                 e1.printStackTrace();
             }

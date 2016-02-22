@@ -7,12 +7,16 @@ import javax.swing.text.NumberFormatter;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.buttons.Button;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
+import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj.command.CommandGroup;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import team5818.robot.commands.Collect;
 import team5818.robot.commands.SetFlywheelVelocity;
 import team5818.robot.commands.SetArmAngle;
+import team5818.robot.commands.SetArmPower;
 import team5818.robot.commands.ShootHigh;
 import team5818.robot.modules.Arm;
 import team5818.robot.modules.Collector;
@@ -28,40 +32,32 @@ public class RobotCoDriver implements Module {
      * The button that prints the arm angle.
      */
     public static final int BUT_PRINT_ANGLE = 7;
+    
     /**
-     * goes to angle specified by throttle
+     * Button to move the arm to high angle. 90 Degrees.
      */
-    JoystickButton BUT_THROTTLE_ANGLE = new JoystickButton(firstJoystick, 8);
+    JoystickButton butHighAngle = new JoystickButton(firstJoystick, 5);
+    
     /**
-     * goes to high shooting angle
+     * Button to move the arm to medium angle. 45 degrees.
      */
-    JoystickButton BUT_HIGH_ANGLE = new JoystickButton(firstJoystick, 5);
+    JoystickButton butMedAngle = new JoystickButton(firstJoystick, 3);
+    
     /**
-     * goes to 0 degrees
+     * Button to move the arm to 0 degrees.
      */
-    JoystickButton BUT_ZERO_DEG = new JoystickButton(firstJoystick, 3);
-    /**
-     * The button that increases the angle the arm.
-     */
-    public static final int BUT_UP_ANGLE = 5;
-    /**
-     * The button that decreases the angle of the arm.
-     */
-    public static final int BUT_DOWN_ANGLE = 3;
-    /**
-     * puts arm in PID mode
-     */
-    public static final int BUT_ENTER_PID = 4;
-    /**
-     * takes arm out of PID mode
-     */
-    public static final int BUT_EXIT_PID = 6;
-    public static final int BUT_SHOOT_HIGH = 1;
+    JoystickButton butZeroDeg = new JoystickButton(firstJoystick, 4);
+    
     /**
      * returns error from arm PID
      */
     public static final int ERROR_BUTTON = 1;
 
+    /**
+     * Button manual power
+     */
+    private static final int BUT_EXIT_PID = 2;
+    
     /**
      * Button starts the flywheel.
      */
@@ -70,7 +66,7 @@ public class RobotCoDriver implements Module {
      * Button stops the flywheel.
      */
     private static final int BUT_STOP_FLYWHEEL = 2;
-
+    
     private static final Joystick firstJoystick =
             new Joystick(RobotConstants.CODRIVER_FIRST_JOYSTICK_PORT);
     private static final Joystick secondJoystick =
@@ -82,7 +78,6 @@ public class RobotCoDriver implements Module {
     private Collector collector;
     private Arm arm;
 
-    private boolean pidMode = false;
 
     @Override
     public void initModule() {
@@ -97,11 +92,15 @@ public class RobotCoDriver implements Module {
                 upperFlywheel.getPIDController());
 
         JoystickButton butStartFlywheel =
-                new JoystickButton(firstJoystick, BUT_START_FLYWHEEL);
+                new JoystickButton(secondJoystick, BUT_START_FLYWHEEL);
         butStartFlywheel.whenPressed(new SetFlywheelVelocity(50));
         JoystickButton butStopFlywheel =
-                new JoystickButton(firstJoystick, BUT_STOP_FLYWHEEL);
+                new JoystickButton(secondJoystick, BUT_STOP_FLYWHEEL);
         butStopFlywheel.whenPressed(new SetFlywheelVelocity(0));
+        Command command = new SetArmAngle(0);
+        butHighAngle.whenPressed(new SetArmAngle(90));
+        butMedAngle.whenPressed(new SetArmAngle(45));
+        butZeroDeg.whenPressed(new SetArmAngle(0));
 
     }
 
@@ -117,37 +116,14 @@ public class RobotCoDriver implements Module {
          *  Button 7: Print Angle 
          *  Y Axis: Set Power Arm if PID disabled
          */
-        // TODO Get rid of RobotCoDriver arm PID test code.
-        if (firstJoystick.getRawButton(BUT_ENTER_PID)) {
-            pidMode = true;
-            DriverStation.reportError("Entering PID Mode", false);
+        if(firstJoystick.getRawButton(BUT_EXIT_PID)) {
+            arm.setPower(0);
         }
-
-        if (firstJoystick.getRawButton(BUT_EXIT_PID)) {
-            pidMode = false;
-            DriverStation.reportError("Exiting PID Mode", false);
-        }
-
         if (firstJoystick.getRawButton(BUT_PRINT_ANGLE)) {
-            SmartDashboard.putString("DB/String 7", "" + arm.getAngle());
-            DriverStation.reportError("" + arm.getAngle() + "\n", false);
+            SmartDashboard.putNumber("Arm Angle = ", arm.getAngle());
         }
-
-        if (pidMode) {
-            double target = 45 * (1 - firstJoystick.getThrottle());
-            BUT_THROTTLE_ANGLE.whenPressed(new SetArmAngle(target));
-            BUT_HIGH_ANGLE.whenPressed(new SetArmAngle(60));
-            BUT_ZERO_DEG.whenPressed(new SetArmAngle(0));
-        }
-
-        if (!pidMode) {
-            arm.setPower(arm.getMaxPower() * firstJoystick.getY());
-            if (firstJoystick.getRawButton(BUT_UP_ANGLE)) {
-                arm.aimAdjust(true);
-            }
-            if (firstJoystick.getRawButton(BUT_DOWN_ANGLE)) {
-                arm.aimAdjust(false);
-            }
+        if(!arm.getPIDMode()) {
+            arm.setPower(firstJoystick.getY());
         }
 
         collector.setPower((Collect.MAX_COLLECT_POWER));

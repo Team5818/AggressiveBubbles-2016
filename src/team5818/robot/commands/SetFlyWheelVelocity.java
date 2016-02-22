@@ -48,7 +48,6 @@ public class SetFlywheelVelocity extends Command {
 
     @Override
     protected void end() {
-        DriverStation.reportError("Has Ended Command", false);
     }
 
     @Override

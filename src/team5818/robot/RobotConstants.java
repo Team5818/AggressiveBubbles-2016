@@ -94,6 +94,7 @@ public final class RobotConstants {
     public static final double VELOCITY_PID_LOOP_D_TERM = 0.05;
 
     public static final double MAX_VELOCITY = 175;
+    
     public static final double ONE_OVER_MAX_VEL = 1 / MAX_VELOCITY;
 
     // TODO redo the math for ROBOT_ENCODER_SCALE

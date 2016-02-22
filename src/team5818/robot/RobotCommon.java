@@ -63,6 +63,7 @@ public class RobotCommon extends IterativeRobot {
      * The drive train connected to the robot talons.
      */
     public final DriveTrain driveTrain = addModule(new DriveTrain());
+
     /**
      * A helper for the {@link #driveTrain}.
      */
@@ -124,6 +125,7 @@ public class RobotCommon extends IterativeRobot {
     public void teleopInit() {
         Scheduler.getInstance().enable();
         modules.forEach(Module::initTeleop);
+        Scheduler.getInstance().enable();
     }
 
     /**
@@ -152,6 +154,7 @@ public class RobotCommon extends IterativeRobot {
     public void teleopPeriodic() {
         Scheduler.getInstance().run();
         modules.forEach(Module::teleopPeriodicModule);
+        Scheduler.getInstance().run();
     }
 
     @Override
@@ -165,6 +168,7 @@ public class RobotCommon extends IterativeRobot {
      */
     @Override
     public void testPeriodic() {
+
         modules.forEach(Module::testPeriodic);
     }
 

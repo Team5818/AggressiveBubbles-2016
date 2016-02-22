@@ -4,22 +4,28 @@ import edu.wpi.first.wpilibj.command.Command;
 import team5818.robot.RobotCommon;
 import team5818.robot.modules.Arm;
 
-public class SetArmAngle extends Command {
-
-    public double targetAngle;
+/**
+ * Command that sets the power to the arm for manual control.
+ *
+ */
+public class SetArmPower extends Command {
+    
+    private double power;
     public Arm arm;
-    private boolean hasInitialized = false;
+    private static boolean hasInitialized = false;
     private double zeroTime;
     private double maxTime = 2 * 1E9;
 
-    public SetArmAngle(double angle) {
-        targetAngle = angle;
+    /**
+     * @param power the desired power to set to the arm.
+     */
+    public SetArmPower(double power) {
         arm = RobotCommon.runningRobot.arm;
     }
 
     @Override
     protected void initialize() {
-        arm.goToAngle(targetAngle);
+        arm.setPower(power);
         zeroTime = System.nanoTime();
     }
 
@@ -34,9 +40,10 @@ public class SetArmAngle extends Command {
 
     @Override
     protected boolean isFinished() {
-        if(System.nanoTime() - zeroTime > maxTime)
+        if(System.nanoTime() - zeroTime > maxTime) {
             return true;
-        return arm.onTarget();
+        }
+        return true;
     }
 
     @Override
@@ -46,7 +53,11 @@ public class SetArmAngle extends Command {
 
     @Override
     protected void interrupted() {
-        arm.disablePID();
+        arm.setPower(0);
+    }
+    
+    public static void reInit() {
+        hasInitialized = false;
     }
 
 }
