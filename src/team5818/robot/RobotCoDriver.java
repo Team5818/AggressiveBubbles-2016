@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import team5818.robot.commands.Collect;
 import team5818.robot.commands.SetFlywheelVelocity;
+import team5818.robot.commands.SetArmAngle;
 import team5818.robot.commands.ShootHigh;
 import team5818.robot.modules.Arm;
 import team5818.robot.modules.Collector;
@@ -24,13 +25,21 @@ import team5818.robot.modules.Module;
 public class RobotCoDriver implements Module {
 
     /**
-     * The button that resets the arm offset.
-     */
-    public static final int BUT_ARM_RESET = 8;
-    /**
-     * The button that prints the arm offset.
+     * The button that prints the arm angle.
      */
     public static final int BUT_PRINT_ANGLE = 7;
+    /**
+     * goes to angle specified by throttle
+     */
+    JoystickButton BUT_THROTTLE_ANGLE = new JoystickButton(firstJoystick, 8);
+    /**
+     * goes to high shooting angle
+     */
+    JoystickButton BUT_HIGH_ANGLE = new JoystickButton(firstJoystick, 5);
+    /**
+     * goes to 0 degrees
+     */
+    JoystickButton BUT_ZERO_DEG = new JoystickButton(firstJoystick, 3);
     /**
      * The button that increases the angle the arm.
      */
@@ -47,16 +56,12 @@ public class RobotCoDriver implements Module {
      * takes arm out of PID mode
      */
     public static final int BUT_EXIT_PID = 6;
-    /**
-     * goes to 45 degrees
-     */
-    public static final int GO_TO_ANGLE_BUTTON = 9;
-
+    public static final int BUT_SHOOT_HIGH = 1;
     /**
      * returns error from arm PID
      */
     public static final int ERROR_BUTTON = 1;
-    
+
     /**
      * Button starts the flywheel.
      */
@@ -77,7 +82,7 @@ public class RobotCoDriver implements Module {
     private Collector collector;
     private Arm arm;
 
-    private boolean setAngleMode = false;
+    private boolean pidMode = false;
 
     @Override
     public void initModule() {
@@ -86,7 +91,6 @@ public class RobotCoDriver implements Module {
         lowerFlywheel = RobotCommon.runningRobot.lowerFlywheel;
         upperFlywheel = RobotCommon.runningRobot.upperFlywheel;
         collect = new Collect();
-
         LiveWindow.addActuator("Flywheel", "Lower PID",
                 lowerFlywheel.getPIDController());
         LiveWindow.addActuator("Flywheel", "Upper PID",
@@ -101,58 +105,47 @@ public class RobotCoDriver implements Module {
 
     @Override
     public void teleopPeriodicModule() {
-        /* Arm Teleop Code Stuff */
         /*
-         * FIRST JoyStick: Button 9: Got To Angle if PID enabled. Button 4:
-         * Enter PID. Button 6: Exit PID. Button 3: Down Angle. Button 5: Up
-         * Angle. Button 8: Arm Reset. Button 7: Print Angle. Y Axis : Set Power
-         * Arm if PID disabled.
+         * Arm teleop FIRST JoyStick: Button 8: Go to high shooting position
+         * Button 9: Go to zero degrees Button 4: Enter PID Button 6: Exit PID
+         * Button 3: Down Angle Button 5: Up Angle Button 7: Print Angle Y Axis
+         * : Set Power Arm if PID disabled
          */
         // TODO Get rid of RobotCoDriver arm PID test code.
         if (firstJoystick.getRawButton(BUT_ENTER_PID)) {
-            setAngleMode = true;
-            if (setAngleMode) {
-                DriverStation.reportError("Entering PID Mode", false);
-            }
+            pidMode = true;
+            DriverStation.reportError("Entering PID Mode", false);
         }
-
+        
         if (firstJoystick.getRawButton(BUT_EXIT_PID)) {
-            setAngleMode = false;
-            if (setAngleMode) {
-                DriverStation.reportError("Exiting PID Mode", false);
-            }
+            pidMode = false;
+            DriverStation.reportError("Exiting PID Mode", false);
         }
-
-        // arm.armTeleopPeriodic(); don't use in setAngleMode
-
-        if (setAngleMode) {
-            double target = 45 * (1 - firstJoystick.getThrottle());
-            arm.goToAngle(target);
-            if (firstJoystick.getRawButton(ERROR_BUTTON)) {
-                DriverStation.reportError("" + arm.getError() + "\n", false);
-            }
-        } else if (firstJoystick.getRawButton(BUT_UP_ANGLE)) {
-            arm.aimAdjust(true);
-        } else if (firstJoystick.getRawButton(BUT_DOWN_ANGLE)) {
-            arm.aimAdjust(false);
-        }
-
-        if (!setAngleMode) {
-            arm.setPower(firstJoystick.getY());
-        }
-
-        if (firstJoystick.getRawButton(BUT_ARM_RESET)) {
-            // arm.resetEncoder();
-        }
+        
         if (firstJoystick.getRawButton(BUT_PRINT_ANGLE)) {
             SmartDashboard.putString("DB/String 7", "" + arm.getAngle());
         }
+        
+        if (pidMode) {
+            double target = 45 * (1 - firstJoystick.getThrottle());
+            BUT_THROTTLE_ANGLE.whenPressed(new SetArmAngle(target));
+            BUT_HIGH_ANGLE.whenPressed(new SetArmAngle(60));
+            BUT_ZERO_DEG.whenPressed(new SetArmAngle(0));
+        }
+        
+        if (!pidMode) {
+        
+            arm.setPower(firstJoystick.getY());
+            if (firstJoystick.getRawButton(BUT_UP_ANGLE)) {
+                arm.aimAdjust(true);
+            }
+            if (firstJoystick.getRawButton(BUT_DOWN_ANGLE)) {
+                arm.aimAdjust(false);
+            }
+        }
 
-        /*
-         * Collector Code Stuff First - Joystick Button 1 (Trigger): Collect
-         * Command
-         */
-        collector.setPower((secondJoystick.getY()));
+        collector.setPower((Collect.MAX_COLLECT_POWER));
+
     }
 
     @Override
