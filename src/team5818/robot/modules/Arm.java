@@ -1,6 +1,5 @@
 package team5818.robot.modules;
 
-
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.CANSpeedController.ControlMode;
 import edu.wpi.first.wpilibj.CANTalon;
@@ -11,19 +10,22 @@ import edu.wpi.first.wpilibj.PIDSource;
 import edu.wpi.first.wpilibj.PIDSourceType;
 import team5818.robot.RobotCommon;
 import team5818.robot.RobotConstants;
+
 /**
- * @author Petey
- *Class to control 5818's robot arm
+ * @author Petey Class to control 5818's robot arm
  */
 public class Arm implements Module, PIDSource, PIDOutput {
 
-
     // TODO redesign arm to use encoder on final robot.
-    private double scale = RobotCommon.runningRobot.prefs.getDouble("ArmPotScale", .047);
-    private double offset = RobotCommon.runningRobot.prefs.getDouble("ArmPotOffset", -9.587);
-    private double maxPower = RobotCommon.runningRobot.prefs.getDouble("MaxArmPower", .8); 
-    private double minPower = -maxPower;
+    protected static final double DEFAULT_SCALE = 0.047;
+    protected static final double DEFAULT_OFFSET = -9.587;
+    protected static final double DEFAULT_MAXPOWER = 0.8;
     
+    private double scale;
+    private double offset;
+    private double maxPower;
+    private double minPower = -maxPower;
+
     private static final AnalogInput armPotentiometer =
             new AnalogInput(RobotConstants.ARM_POTENTIOMETER_CHANNEL);
     private static final CANTalon firstArmMotor =
@@ -31,10 +33,8 @@ public class Arm implements Module, PIDSource, PIDOutput {
     private static final CANTalon secondArmMotor =
             new CANTalon(RobotConstants.TALON_SECOND_ARM_MOTOR);
 
-
     private PIDController armPID =
             new PIDController(.008, .0005, 0, this, firstArmMotor);
-
 
     public Arm() {
         firstArmMotor.setInverted(true);
@@ -42,9 +42,23 @@ public class Arm implements Module, PIDSource, PIDOutput {
             secondArmMotor.setInverted(false);
         armPID.setOutputRange(minPower, maxPower);
         armPID.setAbsoluteTolerance(5);
-
     }
 
+    @Override
+    public void initModule() {
+        try {
+            scale = RobotCommon.runningRobot.prefs.getDouble("ArmPotScale", DEFAULT_SCALE);
+            offset = RobotCommon.runningRobot.prefs.getDouble("ArmPotOffset",
+                    DEFAULT_OFFSET);
+            maxPower = RobotCommon.runningRobot.prefs.getDouble("MaxArmPower", .8);
+        } catch(Exception e) {
+            DriverStation.reportError("Could not get preferences from SmartDashboard.", false);
+            scale = DEFAULT_SCALE;
+            offset = DEFAULT_OFFSET;
+            maxPower = DEFAULT_MAXPOWER;
+        }
+    }
+    
     /**
      * Sets power to arm motors
      * 
@@ -58,10 +72,11 @@ public class Arm implements Module, PIDSource, PIDOutput {
             secondArmMotor.set(power);
         }
     }
+
     /**
      * gives max power
      */
-    public double getMaxPower(){
+    public double getMaxPower() {
         return maxPower;
     }
 
@@ -70,11 +85,10 @@ public class Arm implements Module, PIDSource, PIDOutput {
      */
 
     public double getAngle() {
-       double a1 =  armPotentiometer.getValue() * scale;
-       double aFinal = a1 + offset;
-       return aFinal;
+        double a1 = armPotentiometer.getValue() * scale;
+        double aFinal = a1 + offset;
+        return aFinal;
     }
-
 
     /**
      * @param up
@@ -90,7 +104,7 @@ public class Arm implements Module, PIDSource, PIDOutput {
             }
         }
         if (!up) {
-            this.setPower(minPower/3);
+            this.setPower(minPower / 3);
             try {
                 Thread.sleep(200);
             } catch (InterruptedException e) {
@@ -101,7 +115,8 @@ public class Arm implements Module, PIDSource, PIDOutput {
 
     /**
      * returns error from PID controller
-     * @return  error
+     * 
+     * @return error
      */
 
     public double getError() {
@@ -135,27 +150,31 @@ public class Arm implements Module, PIDSource, PIDOutput {
     }
 
     @Override
-    public void initModule() {}
+    public void teleopPeriodicModule() {
+    }
 
     @Override
-    public void teleopPeriodicModule() {}
+    public void endModule() {
+    }
+
+    public void initTest() {
+    }
 
     @Override
-    public void endModule() {}
-
-    public void initTest() {}
-
-    @Override
-    public void initTeleop() {}
+    public void initTeleop() {
+    }
 
     @Override
-    public void initAutonomous() {}
+    public void initAutonomous() {
+    }
 
     @Override
-    public void testPeriodic() {}
+    public void testPeriodic() {
+    }
 
     @Override
-    public void setPIDSourceType(PIDSourceType pidSource) {}
+    public void setPIDSourceType(PIDSourceType pidSource) {
+    }
 
     @Override
     public PIDSourceType getPIDSourceType() {

@@ -95,45 +95,51 @@ public class RobotCoDriver implements Module {
                 lowerFlywheel.getPIDController());
         LiveWindow.addActuator("Flywheel", "Upper PID",
                 upperFlywheel.getPIDController());
-        
-        JoystickButton butStartFlywheel = new JoystickButton(firstJoystick, BUT_START_FLYWHEEL);
+
+        JoystickButton butStartFlywheel =
+                new JoystickButton(firstJoystick, BUT_START_FLYWHEEL);
         butStartFlywheel.whenPressed(new SetFlywheelVelocity(50));
-        JoystickButton butStopFlywheel = new JoystickButton(firstJoystick, BUT_STOP_FLYWHEEL);
+        JoystickButton butStopFlywheel =
+                new JoystickButton(firstJoystick, BUT_STOP_FLYWHEEL);
         butStopFlywheel.whenPressed(new SetFlywheelVelocity(0));
-        
+
     }
 
     @Override
     public void teleopPeriodicModule() {
         /*
          * Arm teleop FIRST JoyStick: Button 8: Go to high shooting position
-         * Button 9: Go to zero degrees Button 4: Enter PID Button 6: Exit PID
-         * Button 3: Down Angle Button 5: Up Angle Button 7: Print Angle Y Axis
-         * : Set Power Arm if PID disabled
+         *  Button 9: Go to zero degrees.
+         *  Button 4: Enter PID
+         *  Button 6: Exit PID
+         *  Button 3: Down Angle 
+         *  Button 5: Up Angle 
+         *  Button 7: Print Angle 
+         *  Y Axis: Set Power Arm if PID disabled
          */
         // TODO Get rid of RobotCoDriver arm PID test code.
         if (firstJoystick.getRawButton(BUT_ENTER_PID)) {
             pidMode = true;
             DriverStation.reportError("Entering PID Mode", false);
         }
-        
+
         if (firstJoystick.getRawButton(BUT_EXIT_PID)) {
             pidMode = false;
             DriverStation.reportError("Exiting PID Mode", false);
         }
-        
+
         if (firstJoystick.getRawButton(BUT_PRINT_ANGLE)) {
             SmartDashboard.putString("DB/String 7", "" + arm.getAngle());
             DriverStation.reportError("" + arm.getAngle() + "\n", false);
         }
-        
+
         if (pidMode) {
             double target = 45 * (1 - firstJoystick.getThrottle());
             BUT_THROTTLE_ANGLE.whenPressed(new SetArmAngle(target));
             BUT_HIGH_ANGLE.whenPressed(new SetArmAngle(60));
             BUT_ZERO_DEG.whenPressed(new SetArmAngle(0));
         }
-        
+
         if (!pidMode) {
             arm.setPower(arm.getMaxPower() * firstJoystick.getY());
             if (firstJoystick.getRawButton(BUT_UP_ANGLE)) {
