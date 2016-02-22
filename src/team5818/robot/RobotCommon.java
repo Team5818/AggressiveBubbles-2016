@@ -121,7 +121,6 @@ public class RobotCommon extends IterativeRobot {
     public void teleopInit() {
         Scheduler.getInstance().enable();
         modules.forEach(Module::initTeleop);
-        Scheduler.getInstance().enable();
     }
 
     /**
@@ -150,7 +149,6 @@ public class RobotCommon extends IterativeRobot {
     public void teleopPeriodic() {
         Scheduler.getInstance().run();
         modules.forEach(Module::teleopPeriodicModule);
-        Scheduler.getInstance().run();
     }
 
     @Override
