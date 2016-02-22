@@ -10,27 +10,27 @@ public final class RobotConstants {
     /**
      * The talon controlling the left-front wheels.
      */
-    public static final int TALON_LEFT_FRONT = 5;
+    public static final int TALON_LEFT_FRONT = 4;
     /**
      * The talon controlling the left-front wheels.
      */
-    public static final int TALON_LEFT_MIDDLE = 4;
+    public static final int TALON_LEFT_MIDDLE = 6;
     /**
      * The talon controlling the left-back wheels.
      */
-    public static final int TALON_LEFT_BACK = 6;
+    public static final int TALON_LEFT_BACK = 5;
     /**
      * The talon controlling the right-front wheels.
      */
-    public static final int TALON_RIGHT_FRONT = 2;
+    public static final int TALON_RIGHT_FRONT = 1;
     /**
      * The talon controlling the right-front wheels.
      */
-    public static final int TALON_RIGHT_MIDDLE = 1;
+    public static final int TALON_RIGHT_MIDDLE = 3;
     /**
      * The talon controlling the right-back wheels.
      */
-    public static final int TALON_RIGHT_BACK = 3;
+    public static final int TALON_RIGHT_BACK = 2;
 
     /**
      * The talon controlling the arm.

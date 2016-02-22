@@ -97,7 +97,7 @@ public class RobotCoDriver implements Module {
                 upperFlywheel.getPIDController());
         
         JoystickButton butStartFlywheel = new JoystickButton(firstJoystick, BUT_START_FLYWHEEL);
-        butStartFlywheel.whenPressed(new SetFlywheelVelocity(144));
+        butStartFlywheel.whenPressed(new SetFlywheelVelocity(50));
         JoystickButton butStopFlywheel = new JoystickButton(firstJoystick, BUT_STOP_FLYWHEEL);
         butStopFlywheel.whenPressed(new SetFlywheelVelocity(0));
         
