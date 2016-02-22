@@ -15,7 +15,7 @@ import team5818.robot.commands.SetArmAngle;
 import team5818.robot.commands.SetArmPower;
 
 /**
- * @author Petey Class to control 5818's robot arm
+ * Class to control 5818's robot arm
  */
 public class Arm implements Module, PIDSource, PIDOutput {
 
