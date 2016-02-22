@@ -135,7 +135,7 @@ public class RobotCoDriver implements Module {
 
         if (!pidMode) {
 
-            arm.setPower(.3 * FIRST_JOYSTICK.getY());
+            arm.setPower(arm.getMaxPower() * FIRST_JOYSTICK.getY());
             if (FIRST_JOYSTICK.getRawButton(BUT_UP_ANGLE)) {
                 arm.aimAdjust(true);
             }

@@ -1,5 +1,6 @@
 package team5818.robot.modules;
 
+
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.CANSpeedController.ControlMode;
 import edu.wpi.first.wpilibj.CANTalon;
@@ -8,6 +9,7 @@ import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.PIDOutput;
 import edu.wpi.first.wpilibj.PIDSource;
 import edu.wpi.first.wpilibj.PIDSourceType;
+import team5818.robot.RobotCommon;
 import team5818.robot.RobotConstants;
 /**
  * @author Petey
@@ -17,6 +19,11 @@ public class Arm implements Module, PIDSource, PIDOutput {
 
 
     // TODO redesign arm to use encoder on final robot.
+    private double scale = RobotCommon.runningRobot.prefs.getDouble("ArmPotScale", .047);
+    private double offset = RobotCommon.runningRobot.prefs.getDouble("ArmPotOffset", -9.587);
+    private double maxPower = RobotCommon.runningRobot.prefs.getDouble("MaxArmPower", .8); 
+    private double minPower = -maxPower;
+    
     private static final AnalogInput armPotentiometer =
             new AnalogInput(RobotConstants.ARM_POTENTIOMETER_CHANNEL);
     private static final CANTalon firstArmMotor =
@@ -28,8 +35,6 @@ public class Arm implements Module, PIDSource, PIDOutput {
     private PIDController armPID =
             new PIDController(.008, .0005, 0, this, firstArmMotor);
 
-    private double maxPower = .3; // max and min power are for PID and aim adjusts
-    private double minPower = -.3;
 
     public Arm() {
         firstArmMotor.setInverted(true);
@@ -53,15 +58,20 @@ public class Arm implements Module, PIDSource, PIDOutput {
             secondArmMotor.set(power);
         }
     }
-
+    /**
+     * gives max power
+     */
+    public double getMaxPower(){
+        return maxPower;
+    }
 
     /**
      * @return angle measured by pot
      */
 
     public double getAngle() {
-       double a1 =  armPotentiometer.getValue() * RobotConstants.ARM_POTENTIOMETER_SCALE;
-       double aFinal = a1 + RobotConstants.ARM_POTENTIOMETER_INTERCEPT;
+       double a1 =  armPotentiometer.getValue() * scale;
+       double aFinal = a1 + offset;
        return aFinal;
     }
 
