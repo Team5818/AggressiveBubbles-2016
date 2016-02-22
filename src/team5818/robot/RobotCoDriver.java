@@ -10,7 +10,7 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import team5818.robot.commands.Collect;
-import team5818.robot.commands.SetFlyWheelVelocity;
+import team5818.robot.commands.SetFlywheelVelocity;
 import team5818.robot.commands.ShootHigh;
 import team5818.robot.modules.Arm;
 import team5818.robot.modules.Collector;
@@ -76,7 +76,7 @@ public class RobotCoDriver implements Module {
     private FlyWheel upperFlywheel;
     private Collector collector;
     private Arm arm;
-    private SetFlyWheelVelocity setFlyVelocity;
+    private SetFlywheelVelocity setFlyVelocity;
     private ShootHigh shootHigh;
 
     private boolean setAngleMode = false;
@@ -90,7 +90,7 @@ public class RobotCoDriver implements Module {
         upperFlywheel = RobotCommon.runningRobot.upperFlywheel;
         collect = new Collect();
         shootHigh = new ShootHigh();
-        setFlyVelocity = new SetFlyWheelVelocity();
+        setFlyVelocity = new SetFlywheelVelocity(144);
         LiveWindow.addActuator("Flywheel", "Lower PID",
                 lowerFlywheel.getPIDController());
         LiveWindow.addActuator("Flywheel", "Upper PID",
@@ -160,7 +160,6 @@ public class RobotCoDriver implements Module {
                 hasStartedFlywheel = true;
                 hasStopedFlywheel = false;
                 double v = 144;
-                setFlyVelocity.setVelocity(v);
                 setFlyVelocity.start();
             }
         } else {
@@ -174,21 +173,7 @@ public class RobotCoDriver implements Module {
          * Collector Code Stuff First - Joystick Button 1 (Trigger): Collect
          * Command
          */
-        if (FIRST_JOYSTICK.getRawButton(BUT_COLLECT)) {
-            collector.setPower((Collect.MAX_COLLECT_POWER));
-            if (hasStartedCollect) {
-                // hasStopedCollect = false;
-                // hasStartedCollect = true;
-                // collect.start();
-            }
-        } else {
-            hasStartedCollect = false;
-            if (!hasStopedCollect) {
-                hasStopedCollect = true;
-                collector.setPower(0);
-            }
-        }
-
+        collector.setPower((SECOND_JOYSTICK.getY()));
     }
 
     @Override

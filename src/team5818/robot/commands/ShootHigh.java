@@ -10,7 +10,7 @@ public class ShootHigh extends Command {
     public static final double shootAngle = 60;
     private boolean finished;
     
-    private SetFlyWheelVelocity setFlyVelocity;
+    private SetFlywheelVelocity setFlyVelocity;
     private SetArmAngle setArmAngle;
     
     private Collector collector;
@@ -26,14 +26,14 @@ public class ShootHigh extends Command {
      */
     private double maxShootTime = 4 * 1E9;
     
-    public ShootHigh(SetFlyWheelVelocity sfv) {
+    public ShootHigh(SetFlywheelVelocity sfv) {
         setFlyVelocity = sfv;
         collector = RobotCommon.runningRobot.collector;
     }
     
     public ShootHigh()
     {
-        this(new SetFlyWheelVelocity());
+        this(new SetFlywheelVelocity(shootVelocity));
         
     }
     
@@ -41,7 +41,6 @@ public class ShootHigh extends Command {
     protected void initialize() {
         setArmAngle = new SetArmAngle(shootAngle);
         setArmAngle.start();
-        setFlyVelocity.setVelocity(shootVelocity);
         setFlyVelocity.start();
         zeroTime = System.nanoTime();
         //TODO make ShootHigh move arm to angle using PID.
