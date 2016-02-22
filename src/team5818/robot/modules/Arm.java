@@ -10,7 +10,6 @@ import edu.wpi.first.wpilibj.PIDSource;
 import edu.wpi.first.wpilibj.PIDSourceType;
 import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
-import team5818.robot.RobotCommon;
 import team5818.robot.RobotConstants;
 import team5818.robot.commands.SetArmAngle;
 import team5818.robot.commands.SetArmPower;
@@ -27,8 +26,7 @@ public class Arm implements Module, PIDSource, PIDOutput {
     protected static final double DEFAULT_KP = 0.047;
     protected static final double DEFAULT_KI = -9.587;
     protected static final double DEFAULT_KD = 0.8;
-    
-    
+
     private double scale;
     private double offset;
     private double maxPower;
@@ -53,16 +51,18 @@ public class Arm implements Module, PIDSource, PIDOutput {
     public void initModule() {
         double kp, ki, kd;
         try {
-            scale = Preferences.getInstance().getDouble("ArmPotScale", DEFAULT_SCALE);
+            scale = Preferences.getInstance().getDouble("ArmPotScale",
+                    DEFAULT_SCALE);
             offset = Preferences.getInstance().getDouble("ArmPotOffset",
                     DEFAULT_OFFSET);
             maxPower = Preferences.getInstance().getDouble("MaxArmPower", .8);
             kp = Preferences.getInstance().getDouble("ArmKp", DEFAULT_KP);
             ki = Preferences.getInstance().getDouble("ArmKi", DEFAULT_KI);
             kd = Preferences.getInstance().getDouble("ArmKd", DEFAULT_KD);
-            
-        } catch(Exception e) {
-            DriverStation.reportError("Could not get preferences from SmartDashboard.\n", false);
+
+        } catch (Exception e) {
+            DriverStation.reportError(
+                    "Could not get preferences from SmartDashboard.\n", false);
             scale = DEFAULT_SCALE;
             offset = DEFAULT_OFFSET;
             maxPower = DEFAULT_MAXPOWER;
@@ -75,7 +75,7 @@ public class Arm implements Module, PIDSource, PIDOutput {
         armPID.setAbsoluteTolerance(10);
         LiveWindow.addActuator("Arm", "PID Controller", armPID);
     }
-    
+
     /**
      * Sets power to arm motors
      * 
@@ -104,7 +104,7 @@ public class Arm implements Module, PIDSource, PIDOutput {
         double aFinal = a1 + offset;
         return aFinal;
     }
-    
+
     public synchronized boolean getPIDMode() {
         return pidMode;
     }

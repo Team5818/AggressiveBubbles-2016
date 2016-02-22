@@ -11,7 +11,6 @@ import edu.wpi.first.wpilibj.CANTalon;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
-import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -34,7 +33,6 @@ public class RobotCommon extends IterativeRobot {
      * The instance of this {@link RobotCommon} that is currently running.
      */
     public static RobotCommon runningRobot;
-
     private List<Module> modules = new ArrayList<Module>() {
 
         private static final long serialVersionUID = 7074129390191811566L;
@@ -77,7 +75,6 @@ public class RobotCommon extends IterativeRobot {
     public final VisionThread vision = addModule(new VisionThread());
     public final Arm arm = addModule(new Arm());
     public final Collector collector = addModule(new Collector(false));
-    public Preferences prefs;
     final String defaultAuto = "Default";
     final String customAuto = "My Auto";
     String autoSelected;
@@ -96,7 +93,6 @@ public class RobotCommon extends IterativeRobot {
         chooser.addObject("My Auto", customAuto);
         SmartDashboard.putData("Auto choices", chooser);
         panel = new PowerDistributionPanel();
-        prefs = Preferences.getInstance();
     }
 
     /**
