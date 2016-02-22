@@ -123,6 +123,7 @@ public class RobotCoDriver implements Module {
 
         if (FIRST_JOYSTICK.getRawButton(BUT_PRINT_ANGLE)) {
             SmartDashboard.putString("DB/String 7", "" + arm.getAngle());
+            DriverStation.reportError("" + arm.getAngle() + "\n", false);
         }
 
         if (pidMode) {
@@ -134,7 +135,7 @@ public class RobotCoDriver implements Module {
 
         if (!pidMode) {
 
-            arm.setPower(FIRST_JOYSTICK.getY());
+            arm.setPower(.3 * FIRST_JOYSTICK.getY());
             if (FIRST_JOYSTICK.getRawButton(BUT_UP_ANGLE)) {
                 arm.aimAdjust(true);
             }

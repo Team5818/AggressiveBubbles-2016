@@ -62,11 +62,11 @@ public final class RobotConstants {
     /**
      * The scale for the arm potentiometer.
      */
-    public static final double ARM_POTENTIOMETER_SCALE = .0657;
+    public static final double ARM_POTENTIOMETER_SCALE = 1;//.0657 on kitbot;
     /**
      * intercept for arm potentiometer
      */
-    public static final double ARM_POTENTIOMETER_INTERCEPT = -70.15;
+    public static final double ARM_POTENTIOMETER_INTERCEPT = 0;// -70.15 on kitbot;
     /**
      * The button known as "trigger" on the joystick.
      */

@@ -28,13 +28,10 @@ public class Arm implements Module, PIDSource, PIDOutput {
     private PIDController armPID =
             new PIDController(.008, .0005, 0, this, firstArmMotor);
 
-    private double maxPower = .5; // max and min power are for PID and aim adjusts
-    private double minPower = -.5;
+    private double maxPower = .3; // max and min power are for PID and aim adjusts
+    private double minPower = -.3;
 
     public Arm() {
-        // ARM_ENCODER.reset();
-        // ARM_ENCODER.setDistancePerPulse(RobotConstants.ARM_ENCODER_SCALE); //
-        // Angle per pulse in our case
         firstArmMotor.setInverted(true);
         if (secondArmMotor != null)
             secondArmMotor.setInverted(false);
@@ -83,7 +80,7 @@ public class Arm implements Module, PIDSource, PIDOutput {
             }
         }
         if (!up) {
-            this.setPower(minPower);
+            this.setPower(minPower/3);
             try {
                 Thread.sleep(200);
             } catch (InterruptedException e) {
