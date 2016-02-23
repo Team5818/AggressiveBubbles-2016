@@ -10,11 +10,12 @@ public class SetArmAngle extends Command {
     public Arm arm;
     private boolean hasInitialized = false;
     private double zeroTime;
-    private double maxTime = 2 * 1E9;
+    private double maxTime = 3 * 1E9;
 
     public SetArmAngle(double angle) {
         targetAngle = angle;
         arm = RobotCommon.runningRobot.arm;
+        requires(arm);
     }
 
     @Override

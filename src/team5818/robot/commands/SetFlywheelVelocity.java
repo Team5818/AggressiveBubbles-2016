@@ -29,6 +29,9 @@ public class SetFlywheelVelocity extends Command {
      */
     public SetFlywheelVelocity(double vel) {
         velocity = vel;
+        requires(flyUp);
+        requires(flyLo);
+        
     }
 
     @Override

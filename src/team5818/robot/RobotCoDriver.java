@@ -47,6 +47,10 @@ public class RobotCoDriver implements Module {
      * Button to move the arm to 0 degrees.
      */
     JoystickButton butZeroDeg = new JoystickButton(firstJoystick, 4);
+    /**
+     * Button to turn arm into manual control.
+     */
+    JoystickButton butSetPower = new JoystickButton(firstJoystick, 2);
     
     /**
      * returns error from arm PID
@@ -98,27 +102,16 @@ public class RobotCoDriver implements Module {
                 new JoystickButton(secondJoystick, BUT_STOP_FLYWHEEL);
         butStopFlywheel.whenPressed(new SetFlywheelVelocity(0));
         Command command = new SetArmAngle(0);
+        
         butHighAngle.whenPressed(new SetArmAngle(90));
         butMedAngle.whenPressed(new SetArmAngle(45));
         butZeroDeg.whenPressed(new SetArmAngle(0));
+        butSetPower.whenPressed(new SetArmPower(0));
 
     }
 
     @Override
     public void teleopPeriodicModule() {
-        /*
-         * Arm teleop FIRST JoyStick: Button 8: Go to high shooting position
-         *  Button 9: Go to zero degrees.
-         *  Button 4: Enter PID
-         *  Button 6: Exit PID
-         *  Button 3: Down Angle 
-         *  Button 5: Up Angle 
-         *  Button 7: Print Angle 
-         *  Y Axis: Set Power Arm if PID disabled
-         */
-        if(firstJoystick.getRawButton(BUT_EXIT_PID)) {
-            arm.setPower(0);
-        }
         if (firstJoystick.getRawButton(BUT_PRINT_ANGLE)) {
             SmartDashboard.putNumber("Arm Angle = ", arm.getAngle());
         }

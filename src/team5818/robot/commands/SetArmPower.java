@@ -14,13 +14,14 @@ public class SetArmPower extends Command {
     public Arm arm;
     private static boolean hasInitialized = false;
     private double zeroTime;
-    private double maxTime = 2 * 1E9;
+    private double maxTime = 1 * 1E9;
 
     /**
      * @param power the desired power to set to the arm.
      */
     public SetArmPower(double power) {
         arm = RobotCommon.runningRobot.arm;
+        requires(arm);
     }
 
     @Override

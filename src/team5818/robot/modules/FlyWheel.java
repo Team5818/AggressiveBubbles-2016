@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.PIDOutput;
 import edu.wpi.first.wpilibj.PIDSource;
 import edu.wpi.first.wpilibj.PIDSourceType;
+import edu.wpi.first.wpilibj.command.Subsystem;
 
 /**
  * This is the class that handles all the control on the motors directly through
@@ -16,7 +17,7 @@ import edu.wpi.first.wpilibj.PIDSourceType;
  * should go through this class.
  *
  */
-public class FlyWheel implements PIDSource, PIDOutput, Module {
+public class FlyWheel extends Subsystem implements PIDSource, PIDOutput, Module {
 
     public static double TOLERANCE = 10;
 
@@ -183,6 +184,12 @@ public class FlyWheel implements PIDSource, PIDOutput, Module {
 
     @Override
     public void endModule() {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    protected void initDefaultCommand() {
         // TODO Auto-generated method stub
         
     }

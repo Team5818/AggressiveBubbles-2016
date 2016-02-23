@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj.PIDOutput;
 import edu.wpi.first.wpilibj.PIDSource;
 import edu.wpi.first.wpilibj.PIDSourceType;
 import edu.wpi.first.wpilibj.Preferences;
+import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import team5818.robot.RobotConstants;
 import team5818.robot.commands.SetArmAngle;
@@ -17,7 +18,7 @@ import team5818.robot.commands.SetArmPower;
 /**
  * Class to control 5818's robot arm
  */
-public class Arm implements Module, PIDSource, PIDOutput {
+public class Arm extends Subsystem implements Module, PIDSource, PIDOutput {
 
     // TODO redesign arm to use encoder on final robot.
     protected static final double DEFAULT_SCALE = 0.047;
@@ -213,6 +214,12 @@ public class Arm implements Module, PIDSource, PIDOutput {
             secondArmMotor.set(power);
         }
 
+    }
+
+    @Override
+    protected void initDefaultCommand() {
+        // TODO Auto-generated method stub
+        
     }
 
 }
