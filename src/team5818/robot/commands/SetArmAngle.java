@@ -35,9 +35,7 @@ public class SetArmAngle extends Command {
 
     @Override
     protected boolean isFinished() {
-        if(System.nanoTime() - zeroTime > maxTime)
-            return true;
-        return arm.onTarget();
+        return false;
     }
 
     @Override
