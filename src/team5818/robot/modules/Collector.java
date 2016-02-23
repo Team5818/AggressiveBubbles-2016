@@ -73,7 +73,7 @@ public class Collector extends Subsystem implements Module {
 
     @Override
     protected void initDefaultCommand() {
-        // TODO Auto-generated method stub
+        
         
     }    
 }

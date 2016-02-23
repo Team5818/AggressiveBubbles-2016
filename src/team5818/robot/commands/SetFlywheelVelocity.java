@@ -29,6 +29,8 @@ public class SetFlywheelVelocity extends Command {
      */
     public SetFlywheelVelocity(double vel) {
         velocity = vel;
+        upVel = velocity - velocity * backSpin;
+        lowVel = velocity + velocity * backSpin;
         requires(flyUp);
         requires(flyLo);
         

@@ -102,8 +102,7 @@ public class RobotCoDriver implements Module {
             arm.setPower(firstJoystick.getY());
         }
 
-        collector.setPower((Collect.MAX_COLLECT_POWER));
-
+        collector.setPower(secondJoystick.getY());
     }
 
     @Override

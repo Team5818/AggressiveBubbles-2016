@@ -7,7 +7,7 @@ import team5818.robot.modules.FlyWheel;
 
 
 /**
- * Command that sets the power to the arm for manual control.
+ * Command that sets the power to the flywheel for cancelling PID.
  *
  */
 public class SetFlywheelPower extends Command {
