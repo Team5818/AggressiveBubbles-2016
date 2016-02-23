@@ -5,6 +5,7 @@ import java.util.stream.Stream;
 import edu.wpi.first.wpilibj.CANTalon;
 import edu.wpi.first.wpilibj.PIDOutput;
 import edu.wpi.first.wpilibj.Preferences;
+import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.tables.TableKeyNotDefinedException;
@@ -134,7 +135,6 @@ public class DriveTrain implements Module {
 
     @Override
     public void initAutonomous() {
-
     }
 
     @Override

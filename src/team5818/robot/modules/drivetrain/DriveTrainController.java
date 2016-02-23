@@ -1,5 +1,6 @@
 package team5818.robot.modules.drivetrain;
 
+import edu.wpi.first.wpilibj.command.Subsystem;
 import team5818.robot.util.MathUtil;
 import team5818.robot.util.Vector2d;
 
@@ -7,7 +8,7 @@ import team5818.robot.util.Vector2d;
  * Wraps around {@link DriveTrain} to help drive certain distances and control
  * different ways of driving.
  */
-public class DriveTrainController {
+public class DriveTrainController extends Subsystem {
 
     private static final double ROBOT_WIDTH_IN_INCHES = 2.3 * 12;
 
@@ -36,6 +37,11 @@ public class DriveTrainController {
         driveTrain.setPower(power);
     }
 
+    public void setVelocity(Vector2d vector2d) {
+        driveTrain.getLeftMotors().setVelocity(vector2d.getX());
+        driveTrain.getRightMotors().setVelocity(vector2d.getY());
+    }
+
     public void recalculateAndSetPower(Vector2d joystickData) {
         setPowerDirectly(driveCalculator.compute(joystickData));
     }
@@ -62,6 +68,10 @@ public class DriveTrainController {
                 MathUtil.distanceOfArc(ROBOT_WIDTH_IN_INCHES, degrees);
         driveTrain.getLeftMotors().setDriveDistance(distance);
         driveTrain.getRightMotors().setDriveDistance(-distance);
+    }
+
+    @Override
+    protected void initDefaultCommand() {
     }
 
 }

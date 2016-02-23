@@ -14,9 +14,12 @@ public class DriveStraight extends Command {
     private boolean started;
     private boolean running;
 
+    public DriveStraight() {
+        requires(RobotCommon.runningRobot.driveTrainController);
+    }
+
     @Override
     protected void initialize() {
-
     }
 
     @Override
@@ -24,7 +27,8 @@ public class DriveStraight extends Command {
         try {
             running = started = true;
             while (running) {
-                RobotCommon.runningRobot.driveTrain.setPower(POWER);
+                RobotCommon.runningRobot.driveTrainController
+                        .setPowerDirectly(POWER);
             }
         } finally {
             running = false;
@@ -43,7 +47,7 @@ public class DriveStraight extends Command {
 
     @Override
     protected void interrupted() {
-        running = false;
+        end();
     }
 
 }

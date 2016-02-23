@@ -5,40 +5,18 @@ import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.tables.TableKeyNotDefinedException;
 import team5818.robot.RobotCommon;
+import team5818.robot.util.Vector2d;
 
-public class DriveVelocityCommand extends Command {
+public class DriveVelocityCommand extends QuickCommand {
 
-    private boolean hasStarted;
-    private boolean hasRun;
-    private double velocity = 0;
-
-    public void setVelocity(double vel) {
-        velocity = vel;
+    public DriveVelocityCommand() {
+        requires(RobotCommon.runningRobot.driveTrainController);
     }
 
     @Override
-    protected void initialize() {
-    }
-
-    @Override
-    protected void execute() {
-        hasStarted = true;
-        RobotCommon.runningRobot.driveTrain.getRightMotors()
-                .setVelocity(velocity);
-        hasRun = true;
-    }
-
-    @Override
-    protected boolean isFinished() {
-        return hasStarted && hasRun;
-    }
-
-    @Override
-    protected void end() {
-    }
-
-    @Override
-    protected void interrupted() {
+    protected void subexecute() {
+        RobotCommon.runningRobot.driveTrainController
+                .setVelocity(new Vector2d(100, 100));
     }
 
 }
