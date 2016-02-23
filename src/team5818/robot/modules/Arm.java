@@ -23,10 +23,10 @@ public class Arm extends Subsystem implements Module, PIDSource, PIDOutput {
     // TODO redesign arm to use encoder on final robot.
     protected static final double DEFAULT_SCALE = 0.047;
     protected static final double DEFAULT_OFFSET = -9.587;
-    protected static final double DEFAULT_MAXPOWER = 0.8;
-    protected static final double DEFAULT_KP = 0.047;
-    protected static final double DEFAULT_KI = -9.587;
-    protected static final double DEFAULT_KD = 0.8;
+    protected static final double DEFAULT_MAXPOWER = 0.5;
+    protected static final double DEFAULT_KP = 0.005;
+    protected static final double DEFAULT_KI = 0.01;
+    protected static final double DEFAULT_KD = 0.0;
 
     private double scale;
     private double offset;
@@ -219,7 +219,7 @@ public class Arm extends Subsystem implements Module, PIDSource, PIDOutput {
     @Override
     protected void initDefaultCommand() {
         // TODO Auto-generated method stub
-        
+
     }
 
 }

@@ -86,8 +86,7 @@ public class RobotCoDriver implements Module {
         butMedAngle.whenPressed(new SetArmAngle(45));
         butCollectAngle.whenPressed(new SetArmAngle(collectAngle));
         butSetPower.whenPressed(new SetArmPower(0));
-        butSpinFlywheel
-                .whenPressed(new SetFlywheelVelocity(FlyWheel.MAX_VELOCITY));
+        butSpinFlywheel.whenPressed(new SetFlywheelVelocity(FlyWheel.SHOOT_VELOCITY_UPPER, FlyWheel.SHOOT_VELOCITY_LOWER));
         butSpinFlywheel.whenReleased(new SetFlywheelPower(0));
         butSwitchFeed1.whenPressed(new SwitchFeed(1));
         butSwitchFeed2.whenPressed(new SwitchFeed(2));
@@ -97,6 +96,8 @@ public class RobotCoDriver implements Module {
     public void teleopPeriodicModule() {
         if (firstJoystick.getRawButton(BUT_PRINT_ANGLE)) {
             SmartDashboard.putNumber("Arm Angle = ", arm.getAngle());
+            SmartDashboard.putNumber("Upper flywheel", upperFlywheel.getRPS());
+            SmartDashboard.putNumber("Lower flywheel", lowerFlywheel.getRPS());
         }
         if (!arm.getPIDMode()) {
             arm.setPower(firstJoystick.getY());

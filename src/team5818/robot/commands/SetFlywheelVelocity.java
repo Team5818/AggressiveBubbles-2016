@@ -27,10 +27,9 @@ public class SetFlywheelVelocity extends Command {
      * @param vel
      *            The velocity desired to be set in units of
      */
-    public SetFlywheelVelocity(double vel) {
-        velocity = vel;
-        upVel = velocity - velocity * backSpin;
-        lowVel = velocity + velocity * backSpin;
+    public SetFlywheelVelocity(double velUp, double velLow) {
+        upVel = velUp - velUp * backSpin;
+        lowVel = velLow + velLow * backSpin;
         requires(flyUp);
         requires(flyLo);
         

@@ -17,7 +17,7 @@ import edu.wpi.first.wpilibj.command.Subsystem;
  * should go through this class.
  *
  */
-public class FlyWheel extends Subsystem implements PIDSource, PIDOutput, Module {
+public class FlyWheel extends Subsystem implements PIDSource, Module {
 
     public static double TOLERANCE = 10;
 
@@ -32,19 +32,17 @@ public class FlyWheel extends Subsystem implements PIDSource, PIDOutput, Module 
     private final double gearBoxRatio;
     public final double maxVelocity;
 
-    /**
-     * Weather to invert the output and sensor output.
-     */
-    private boolean inverted = false;
-
-    public static final double MAX_VELOCITY = 240;
-
+    public static final double MAX_VELOCITY_UPPER = 240;
+    public static final double MAX_VELOCITY_LOWER = 140;
+    public static final double SHOOT_VELOCITY_UPPER = 192;
+    public static final double SHOOT_VELOCITY_LOWER = 112;
+    
     /**
      * The constants for the PID loop. kp = P constant ki = I constant kd = D
      * constant izone = Integration Zone for when to cut off the integral klrr =
      * Closed Loop Ramp Rate constant.
      */
-    public static final double KP = 0.005, KI = 0.01, KD = 0.01;
+    public static final double KP = 0.001, KI = 0.001, KD = 0.01;
 
     private PIDController pid;
 
@@ -58,13 +56,15 @@ public class FlyWheel extends Subsystem implements PIDSource, PIDOutput, Module 
      * @param gearRatio
      *            The gearRatio on the flywheel. output/input
      */
-    public FlyWheel(CANTalon talon, double gearRatio, double maxVel, boolean reversed) {
+    public FlyWheel(CANTalon talon, double gearRatio, double maxVel,
+            boolean reversed) {
         gearBoxRatio = gearRatio;
         maxVelocity = maxVel;
-        pid = new PIDController(KP, KI, KD, 1.0 / MAX_VELOCITY, this, this);
+        pid = new PIDController(KP, KI, KD, 1.0 / maxVelocity, this, talon);
         pid.setAbsoluteTolerance(TOLERANCE);
         this.talon = talon;
-        this.inverted = reversed;
+        talon.setInverted(reversed);
+        talon.reverseSensor(reversed);
     }
 
     public void setPID(double kp, double ki, double kd) {
@@ -104,8 +104,6 @@ public class FlyWheel extends Subsystem implements PIDSource, PIDOutput, Module 
      *            the desired value to be set to the motor.
      */
     private void set(double output) {
-        if (inverted)
-            output *= -1;
         talon.set(output);
     }
 
@@ -116,12 +114,10 @@ public class FlyWheel extends Subsystem implements PIDSource, PIDOutput, Module 
      */
     public double getRPS() {
         try {
-        double rps = talon.getEncVelocity() * 10.0 / 6.0 * gearBoxRatio;
-        if (inverted)
-            rps *= -1;
-        return rps;
-        } catch(Exception e) {
-            
+            double rps = talon.getEncVelocity() * 10.0 / 6.0 * gearBoxRatio;
+            return rps;
+        } catch (Exception e) {
+
         }
         return 0;
     }
@@ -145,57 +141,51 @@ public class FlyWheel extends Subsystem implements PIDSource, PIDOutput, Module 
     }
 
     @Override
-    public void pidWrite(double output) {
-        set(output);
-
-    }
-
-    @Override
     public void initModule() {
         // TODO Auto-generated method stub
-        
+
     }
 
     @Override
     public void initTest() {
         // TODO Auto-generated method stub
-        
+
     }
 
     @Override
     public void initTeleop() {
         // TODO Auto-generated method stub
-        
+
     }
 
     @Override
     public void initAutonomous() {
         // TODO Auto-generated method stub
-        
+
     }
 
     @Override
     public void teleopPeriodicModule() {
         // TODO Auto-generated method stub
-        
+
     }
 
     @Override
     public void testPeriodic() {
         // TODO Auto-generated method stub
-        
+
     }
 
     @Override
     public void endModule() {
         // TODO Auto-generated method stub
-        
+
     }
 
     @Override
     protected void initDefaultCommand() {
         // TODO Auto-generated method stub
-        
+
     }
 
 }

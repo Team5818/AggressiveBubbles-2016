@@ -6,7 +6,8 @@ import team5818.robot.modules.Arm;
 import team5818.robot.modules.Collector;
 
 public class ShootHigh extends Command {
-    public static final double shootVelocity = 144;
+    public static final double shootUpperVelocity = 240;
+    public static final double shootLowerVelocity = 144;
     public static final double shootAngle = 60;
     
     private SetFlywheelVelocity setFlyVelocity;
@@ -27,7 +28,7 @@ public class ShootHigh extends Command {
     private double maxShootTime = 4 * 1E9;
     
     public ShootHigh(){
-        setFlyVelocity = new SetFlywheelVelocity(shootVelocity);
+        setFlyVelocity = new SetFlywheelVelocity(shootUpperVelocity,shootLowerVelocity);
         setArmAngle = new SetArmAngle(shootAngle);
         flyToZero = new SetFlywheelPower(0);
         collector = RobotCommon.runningRobot.collector;

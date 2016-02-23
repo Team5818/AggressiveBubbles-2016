@@ -101,7 +101,7 @@ public final class RobotConstants {
     /**
      * The encoder scale to convert to inches/tick.
      */
-    public static final double ROBOT_ENCODER_SCALE = 0.02843601895734597;
+    public static final double ROBOT_ENCODER_SCALE = .020603;
 
     private RobotConstants() {
     }
