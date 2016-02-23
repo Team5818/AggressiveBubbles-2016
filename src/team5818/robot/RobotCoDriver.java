@@ -7,6 +7,7 @@ import javax.swing.text.NumberFormatter;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.buttons.Button;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
 import edu.wpi.first.wpilibj.command.Command;
@@ -47,7 +48,7 @@ public class RobotCoDriver implements Module {
     /**
      * Button to move the arm to 0 degrees.
      */
-    JoystickButton butZeroDeg = new JoystickButton(firstJoystick, 4);
+    JoystickButton butCollectAngle = new JoystickButton(firstJoystick, 4);
     /**
      * Button to turn arm into manual control.
      */
@@ -67,6 +68,7 @@ public class RobotCoDriver implements Module {
     private FlyWheel upperFlywheel;
     private Collector collector;
     private Arm arm;
+    double collectAngle = Preferences.getInstance().getDouble("ArmCollectAngke", -6);
 
 
     @Override
@@ -83,7 +85,7 @@ public class RobotCoDriver implements Module {
         
         butHighAngle.whenPressed(new SetArmAngle(90));
         butMedAngle.whenPressed(new SetArmAngle(45));
-        butZeroDeg.whenPressed(new SetArmAngle(0));
+        butCollectAngle.whenPressed(new SetArmAngle(collectAngle));
         butSetPower.whenPressed(new SetArmPower(0));
         butSpinFlywheel.whenPressed(new SetFlywheelVelocity(50));
         butSpinFlywheel.whenReleased(new SetFlywheelPower(0));
