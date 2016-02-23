@@ -6,13 +6,9 @@ import team5818.robot.modules.Arm;
 import team5818.robot.modules.Collector;
 
 public class ShootLow extends Command {
-    public static final double shootVelocity = 144;
-    public static final double shootAngle = 90;
+    public static final double shootAngle = 0;
     
-    private SetFlywheelVelocity setFlyVelocity;
-    private SetArmAngle setArmAngle;
-    private SetFlywheelPower flyToZero;
-    
+    private SetArmAngle setArmAngle; 
     private Collector collector;
     
     /**
@@ -27,9 +23,7 @@ public class ShootLow extends Command {
     private double maxShootTime = 4 * 1E9;
     
     public ShootLow(){
-        setFlyVelocity = new SetFlywheelVelocity(shootVelocity);
         setArmAngle = new SetArmAngle(shootAngle);
-        flyToZero = new SetFlywheelPower(0);
         collector = RobotCommon.runningRobot.collector;
     }
     
@@ -37,15 +31,14 @@ public class ShootLow extends Command {
     @Override
     protected void initialize() {
         setArmAngle.start();
-        setFlyVelocity.start();
         zeroTime = System.nanoTime();
         //TODO make ShootHigh move arm to angle using PID.
     }
 
     @Override
     protected void execute() {
-        if(setArmAngle.isFinished() && setFlyVelocity.isFinished()){
-            collector.setPower(Collect.COLLECT_POWER);
+        if(setArmAngle.isFinished()){
+            collector.setPower(-Collect.COLLECT_POWER);
         }
         
     }
@@ -60,7 +53,6 @@ public class ShootLow extends Command {
     @Override
     protected void end() {
         collector.setPower(0);
-        flyToZero.start();
     }
 
     @Override
