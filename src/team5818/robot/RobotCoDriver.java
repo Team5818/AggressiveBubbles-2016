@@ -87,7 +87,7 @@ public class RobotCoDriver implements Module {
         butMedAngle.whenPressed(new SetArmAngle(45));
         butCollectAngle.whenPressed(new SetArmAngle(collectAngle));
         butSetPower.whenPressed(new SetArmPower(0));
-        butSpinFlywheel.whenPressed(new SetFlywheelVelocity(50));
+        butSpinFlywheel.whenPressed(new SetFlywheelVelocity(FlyWheel.MAX_VELOCITY));
         butSpinFlywheel.whenReleased(new SetFlywheelPower(0));
 
 
