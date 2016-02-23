@@ -1,25 +1,16 @@
 package team5818.robot;
 
-import java.text.Format;
-import java.util.Formatter;
-
-import javax.swing.text.NumberFormatter;
-
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Preferences;
-import edu.wpi.first.wpilibj.buttons.Button;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
-import edu.wpi.first.wpilibj.command.Command;
-import edu.wpi.first.wpilibj.command.CommandGroup;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import team5818.robot.commands.Collect;
-import team5818.robot.commands.SetFlywheelVelocity;
 import team5818.robot.commands.SetArmAngle;
 import team5818.robot.commands.SetArmPower;
 import team5818.robot.commands.SetFlywheelPower;
-import team5818.robot.commands.ShootHigh;
+import team5818.robot.commands.SetFlywheelVelocity;
+import team5818.robot.commands.SwitchFeed;
 import team5818.robot.modules.Arm;
 import team5818.robot.modules.Collector;
 import team5818.robot.modules.FlyWheel;
@@ -34,17 +25,17 @@ public class RobotCoDriver implements Module {
      * The button that prints the arm angle.
      */
     public static final int BUT_PRINT_ANGLE = 7;
-    
+
     /**
      * Button to move the arm to high angle. 90 Degrees.
      */
     JoystickButton butHighAngle = new JoystickButton(firstJoystick, 5);
-    
+
     /**
      * Button to move the arm to medium angle. 45 degrees.
      */
     JoystickButton butMedAngle = new JoystickButton(firstJoystick, 3);
-    
+
     /**
      * Button to move the arm to 0 degrees.
      */
@@ -57,6 +48,14 @@ public class RobotCoDriver implements Module {
      * button to spin up and spin down flywheel
      */
     JoystickButton butSpinFlywheel = new JoystickButton(secondJoystick, 1);
+    /**
+     * button to switch to feed 1
+     */
+    JoystickButton butSwitchFeed1 = new JoystickButton(secondJoystick, 6);
+    /**
+     * button to switch feed 2
+     */
+    JoystickButton butSwitchFeed2 = new JoystickButton(secondJoystick, 4);
 
     private static final Joystick firstJoystick =
             new Joystick(RobotConstants.CODRIVER_FIRST_JOYSTICK_PORT);
@@ -68,8 +67,8 @@ public class RobotCoDriver implements Module {
     private FlyWheel upperFlywheel;
     private Collector collector;
     private Arm arm;
-    double collectAngle = Preferences.getInstance().getDouble("ArmCollectAngke", -6);
-
+    double collectAngle =
+            Preferences.getInstance().getDouble("ArmCollectAngke", -6);
 
     @Override
     public void initModule() {
@@ -82,15 +81,16 @@ public class RobotCoDriver implements Module {
                 lowerFlywheel.getPIDController());
         LiveWindow.addActuator("Flywheel", "Upper PID",
                 upperFlywheel.getPIDController());
-        
+
         butHighAngle.whenPressed(new SetArmAngle(90));
         butMedAngle.whenPressed(new SetArmAngle(45));
         butCollectAngle.whenPressed(new SetArmAngle(collectAngle));
         butSetPower.whenPressed(new SetArmPower(0));
-        butSpinFlywheel.whenPressed(new SetFlywheelVelocity(FlyWheel.MAX_VELOCITY));
+        butSpinFlywheel
+                .whenPressed(new SetFlywheelVelocity(FlyWheel.MAX_VELOCITY));
         butSpinFlywheel.whenReleased(new SetFlywheelPower(0));
-
-
+        butSwitchFeed1.whenPressed(new SwitchFeed(1));
+        butSwitchFeed2.whenPressed(new SwitchFeed(2));
     }
 
     @Override
@@ -98,7 +98,7 @@ public class RobotCoDriver implements Module {
         if (firstJoystick.getRawButton(BUT_PRINT_ANGLE)) {
             SmartDashboard.putNumber("Arm Angle = ", arm.getAngle());
         }
-        if(!arm.getPIDMode()) {
+        if (!arm.getPIDMode()) {
             arm.setPower(firstJoystick.getY());
         }
 
