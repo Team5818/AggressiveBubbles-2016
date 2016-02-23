@@ -2,6 +2,8 @@ package team5818.robot.commands;
 
 import edu.wpi.first.wpilibj.CANTalon;
 import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj.command.Subsystem;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import team5818.robot.RobotCommon;
 import team5818.robot.RobotConstants;
 import team5818.robot.modules.Collector;
@@ -12,16 +14,13 @@ public class Collect extends Command {
     public static final double COLLECT_POWER = 0.6;
     private Collector collector;
     
-    private double endSequanceZeroTime;
     /**
      * Time to run the motor
      */
     //TODO tune the ballFeedOutTime number to the correct timing.
-    private double ballFeedOutTime = 0.4 * 1E9;
     private double maxCollectTime = 4 * 1E9;
     private double zeroTime;
     
-    private boolean hasStartedEndSequance = false;
     private boolean hasFinished = false;
     
     
@@ -30,35 +29,22 @@ public class Collect extends Command {
         collector = RobotCommon.runningRobot.collector;
         collector.setPower(MAX_COLLECT_POWER);
         zeroTime = System.nanoTime();
+        requires(collector);
     }
 
     @Override
     protected void execute() {
-        if(collector.isStalled() || hasStartedEndSequance)
+        if(collector.isStalled())
         {
-            endSequance();
+            SmartDashboard.putNumber("Stall_Indicator", 100);
         }
     }
     
-    private void endSequance()
-    {
-        if(!hasStartedEndSequance) {
-            hasStartedEndSequance = true;
-            collector.setPower(-COLLECT_POWER/2);
-            endSequanceZeroTime = System.nanoTime();
-        } else {
-            double deltaTime = System.nanoTime() - endSequanceZeroTime;
-            if(deltaTime >= ballFeedOutTime) {
-                collector.setPower(0);
-                hasFinished  = true;
-            }
-        }   
-    }
+
 
     @Override
     protected boolean isFinished() {
         if(System.nanoTime() - zeroTime >= maxCollectTime) {
-            end();
             return true;
         }
         return hasFinished;

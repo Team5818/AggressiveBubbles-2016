@@ -5,9 +5,10 @@ import edu.wpi.first.wpilibj.CANTalon.TalonControlMode;
 import edu.wpi.first.wpilibj.PIDOutput;
 import edu.wpi.first.wpilibj.PIDSource;
 import edu.wpi.first.wpilibj.PIDSourceType;
+import edu.wpi.first.wpilibj.command.Subsystem;
 import team5818.robot.RobotConstants;
 
-public class Collector implements Module {
+public class Collector extends Subsystem implements Module {
     
     private static final CANTalon collectorMotor = new CANTalon(RobotConstants.TALON_COLLECTOR_MOTOR);
     private static final double STALL_THRESHOLD = 41;
@@ -68,5 +69,11 @@ public class Collector implements Module {
     @Override
     public void endModule() {
         // TODO Auto-generated method stub
+    }
+
+    @Override
+    protected void initDefaultCommand() {
+        // TODO Auto-generated method stub
+        
     }    
 }

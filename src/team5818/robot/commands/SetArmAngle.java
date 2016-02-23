@@ -22,12 +22,12 @@ public class SetArmAngle extends Command {
     protected void initialize() {
         arm.goToAngle(targetAngle);
         zeroTime = System.nanoTime();
+        hasInitialized = true;
     }
 
     @Override
     protected void execute() {
         if(!hasInitialized) {
-            hasInitialized = true;
             initialize();
         }
 
