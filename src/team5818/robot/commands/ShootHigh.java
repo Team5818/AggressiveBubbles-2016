@@ -11,6 +11,7 @@ public class ShootHigh extends Command {
     
     private SetFlywheelVelocity setFlyVelocity;
     private SetArmAngle setArmAngle;
+    private SetFlywheelPower flyToZero;
     
     private Collector collector;
     
@@ -28,6 +29,7 @@ public class ShootHigh extends Command {
     public ShootHigh(){
         setFlyVelocity = new SetFlywheelVelocity(shootVelocity);
         setArmAngle = new SetArmAngle(shootAngle);
+        flyToZero = new SetFlywheelPower(0);
         collector = RobotCommon.runningRobot.collector;
     }
     
@@ -58,7 +60,7 @@ public class ShootHigh extends Command {
     @Override
     protected void end() {
         collector.setPower(0);
-        setFlyVelocity.cancel();
+        flyToZero.start();
     }
 
     @Override

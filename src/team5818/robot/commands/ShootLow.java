@@ -6,34 +6,53 @@ import team5818.robot.modules.Arm;
 import team5818.robot.modules.Collector;
 
 public class ShootLow extends Command {
-
-    private Collector collector;
-    private SetArmAngle setArmAngle;
+    public static final double shootVelocity = 144;
+    public static final double shootAngle = 90;
     
+    private SetFlywheelVelocity setFlyVelocity;
+    private SetArmAngle setArmAngle;
+    private SetFlywheelPower flyToZero;
+    
+    private Collector collector;
+    
+    /**
+     * The time when the command starts in nano seconds.
+     * Retrieved using System.nanoTime();
+     */
     private double zeroTime;
+    
+    /**
+     * The maximum time the shooter can be on in nano seconds.
+     */
     private double maxShootTime = 4 * 1E9;
     
-    public ShootLow()
-    {
+    public ShootLow(){
+        setFlyVelocity = new SetFlywheelVelocity(shootVelocity);
+        setArmAngle = new SetArmAngle(shootAngle);
+        flyToZero = new SetFlywheelPower(0);
         collector = RobotCommon.runningRobot.collector;
-        setArmAngle = new SetArmAngle(90);
     }
+    
     
     @Override
     protected void initialize() {
         setArmAngle.start();
-        collector.setPower(-Collect.MAX_COLLECT_POWER);
+        setFlyVelocity.start();
         zeroTime = System.nanoTime();
+        //TODO make ShootHigh move arm to angle using PID.
     }
 
     @Override
     protected void execute() {
-
+        if(setArmAngle.isFinished() && setFlyVelocity.isFinished()){
+            collector.setPower(Collect.COLLECT_POWER);
+        }
+        
     }
 
     @Override
     protected boolean isFinished() {
-        if(System.nanoTime() - zeroTime > maxShootTime)
+        if(System.nanoTime() - zeroTime >= maxShootTime)
             return true;
         return false;
     }
@@ -41,10 +60,12 @@ public class ShootLow extends Command {
     @Override
     protected void end() {
         collector.setPower(0);
+        flyToZero.start();
     }
 
     @Override
     protected void interrupted() {
+        setArmAngle.cancel();
         end();
     }
 
