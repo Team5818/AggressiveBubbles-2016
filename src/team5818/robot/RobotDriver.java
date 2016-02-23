@@ -1,8 +1,10 @@
 package team5818.robot;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import team5818.robot.commands.DriveForwardCommand;
 import team5818.robot.commands.DriveVelocityCommand;
 import team5818.robot.commands.ResetEncoderCommand;
@@ -36,6 +38,7 @@ public class RobotDriver implements Module {
     public static final int BUT_ONESTICK_ARCADE = 11;
     public static final int BUT_INVERT = 9;
     public static final int BUT_NO_INVERT = 8;
+    
 
     private static final Joystick FIRST_JOYSTICK =
             new Joystick(RobotConstants.DRIVER_FIRST_JOYSTICK_PORT);
@@ -70,14 +73,10 @@ public class RobotDriver implements Module {
 
     @Override
     public void teleopPeriodicModule() {
-        if (FIRST_JOYSTICK.getRawButton(BUT_DEBUG)) {
-            currTicks = (currTicks + 1) % debugCycleTicks;
-            if (currTicks == 0) {
-                DriveTrain dt = RobotCommon.runningRobot.driveTrain;
-
-                System.out.println("LP: " + dt.getLeftMotors().dumpPower(1)
-                        + " RP: " + dt.getRightMotors().dumpPower(1));
-            }
+        if (SECOND_JOYSTICK.getRawButton(9)) {
+            SmartDashboard.putNumber("Drive Train Left Pos", RobotCommon.runningRobot.driveTrain.getLeftMotors().getEncPosRaw());
+            SmartDashboard.putNumber("Drive Train Right Pos", RobotCommon.runningRobot.driveTrain.getRightMotors().getEncPosRaw());
+            
         }
 
         if (FIRST_JOYSTICK.getRawButton(BUT_TWOSTICK_ARCADE)) {

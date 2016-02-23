@@ -115,11 +115,15 @@ public class FlyWheel extends Subsystem implements PIDSource, PIDOutput, Module 
      * @return Revolotions Per Second
      */
     public double getRPS() {
-
+        try {
         double rps = talon.getEncVelocity() * 10.0 / 6.0 * gearBoxRatio;
         if (inverted)
             rps *= -1;
         return rps;
+        } catch(Exception e) {
+            
+        }
+        return 0;
     }
 
     public PIDController getPIDController() {
