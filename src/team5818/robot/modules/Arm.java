@@ -84,6 +84,9 @@ public class Arm extends Subsystem implements Module, PIDSource, PIDOutput {
      *            The power value
      */
     public synchronized void setPower(double power) {
+        firstArmMotor.enableBrakeMode(true);
+        if(secondArmMotor != null);
+            secondArmMotor.enableBrakeMode(true);
         pidMode = false;
         armPID.disable();
         pidWrite(power);
@@ -148,6 +151,9 @@ public class Arm extends Subsystem implements Module, PIDSource, PIDOutput {
      *            PIDs to the given objective
      */
     public synchronized void goToAngle(double objectiveAngle) {
+        firstArmMotor.enableBrakeMode(false);
+        if(secondArmMotor != null);
+            secondArmMotor.enableBrakeMode(false);
         pidMode = true;
         armPID.reset();
         armPID.setSetpoint(objectiveAngle);
