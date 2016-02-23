@@ -8,6 +8,7 @@ import team5818.robot.modules.Collector;
 public class ShootLow extends Command {
 
     private Collector collector;
+    private SetArmAngle setArmAngle;
     
     private double zeroTime;
     private double maxShootTime = 4 * 1E9;
@@ -15,10 +16,12 @@ public class ShootLow extends Command {
     public ShootLow()
     {
         collector = RobotCommon.runningRobot.collector;
+        setArmAngle = new SetArmAngle(90);
     }
     
     @Override
     protected void initialize() {
+        setArmAngle.start();
         collector.setPower(-Collect.MAX_COLLECT_POWER);
         zeroTime = System.nanoTime();
     }

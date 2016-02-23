@@ -50,12 +50,12 @@ public class SetFlywheelVelocity extends Command {
     }
 
     @Override
-    protected void end() {
-    }
+    protected void end() {}
 
     @Override
     protected void interrupted() {
-        end();
+        flyUp.setPower(0);
+        flyLo.setPower(0);
 
     }
 

@@ -3,15 +3,18 @@ package team5818.robot.commands;
 import edu.wpi.first.wpilibj.command.Command;
 import team5818.robot.RobotCommon;
 import team5818.robot.modules.Arm;
+import team5818.robot.modules.FlyWheel;
+
 
 /**
  * Command that sets the power to the arm for manual control.
  *
  */
-public class SetArmPower extends Command {
+public class SetFlywheelPower extends Command {
     
     private double power;
-    public Arm arm;
+    private static  FlyWheel flyUp;
+    private static  FlyWheel flyLo;
     private static boolean hasInitialized = false;
     private double zeroTime;
     private double maxTime = 1 * 1E9;
@@ -19,16 +22,21 @@ public class SetArmPower extends Command {
     /**
      * @param power the desired power to set to the arm.
      */
-    public SetArmPower(double power) {
-        arm = RobotCommon.runningRobot.arm;
-        requires(arm);
+    public SetFlywheelPower(double power) {
+        flyUp = RobotCommon.runningRobot.upperFlywheel;
+        flyLo = RobotCommon.runningRobot.lowerFlywheel;
+        requires(flyUp);
+        requires(flyLo);
+        this.power = power;
     }
 
     @Override
     protected void initialize() {
-        arm.setPower(power);
+        flyUp.setPower(power);
+        flyLo.setPower(power);
         zeroTime = System.nanoTime();
         hasInitialized = true;
+        
     }
 
     @Override
@@ -54,7 +62,8 @@ public class SetArmPower extends Command {
 
     @Override
     protected void interrupted() {
-        arm.setPower(0);
+        flyUp.setPower(0);
+        flyLo.setPower(0);
     }
     
     public static void reInit() {

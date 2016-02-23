@@ -17,6 +17,7 @@ import team5818.robot.commands.Collect;
 import team5818.robot.commands.SetFlywheelVelocity;
 import team5818.robot.commands.SetArmAngle;
 import team5818.robot.commands.SetArmPower;
+import team5818.robot.commands.SetFlywheelPower;
 import team5818.robot.commands.ShootHigh;
 import team5818.robot.modules.Arm;
 import team5818.robot.modules.Collector;
@@ -51,26 +52,11 @@ public class RobotCoDriver implements Module {
      * Button to turn arm into manual control.
      */
     JoystickButton butSetPower = new JoystickButton(firstJoystick, 2);
-    
     /**
-     * returns error from arm PID
+     * button to spin up and spin down flywheel
      */
-    public static final int ERROR_BUTTON = 1;
+    JoystickButton butSpinFlywheel = new JoystickButton(secondJoystick, 1);
 
-    /**
-     * Button manual power
-     */
-    private static final int BUT_EXIT_PID = 2;
-    
-    /**
-     * Button starts the flywheel.
-     */
-    private static final int BUT_START_FLYWHEEL = 1;
-    /**
-     * Button stops the flywheel.
-     */
-    private static final int BUT_STOP_FLYWHEEL = 2;
-    
     private static final Joystick firstJoystick =
             new Joystick(RobotConstants.CODRIVER_FIRST_JOYSTICK_PORT);
     private static final Joystick secondJoystick =
@@ -94,19 +80,14 @@ public class RobotCoDriver implements Module {
                 lowerFlywheel.getPIDController());
         LiveWindow.addActuator("Flywheel", "Upper PID",
                 upperFlywheel.getPIDController());
-
-        JoystickButton butStartFlywheel =
-                new JoystickButton(secondJoystick, BUT_START_FLYWHEEL);
-        butStartFlywheel.whenPressed(new SetFlywheelVelocity(50));
-        JoystickButton butStopFlywheel =
-                new JoystickButton(secondJoystick, BUT_STOP_FLYWHEEL);
-        butStopFlywheel.whenPressed(new SetFlywheelVelocity(0));
-        Command command = new SetArmAngle(0);
         
         butHighAngle.whenPressed(new SetArmAngle(90));
         butMedAngle.whenPressed(new SetArmAngle(45));
         butZeroDeg.whenPressed(new SetArmAngle(0));
         butSetPower.whenPressed(new SetArmPower(0));
+        butSpinFlywheel.whenPressed(new SetFlywheelVelocity(50));
+        butSpinFlywheel.whenReleased(new SetFlywheelPower(0));
+
 
     }
 

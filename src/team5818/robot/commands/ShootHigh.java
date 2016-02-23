@@ -8,7 +8,6 @@ import team5818.robot.modules.Collector;
 public class ShootHigh extends Command {
     public static final double shootVelocity = 144;
     public static final double shootAngle = 60;
-    private boolean finished;
     
     private SetFlywheelVelocity setFlyVelocity;
     private SetArmAngle setArmAngle;
@@ -26,20 +25,15 @@ public class ShootHigh extends Command {
      */
     private double maxShootTime = 4 * 1E9;
     
-    public ShootHigh(SetFlywheelVelocity sfv) {
-        setFlyVelocity = sfv;
+    public ShootHigh(){
+        setFlyVelocity = new SetFlywheelVelocity(shootVelocity);
+        setArmAngle = new SetArmAngle(shootAngle);
         collector = RobotCommon.runningRobot.collector;
     }
     
-    public ShootHigh()
-    {
-        this(new SetFlywheelVelocity(shootVelocity));
-        
-    }
     
     @Override
     protected void initialize() {
-        setArmAngle = new SetArmAngle(shootAngle);
         setArmAngle.start();
         setFlyVelocity.start();
         zeroTime = System.nanoTime();
@@ -51,6 +45,7 @@ public class ShootHigh extends Command {
         if(setArmAngle.isFinished() && setFlyVelocity.isFinished()){
             collector.setPower(Collect.COLLECT_POWER);
         }
+        
     }
 
     @Override
@@ -62,13 +57,13 @@ public class ShootHigh extends Command {
 
     @Override
     protected void end() {
+        collector.setPower(0);
         setFlyVelocity.cancel();
-        
-
     }
 
     @Override
     protected void interrupted() {
+        setArmAngle.cancel();
         end();
     }
 
