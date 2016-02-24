@@ -40,22 +40,18 @@ public class RobotCoDriver implements Module {
     private static final int BUT_ARM_ANGLE_ZERO = 4;
     private static final int BUT_SET_ARM_POWER = 2;
 
+    // Joystick Two Buttons
+    private static final int BUT_SWITCH_SHOOT_FEED = 12;
+    private static final int BUT_SWITCH_DRIVER_FEED = 11;
     private static final int BUT_LED_ON = 8;
     private static final int BUT_LED_OFF = 7;
-            new Joystick(RobotConstants.CODRIVER_SECOND_JOYSTICK_PORT);
-    private static final int BUT_ARM_ANGLE_HOME = 5;
-    private static final int BUT_ARM_ANGLE_ZERO = 4;
-    private static final int BUT_SHOOT_ANGLE_HIGH = 3;
-    private static final int BUT_SHOOT_ANGLE_MED_HIGH = 4;
-    private static final int BUT_SHOOT_ANGLE_MED_LOW = 3;
-    private static final int BUT_SHOOT_ANGLE_LOW = 4;
-    private static final int BUT_ARM_SET_POWER = 2;
+    private static final int BUT_SHOOT_ANGLE_HIGH = 5;
     private static final int BUT_SHOOT_ANGLE_MED_HIGH = 4;
     private static final int BUT_SHOOT_ANGLE_MED_LOW = 3;
     private static final int BUT_SHOOT_ANGLE_LOW = 4;
     private static final int BUT_SPIN_FLYWHEEL = 2;
     private static final int BUT_COLLECT = 1;
-    
+
     private double shootAngleHigh = 60;
     private double shootAngleMedHigh = 50;
     private double shootAngleMedLow = 40;
@@ -63,25 +59,18 @@ public class RobotCoDriver implements Module {
     private double armAngleZero = 0;
     private double armAngleHome = 85;
 
-    JoystickButton butSetPower =
-            new JoystickButton(firstJoystick, BUT_ARM_SET_POWER);
-    JoystickButton butSpinFlywheel =
-            new JoystickButton(secondJoystick, BUT_SPIN_FLYWHEEL);
-    JoystickButton butCollect = new JoystickButton(secondJoystick, BUT_COLLECT);
-    JoystickButton butShootAngleLow =
-            new JoystickButton(secondJoystick, BUT_SHOOT_ANGLE_LOW);
-    JoystickButton butShootAngleMedLow =
-            new JoystickButton(secondJoystick, BUT_SHOOT_ANGLE_MED_LOW);
-    JoystickButton butShootAngleMedHigh =
-            new JoystickButton(secondJoystick, BUT_SHOOT_ANGLE_MED_HIGH);
-    JoystickButton butShootAngleHigh =
-            new JoystickButton(secondJoystick, BUT_SHOOT_ANGLE_HIGH);
+    // First Joystick Buttons
+    JoystickButton butSetArmPower =
+            new JoystickButton(firstJoystick, BUT_SET_ARM_POWER);
     JoystickButton butArmAngleHome =
             new JoystickButton(firstJoystick, BUT_ARM_ANGLE_HOME);
     JoystickButton butArmAngleZero =
             new JoystickButton(firstJoystick, BUT_ARM_ANGLE_ZERO);
-    JoystickButton butLedOn = new JoystickButton(secondJoystick, BUT_LED_ON);
-    JoystickButton butLedOff = new JoystickButton(secondJoystick, BUT_LED_OFF);
+
+    // Second Joystick Buttons
+    JoystickButton butSpinFlywheel =
+            new JoystickButton(secondJoystick, BUT_SPIN_FLYWHEEL);
+    JoystickButton butCollect = new JoystickButton(secondJoystick, BUT_COLLECT);
     JoystickButton butShootAngleLow =
             new JoystickButton(secondJoystick, BUT_SHOOT_ANGLE_LOW);
     JoystickButton butShootAngleMedLow =
@@ -100,8 +89,6 @@ public class RobotCoDriver implements Module {
     private FlyWheel lowerFlywheel;
     private FlyWheel upperFlywheel;
     private Arm arm;
-    double medAngle = Preferences.getInstance().getDouble("ArmMedAngle", 35);
-    double highAngle = Preferences.getInstance().getDouble("ArmHighAngle", 60);
 
     @Override
     public void initModule() {
@@ -116,6 +103,7 @@ public class RobotCoDriver implements Module {
         LiveWindow.addActuator("Flywheel", "Upper PID",
                 upperFlywheel.getPIDController());
 
+        // Settings the preferences
         shootAngleHigh = Preferences.getInstance().getDouble("ShootAngleHigh",
                 shootAngleHigh);
         shootAngleMedHigh = Preferences.getInstance()
@@ -129,15 +117,18 @@ public class RobotCoDriver implements Module {
         armAngleZero = Preferences.getInstance().getDouble("ArmAngleZero",
                 armAngleZero);
 
+        // Making the command groups
         CommandGroup startFlywheel = new CommandGroup();
         startFlywheel.addParallel(new SetFlywheelVelocity(
                 FlyWheel.SHOOT_VELOCITY_UPPER, FlyWheel.SHOOT_VELOCITY_LOWER));
-        startFlywheel.addParallel(new SwitchFeed(ComputerVision.CAMERA_SHOOTER));
+        startFlywheel
+                .addParallel(new SwitchFeed(ComputerVision.CAMERA_SHOOTER));
         CommandGroup stopFlywheel = new CommandGroup();
         stopFlywheel.addParallel(new SetFlywheelPower(0));
         stopFlywheel.addParallel(new SwitchFeed(ComputerVision.CAMERA_DRIVER));
+
+        // Assigning commands to the buttons
         butSpinFlywheel.whenPressed(startFlywheel);
-        stopFlywheel.addParallel(new SetFlywheelPower(0));
         butShootAngleHigh.whenPressed(new SetArmAngle(shootAngleHigh));
         butShootAngleMedHigh.whenPressed(new SetArmAngle(shootAngleMedHigh));
         butShootAngleMedLow.whenPressed(new SetArmAngle(shootAngleMedLow));
@@ -171,18 +162,15 @@ public class RobotCoDriver implements Module {
 
         // Manual Arm Mode
         if (!arm.getPIDMode()) {
-            arm.setPower(arm.getMaxPower()*firstJoystick.getY());
+            arm.setPower(arm.getMaxPower() * firstJoystick.getY());
         }
 
         // Overrides Driver Control.
         if (secondJoystick.getRawButton(BUT_SPIN_FLYWHEEL)) {
             setOverrideDriver(true);
 
-
         } else {
             setOverrideDriver(false);
-
-
         }
 
         // Control the DriverTrain if Overriding Drive Control
