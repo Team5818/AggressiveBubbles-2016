@@ -13,8 +13,6 @@ public class SetArmPower extends Command {
     private double power;
     public Arm arm;
     private static boolean hasInitialized = false;
-    private double zeroTime;
-    private double maxTime = 1 * 1E9;
 
     /**
      * @param power the desired power to set to the arm.
@@ -27,7 +25,6 @@ public class SetArmPower extends Command {
     @Override
     protected void initialize() {
         arm.setPower(power);
-        zeroTime = System.nanoTime();
         hasInitialized = true;
     }
 
@@ -41,9 +38,6 @@ public class SetArmPower extends Command {
 
     @Override
     protected boolean isFinished() {
-        if(System.nanoTime() - zeroTime > maxTime) {
-            return true;
-        }
         return true;
     }
 

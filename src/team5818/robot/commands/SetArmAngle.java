@@ -9,8 +9,7 @@ public class SetArmAngle extends Command {
     public double targetAngle;
     public Arm arm;
     private boolean hasInitialized = false;
-    private double zeroTime;
-    private double maxTime = 3 * 1E9;
+    private double maxTime = 3;
 
     public SetArmAngle(double angle) {
         targetAngle = angle;
@@ -21,8 +20,8 @@ public class SetArmAngle extends Command {
     @Override
     protected void initialize() {
         arm.goToAngle(targetAngle);
-        zeroTime = System.nanoTime();
         hasInitialized = true;
+        setTimeout(maxTime);
     }
 
     @Override
@@ -35,9 +34,7 @@ public class SetArmAngle extends Command {
 
     @Override
     protected boolean isFinished() {
-        if(System.nanoTime() - zeroTime > maxTime)
-            return true;
-        return arm.onTarget();
+        return isTimedOut();
     }
 
     @Override

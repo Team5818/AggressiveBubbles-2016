@@ -28,7 +28,7 @@ public class Collect extends Command {
         collectPower = power;
         collector = RobotCommon.runningRobot.collector;
         requires(collector);
-    }
+        }
 
     /**
      * @param power

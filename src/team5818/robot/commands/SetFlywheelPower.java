@@ -16,8 +16,7 @@ public class SetFlywheelPower extends Command {
     private static  FlyWheel flyUp;
     private static  FlyWheel flyLo;
     private static boolean hasInitialized = false;
-    private double zeroTime;
-    private double maxTime = 1 * 1E9;
+    private double maxTime = 1;
 
     /**
      * @param power the desired power to set to the arm.
@@ -34,8 +33,8 @@ public class SetFlywheelPower extends Command {
     protected void initialize() {
         flyUp.setPower(power);
         flyLo.setPower(power);
-        zeroTime = System.nanoTime();
         hasInitialized = true;
+        setTimeout(maxTime);
         
     }
 
@@ -49,10 +48,7 @@ public class SetFlywheelPower extends Command {
 
     @Override
     protected boolean isFinished() {
-        if(System.nanoTime() - zeroTime > maxTime) {
-            return true;
-        }
-        return true;
+       return isTimedOut(); 
     }
 
     @Override
