@@ -2,6 +2,7 @@ package team5818.robot.commands;
 
 import edu.wpi.first.wpilibj.command.Command;
 import team5818.robot.RobotCommon;
+import team5818.robot.modules.drivetrain.DriveSide;
 import team5818.robot.util.Vector2d;
 
 public class DriveDistanceCommand extends Command {
@@ -51,6 +52,9 @@ public class DriveDistanceCommand extends Command {
 
     @Override
     protected boolean isFinished() {
+        DriveSide ds = RobotCommon.runningRobot.driveTrain.getLeftMotors();
+        
+        System.out.println(ds.getPIDController().getError()+ " onTarget "+ds.getPIDController().onTarget() );
         return isTimedOut() || RobotCommon.runningRobot.driveTrain.getLeftMotors().getPIDController().onTarget();
     }
 

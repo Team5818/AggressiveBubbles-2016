@@ -23,7 +23,7 @@ public class Arm extends Subsystem implements Module, PIDSource, PIDOutput {
     public double teamNum =  Preferences.getInstance().getDouble("TeamNumber", 1717);
     protected static final double DEFAULT_SCALE = 0.047;
     protected static final double DEFAULT_OFFSET = -9.587;
-    protected static final double DEFAULT_MAXPOWER = 0.5;
+    protected static final double DEFAULT_MAXPOWER = 0.8;
     protected static final double DEFAULT_KP = 0.01;
     protected static final double DEFAULT_KI = 0.0;
     protected static final double DEFAULT_KD = 0.0;
@@ -58,10 +58,10 @@ public class Arm extends Subsystem implements Module, PIDSource, PIDOutput {
                     DEFAULT_SCALE);
             offset = Preferences.getInstance().getDouble("ArmPotOffset",
                     DEFAULT_OFFSET);
-            maxPower = Preferences.getInstance().getDouble("MaxArmPower", .8);
-            kp = Preferences.getInstance().getDouble("ArmKp.", DEFAULT_KP);//remove .'s
-            ki = Preferences.getInstance().getDouble("ArmKi.", DEFAULT_KI);
-            kd = Preferences.getInstance().getDouble("ArmKd.", DEFAULT_KD);
+            maxPower = Preferences.getInstance().getDouble("MaxArmPower", DEFAULT_MAXPOWER);
+            kp = Preferences.getInstance().getDouble("ArmKp", DEFAULT_KP);//remove .'s
+            ki = Preferences.getInstance().getDouble("ArmKi", DEFAULT_KI);
+            kd = Preferences.getInstance().getDouble("ArmKd", DEFAULT_KD);
 
         } catch (Exception e) {
             DriverStation.reportError(
