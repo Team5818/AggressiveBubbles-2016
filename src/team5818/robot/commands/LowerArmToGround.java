@@ -40,14 +40,8 @@ public class LowerArmToGround extends Command{
 
     @Override
     protected boolean isFinished() {
-        if(arm.getAngle() <= groundAngle){
-            return true;
-        }
-        if(currentAngle - lastAngle > stallBuffer){
-            return true;
-        }
-        
-        return isTimedOut();
+        return (arm.getAngle() <= groundAngle || currentAngle - lastAngle > stallBuffer || isTimedOut());
+
     }
 
     @Override
