@@ -15,6 +15,8 @@ import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import team5818.robot.commands.Auto1E;
+import team5818.robot.commands.DoNothingAuto;
 import team5818.robot.modules.Arm;
 import team5818.robot.modules.Collector;
 import team5818.robot.modules.FlyWheel;
@@ -90,7 +92,8 @@ public class RobotCommon extends IterativeRobot {
         modules.forEach(Module::initModule);
         chooser = new SendableChooser();
         chooser.addDefault("Default Auto", defaultAuto);
-        chooser.addObject("My Auto", customAuto);
+        chooser.addObject("Lowbar Auto", new Auto1E());
+        chooser.addObject("Do Nothing Auto", new DoNothingAuto());
         SmartDashboard.putData("Auto choices", chooser);
         panel = new PowerDistributionPanel();
     }
