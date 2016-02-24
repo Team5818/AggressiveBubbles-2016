@@ -20,6 +20,21 @@ import team5818.robot.util.PIDSourceBase;
  */
 public class DriveSide implements EncoderManager, PIDOutput, MovingControl {
 
+    /**
+     * The mode for setting direct power to the drive side.
+     */
+    public static final int MODE_POWER = 0;
+    /**
+     * The mode for setting velocity to the drive side.
+     */
+    public static final int MODE_VELOCITY = 1;
+    /**
+     * The mode for setting drive distance to the drive side.
+     */
+    public static final int MODE_DISTANCE = 2;
+
+    private static int driveMode = MODE_POWER;
+
     private static final double DEFAULT_MAX_POWER = 1.0;
 
     private final CANTalon mainTalon;
@@ -169,15 +184,28 @@ public class DriveSide implements EncoderManager, PIDOutput, MovingControl {
         return vel;
     }
 
+    /**
+     * Returns the current driving mode. ie velocity, distance, power.
+     * @return the current driving mode.
+     */
+    public static int getMode() {
+        return driveMode;
+    }
+
     public PIDController getPIDController() {
         return pidLoop;
     }
 
     @Override
     public void setPower(double power) {
+        setDriveMode(MODE_VELOCITY);
         pidLoop.disable();
         // Delegate to power.
         pidWrite(power);
+    }
+
+    private void setDriveMode(int dm) {
+        driveMode = dm;
     }
 
     /**
@@ -189,6 +217,7 @@ public class DriveSide implements EncoderManager, PIDOutput, MovingControl {
      */
     @Override
     public void setVelocity(double vel) {
+        setDriveMode(MODE_VELOCITY);
         vel = Math.min(RobotConstants.MAX_VELOCITY,
                 Math.max(-RobotConstants.MAX_VELOCITY, vel));
         resetPIDLoop();
@@ -210,6 +239,7 @@ public class DriveSide implements EncoderManager, PIDOutput, MovingControl {
 
     @Override
     public void setDriveDistance(double dist, double maxPower) {
+        setDriveMode(MODE_DISTANCE);
         resetPIDLoop();
         pidLoop.setPID(RobotConstants.DISTANCE_PID_LOOP_P_TERM,
                 RobotConstants.DISTANCE_PID_LOOP_I_TERM,

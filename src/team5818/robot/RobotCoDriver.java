@@ -15,11 +15,14 @@ import team5818.robot.modules.Arm;
 import team5818.robot.modules.Collector;
 import team5818.robot.modules.FlyWheel;
 import team5818.robot.modules.Module;
+import team5818.robot.util.Vectors;
 
 /**
  * The secondary robot driver. Responsible for the arm.
  */
 public class RobotCoDriver implements Module {
+    
+    private static boolean overrideDriver = false;
 
     private static final int BUT_PRINT_ANGLE = 7;
     private static final int BUT_SPIN_FLYWHEEL = 2;
@@ -80,8 +83,19 @@ public class RobotCoDriver implements Module {
             SmartDashboard.putNumber("Upper flywheel", upperFlywheel.getRPS());
             SmartDashboard.putNumber("Lower flywheel", lowerFlywheel.getRPS());
         }
+        
         if (!arm.getPIDMode()) {
-            arm.setPower(firstJoystick.getY());
+            arm.setPower(secondJoystick.getY());
+        }
+        
+        if(secondJoystick.getRawButton(BUT_SPIN_FLYWHEEL)) {
+            setOverrideDriver(true);
+        } else {
+            setOverrideDriver(false);
+        }
+        
+        if(isOverrideDriver()) {
+            RobotCommon.runningRobot.driveTrain.setPower(Vectors.fromJoystick(firstJoystick, false));
         }
     }
 
@@ -109,6 +123,21 @@ public class RobotCoDriver implements Module {
     public void testPeriodic() {
         SmartDashboard.putNumber("FlyWheel Upper RPS", upperFlywheel.getRPS());
         SmartDashboard.putNumber("FlyWheel Lower RPS", lowerFlywheel.getRPS());
+    }
+    /**
+     * 
+     * @return Weather CoDriver is overriding Driver control.
+     */
+    public static boolean isOverrideDriver() {
+        return overrideDriver;
+    }
+    
+    /**
+     * 
+     * @param od weather to override driver or not.
+     */
+    public static void setOverrideDriver(boolean od) {
+        overrideDriver = od;
     }
 
 }

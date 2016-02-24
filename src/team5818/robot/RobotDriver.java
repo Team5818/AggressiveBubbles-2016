@@ -63,6 +63,10 @@ public class RobotDriver implements Module {
 
     @Override
     public void teleopPeriodicModule() {
+        
+        if(RobotCoDriver.isOverrideDriver() || DriveSide.getMode() == DriveSide.MODE_POWER)
+            return;
+        
         if (SECOND_JOYSTICK.getRawButton(BUT_DEBUG)) {
             SmartDashboard.putNumber("Drive Train Left Pos",
                     RobotCommon.runningRobot.driveTrain.getLeftMotors()
