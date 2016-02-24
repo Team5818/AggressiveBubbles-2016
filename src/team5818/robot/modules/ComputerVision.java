@@ -5,7 +5,9 @@ import com.ni.vision.NIVision.Image;
 
 import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.vision.USBCamera;
+import edu.wpi.first.wpilibj.Solenoid;
 
 public class ComputerVision {
 
@@ -14,8 +16,14 @@ public class ComputerVision {
     USBCamera cam2;
     USBCamera currcam;
     Image frame;
+    public Solenoid LEDLight;
+    public Boolean LEDon;
 
     public ComputerVision() {
+
+        LEDLight = new Solenoid(0);
+        LEDon = true;
+
         try {
             cam = new USBCamera("cam1");
             cam2 = new USBCamera("cam2");
@@ -78,15 +86,23 @@ public class ComputerVision {
     }
 
     public synchronized void ChangeFeed(int i) {
-        if (currcam == cam && i == 1) {
-            cam.stopCapture();
-            currcam = cam2;
-            cam2.startCapture();
-        } else if (currcam == cam2 && i == 2) {
-            cam2.stopCapture();
-            currcam = cam;
-            cam.startCapture();
+        try {
+            if (currcam == cam && i == 1) {
+                cam.stopCapture();
+                currcam = cam2;
+                cam2.startCapture();
+            } else if (currcam == cam2 && i == 2) {
+                cam2.stopCapture();
+                currcam = cam;
+                cam.startCapture();
+            }
+        } catch (Exception e) {
+            DriverStation.reportError("Camera Feed Switching Error", false);
         }
+    }
+
+    public void LEDToggle(Boolean toggle) {
+        LEDLight.set(toggle);
     }
 
 }

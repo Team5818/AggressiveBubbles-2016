@@ -11,6 +11,7 @@ import team5818.robot.commands.SetArmPower;
 import team5818.robot.commands.SetFlywheelPower;
 import team5818.robot.commands.SetFlywheelVelocity;
 import team5818.robot.commands.SwitchFeed;
+import team5818.robot.commands.LedToggle;
 import team5818.robot.modules.Arm;
 import team5818.robot.modules.Collector;
 import team5818.robot.modules.FlyWheel;
@@ -36,6 +37,8 @@ public class RobotCoDriver implements Module {
     JoystickButton butSwitchFeed2 = new JoystickButton(secondJoystick, 4);
     JoystickButton butSpinFlywheel = new JoystickButton(secondJoystick, BUT_SPIN_FLYWHEEL);
     JoystickButton butCollect = new JoystickButton(secondJoystick, BUT_COLLECT);
+    JoystickButton butLedOn = new JoystickButton(secondJoystick, 7);
+    JoystickButton butLedOff = new JoystickButton(secondJoystick, 8);
     
     private static final Joystick firstJoystick =
             new Joystick(RobotConstants.CODRIVER_FIRST_JOYSTICK_PORT);
@@ -74,6 +77,8 @@ public class RobotCoDriver implements Module {
         butSpinFlywheel.whenReleased(new SetFlywheelPower(0));
         butSwitchFeed1.whenPressed(new SwitchFeed(1));
         butSwitchFeed2.whenPressed(new SwitchFeed(2));
+        butLedOn.whenPressed(new LedToggle(true));
+        butLedOff.whenPressed(new LedToggle(false));
     }
 
     @Override
