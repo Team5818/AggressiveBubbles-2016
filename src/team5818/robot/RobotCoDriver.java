@@ -14,7 +14,6 @@ import team5818.robot.commands.SetFlywheelVelocity;
 import team5818.robot.commands.SwitchFeed;
 import team5818.robot.commands.LEDToggle;
 import team5818.robot.modules.Arm;
-import team5818.robot.modules.Collector;
 import team5818.robot.modules.ComputerVision;
 import team5818.robot.modules.FlyWheel;
 import team5818.robot.modules.Module;
@@ -27,12 +26,20 @@ public class RobotCoDriver implements Module {
 
     private static boolean overrideDriver = false;
 
+    /**
+     * The First CoDriver Joystick.
+     */
     public static final Joystick firstJoystick =
             new Joystick(RobotConstants.CODRIVER_FIRST_JOYSTICK_PORT);
+    /**
+     * The Second CoDriver Joystick.
+     */
     public static final Joystick secondJoystick =
             new Joystick(RobotConstants.CODRIVER_SECOND_JOYSTICK_PORT);
 
     // Joystick Two Buttons
+    private static final int BUT_SWITCH_SHOOT_FEED = 12;
+    private static final int BUT_SWITCH_DRIVER_FEED = 11;
     private static final int BUT_LED_ON = 8;
     private static final int BUT_LED_OFF = 7;
     private static final int BUT_SHOOT_ANGLE_HIGH = 5;
@@ -46,7 +53,7 @@ public class RobotCoDriver implements Module {
     private static final int BUT_PRINT_ANGLE = 7;
     private static final int BUT_ARM_ANGLE_HOME = 5;
     private static final int BUT_ARM_ANGLE_ZERO = 4;
-    private static final int BUT_ARM_SET_POWER = 2;
+    private static final int BUT_SET_ARM_POWER = 2;
 
     private double shootAngleHigh = 60;
     private double shootAngleMedHigh = 50;
@@ -56,8 +63,8 @@ public class RobotCoDriver implements Module {
     private double armAngleHome = 85;
 
     // First Joystick Buttons
-    JoystickButton butSetPower =
-            new JoystickButton(firstJoystick, BUT_ARM_SET_POWER);
+    JoystickButton butSetArmPower =
+            new JoystickButton(firstJoystick, BUT_SET_ARM_POWER);
     JoystickButton butArmAngleHome =
             new JoystickButton(firstJoystick, BUT_ARM_ANGLE_HOME);
     JoystickButton butArmAngleZero =
@@ -77,29 +84,29 @@ public class RobotCoDriver implements Module {
             new JoystickButton(secondJoystick, BUT_SHOOT_ANGLE_HIGH);
     JoystickButton butLedOn = new JoystickButton(secondJoystick, BUT_LED_ON);
     JoystickButton butLedOff = new JoystickButton(secondJoystick, BUT_LED_OFF);
+    JoystickButton butSwitchShootFeed =
+            new JoystickButton(secondJoystick, BUT_SWITCH_SHOOT_FEED);
+    JoystickButton butSwitchDriverFeed =
+            new JoystickButton(secondJoystick, BUT_SWITCH_DRIVER_FEED);
 
-    private Collect collect;
     private FlyWheel lowerFlywheel;
     private FlyWheel upperFlywheel;
-    private Collector collector;
     private Arm arm;
-    double collectAngle =
-            Preferences.getInstance().getDouble("ArmCollectAngle", -6);
-    double medAngle = Preferences.getInstance().getDouble("ArmMedAngle", 35);
-    double highAngle = Preferences.getInstance().getDouble("ArmHighAngle", 60);
 
     @Override
     public void initModule() {
+        // Setting the singletons to local fields for easy access.
         arm = RobotCommon.runningRobot.arm;
-        collector = RobotCommon.runningRobot.collector;
         lowerFlywheel = RobotCommon.runningRobot.lowerFlywheel;
         upperFlywheel = RobotCommon.runningRobot.upperFlywheel;
 
+        // Adding PID's to SmartDashboard
         LiveWindow.addActuator("Flywheel", "Lower PID",
                 lowerFlywheel.getPIDController());
         LiveWindow.addActuator("Flywheel", "Upper PID",
                 upperFlywheel.getPIDController());
 
+        // Setting the preferences
         shootAngleHigh = Preferences.getInstance().getDouble("ShootAngleHigh",
                 shootAngleHigh);
         shootAngleMedHigh = Preferences.getInstance()
@@ -113,6 +120,7 @@ public class RobotCoDriver implements Module {
         armAngleZero = Preferences.getInstance().getDouble("ArmAngleZero",
                 armAngleZero);
 
+        // Making the command groups
         CommandGroup startFlywheel = new CommandGroup();
         startFlywheel.addParallel(new SetFlywheelVelocity(
                 FlyWheel.SHOOT_VELOCITY_UPPER, FlyWheel.SHOOT_VELOCITY_LOWER));
@@ -121,6 +129,8 @@ public class RobotCoDriver implements Module {
         CommandGroup stopFlywheel = new CommandGroup();
         stopFlywheel.addParallel(new SetFlywheelPower(0));
         stopFlywheel.addParallel(new SwitchFeed(ComputerVision.CAMERA_DRIVER));
+
+        // Assigning commands to the buttons
         butSpinFlywheel.whenPressed(startFlywheel);
         butSpinFlywheel.whenReleased(new SetFlywheelPower(0));
         butShootAngleHigh.whenPressed(new SetArmAngle(shootAngleHigh));
@@ -129,24 +139,32 @@ public class RobotCoDriver implements Module {
         butShootAngleLow.whenPressed(new SetArmAngle(shootAngleLow));
         butArmAngleHome.whenPressed(new SetArmAngle(armAngleHome));
         butArmAngleZero.whenPressed(new SetArmAngle(armAngleZero));
+        butSetArmPower.whenPressed(new SetArmPower(0));
         butLedOn.whenPressed(new LEDToggle(true));
         butLedOff.whenPressed(new LEDToggle(false));
         butCollect.whenPressed(new Collect(Collect.COLLECT_POWER));
         butCollect.whenReleased(new Collect(0));
+        butSwitchShootFeed
+                .whenPressed(new SwitchFeed(ComputerVision.CAMERA_SHOOTER));
+        butSwitchDriverFeed
+                .whenPressed(new SwitchFeed(ComputerVision.CAMERA_DRIVER));
     }
 
     @Override
     public void teleopPeriodicModule() {
+        // Printing the Arm Angle on the SmartDashboard.
         if (firstJoystick.getRawButton(BUT_PRINT_ANGLE)) {
             SmartDashboard.putNumber("Arm Angle = ", arm.getAngle());
             SmartDashboard.putNumber("Upper flywheel", upperFlywheel.getRPS());
             SmartDashboard.putNumber("Lower flywheel", lowerFlywheel.getRPS());
         }
-
+        
+        // Manual Arm Mode
         if (!arm.getPIDMode()) {
             arm.setPower(secondJoystick.getY());
         }
-
+        
+        // Overrides Driver Control.
         if (secondJoystick.getRawButton(BUT_SPIN_FLYWHEEL)) {
             setOverrideDriver(true);
 
@@ -154,7 +172,8 @@ public class RobotCoDriver implements Module {
             setOverrideDriver(false);
 
         }
-
+        
+        // Control the DriverTrain if Overriding Drive Control
         if (isOverrideDriver()) {
             RobotCommon.runningRobot.driveTrain
                     .setPower(Vectors.fromJoystick(firstJoystick, false));
@@ -188,7 +207,6 @@ public class RobotCoDriver implements Module {
     }
 
     /**
-     * 
      * @return Weather CoDriver is overriding Driver control.
      */
     public static boolean isOverrideDriver() {
@@ -196,7 +214,6 @@ public class RobotCoDriver implements Module {
     }
 
     /**
-     * 
      * @param od
      *            weather to override driver or not.
      */
