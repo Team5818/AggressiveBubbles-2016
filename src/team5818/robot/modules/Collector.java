@@ -6,6 +6,7 @@ import edu.wpi.first.wpilibj.PIDOutput;
 import edu.wpi.first.wpilibj.PIDSource;
 import edu.wpi.first.wpilibj.PIDSourceType;
 import edu.wpi.first.wpilibj.command.Subsystem;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import team5818.robot.RobotConstants;
 
 public class Collector extends Subsystem implements Module {
@@ -56,7 +57,9 @@ public class Collector extends Subsystem implements Module {
 
     @Override
     public void teleopPeriodicModule() {
-        // TODO Auto-generated method stub
+        if (isStalled()) {
+            SmartDashboard.putNumber("Stall_Indicator", 100);
+        }
         
     }
 

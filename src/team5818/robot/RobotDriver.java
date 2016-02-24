@@ -1,17 +1,13 @@
 package team5818.robot;
 
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import team5818.robot.commands.DriveForwardCommand;
-import team5818.robot.commands.DriveVelocityCommand;
-import team5818.robot.commands.ResetEncoderCommand;
+import team5818.robot.commands.Collect;
 import team5818.robot.modules.Module;
 import team5818.robot.modules.drivetrain.ArcadeDriveCalculator;
 import team5818.robot.modules.drivetrain.DriveSide;
-import team5818.robot.modules.drivetrain.DriveTrain;
 import team5818.robot.modules.drivetrain.TankDriveCalculator;
 import team5818.robot.util.Vector2d;
 import team5818.robot.util.Vectors;
@@ -29,38 +25,28 @@ public class RobotDriver implements Module {
         ONE_STICK, TWO_STICKS;
     }
 
-    public static final int BUT_DEBUG = 3;
-    public static final int debugCycleTicks = 30;
-    public static int currTicks = 0;
-
-    public static final int BUT_TWOSTICK_ARCADE = 6;
-    public static final int BUT_TWOSTICK_TANK = 7;
-    public static final int BUT_ONESTICK_ARCADE = 11;
-    public static final int BUT_INVERT = 9;
-    public static final int BUT_NO_INVERT = 8;
-    
-
     private static final Joystick FIRST_JOYSTICK =
             new Joystick(RobotConstants.DRIVER_FIRST_JOYSTICK_PORT);
-
     private static final Joystick SECOND_JOYSTICK =
             new Joystick(RobotConstants.DRIVER_SECOND_JOYSTICK_PORT);
 
-    private DriveType driveType = DriveType.TANK;
-    private InputMode inputMode = InputMode.ONE_STICK;
+    private DriveType driveType = DriveType.ARCADE;
+    private InputMode inputMode = InputMode.TWO_STICKS;
 
-    private boolean invertThrottle = false;
+    private static boolean invertThrottle = false;
+
+    private static final int BUT_DEBUG = 12;
+    private static final int BUT_ONESTICK_ARCADE = 11;
+    private static final int BUT_INVERT = 8;
+    private static final int BUT_UNINVERT = 9;
+    private static final int BUT_TWOSTICK_TANK = 7;
+    private static final int BUT_TWOSTICK_ARCADE = 6;
+    private static final int BUT_COLLECT = 1;
+
+    private JoystickButton butCollect;
 
     @Override
     public void initModule() {
-        JoystickButton resetEncoder = new JoystickButton(FIRST_JOYSTICK, 10);
-        resetEncoder.whenPressed(new ResetEncoderCommand());
-        JoystickButton driveForwardSlowly =
-        new JoystickButton(FIRST_JOYSTICK, 3);
-        JoystickButton fallSpeedAhead = new JoystickButton(FIRST_JOYSTICK,
-        2);
-        driveForwardSlowly.whenActive(new DriveVelocityCommand());
-        fallSpeedAhead.whileHeld(new DriveForwardCommand());
         DriveSide leftDriveSide =
                 RobotCommon.runningRobot.driveTrain.getLeftMotors();
         DriveSide rightDriveSide =
@@ -69,16 +55,29 @@ public class RobotDriver implements Module {
                 leftDriveSide.getPIDController());
         LiveWindow.addActuator("DriveSide", "Right",
                 rightDriveSide.getPIDController());
+
+        butCollect = new JoystickButton(SECOND_JOYSTICK, BUT_COLLECT);
+        butCollect.whenPressed(new Collect(Collect.COLLECT_POWER, 0));
+        butCollect.whenReleased(new Collect(0, 0));
     }
 
     @Override
     public void teleopPeriodicModule() {
-        if (SECOND_JOYSTICK.getRawButton(9)) {
-            SmartDashboard.putNumber("Drive Train Left Pos", RobotCommon.runningRobot.driveTrain.getLeftMotors().getEncPosRaw());
-            SmartDashboard.putNumber("Drive Train Right Pos", RobotCommon.runningRobot.driveTrain.getRightMotors().getEncPosRaw());
-            
+        if (SECOND_JOYSTICK.getRawButton(BUT_DEBUG)) {
+            SmartDashboard.putNumber("Drive Train Left Pos",
+                    RobotCommon.runningRobot.driveTrain.getLeftMotors()
+                            .getEncPosRaw());
+            SmartDashboard.putNumber("Drive Train Right Pos",
+                    RobotCommon.runningRobot.driveTrain.getRightMotors()
+                            .getEncPosRaw());
         }
 
+        if (FIRST_JOYSTICK.getRawButton(BUT_INVERT)) {
+            invertThrottle = true;
+        }
+        if (FIRST_JOYSTICK.getRawButton(BUT_UNINVERT)) {
+            invertThrottle = false;
+        }
         if (FIRST_JOYSTICK.getRawButton(BUT_TWOSTICK_ARCADE)) {
             RobotCommon.runningRobot.driveTrainController
                     .setDriveCalculator(ArcadeDriveCalculator.INSTANCE);
@@ -95,11 +94,6 @@ public class RobotDriver implements Module {
             driveType = DriveType.ARCADE;
             inputMode = InputMode.ONE_STICK;
         }
-
-        if (FIRST_JOYSTICK.getRawButton(BUT_INVERT))
-            invertThrottle = true;
-        else if (FIRST_JOYSTICK.getRawButton(BUT_NO_INVERT))
-            invertThrottle = false;
 
         Vector2d thePowersThatBe;
 

@@ -10,17 +10,12 @@ public class ShootLow extends Command {
     
     private SetArmAngle setArmAngle; 
     private Collector collector;
-    
-    /**
-     * The time when the command starts in nano seconds.
-     * Retrieved using System.nanoTime();
-     */
-    private double zeroTime;
+
     
     /**
      * The maximum time the shooter can be on in nano seconds.
      */
-    private double maxShootTime = 4 * 1E9;
+    private double maxShootTime = 4;
     
     public ShootLow(){
         setArmAngle = new SetArmAngle(shootAngle);
@@ -31,7 +26,7 @@ public class ShootLow extends Command {
     @Override
     protected void initialize() {
         setArmAngle.start();
-        zeroTime = System.nanoTime();
+        setTimeout(maxShootTime);
         //TODO make ShootHigh move arm to angle using PID.
     }
 
@@ -45,9 +40,7 @@ public class ShootLow extends Command {
 
     @Override
     protected boolean isFinished() {
-        if(System.nanoTime() - zeroTime >= maxShootTime)
-            return true;
-        return false;
+        return isTimedOut();
     }
 
     @Override
