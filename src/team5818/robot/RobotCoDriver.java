@@ -126,6 +126,8 @@ public class RobotCoDriver implements Module {
         butArmAngleZero.whenPressed(new SetArmAngle(armAngleZero));
         butLedOn.whenPressed(new LEDToggle(true));
         butLedOff.whenPressed(new LEDToggle(false));
+        butCollect.whenPressed(new Collect(Collect.COLLECT_POWER));
+        butCollect.whenReleased(new Collect(0));
     }
 
     @Override
