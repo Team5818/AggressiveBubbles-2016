@@ -74,6 +74,11 @@ public class DriveTrain implements Module {
         left.pidWrite(power.getX());
         right.pidWrite(power.getY());
     }
+    
+    public double getAverageDistance(){
+        double avgDist = (right.getEncPosAbs() + left.getEncPosAbs())/2;
+        return avgDist;
+    }
 
     @Override
     public void initModule() {
