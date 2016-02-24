@@ -45,7 +45,11 @@ public class RobotCoDriver implements Module {
     private Collector collector;
     private Arm arm;
     double collectAngle =
-            Preferences.getInstance().getDouble("ArmCollectAngke", -6);
+            Preferences.getInstance().getDouble("ArmCollectAngle", -6);
+    double medAngle =
+            Preferences.getInstance().getDouble("ArmMedAngle", 35);
+    double highAngle =
+            Preferences.getInstance().getDouble("ArmHighAngle", 60);
 
     @Override
     public void initModule() {
@@ -59,8 +63,8 @@ public class RobotCoDriver implements Module {
         LiveWindow.addActuator("Flywheel", "Upper PID",
                 upperFlywheel.getPIDController());
 
-        butHighAngle.whenPressed(new SetArmAngle(90));
-        butMedAngle.whenPressed(new SetArmAngle(45));
+        butHighAngle.whenPressed(new SetArmAngle(highAngle));
+        butMedAngle.whenPressed(new SetArmAngle(medAngle));
         butCollectAngle.whenPressed(new SetArmAngle(collectAngle));
         butSetPower.whenPressed(new SetArmPower(0));
         butSpinFlywheel.whenPressed(new SetFlywheelVelocity(FlyWheel.SHOOT_VELOCITY_UPPER, FlyWheel.SHOOT_VELOCITY_LOWER));
