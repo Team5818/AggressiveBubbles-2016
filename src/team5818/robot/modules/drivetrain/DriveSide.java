@@ -5,12 +5,12 @@ import java.util.stream.Stream;
 
 import edu.wpi.first.wpilibj.CANTalon;
 import edu.wpi.first.wpilibj.CANTalon.FeedbackDevice;
-import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.PIDOutput;
 import edu.wpi.first.wpilibj.PIDSourceType;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import team5818.robot.RobotConstants;
 import team5818.robot.encoders.EncoderManager;
+import team5818.robot.util.BetterPIDController;
 import team5818.robot.util.PIDSourceBase;
 
 /**
@@ -41,7 +41,7 @@ public class DriveSide implements EncoderManager, PIDOutput, MovingControl {
     private final CANTalon secondaryTalon;
     private final CANTalon thirdTalon;
     private final PIDSourceBase pidSource;
-    private PIDController pidLoop;
+    private BetterPIDController pidLoop;
     private int cyclesUntilAttemptStop;
 
     /**
@@ -111,13 +111,15 @@ public class DriveSide implements EncoderManager, PIDOutput, MovingControl {
 
     private void resetPIDLoop() {
         if (pidLoop != null) {
-            pidLoop.reset();
-            pidLoop.free();
-        }
-        pidLoop = new PIDController(RobotConstants.DISTANCE_PID_LOOP_P_TERM,
-                RobotConstants.DISTANCE_PID_LOOP_I_TERM,
-                RobotConstants.DISTANCE_PID_LOOP_D_TERM, pidSource, this);
+            // pidLoop.reset();
+            // pidLoop.free();
+        } else {
+            pidLoop = new BetterPIDController(
+                    RobotConstants.DISTANCE_PID_LOOP_P_TERM,
+                    RobotConstants.DISTANCE_PID_LOOP_I_TERM,
+                    RobotConstants.DISTANCE_PID_LOOP_D_TERM, pidSource, this);
         pidLoop.setAbsoluteTolerance(10);
+        }
     }
 
     private void configureEncoderTalon() {
@@ -187,13 +189,14 @@ public class DriveSide implements EncoderManager, PIDOutput, MovingControl {
 
     /**
      * Returns the current driving mode. ie velocity, distance, power.
+     * 
      * @return the current driving mode.
      */
     public static int getMode() {
         return driveMode;
     }
 
-    public PIDController getPIDController() {
+    public BetterPIDController getPIDController() {
         return pidLoop;
     }
 

@@ -1,6 +1,7 @@
 package team5818.robot.commands;
 
 import edu.wpi.first.wpilibj.command.Command;
+import team5818.robot.RobotCoDriver;
 import team5818.robot.RobotCommon;
 import team5818.robot.modules.Arm;
 
@@ -19,7 +20,8 @@ public class SetArmAngle extends Command {
 
     @Override
     protected void initialize() {
-        arm.goToAngle(targetAngle);
+        double offset = RobotCoDriver.secondJoystick.getY() * -2;
+        arm.goToAngle(targetAngle + offset);
         hasInitialized = true;
         setTimeout(maxTime);
     }
