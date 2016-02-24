@@ -22,13 +22,14 @@ public class Collect extends Command {
     private Collector collector;
 
     /**
-     * @param power The desired power to run the collector
+     * @param power
+     *            The desired power to run the collector
      */
     private Collect(double power) {
         collectPower = power;
         collector = RobotCommon.runningRobot.collector;
         requires(collector);
-        }
+    }
 
     /**
      * @param power
