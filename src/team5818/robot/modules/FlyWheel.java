@@ -6,6 +6,7 @@ import edu.wpi.first.wpilibj.PIDOutput;
 import edu.wpi.first.wpilibj.PIDSource;
 import edu.wpi.first.wpilibj.PIDSourceType;
 import edu.wpi.first.wpilibj.command.Subsystem;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * This is the class that handles all the control on the motors directly through
@@ -142,49 +143,45 @@ public class FlyWheel extends Subsystem implements PIDSource, Module {
 
     @Override
     public void initModule() {
-        // TODO Auto-generated method stub
 
     }
 
     @Override
     public void initTest() {
-        // TODO Auto-generated method stub
 
     }
 
     @Override
     public void initTeleop() {
-        // TODO Auto-generated method stub
 
     }
 
     @Override
     public void initAutonomous() {
-        // TODO Auto-generated method stub
 
     }
 
     @Override
     public void teleopPeriodicModule() {
-        // TODO Auto-generated method stub
-
+        int status = 0;
+        if (pid.isEnabled() && pid.onTarget()) {
+            status = 100;
+        }
+        SmartDashboard.putNumber("Flywheel_Ready", status);
     }
 
     @Override
     public void testPeriodic() {
-        // TODO Auto-generated method stub
 
     }
 
     @Override
     public void endModule() {
-        // TODO Auto-generated method stub
 
     }
 
     @Override
     protected void initDefaultCommand() {
-        // TODO Auto-generated method stub
 
     }
 

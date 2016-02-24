@@ -12,7 +12,7 @@ import team5818.robot.RobotConstants;
 public class Collector extends Subsystem implements Module {
     
     private static final CANTalon collectorMotor = new CANTalon(RobotConstants.TALON_COLLECTOR_MOTOR);
-    private static final double STALL_THRESHOLD = 41;
+    private static final double STALL_CURRENT = 41;
     
     public Collector(boolean inverted){
         collectorMotor.setInverted(inverted);
@@ -25,7 +25,7 @@ public class Collector extends Subsystem implements Module {
     public boolean isStalled(){
         boolean stalled = false;
         double current = collectorMotor.getOutputCurrent();
-        if(current >= STALL_THRESHOLD - 10){
+        if(current >= STALL_CURRENT - 10){
             stalled = true;
         }
         return stalled;
@@ -33,45 +33,36 @@ public class Collector extends Subsystem implements Module {
     
     @Override
     public void initModule() {
-        // TODO Auto-generated method stub
-        
     }
 
     @Override
     public void initTest() {
-        // TODO Auto-generated method stub
-        
     }
 
     @Override
     public void initTeleop() {
-        // TODO Auto-generated method stub
-        
     }
 
     @Override
     public void initAutonomous() {
-        // TODO Auto-generated method stub
         
     }
 
     @Override
     public void teleopPeriodicModule() {
+        int status = 0;
         if (isStalled()) {
-            SmartDashboard.putNumber("Stall_Indicator", 100);
+            status = 100;
         }
-        
+        SmartDashboard.putNumber("Stall_Indicator", status);
     }
 
     @Override
     public void testPeriodic() {
-        // TODO Auto-generated method stub
-        
     }
 
     @Override
     public void endModule() {
-        // TODO Auto-generated method stub
     }
 
     @Override
