@@ -16,7 +16,7 @@ public class Collect extends Command {
     /**
      * The recommended power to collect a ball.
      */
-    public static final double COLLECT_POWER = 0.6;
+    public static final double COLLECT_POWER = MAX_COLLECT_POWER;
 
     private final double collectPower;
     private Collector collector;
