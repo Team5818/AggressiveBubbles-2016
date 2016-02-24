@@ -34,13 +34,15 @@ public class RobotDriver implements Module {
     private InputMode inputMode = InputMode.TWO_STICKS;
 
     private static boolean invertThrottle = false;
-
-    private static final int BUT_DEBUG = 12;
+    // First Joystick Buttons
     private static final int BUT_ONESTICK_ARCADE = 11;
     private static final int BUT_INVERT = 8;
     private static final int BUT_UNINVERT = 9;
     private static final int BUT_TWOSTICK_TANK = 7;
     private static final int BUT_TWOSTICK_ARCADE = 6;
+    
+    // Second Joystick Buttons
+    private static final int BUT_DEBUG = 12;
     private static final int BUT_UNCOLLECT = 2;
     private static final int BUT_COLLECT = 1;
 
@@ -126,10 +128,7 @@ public class RobotDriver implements Module {
                 throw new IllegalStateException(
                         "Don't know what mode " + inputMode + " does");
         }
-
-        // Setting the Vectors to driving
-        RobotCommon.runningRobot.driveTrainController
-                .recalculateAndSetPower(thePowersThatBe);
+        
     }
 
     @Override
