@@ -132,7 +132,7 @@ public class RobotCoDriver implements Module {
 
         // Assigning commands to the buttons
         butSpinFlywheel.whenPressed(startFlywheel);
-        butSpinFlywheel.whenReleased(new SetFlywheelPower(0));
+        butSpinFlywheel.whenReleased(stopFlywheel);
         butShootAngleHigh.whenPressed(new SetArmAngle(shootAngleHigh));
         butShootAngleMedHigh.whenPressed(new SetArmAngle(shootAngleMedHigh));
         butShootAngleMedLow.whenPressed(new SetArmAngle(shootAngleMedLow));
