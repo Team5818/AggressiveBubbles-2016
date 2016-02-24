@@ -8,12 +8,22 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.vision.USBCamera;
 
 public class ComputerVision {
-
-    int session;
-    USBCamera cam;
-    USBCamera cam2;
-    USBCamera currcam;
-    Image frame;
+    
+    /**
+     * The driving camera that is directed with the direction we collect.
+     */
+    public static final int CAMERA_DRIVER = 2;
+    
+    /**
+     * The shooter Camera that faces with the flywheel.
+     */
+    public static final int CAMERA_SHOOTER = 1;
+    
+    private int session;
+    private USBCamera cam;
+    private USBCamera cam2;
+    private USBCamera currcam;
+    private Image frame;
 
     public ComputerVision() {
         try {

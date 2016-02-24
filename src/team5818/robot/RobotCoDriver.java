@@ -13,6 +13,7 @@ import team5818.robot.commands.SetFlywheelVelocity;
 import team5818.robot.commands.SwitchFeed;
 import team5818.robot.modules.Arm;
 import team5818.robot.modules.Collector;
+import team5818.robot.modules.ComputerVision;
 import team5818.robot.modules.FlyWheel;
 import team5818.robot.modules.Module;
 import team5818.robot.util.Vectors;
@@ -23,25 +24,42 @@ import team5818.robot.util.Vectors;
 public class RobotCoDriver implements Module {
     
     private static boolean overrideDriver = false;
-
+    
+    public static final Joystick firstJoystick =
+            new Joystick(RobotConstants.CODRIVER_FIRST_JOYSTICK_PORT);
+    public static final Joystick secondJoystick =
+            new Joystick(RobotConstants.CODRIVER_SECOND_JOYSTICK_PORT);
+    //Arm 1 Arm 2
+    // 435 | 5  6
+    //  2  |  34 
     private static final int BUT_PRINT_ANGLE = 7;
+    private static final int BUT_ARM_ANGLE_HOME = 5;
+    private static final int BUT_ARM_ANGLE_ZERO = 4;
+    private static final int BUT_SHOOT_ANGLE_HIGH = 3;
+    private static final int BUT_SHOOT_ANGLE_MED_HIGH= 4;
+    private static final int BUT_SHOOT_ANGLE_MED_LOW = 3;
+    private static final int BUT_SHOOT_ANGLE_LOW = 4;
+    private static final int BUT_ARM_SET_POWER = 2;
     private static final int BUT_SPIN_FLYWHEEL = 2;
     private static final int BUT_COLLECT = 1;
-
-    JoystickButton butHighAngle = new JoystickButton(firstJoystick, 5);
-    JoystickButton butMedAngle = new JoystickButton(firstJoystick, 3);
-    JoystickButton butCollectAngle = new JoystickButton(firstJoystick, 4);
-    JoystickButton butSetPower = new JoystickButton(firstJoystick, 2);
-    JoystickButton butSwitchFeed1 = new JoystickButton(secondJoystick, 6);
-    JoystickButton butSwitchFeed2 = new JoystickButton(secondJoystick, 4);
+    
+    private double shootAngleHigh = 60;
+    private double shootAngleMedHigh = 50;
+    private double shootAngleMedLow = 40;
+    private double shootAngleLow = 30;
+    private double armAngleZero = 0;
+    private double armAngleHome = 85;
+    
+    JoystickButton butSetPower = new JoystickButton(firstJoystick, BUT_ARM_SET_POWER);
     JoystickButton butSpinFlywheel = new JoystickButton(secondJoystick, BUT_SPIN_FLYWHEEL);
     JoystickButton butCollect = new JoystickButton(secondJoystick, BUT_COLLECT);
+    JoystickButton butShootAngleLow = new JoystickButton(secondJoystick, BUT_SHOOT_ANGLE_LOW);
+    JoystickButton butShootAngleMedLow = new JoystickButton(secondJoystick, BUT_SHOOT_ANGLE_MED_LOW);
+    JoystickButton butShootAngleMedHigh = new JoystickButton(secondJoystick, BUT_SHOOT_ANGLE_MED_HIGH);
+    JoystickButton butShootAngleHigh = new JoystickButton(secondJoystick, BUT_SHOOT_ANGLE_HIGH);
+    JoystickButton butArmAngleHome = new JoystickButton(firstJoystick, BUT_ARM_ANGLE_HOME);
+    JoystickButton butArmAngleZero = new JoystickButton(firstJoystick, BUT_ARM_ANGLE_ZERO);
     
-    private static final Joystick firstJoystick =
-            new Joystick(RobotConstants.CODRIVER_FIRST_JOYSTICK_PORT);
-    private static final Joystick secondJoystick =
-            new Joystick(RobotConstants.CODRIVER_SECOND_JOYSTICK_PORT);
-
     private Collect collect;
     private FlyWheel lowerFlywheel;
     private FlyWheel upperFlywheel;
@@ -65,15 +83,23 @@ public class RobotCoDriver implements Module {
                 lowerFlywheel.getPIDController());
         LiveWindow.addActuator("Flywheel", "Upper PID",
                 upperFlywheel.getPIDController());
+        
+        shootAngleHigh = Preferences.getInstance().getDouble("ShootAngleHigh", shootAngleHigh);
+        shootAngleMedHigh = Preferences.getInstance().getDouble("ShootAngleMedHigh", shootAngleMedHigh);
+        shootAngleMedLow = Preferences.getInstance().getDouble("ShootAngleMedLow", shootAngleMedLow);
+        shootAngleLow = Preferences.getInstance().getDouble("ShootAngleLow", shootAngleLow);
+        armAngleHome = Preferences.getInstance().getDouble("ArmAngleHome", armAngleHome);
+        armAngleZero = Preferences.getInstance().getDouble("ArmAngleZero", armAngleZero);
 
-        butHighAngle.whenPressed(new SetArmAngle(highAngle));
-        butMedAngle.whenPressed(new SetArmAngle(medAngle));
-        butCollectAngle.whenPressed(new SetArmAngle(collectAngle));
         butSetPower.whenPressed(new SetArmPower(0));
         butSpinFlywheel.whenPressed(new SetFlywheelVelocity(FlyWheel.SHOOT_VELOCITY_UPPER, FlyWheel.SHOOT_VELOCITY_LOWER));
         butSpinFlywheel.whenReleased(new SetFlywheelPower(0));
-        butSwitchFeed1.whenPressed(new SwitchFeed(1));
-        butSwitchFeed2.whenPressed(new SwitchFeed(2));
+        butShootAngleHigh.whenPressed(new SetArmAngle(shootAngleHigh));
+        butShootAngleMedHigh.whenPressed(new SetArmAngle(shootAngleMedHigh));
+        butShootAngleMedLow.whenPressed(new SetArmAngle(shootAngleMedLow));
+        butShootAngleLow.whenPressed(new SetArmAngle(shootAngleLow));
+        butArmAngleHome.whenPressed(new SetArmAngle(armAngleHome));
+        butArmAngleZero.whenPressed(new SetArmAngle(armAngleZero));
     }
 
     @Override
@@ -89,9 +115,14 @@ public class RobotCoDriver implements Module {
         }
         
         if(secondJoystick.getRawButton(BUT_SPIN_FLYWHEEL)) {
+            
             setOverrideDriver(true);
+            RobotCommon.runningRobot.vision.See.ChangeFeed(ComputerVision.CAMERA_SHOOTER);
+            
         } else {
             setOverrideDriver(false);
+            RobotCommon.runningRobot.vision.See.ChangeFeed(ComputerVision.CAMERA_DRIVER);
+            
         }
         
         if(isOverrideDriver()) {
