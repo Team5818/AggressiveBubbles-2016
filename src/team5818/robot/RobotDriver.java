@@ -66,10 +66,12 @@ public class RobotDriver implements Module {
 
     @Override
     public void teleopPeriodicModule() {
+        Vector2d thePowersThatBe;
         
         if(RobotCoDriver.isOverrideDriver() || DriveSide.getMode() == DriveSide.MODE_POWER)
             return;
         
+        // Puts the Raw Encoders in the SmartDashboard
         if (SECOND_JOYSTICK.getRawButton(BUT_DEBUG)) {
             SmartDashboard.putNumber("Drive Train Left Pos",
                     RobotCommon.runningRobot.driveTrain.getLeftMotors()
@@ -78,13 +80,16 @@ public class RobotDriver implements Module {
                     RobotCommon.runningRobot.driveTrain.getRightMotors()
                             .getEncPosRaw());
         }
-
+        
+        // Inverts the controls if needed.
         if (FIRST_JOYSTICK.getRawButton(BUT_INVERT)) {
             invertThrottle = true;
         }
         if (FIRST_JOYSTICK.getRawButton(BUT_UNINVERT)) {
             invertThrottle = false;
         }
+        
+        // Changes the Control Mode
         if (FIRST_JOYSTICK.getRawButton(BUT_TWOSTICK_ARCADE)) {
             RobotCommon.runningRobot.driveTrainController
                     .setDriveCalculator(ArcadeDriveCalculator.INSTANCE);
@@ -102,8 +107,7 @@ public class RobotDriver implements Module {
             inputMode = InputMode.ONE_STICK;
         }
 
-        Vector2d thePowersThatBe;
-
+        //Computing Driving Code
         switch (inputMode) {
             case ONE_STICK:
                 thePowersThatBe =
@@ -123,6 +127,7 @@ public class RobotDriver implements Module {
                         "Don't know what mode " + inputMode + " does");
         }
 
+        // Setting the Vectors to driving
         RobotCommon.runningRobot.driveTrainController
                 .recalculateAndSetPower(thePowersThatBe);
     }
