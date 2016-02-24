@@ -6,7 +6,11 @@ import edu.wpi.first.wpilibj.Joystick.ButtonType;
  * Controllers for the robot.
  */
 public final class RobotConstants {
-
+    
+    /**
+     * width of the robot
+     */
+    public static final double ROBOT_WIDTH_IN_INCHES = 2.3 * 12;
     /**
      * The talon controlling the left-front wheels.
      */
