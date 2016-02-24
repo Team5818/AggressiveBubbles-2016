@@ -31,9 +31,7 @@ public class RobotCoDriver implements Module {
             new Joystick(RobotConstants.CODRIVER_FIRST_JOYSTICK_PORT);
     public static final Joystick secondJoystick =
             new Joystick(RobotConstants.CODRIVER_SECOND_JOYSTICK_PORT);
-    // Arm 1 Arm 2
-    // 435 | 5 6
-    // 2 | 34
+
     // Joystick One Buttons
     private static final int BUT_PRINT_ANGLE = 7;
     private static final int BUT_ARM_ANGLE_HOME = 5;
