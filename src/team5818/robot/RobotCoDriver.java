@@ -21,41 +21,19 @@ import team5818.robot.modules.Module;
  */
 public class RobotCoDriver implements Module {
 
-    /**
-     * The button that prints the arm angle.
-     */
-    public static final int BUT_PRINT_ANGLE = 7;
+    private static final int BUT_PRINT_ANGLE = 7;
+    private static final int BUT_SPIN_FLYWHEEL = 2;
+    private static final int BUT_COLLECT = 1;
 
-    /**
-     * Button to move the arm to high angle. 90 Degrees.
-     */
     JoystickButton butHighAngle = new JoystickButton(firstJoystick, 5);
-
-    /**
-     * Button to move the arm to medium angle. 45 degrees.
-     */
     JoystickButton butMedAngle = new JoystickButton(firstJoystick, 3);
-
-    /**
-     * Button to move the arm to 0 degrees.
-     */
     JoystickButton butCollectAngle = new JoystickButton(firstJoystick, 4);
-    /**
-     * Button to turn arm into manual control.
-     */
     JoystickButton butSetPower = new JoystickButton(firstJoystick, 2);
-    /**
-     * button to spin up and spin down flywheel
-     */
-    JoystickButton butSpinFlywheel = new JoystickButton(secondJoystick, 1);
-    /**
-     * button to switch to feed 1
-     */
     JoystickButton butSwitchFeed1 = new JoystickButton(secondJoystick, 6);
-    /**
-     * button to switch feed 2
-     */
     JoystickButton butSwitchFeed2 = new JoystickButton(secondJoystick, 4);
+    JoystickButton butCollect = new JoystickButton(secondJoystick, BUT_COLLECT);
+    JoystickButton butSpinFlywheel = new JoystickButton(secondJoystick, BUT_SPIN_FLYWHEEL);
+    
 
     private static final Joystick firstJoystick =
             new Joystick(RobotConstants.CODRIVER_FIRST_JOYSTICK_PORT);
