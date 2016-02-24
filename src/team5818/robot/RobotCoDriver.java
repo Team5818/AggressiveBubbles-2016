@@ -31,9 +31,9 @@ public class RobotCoDriver implements Module {
     JoystickButton butSetPower = new JoystickButton(firstJoystick, 2);
     JoystickButton butSwitchFeed1 = new JoystickButton(secondJoystick, 6);
     JoystickButton butSwitchFeed2 = new JoystickButton(secondJoystick, 4);
-    JoystickButton butCollect = new JoystickButton(secondJoystick, BUT_COLLECT);
     JoystickButton butSpinFlywheel = new JoystickButton(secondJoystick, BUT_SPIN_FLYWHEEL);
-
+    JoystickButton butCollect = new JoystickButton(secondJoystick, BUT_COLLECT);
+    
     private static final Joystick firstJoystick =
             new Joystick(RobotConstants.CODRIVER_FIRST_JOYSTICK_PORT);
     private static final Joystick secondJoystick =
@@ -53,6 +53,7 @@ public class RobotCoDriver implements Module {
         collector = RobotCommon.runningRobot.collector;
         lowerFlywheel = RobotCommon.runningRobot.lowerFlywheel;
         upperFlywheel = RobotCommon.runningRobot.upperFlywheel;
+        
         LiveWindow.addActuator("Flywheel", "Lower PID",
                 lowerFlywheel.getPIDController());
         LiveWindow.addActuator("Flywheel", "Upper PID",
