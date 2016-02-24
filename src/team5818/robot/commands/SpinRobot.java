@@ -13,11 +13,16 @@ public class SpinRobot extends Command{
     private double spinAngle;
     private double arcLength;
     private double drivePower;
+    private static double defaultTimeout = 6;
 
     public SpinRobot(double angle, double timeout){
         spinAngle = angle;
         arcLength = MathUtil.distanceOfArc(RobotConstants.ROBOT_WIDTH_IN_INCHES, spinAngle);
         setTimeout(timeout);
+    }
+    
+    public SpinRobot(double angle){
+        this(angle, defaultTimeout);
     }
     
     @Override

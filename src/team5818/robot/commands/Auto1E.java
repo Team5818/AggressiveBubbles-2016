@@ -1,37 +1,32 @@
 package team5818.robot.commands;
 
+import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj.command.CommandGroup;
+import team5818.robot.Field;
 
-public class Auto1E extends Command{
-
-    @Override
-    protected void initialize() {
-        // TODO Auto-generated method stub
+public class Auto1E extends CommandGroup{
+   
+    public double collectAngle = Preferences.getInstance().getDouble("ArmCollectAngle", -6.0);
+    public double shootAngle = Preferences.getInstance().getDouble("ShootHighAngle", 60.0);
+    public double flyUpVel = Preferences.getInstance().getDouble("UpperFlyVel", 100.0);
+    public double flyLoVel = Preferences.getInstance().getDouble("LowerFlyVel", 60.0);
+    public double lowbarDist = Field.AUTOSTART_TO_LOWBAR;
+    
+    private CommandGroup commandGroup;
+    private SetArmAngle putArmDown = new SetArmAngle(collectAngle);
+    private DriveDistanceCommand goUnderLowbar = new DriveDistanceCommand(lowbarDist);
+    private SpinRobot aim = new SpinRobot(20.0);
+    private Shoot dontMiss = new Shoot(shootAngle, flyUpVel, flyLoVel);
+    
+    public Auto1E(){
         
-    }
-
-    @Override
-    protected void execute() {
-        // TODO Auto-generated method stub
         
-    }
-
-    @Override
-    protected boolean isFinished() {
-        // TODO Auto-generated method stub
-        return false;
-    }
-
-    @Override
-    protected void end() {
-        // TODO Auto-generated method stub
-        
-    }
-
-    @Override
-    protected void interrupted() {
-        // TODO Auto-generated method stub
-        
+        commandGroup = new CommandGroup();
+        commandGroup.addSequential(putArmDown);
+        commandGroup.addSequential(goUnderLowbar);
+        commandGroup.addSequential(aim);
+        commandGroup.addSequential(dontMiss);
     }
 
 }

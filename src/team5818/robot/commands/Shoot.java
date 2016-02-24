@@ -20,7 +20,7 @@ public class Shoot extends Command{
      */
     private double maxShootTime = 4;
     
-    public Shoot(double angle, double flyLoVel, double flyUpVel){
+    public Shoot(double angle, double flyUpVel, double flyLoVel){
         shootUpperVelocity = flyUpVel;
         shootLowerVelocity = flyLoVel;
         shootAngle = flyUpVel;
