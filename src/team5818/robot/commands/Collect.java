@@ -18,18 +18,15 @@ public class Collect extends Command {
      * Time to run the motor
      */
     //TODO tune the ballFeedOutTime number to the correct timing.
-    private double maxCollectTime = 4 * 1E9;
-    private double zeroTime;
-    
-    private boolean hasFinished = false;
-    
+    private double maxCollectTime = 4;
+        
     
     @Override
     protected void initialize() {
         collector = RobotCommon.runningRobot.collector;
         collector.setPower(MAX_COLLECT_POWER);
-        zeroTime = System.nanoTime();
         requires(collector);
+        setTimeout(maxCollectTime);
     }
 
     @Override
@@ -44,10 +41,7 @@ public class Collect extends Command {
 
     @Override
     protected boolean isFinished() {
-        if(System.nanoTime() - zeroTime >= maxCollectTime) {
-            return true;
-        }
-        return hasFinished;
+        return isTimedOut();
     }
 
     @Override

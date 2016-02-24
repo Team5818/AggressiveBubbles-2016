@@ -17,16 +17,15 @@ public class LowerArmToGround extends Command{
     private Arm arm;
     SetArmAngle goToCollectAngle = new SetArmAngle(collectAngle);
     private boolean hasInitialized = false;
-    private double zeroTime;
-    private double maxTime = 3 * 1E9;
+    private double maxTime = 3;
     
     @Override
     protected void initialize() {
         arm = RobotCommon.runningRobot.arm;
-        zeroTime = System.nanoTime();
         hasInitialized = true;
         goToCollectAngle.start();
         currentAngle = 0;
+        setTimeout(maxTime);
     }
 
     @Override
@@ -41,9 +40,6 @@ public class LowerArmToGround extends Command{
 
     @Override
     protected boolean isFinished() {
-        if(System.nanoTime() - zeroTime > maxTime){
-            return true;
-        }    
         if(arm.getAngle() <= groundAngle){
             return true;
         }
@@ -51,7 +47,7 @@ public class LowerArmToGround extends Command{
             return true;
         }
         
-        return false;
+        return isTimedOut();
     }
 
     @Override

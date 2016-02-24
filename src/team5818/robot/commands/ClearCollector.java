@@ -9,18 +9,16 @@ public class ClearCollector extends Command{
     double collectPower = Collect.COLLECT_POWER;
     private Collector collector = RobotCommon.runningRobot.collector;
     boolean hasInitialized = false;
-    private double maxSpitTime = .25 * 1E9;
-    private double maxTime = 4* 1E9;
-    private double zeroTime;
+    private double maxSpitTime = .25;
+    private double maxTime = 4;
 
     @Override
     protected void initialize() {
         // TODO Auto-generated method stub
-        zeroTime = System.nanoTime();
         requires(collector);
         hasInitialized = true;
         collector.setPower(-collectPower/2);
-        
+        setTimeout(maxTime);
     }
 
     @Override
@@ -28,17 +26,14 @@ public class ClearCollector extends Command{
         if(!hasInitialized){
             initialize();
         }
-        if(System.nanoTime() - zeroTime >= maxSpitTime) {
+        if(timeSinceInitialized() >= maxSpitTime) {
             collector.setPower(collectPower);
         }
     }
 
     @Override
     protected boolean isFinished() {
-        if(System.nanoTime() - zeroTime >= maxTime) {
-            return true;
-        }
-        return false;
+        return isTimedOut();
     }
 
     @Override

@@ -17,15 +17,9 @@ public class ShootHigh extends Command {
     private Collector collector;
     
     /**
-     * The time when the command starts in nano seconds.
-     * Retrieved using System.nanoTime();
-     */
-    private double zeroTime;
-    
-    /**
      * The maximum time the shooter can be on in nano seconds.
      */
-    private double maxShootTime = 4 * 1E9;
+    private double maxShootTime = 4;
     
     public ShootHigh(){
         setFlyVelocity = new SetFlywheelVelocity(shootUpperVelocity,shootLowerVelocity);
@@ -39,7 +33,7 @@ public class ShootHigh extends Command {
     protected void initialize() {
         setArmAngle.start();
         setFlyVelocity.start();
-        zeroTime = System.nanoTime();
+        setTimeout(maxShootTime);
         //TODO make ShootHigh move arm to angle using PID.
     }
 
@@ -53,9 +47,7 @@ public class ShootHigh extends Command {
 
     @Override
     protected boolean isFinished() {
-        if(System.nanoTime() - zeroTime >= maxShootTime)
-            return true;
-        return false;
+        return isTimedOut();
     }
 
     @Override
