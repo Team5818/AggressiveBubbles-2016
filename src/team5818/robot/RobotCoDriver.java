@@ -3,6 +3,7 @@ package team5818.robot;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
+import edu.wpi.first.wpilibj.command.CommandGroup;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import team5818.robot.commands.Collect;
@@ -108,9 +109,14 @@ public class RobotCoDriver implements Module {
         armAngleZero = Preferences.getInstance().getDouble("ArmAngleZero",
                 armAngleZero);
 
-        butSetPower.whenPressed(new SetArmPower(0));
-        butSpinFlywheel.whenPressed(new SetFlywheelVelocity(
+        CommandGroup startFlywheel = new CommandGroup();
+        startFlywheel.addParallel(new SetFlywheelVelocity(
                 FlyWheel.SHOOT_VELOCITY_UPPER, FlyWheel.SHOOT_VELOCITY_LOWER));
+        startFlywheel.addParallel(new SwitchFeed(ComputerVision.CAMERA_SHOOTER));
+        CommandGroup stopFlywheel = new CommandGroup();
+        stopFlywheel.addParallel(new SetFlywheelPower(0));
+        stopFlywheel.addParallel(new SwitchFeed(ComputerVision.CAMERA_DRIVER));
+        butSpinFlywheel.whenPressed(startFlywheel);
         butSpinFlywheel.whenReleased(new SetFlywheelPower(0));
         butShootAngleHigh.whenPressed(new SetArmAngle(shootAngleHigh));
         butShootAngleMedHigh.whenPressed(new SetArmAngle(shootAngleMedHigh));
@@ -135,16 +141,12 @@ public class RobotCoDriver implements Module {
         }
 
         if (secondJoystick.getRawButton(BUT_SPIN_FLYWHEEL)) {
-
             setOverrideDriver(true);
-            RobotCommon.runningRobot.vision.See
-                    .ChangeFeed(ComputerVision.CAMERA_SHOOTER);
-            new LEDToggle(true).start();
+            
 
         } else {
             setOverrideDriver(false);
-            RobotCommon.runningRobot.vision.See
-                    .ChangeFeed(ComputerVision.CAMERA_DRIVER);
+            
 
         }
 
