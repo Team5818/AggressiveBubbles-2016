@@ -32,6 +32,11 @@ public class DriveTrainController extends Subsystem {
         driveTrain.getLeftMotors().setDriveDistance(inches);
         driveTrain.getRightMotors().setDriveDistance(inches);
     }
+    
+    public void driveToTargetXInchesAway(double inches, double maxPower) {
+        driveTrain.getLeftMotors().setDriveDistance(inches, maxPower);
+        driveTrain.getRightMotors().setDriveDistance(inches, maxPower);
+    }
 
     public void setPowerDirectly(Vector2d power) {
         driveTrain.setPower(power);
