@@ -47,7 +47,7 @@ public class RobotCoDriver implements Module {
     /**
      * button to spin up and spin down flywheel
      */
-    JoystickButton butSpinFlywheel = new JoystickButton(secondJoystick, 1);
+    JoystickButton butSpinFlywheel = new JoystickButton(secondJoystick, 2);
     /**
      * button to switch to feed 1
      */
@@ -56,6 +56,10 @@ public class RobotCoDriver implements Module {
      * button to switch feed 2
      */
     JoystickButton butSwitchFeed2 = new JoystickButton(secondJoystick, 4);
+    /**
+     * button load flywheel (spin collector)
+     */
+    JoystickButton butLoadShooter = new JoystickButton(secondJoystick, 1);
 
     private static final Joystick firstJoystick =
             new Joystick(RobotConstants.CODRIVER_FIRST_JOYSTICK_PORT);
@@ -76,7 +80,6 @@ public class RobotCoDriver implements Module {
         collector = RobotCommon.runningRobot.collector;
         lowerFlywheel = RobotCommon.runningRobot.lowerFlywheel;
         upperFlywheel = RobotCommon.runningRobot.upperFlywheel;
-        collect = new Collect();
         LiveWindow.addActuator("Flywheel", "Lower PID",
                 lowerFlywheel.getPIDController());
         LiveWindow.addActuator("Flywheel", "Upper PID",
@@ -102,8 +105,6 @@ public class RobotCoDriver implements Module {
         if (!arm.getPIDMode()) {
             arm.setPower(firstJoystick.getY());
         }
-
-        collector.setPower(secondJoystick.getY());
     }
 
     @Override

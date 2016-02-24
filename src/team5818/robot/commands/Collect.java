@@ -1,58 +1,63 @@
 package team5818.robot.commands;
 
-import edu.wpi.first.wpilibj.CANTalon;
-import edu.wpi.first.wpilibj.command.Command;
-import edu.wpi.first.wpilibj.command.Subsystem;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import team5818.robot.RobotCommon;
-import team5818.robot.RobotConstants;
 import team5818.robot.modules.Collector;
+import edu.wpi.first.wpilibj.command.Command;
+import team5818.robot.RobotCommon;
 
+/**
+ * Runs the collector in a specified speed for a specified time.
+ */
 public class Collect extends Command {
 
-    public static final double MAX_COLLECT_POWER = 1;
-    public static final double COLLECT_POWER = 0.6;
-    private Collector collector;
-    
     /**
-     * Time to run the motor
+     * The maximum collecting power that can be set.
      */
-    //TODO tune the ballFeedOutTime number to the correct timing.
-    private double maxCollectTime = 4 * 1E9;
-    private double zeroTime;
-    
-    private boolean hasFinished = false;
-    
-    
+    public static final double MAX_COLLECT_POWER = 1;
+    /**
+     * The recommended power to collect a ball.
+     */
+    public static final double COLLECT_POWER = 0.6;
+
+    private final double collectPower;
+    private Collector collector;
+
+    /**
+     * @param power The desired power to run the collector
+     */
+    private Collect(double power) {
+        collectPower = power;
+        collector = RobotCommon.runningRobot.collector;
+        requires(collector);
+    }
+
+    /**
+     * @param power
+     *            The desired power to run the collector.
+     * @param timeout
+     *            The time to have the command run.
+     */
+    public Collect(double power, double timeout) {
+        this(power);
+        this.setTimeout(timeout);
+    }
+
     @Override
     protected void initialize() {
-        collector = RobotCommon.runningRobot.collector;
-        collector.setPower(MAX_COLLECT_POWER);
-        zeroTime = System.nanoTime();
-        requires(collector);
+        collector.setPower(collectPower);
     }
 
     @Override
     protected void execute() {
-        if(collector.isStalled())
-        {
-            SmartDashboard.putNumber("Stall_Indicator", 100);
-        }
     }
-    
-
 
     @Override
     protected boolean isFinished() {
-        if(System.nanoTime() - zeroTime >= maxCollectTime) {
-            return true;
-        }
-        return hasFinished;
+        return isTimedOut();
     }
 
     @Override
     protected void end() {
-       collector.setPower(0);
+        collector.setPower(0);
     }
 
     @Override
