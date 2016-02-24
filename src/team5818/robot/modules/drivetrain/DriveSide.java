@@ -120,6 +120,7 @@ public class DriveSide implements EncoderManager, PIDOutput, MovingControl {
                     RobotConstants.DISTANCE_PID_LOOP_D_TERM, pidSource, this);
         pidLoop.setAbsoluteTolerance(10);
         }
+        }
     }
 
     private void configureEncoderTalon() {

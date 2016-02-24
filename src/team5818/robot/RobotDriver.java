@@ -41,9 +41,11 @@ public class RobotDriver implements Module {
     private static final int BUT_UNINVERT = 9;
     private static final int BUT_TWOSTICK_TANK = 7;
     private static final int BUT_TWOSTICK_ARCADE = 6;
+    private static final int BUT_UNCOLLECT = 2;
     private static final int BUT_COLLECT = 1;
 
-    private JoystickButton butCollect;
+    private JoystickButton butCollect = new JoystickButton(SECOND_JOYSTICK, BUT_COLLECT);
+    private JoystickButton butUncollect = new JoystickButton(SECOND_JOYSTICK, BUT_UNCOLLECT);
 
     @Override
     public void initModule() {
@@ -56,9 +58,10 @@ public class RobotDriver implements Module {
         LiveWindow.addActuator("DriveSide", "Right",
                 rightDriveSide.getPIDController());
 
-        butCollect = new JoystickButton(SECOND_JOYSTICK, BUT_COLLECT);
-        butCollect.whenPressed(new Collect(Collect.COLLECT_POWER, 0));
-        butCollect.whenReleased(new Collect(0, 0));
+        butCollect.whenPressed(new Collect(Collect.COLLECT_POWER));
+        butCollect.whenReleased(new Collect(0));
+        butUncollect.whenPressed(new Collect(-Collect.COLLECT_POWER));
+        butUncollect.whenReleased(new Collect(0));
     }
 
     @Override
