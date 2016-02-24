@@ -85,7 +85,7 @@ public class RobotCoDriver implements Module {
         }
         
         if (!arm.getPIDMode()) {
-            arm.setPower(secondJoystick.getY());
+            arm.setPower(arm.getMaxPower()*firstJoystick.getY());
         }
         
         if(secondJoystick.getRawButton(BUT_SPIN_FLYWHEEL)) {

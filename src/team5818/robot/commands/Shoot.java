@@ -1,19 +1,21 @@
 package team5818.robot.commands;
 
+import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj.command.CommandGroup;
 import team5818.robot.RobotCommon;
 import team5818.robot.modules.Collector;
 
-public class Shoot extends Command{
-    public double shootUpperVelocity;
-    public double shootLowerVelocity;
-    public double shootAngle;
+public class Shoot extends CommandGroup{
+    public double shootUpperVelocity = Preferences.getInstance().getDouble("UpperFlyVel", 100);
+    public double shootLowerVelocity = Preferences.getInstance().getDouble("LowerFlyVel", 60);
+    public double shootAngle = Preferences.getInstance().getDouble("ArmAngleHigh", 60);
     
-    private SetFlywheelVelocity setFlyVelocity;
-    private SetArmAngle setArmAngle;
-    private SetFlywheelPower flyToZero;
-    
-    private Collector collector = RobotCommon.runningRobot.collector;
+    private SetFlywheelVelocity setFlyVelocity = new SetFlywheelVelocity(shootUpperVelocity,shootLowerVelocity);
+    private SetArmAngle setArmAngle = new SetArmAngle(shootAngle);
+    private SetFlywheelPower flyToZero = new SetFlywheelPower(0);
+    private Collect collectIn = new Collect(Collect.COLLECT_POWER, 2);
+    private CommandGroup prepareShot = new CommandGroup();
     
     /**
      * The maximum time the shooter can be on in nano seconds.
@@ -21,46 +23,13 @@ public class Shoot extends Command{
     private double maxShootTime = 4;
     
     public Shoot(double angle, double flyUpVel, double flyLoVel){
-        shootUpperVelocity = flyUpVel;
-        shootLowerVelocity = flyLoVel;
-        shootAngle = flyUpVel;
-        setFlyVelocity = new SetFlywheelVelocity(shootUpperVelocity,shootLowerVelocity);
-        setArmAngle = new SetArmAngle(shootAngle);
-        flyToZero = new SetFlywheelPower(0);
+        prepareShot.addParallel(setArmAngle);
+        prepareShot.addParallel(setFlyVelocity);
+        this.addSequential(prepareShot);
+        this.addSequential(collectIn);
+        this.addSequential(flyToZero);
     }
     
     
-    @Override
-    protected void initialize() {
-        setArmAngle.start();
-        setFlyVelocity.start();
-        setTimeout(maxShootTime);
-        //TODO make ShootHigh move arm to angle using PID.
-    }
-
-    @Override
-    protected void execute() {
-        if(setArmAngle.isFinished() && setFlyVelocity.isFinished()){
-            collector.setPower(Collect.COLLECT_POWER);
-        }
-        
-    }
-
-    @Override
-    protected boolean isFinished() {
-        return isTimedOut();
-    }
-
-    @Override
-    protected void end() {
-        collector.setPower(0);
-        flyToZero.start();
-    }
-
-    @Override
-    protected void interrupted() {
-        setArmAngle.cancel();
-        end();
-    }
 
 }

@@ -13,7 +13,6 @@ public class Auto1E extends CommandGroup{
     public double flyLoVel = Preferences.getInstance().getDouble("LowerFlyVel", 60.0);
     public double lowbarDist = Field.AUTOSTART_TO_LOWBAR;
     
-    private CommandGroup commandGroup;
     private SetArmAngle putArmDown = new SetArmAngle(collectAngle);
     private DriveDistanceCommand goUnderLowbar = new DriveDistanceCommand(lowbarDist);
     private SpinRobot aim = new SpinRobot(20.0);
@@ -21,12 +20,10 @@ public class Auto1E extends CommandGroup{
     
     public Auto1E(){
         
-        
-        commandGroup = new CommandGroup();
-        commandGroup.addSequential(putArmDown);
-        commandGroup.addSequential(goUnderLowbar);
-        commandGroup.addSequential(aim);
-        commandGroup.addSequential(dontMiss);
+        this.addSequential(putArmDown);
+        this.addSequential(goUnderLowbar);
+        this.addSequential(aim);
+        this.addSequential(dontMiss);
     }
 
 }

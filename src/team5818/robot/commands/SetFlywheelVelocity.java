@@ -22,17 +22,23 @@ public class SetFlywheelVelocity extends Command {
             RobotCommon.runningRobot.upperFlywheel;
     private static final FlyWheel flyLo =
             RobotCommon.runningRobot.lowerFlywheel;
+    private static double defaultTimeout = 3;
 
     /**
      * @param vel
      *            The velocity desired to be set in units of
      */
-    public SetFlywheelVelocity(double velUp, double velLow) {
+    public SetFlywheelVelocity(double velUp, double velLow, double timeout) {
         upVel = velUp - velUp * backSpin;
         lowVel = velLow + velLow * backSpin;
         requires(flyUp);
         requires(flyLo);
+        setTimeout(timeout);
         
+    }
+    
+    public SetFlywheelVelocity(double velUp, double velLow){
+        this(velUp,velLow,defaultTimeout);
     }
 
     @Override
@@ -47,7 +53,7 @@ public class SetFlywheelVelocity extends Command {
 
     @Override
     protected boolean isFinished() {        
-        return hasReachedVelocity();
+        return (isTimedOut() || hasReachedVelocity());
     }
 
     @Override

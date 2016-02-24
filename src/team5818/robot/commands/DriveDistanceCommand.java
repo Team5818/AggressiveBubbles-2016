@@ -1,9 +1,10 @@
 package team5818.robot.commands;
 
+import edu.wpi.first.wpilibj.command.Command;
 import team5818.robot.RobotCommon;
 import team5818.robot.util.Vector2d;
 
-public class DriveDistanceCommand extends QuickCommand {
+public class DriveDistanceCommand extends Command {
 
     double dist;
     double maxP;
@@ -29,10 +30,6 @@ public class DriveDistanceCommand extends QuickCommand {
         maxP = 1.0;
         timeout = 10.0;
     }
-
-    @Override
-    protected void subexecute() {
-    }
     
     protected void end()
     {
@@ -45,5 +42,21 @@ public class DriveDistanceCommand extends QuickCommand {
         this.setTimeout(timeout);
         RobotCommon.runningRobot.driveTrainController
                 .driveToTargetXInchesAway(dist, maxP);
+    }
+
+    @Override
+    protected void execute() {
+        
+    }
+
+    @Override
+    protected boolean isFinished() {
+        return isTimedOut() || RobotCommon.runningRobot.driveTrain.getLeftMotors().getPIDController().onTarget();
+    }
+
+    @Override
+    protected void interrupted() {
+        this.end();
+        
     }
 }

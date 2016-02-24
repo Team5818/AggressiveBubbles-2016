@@ -24,7 +24,7 @@ public class Collect extends Command {
     /**
      * @param power The desired power to run the collector
      */
-    private Collect(double power) {
+    Collect(double power) {
         collectPower = power;
         collector = RobotCommon.runningRobot.collector;
         requires(collector);
@@ -40,6 +40,8 @@ public class Collect extends Command {
         this(power);
         this.setTimeout(timeout);
     }
+    
+ 
 
     @Override
     protected void initialize() {

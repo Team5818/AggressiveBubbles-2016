@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.CANTalon;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
+import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -79,7 +80,7 @@ public class RobotCommon extends IterativeRobot {
     public final Collector collector = addModule(new Collector(false));
     final String defaultAuto = "Default";
     final String customAuto = "My Auto";
-    String autoSelected;
+    Command autoSelected;
     SendableChooser chooser;
 
     /**
@@ -112,10 +113,11 @@ public class RobotCommon extends IterativeRobot {
     @Override
     public void autonomousInit() {
         modules.forEach(Module::initAutonomous);
-        autoSelected = (String) chooser.getSelected();
+        autoSelected = (Command) chooser.getSelected();
         // autoSelected = SmartDashboard.getString("Auto Selector",
         // defaultAuto);
-        System.out.println("Auto selected: " + autoSelected);
+        //System.out.println("Auto selected: " + autoSelected);
+        autoSelected.start();
         // driveTrainController.rotateDegrees(90, true);
         Scheduler.getInstance().enable();
     }
@@ -132,15 +134,7 @@ public class RobotCommon extends IterativeRobot {
     @Override
     public void autonomousPeriodic() {
         Scheduler.getInstance().run();
-        switch (autoSelected) {
-            case customAuto:
-                // Put custom auto code here
-                break;
-            case defaultAuto:
-            default:
-                // Put default auto code here
-                break;
-        }
+        
     }
 
     private PowerDistributionPanel panel;
