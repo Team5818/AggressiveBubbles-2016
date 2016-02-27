@@ -19,6 +19,7 @@ import team5818.robot.modules.ComputerVision;
 import team5818.robot.modules.ComputerVision;
 import team5818.robot.modules.FlyWheel;
 import team5818.robot.modules.Module;
+import team5818.robot.modules.drivetrain.ArcadeDriveCalculator;
 import team5818.robot.util.Vectors;
 
 /**
@@ -184,8 +185,10 @@ public class RobotCoDriver implements Module {
 
         // Control the DriverTrain if Overriding Drive Control
         if (isOverrideDriver()) {
-            RobotCommon.runningRobot.driveTrain
-                    .setPower(Vectors.fromJoystick(firstJoystick, false));
+            RobotCommon.runningRobot.driveTrainController
+                    .setPowerDirectly(ArcadeDriveCalculator.INSTANCE.compute(Vectors
+                            .fromJoystick(firstJoystick, false)));
+
         }
     }
 

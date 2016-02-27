@@ -14,24 +14,6 @@ public enum ArcadeDriveCalculator implements DriveCalculator {
     public Vector2d compute(Vector2d in) {
         double rotateValue = -in.getX();
         double moveValue = in.getY();
-
-        // if (reversedTurn) {
-        // rotateValue = -rotateValue;
-        // }
-
-        // if (squaredInputs) {
-        // if (moveValue >= 0.0) {
-        // moveValue = (moveValue * moveValue);
-        // } else {
-        // moveValue = -(moveValue * moveValue);
-        // }
-        // if (rotateValue >= 0.0) {
-        // rotateValue = (rotateValue * rotateValue);
-        // } else {
-        // rotateValue = -(rotateValue * rotateValue);
-        // }
-        // }
-
         double leftMotorSpeed;
         double rightMotorSpeed;
         if (moveValue > 0.0) {

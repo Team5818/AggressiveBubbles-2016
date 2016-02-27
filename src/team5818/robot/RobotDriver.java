@@ -163,25 +163,29 @@ public class RobotDriver implements Module {
         }
 
         // Computing Driving Code
+        ArcadeDriveCalculator arcadeCalc = ArcadeDriveCalculator.INSTANCE;
+        TankDriveCalculator tankCalc = TankDriveCalculator.INSTANCE;
         switch (inputMode) {
             case ONE_STICK:
                 thePowersThatBe =
-                        Vectors.fromJoystick(FIRST_JOYSTICK, invertThrottle);
+                        arcadeCalc.compute(Vectors.fromJoystick(FIRST_JOYSTICK, invertThrottle));
                 break;
             case TWO_STICKS:
                 if (driveType == DriveType.TANK) {
-                    thePowersThatBe = Vectors.fromJoystickTank(FIRST_JOYSTICK,
-                            SECOND_JOYSTICK, invertThrottle);
+                    thePowersThatBe = tankCalc.compute(Vectors.fromJoystickTank(FIRST_JOYSTICK,
+                            SECOND_JOYSTICK, invertThrottle));
                 } else {
-                    thePowersThatBe = Vectors.fromJoystick(FIRST_JOYSTICK,
-                            SECOND_JOYSTICK, invertThrottle);
+                    thePowersThatBe = arcadeCalc.compute(Vectors.fromJoystick(FIRST_JOYSTICK,
+                            SECOND_JOYSTICK, invertThrottle));
                 }
                 break;
             default:
                 throw new IllegalStateException(
                         "Don't know what mode " + inputMode + " does");
         }
-
+        
+        
+        RobotCommon.runningRobot.driveTrainController.setPowerDirectly(thePowersThatBe);
     }
 
     @Override
