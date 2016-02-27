@@ -72,8 +72,8 @@ public class DriveTrain implements Module {
      *            {@link Vector2d#getX()} and right is {@link Vector2d#getY()}
      */
     public void setPower(Vector2d power) {
-        left.pidWrite(power.getX());
-        right.pidWrite(power.getY());
+        left.setPower(power.getX());
+        right.setPower(power.getY());
     }
 
     public double getAverageDistance() {
