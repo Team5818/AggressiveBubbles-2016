@@ -25,12 +25,19 @@ import team5818.robot.util.Vectors;
  */
 public class RobotCoDriver implements Module {
 
-    private static boolean overrideDriver = false;
-
+    /**
+     * The object for the first CoDriver Joystick.
+     */
     public static final Joystick firstJoystick =
             new Joystick(RobotConstants.CODRIVER_FIRST_JOYSTICK_PORT);
+    /**
+     * The object for the second CoDriver Joystick.
+     */
     public static final Joystick secondJoystick =
             new Joystick(RobotConstants.CODRIVER_SECOND_JOYSTICK_PORT);
+
+    // Weather CoDriver is overriding driver control.
+    private static boolean overrideDriver = false;
 
     // Joystick One Buttons
     private static final int BUT_PRINT_ANGLE = 7;
@@ -50,6 +57,7 @@ public class RobotCoDriver implements Module {
     private static final int BUT_SPIN_FLYWHEEL = 2;
     private static final int BUT_COLLECT = 1;
 
+    // Different arm angles
     private double shootAngleHigh = 60;
     private double shootAngleMedHigh = 50;
     private double shootAngleMedLow = 40;
