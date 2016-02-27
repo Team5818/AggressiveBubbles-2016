@@ -11,19 +11,29 @@ public class Auto1E extends CommandGroup{
     public double shootAngle = Preferences.getInstance().getDouble("ArmShootHigh", 40.0);
     public double flyUpVel = Preferences.getInstance().getDouble("UpperFlyVel", 100.0);
     public double flyLoVel = Preferences.getInstance().getDouble("LowerFlyVel", 60.0);
-    public double lowbarDist = Field.AUTOSTART_TO_LOWBAR;
+    public double lowbarDist = 60;
     
     private SetArmAngle putArmDown = new SetArmAngle(collectAngle);
-    private DriveDistanceCommand goUnderLowbar = new DriveDistanceCommand(lowbarDist);
-    private SpinRobot aim = new SpinRobot(20.0);
+    private SetArmAngle armDownAgain = new SetArmAngle(collectAngle);
+    private DriveDistanceCommand goUnderLowbar = new DriveDistanceCommand(-lowbarDist, .3, 5);
+    private DriveDistanceCommand backUp = new DriveDistanceCommand(lowbarDist, .3, 5);
+    private DoNothing sitAround = new DoNothing(2);
+    private DoNothing chill = new DoNothing(2);
+    private SpinRobot aim = new SpinRobot(10.0);
+    private SpinRobot unAim = new SpinRobot(-10.0);
     private Shoot dontMiss = new Shoot(shootAngle, flyUpVel, flyLoVel);
     
     public Auto1E(){
         
         this.addSequential(putArmDown);
         this.addSequential(goUnderLowbar);
+        this.addSequential(sitAround);
         this.addSequential(aim);
         this.addSequential(dontMiss);
+        this.addSequential(chill);
+        this.addSequential(unAim);
+        this.addSequential(armDownAgain);
+        this.addSequential(backUp);
     }
 
 }
