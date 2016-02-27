@@ -1,10 +1,12 @@
 package team5818.robot;
 
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import team5818.robot.commands.Collect;
+import team5818.robot.commands.SetArmAngle;
 import team5818.robot.modules.Module;
 import team5818.robot.modules.drivetrain.ArcadeDriveCalculator;
 import team5818.robot.modules.drivetrain.DriveSide;
@@ -25,54 +27,100 @@ public class RobotDriver implements Module {
         ONE_STICK, TWO_STICKS;
     }
 
+    // First driver Joystick.
     private static final Joystick FIRST_JOYSTICK =
             new Joystick(RobotConstants.DRIVER_FIRST_JOYSTICK_PORT);
+    // Second driver Joystick.
     private static final Joystick SECOND_JOYSTICK =
             new Joystick(RobotConstants.DRIVER_SECOND_JOYSTICK_PORT);
 
-    private DriveType driveType = DriveType.ARCADE;
-    private InputMode inputMode = InputMode.TWO_STICKS;
-
-    private static boolean invertThrottle = false;
     // First Joystick Buttons
     private static final int BUT_ONESTICK_ARCADE = 11;
     private static final int BUT_INVERT = 8;
     private static final int BUT_UNINVERT = 9;
     private static final int BUT_TWOSTICK_TANK = 7;
     private static final int BUT_TWOSTICK_ARCADE = 6;
-    
+
+    // First Joystick Buttons
+    private static final int BUT_ARM_ANGLE_HIGH = 5;
+    private static final int BUT_ARM_ANGLE_LOW = 4;
+    private static final int BUT_ARM_ANGLE_ZERO = 3;
+    private static final int BUT_ARM_ANGLE_GROUND = 2;
+
     // Second Joystick Buttons
     private static final int BUT_DEBUG = 12;
     private static final int BUT_UNCOLLECT = 2;
     private static final int BUT_COLLECT = 1;
 
-    private JoystickButton butCollect = new JoystickButton(SECOND_JOYSTICK, BUT_COLLECT);
-    private JoystickButton butUncollect = new JoystickButton(SECOND_JOYSTICK, BUT_UNCOLLECT);
+    private DriveType driveType = DriveType.ARCADE;
+    private InputMode inputMode = InputMode.TWO_STICKS;
+
+    // Weather to invert the throttle
+    private static boolean invertThrottle = false;
+
+    private double armAngleHigh = 85;
+    private double armAngleLow = 40;
+    private double armAngleCollect = 2.3;
+    private double armAngleGround = -6;
+
+    //Initializing the JoystickButtons
+    private JoystickButton butCollect =
+            new JoystickButton(SECOND_JOYSTICK, BUT_COLLECT);
+    private JoystickButton butUncollect =
+            new JoystickButton(SECOND_JOYSTICK, BUT_UNCOLLECT);
+    private JoystickButton setArmAngleHigh =
+            new JoystickButton(FIRST_JOYSTICK, BUT_ARM_ANGLE_HIGH);
+    private JoystickButton setArmAngleLow =
+            new JoystickButton(FIRST_JOYSTICK, BUT_ARM_ANGLE_LOW);
+    private JoystickButton setArmAngleCollect =
+            new JoystickButton(FIRST_JOYSTICK, BUT_ARM_ANGLE_ZERO);
+    private JoystickButton setArmAngleGround =
+            new JoystickButton(FIRST_JOYSTICK, BUT_ARM_ANGLE_GROUND);
+    
 
     @Override
     public void initModule() {
+        //Setting Preference values.
+        armAngleLow =
+                Preferences.getInstance().getDouble("ArmAngleLow", armAngleLow);
+        armAngleHigh = Preferences.getInstance().getDouble("ArmAngleHigh",
+                armAngleHigh);
+        armAngleCollect = Preferences.getInstance().getDouble("ArmAngleCollect",
+                armAngleCollect);
+        armAngleGround = Preferences.getInstance().getDouble("ArmAngleGround",
+                armAngleGround);
+
+        //Setting local objects of singletons for easy access.
         DriveSide leftDriveSide =
                 RobotCommon.runningRobot.driveTrain.getLeftMotors();
         DriveSide rightDriveSide =
                 RobotCommon.runningRobot.driveTrain.getRightMotors();
+        
+        //Adding the DriveSide PID Controllers to the smart Smart Dashboard.
         LiveWindow.addActuator("DriveSide", "Left",
                 leftDriveSide.getPIDController());
         LiveWindow.addActuator("DriveSide", "Right",
                 rightDriveSide.getPIDController());
 
+        //Assigning commands to their respective buttons.
         butCollect.whenPressed(new Collect(Collect.COLLECT_POWER));
         butCollect.whenReleased(new Collect(0));
         butUncollect.whenPressed(new Collect(-Collect.COLLECT_POWER));
         butUncollect.whenReleased(new Collect(0));
+        setArmAngleHigh.whenPressed(new SetArmAngle(armAngleHigh));
+        setArmAngleLow.whenPressed(new SetArmAngle(armAngleLow));
+        setArmAngleCollect.whenPressed(new SetArmAngle(armAngleCollect));
+        setArmAngleGround.whenPressed(new SetArmAngle(armAngleGround));
     }
 
     @Override
     public void teleopPeriodicModule() {
         Vector2d thePowersThatBe;
-        
-        if(RobotCoDriver.isOverrideDriver() || DriveSide.getMode() == DriveSide.MODE_POWER)
+
+        if (RobotCoDriver.isOverrideDriver()
+                || DriveSide.getMode() == DriveSide.MODE_POWER)
             return;
-        
+
         // Puts the Raw Encoders in the SmartDashboard
         if (SECOND_JOYSTICK.getRawButton(BUT_DEBUG)) {
             SmartDashboard.putNumber("Drive Train Left Pos",
@@ -82,7 +130,7 @@ public class RobotDriver implements Module {
                     RobotCommon.runningRobot.driveTrain.getRightMotors()
                             .getEncPosRaw());
         }
-        
+
         // Inverts the controls if needed.
         if (FIRST_JOYSTICK.getRawButton(BUT_INVERT)) {
             invertThrottle = true;
@@ -90,7 +138,7 @@ public class RobotDriver implements Module {
         if (FIRST_JOYSTICK.getRawButton(BUT_UNINVERT)) {
             invertThrottle = false;
         }
-        
+
         // Changes the Control Mode
         if (FIRST_JOYSTICK.getRawButton(BUT_TWOSTICK_ARCADE)) {
             RobotCommon.runningRobot.driveTrainController
@@ -109,7 +157,7 @@ public class RobotDriver implements Module {
             inputMode = InputMode.ONE_STICK;
         }
 
-        //Computing Driving Code
+        // Computing Driving Code
         switch (inputMode) {
             case ONE_STICK:
                 thePowersThatBe =
@@ -128,7 +176,7 @@ public class RobotDriver implements Module {
                 throw new IllegalStateException(
                         "Don't know what mode " + inputMode + " does");
         }
-        
+
     }
 
     @Override
