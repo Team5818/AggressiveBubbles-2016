@@ -5,6 +5,10 @@ import team5818.robot.RobotCoDriver;
 import team5818.robot.RobotCommon;
 import team5818.robot.modules.Arm;
 
+/**
+ * @author Petey sets the angle of the arm using PID
+ *
+ */
 public class SetArmAngle extends Command {
 
     public double targetAngle;
@@ -12,6 +16,10 @@ public class SetArmAngle extends Command {
     private boolean hasInitialized = false;
     private double maxTime = 3;
 
+    /**
+     * @param angle
+     *            target angle
+     */
     public SetArmAngle(double angle) {
         targetAngle = angle;
         arm = RobotCommon.runningRobot.arm;
@@ -28,7 +36,7 @@ public class SetArmAngle extends Command {
 
     @Override
     protected void execute() {
-        if(!hasInitialized) {
+        if (!hasInitialized) {
             initialize();
         }
 
@@ -41,7 +49,7 @@ public class SetArmAngle extends Command {
 
     @Override
     protected void end() {
-        hasInitialized  = false;
+        hasInitialized = false;
     }
 
     @Override
