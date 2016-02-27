@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import team5818.robot.commands.Collect;
 import team5818.robot.commands.SetArmAngle;
 import team5818.robot.commands.SetArmPower;
+import team5818.robot.commands.SetDrivePower;
 import team5818.robot.commands.SetFlywheelPower;
 import team5818.robot.commands.SetFlywheelVelocity;
 import team5818.robot.commands.SwitchFeed;
@@ -132,6 +133,7 @@ public class RobotCoDriver implements Module {
         CommandGroup stopFlywheel = new CommandGroup();
         stopFlywheel.addParallel(new SetFlywheelPower(0));
         stopFlywheel.addParallel(new SwitchFeed(ComputerVision.CAMERA_DRIVER));
+        stopFlywheel.addParallel(new SetDrivePower(0, 0));
 
         // Assigning commands to the buttons
         butSpinFlywheel.whenPressed(startFlywheel);
@@ -169,7 +171,7 @@ public class RobotCoDriver implements Module {
 
         // Manual Arm Mode
         if (!arm.getPIDMode()) {
-            arm.setPower(arm.getMaxPower() * firstJoystick.getY());
+            arm.setPower(arm.getMaxPower() * secondJoystick.getY());
         }
 
         // Overrides Driver Control.

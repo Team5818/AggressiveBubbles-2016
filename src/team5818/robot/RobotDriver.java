@@ -6,7 +6,9 @@ import edu.wpi.first.wpilibj.buttons.JoystickButton;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import team5818.robot.commands.Collect;
+import team5818.robot.commands.DrivePower;
 import team5818.robot.commands.SetArmAngle;
+import team5818.robot.commands.SetDrivePower;
 import team5818.robot.modules.Module;
 import team5818.robot.modules.drivetrain.ArcadeDriveCalculator;
 import team5818.robot.modules.drivetrain.DriveSide;
@@ -111,6 +113,9 @@ public class RobotDriver implements Module {
         setArmAngleLow.whenPressed(new SetArmAngle(armAngleLow));
         setArmAngleCollect.whenPressed(new SetArmAngle(armAngleCollect));
         setArmAngleGround.whenPressed(new SetArmAngle(armAngleGround));
+        
+        //Setting driving mode to power.
+        new SetDrivePower(0, 0).start();
     }
 
     @Override
