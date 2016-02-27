@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj.CANTalon;
 import edu.wpi.first.wpilibj.CANTalon.FeedbackDevice;
 import edu.wpi.first.wpilibj.PIDOutput;
 import edu.wpi.first.wpilibj.PIDSourceType;
+import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import team5818.robot.RobotConstants;
 import team5818.robot.encoders.EncoderManager;
@@ -21,6 +22,11 @@ import team5818.robot.util.PIDSourceBase;
 public class DriveSide implements EncoderManager, PIDOutput, MovingControl {
 
     /**
+     * The Maximum velocity the flywheel can reach.
+     */
+    public static final double MAX_VELOCITY = 175;
+
+    /**
      * The mode for setting direct power to the drive side.
      */
     public static final int MODE_POWER = 0;
@@ -33,10 +39,21 @@ public class DriveSide implements EncoderManager, PIDOutput, MovingControl {
      */
     public static final int MODE_DISTANCE = 2;
 
-    private static int driveMode = MODE_POWER;
-
+    // The default max power output.
     private static final double DEFAULT_MAX_POWER = 1.0;
 
+    // The driving mode that the robot is in.
+    private static int driveMode = MODE_POWER;
+
+    // Initialize all the pid constants.
+    private static double distanceKp = 0.12;
+    private static double distanceKi = 0.00000001;
+    private static double distanceKd = 0.05;
+    private static double velocityKp = 0.12;
+    private static double velocityKi = 0.00000001;
+    private static double velocityKd = 0.05;
+
+    // Initialize objects.
     private final CANTalon mainTalon;
     private final CANTalon secondaryTalon;
     private final CANTalon thirdTalon;
@@ -75,6 +92,17 @@ public class DriveSide implements EncoderManager, PIDOutput, MovingControl {
      */
     public DriveSide(CANTalon mainTalon, CANTalon secondaryTalon,
             CANTalon thirdTalon, boolean inverted) {
+
+        distanceKp = Preferences.getInstance().getDouble("DistanceKp", 0.12);
+        distanceKi =
+                Preferences.getInstance().getDouble("DistanceKi", 0.00000001);
+        distanceKd = Preferences.getInstance().getDouble("DistanceKd", 0.05);
+        velocityKp = Preferences.getInstance().getDouble("VelocityKp", 0.12);
+        velocityKi =
+                Preferences.getInstance().getDouble("VelocityKi", 0.00000001);
+        velocityKd =
+                Preferences.getInstance().getDouble("Velocity" + "Kd", 0.05);
+
         if (mainTalon == null) {
             throw new IllegalArgumentException("mainTalon cannot be null");
         }
@@ -114,10 +142,8 @@ public class DriveSide implements EncoderManager, PIDOutput, MovingControl {
             // pidLoop.reset();
             // pidLoop.free();
         } else {
-            pidLoop = new BetterPIDController(
-                    RobotConstants.DISTANCE_PID_LOOP_P_TERM,
-                    RobotConstants.DISTANCE_PID_LOOP_I_TERM,
-                    RobotConstants.DISTANCE_PID_LOOP_D_TERM, pidSource, this);
+            pidLoop = new BetterPIDController(distanceKp, distanceKi,
+                    distanceKd, pidSource, this);
             pidLoop.setAbsoluteTolerance(10);
         }
     }
@@ -222,14 +248,11 @@ public class DriveSide implements EncoderManager, PIDOutput, MovingControl {
     @Override
     public void setVelocity(double vel) {
         setDriveMode(MODE_VELOCITY);
-        vel = Math.min(RobotConstants.MAX_VELOCITY,
-                Math.max(-RobotConstants.MAX_VELOCITY, vel));
+        vel = Math.min(MAX_VELOCITY, Math.max(-MAX_VELOCITY, vel));
         resetPIDLoop();
-        pidLoop.setPID(RobotConstants.VELOCITY_PID_LOOP_P_TERM,
-                RobotConstants.VELOCITY_PID_LOOP_I_TERM,
-                RobotConstants.VELOCITY_PID_LOOP_D_TERM);
+        pidLoop.setPID(velocityKp, velocityKi, velocityKd);
         setPIDFromSmart();
-        pidWrite(RobotConstants.ONE_OVER_MAX_VEL * vel);
+        pidWrite(vel / MAX_VELOCITY);
         try {
             Thread.sleep(100);
         } catch (InterruptedException e) {
@@ -245,9 +268,7 @@ public class DriveSide implements EncoderManager, PIDOutput, MovingControl {
     public void setDriveDistance(double dist, double maxPower) {
         setDriveMode(MODE_DISTANCE);
         resetPIDLoop();
-        pidLoop.setPID(RobotConstants.DISTANCE_PID_LOOP_P_TERM,
-                RobotConstants.DISTANCE_PID_LOOP_I_TERM,
-                RobotConstants.DISTANCE_PID_LOOP_D_TERM);
+        pidLoop.setPID(distanceKp, distanceKi, distanceKd);
         // setPIDFromSmart();
         cyclesUntilAttemptStop = 5;
         pidSource.setPIDSourceType(PIDSourceType.kDisplacement);
@@ -261,12 +282,12 @@ public class DriveSide implements EncoderManager, PIDOutput, MovingControl {
 
     public void setPIDFromSmart() {
         try {
-            double p = Double.parseDouble(SmartDashboard.getString("pS",
-                    "" + RobotConstants.VELOCITY_PID_LOOP_P_TERM));
-            double i = Double.parseDouble(SmartDashboard.getString("iS",
-                    "" + RobotConstants.VELOCITY_PID_LOOP_I_TERM));
-            double d = Double.parseDouble(SmartDashboard.getString("dS",
-                    "" + RobotConstants.VELOCITY_PID_LOOP_D_TERM));
+            double p = Double.parseDouble(
+                    SmartDashboard.getString("pS", "" + velocityKp));
+            double i = Double.parseDouble(
+                    SmartDashboard.getString("iS", "" + velocityKi));
+            double d = Double.parseDouble(
+                    SmartDashboard.getString("dS", "" + velocityKd));
             double f =
                     Double.parseDouble(SmartDashboard.getString("fS", "0.0"));
             pidLoop.setPID(p, i, d, f);

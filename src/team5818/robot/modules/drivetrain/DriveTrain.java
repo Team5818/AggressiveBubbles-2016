@@ -30,6 +30,7 @@ public class DriveTrain implements Module {
     private static final CANTalon RIGHT_MIDDLE;
     private static final CANTalon RIGHT_BACK =
             new CANTalon(RobotConstants.TALON_RIGHT_BACK);
+
     static {
         CANTalon lm = null;
         if (SIX_TALONS) {
@@ -74,9 +75,9 @@ public class DriveTrain implements Module {
         left.pidWrite(power.getX());
         right.pidWrite(power.getY());
     }
-    
-    public double getAverageDistance(){
-        double avgDist = (right.getEncPosAbs() + left.getEncPosAbs())/2;
+
+    public double getAverageDistance() {
+        double avgDist = (right.getEncPosAbs() + left.getEncPosAbs()) / 2;
         return avgDist;
     }
 
@@ -113,29 +114,6 @@ public class DriveTrain implements Module {
 
     @Override
     public void initTeleop() {
-        try {
-            SmartDashboard.getString("pS");
-        } catch (TableKeyNotDefinedException set) {
-            SmartDashboard.putString("pS",
-                    "" + RobotConstants.DISTANCE_PID_LOOP_P_TERM);
-        }
-        try {
-            SmartDashboard.getString("iS");
-        } catch (TableKeyNotDefinedException set) {
-            SmartDashboard.putString("iS",
-                    "" + RobotConstants.DISTANCE_PID_LOOP_I_TERM);
-        }
-        try {
-            SmartDashboard.getString("dS");
-        } catch (TableKeyNotDefinedException set) {
-            SmartDashboard.putString("dS",
-                    "" + RobotConstants.DISTANCE_PID_LOOP_D_TERM);
-        }
-        try {
-            SmartDashboard.getString("fS");
-        } catch (TableKeyNotDefinedException set) {
-            SmartDashboard.putString("fS", "0.0");
-        }
     }
 
     @Override
