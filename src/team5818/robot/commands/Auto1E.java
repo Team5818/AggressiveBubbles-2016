@@ -8,7 +8,7 @@ import team5818.robot.Field;
 public class Auto1E extends CommandGroup{
    
     public double collectAngle = Preferences.getInstance().getDouble("ArmCollectAngle", -6.0);
-    public double shootAngle = Preferences.getInstance().getDouble("ShootHighAngle", 60.0);
+    public double shootAngle = Preferences.getInstance().getDouble("ArmShootHigh", 40.0);
     public double flyUpVel = Preferences.getInstance().getDouble("UpperFlyVel", 100.0);
     public double flyLoVel = Preferences.getInstance().getDouble("LowerFlyVel", 60.0);
     public double lowbarDist = Field.AUTOSTART_TO_LOWBAR;
