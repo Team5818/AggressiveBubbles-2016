@@ -27,8 +27,9 @@ public class SpinRobot extends Command{
     
     @Override
     protected void initialize() {
+        double negArc = -arcLength; 
         train.getLeftMotors().setDriveDistance(arcLength);
-        train.getRightMotors().setDriveDistance(-arcLength);
+        train.getRightMotors().setDriveDistance(negArc);
         
     }
 
@@ -39,7 +40,7 @@ public class SpinRobot extends Command{
 
     @Override
     protected boolean isFinished() {
-        return (train.getAverageDistance() >= arcLength || isTimedOut());
+        return (train.getAverageDistance() >= Math.abs(arcLength) || isTimedOut());
 
     }
 
