@@ -182,29 +182,6 @@ public class Arm extends Subsystem implements Module, PIDSource, PIDOutput {
     }
 
     @Override
-    public void teleopPeriodicModule() {
-    }
-
-    @Override
-    public void endModule() {
-    }
-
-    public void initTest() {
-    }
-
-    @Override
-    public void initTeleop() {
-    }
-
-    @Override
-    public void initAutonomous() {
-    }
-
-    @Override
-    public void testPeriodic() {
-    }
-
-    @Override
     public void setPIDSourceType(PIDSourceType pidSource) {
     }
 

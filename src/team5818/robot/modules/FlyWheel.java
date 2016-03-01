@@ -147,37 +147,12 @@ public class FlyWheel extends Subsystem implements PIDSource, Module {
     }
 
     @Override
-    public void initTest() {
-
-    }
-
-    @Override
-    public void initTeleop() {
-
-    }
-
-    @Override
-    public void initAutonomous() {
-
-    }
-
-    @Override
     public void teleopPeriodicModule() {
         int status = 0;
         if (pid.isEnabled() && pid.onTarget()) {
             status = 100;
         }
         SmartDashboard.putNumber("Flywheel_Ready", status);
-    }
-
-    @Override
-    public void testPeriodic() {
-
-    }
-
-    @Override
-    public void endModule() {
-
     }
 
     @Override

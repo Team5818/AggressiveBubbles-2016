@@ -36,33 +36,12 @@ public class Collector extends Subsystem implements Module {
     }
 
     @Override
-    public void initTest() {
-    }
-
-    @Override
-    public void initTeleop() {
-    }
-
-    @Override
-    public void initAutonomous() {
-        
-    }
-
-    @Override
     public void teleopPeriodicModule() {
         int status = 0;
         if (isStalled()) {
             status = 100;
         }
         SmartDashboard.putNumber("Stall_Indicator", status);
-    }
-
-    @Override
-    public void testPeriodic() {
-    }
-
-    @Override
-    public void endModule() {
     }
 
     @Override

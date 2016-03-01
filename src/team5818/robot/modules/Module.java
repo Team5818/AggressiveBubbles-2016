@@ -14,25 +14,31 @@ public interface Module {
      */
     public void initModule();
 
-    public void initTest();
+    public default void initTest() {
+    }
 
-    public void initTeleop();
+    public default void initTeleop() {
+    }
 
-    public void initAutonomous();
+    public default void initAutonomous() {
+    }
 
     /**
      * The periodic method for this module. Should not be used unless very
      * necessary. Should have commands that can achieve the function that this
      * module should do.
      */
-    public void teleopPeriodicModule();
+    public default void teleopPeriodicModule() {
+    }
 
-    public void testPeriodic();
+    public default void testPeriodic() {
+    }
 
     /**
      * This method is called when the robot is about to exit from a state. This
      * is used to clear any variables that need to be reset.
      */
-    public void endModule();
+    public default void endModule() {
+    }
 
 }
