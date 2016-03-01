@@ -11,8 +11,7 @@ import team5818.robot.util.Vector2d;
 public class DriveStraight extends Command {
 
     private static final Vector2d POWER = new Vector2d(0.25, 0.25);
-    private boolean started;
-    private boolean running;
+    private boolean ended = false;
 
     public DriveStraight() {
         requires(RobotCommon.runningRobot.driveTrainController);
@@ -20,34 +19,26 @@ public class DriveStraight extends Command {
 
     @Override
     protected void initialize() {
+        ended = false;
     }
 
     @Override
     protected void execute() {
-        try {
-            running = started = true;
-            while (running) {
-                RobotCommon.runningRobot.driveTrainController
-                        .setPowerDirectly(POWER);
-            }
-        } finally {
-            running = false;
-        }
+        RobotCommon.runningRobot.driveTrainController.setPowerDirectly(POWER);
     }
 
     @Override
     protected boolean isFinished() {
-        return started && !running;
+        return !ended;
     }
 
     @Override
     protected void end() {
-        running = false;
     }
 
     @Override
     protected void interrupted() {
-        end();
+        ended = true;
     }
 
 }

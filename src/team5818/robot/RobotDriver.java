@@ -113,9 +113,6 @@ public class RobotDriver implements Module {
         setArmAngleLow.whenPressed(new SetArmAngle(armAngleLow));
         setArmAngleCollect.whenPressed(new SetArmAngle(armAngleCollect));
         setArmAngleGround.whenPressed(new SetArmAngle(armAngleGround));
-        
-        //Setting driving mode to power.
-        new SetDrivePower(0, 0).start();
     }
 
     @Override

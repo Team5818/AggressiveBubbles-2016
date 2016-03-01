@@ -229,7 +229,8 @@ public class DriveSide implements EncoderManager, PIDOutput, MovingControl {
     @Override
     public void setPower(double power) {
         setDriveMode(MODE_VELOCITY);
-        pidLoop.disable();
+        if(pidLoop.isEnabled() || driveMode != MODE_POWER)
+            pidLoop.disable();
         // Delegate to power.
         pidWrite(power);
     }
