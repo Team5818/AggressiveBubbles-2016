@@ -74,6 +74,10 @@ public class DriveTrainController extends Subsystem {
         driveTrain.getLeftMotors().setDriveDistance(distance);
         driveTrain.getRightMotors().setDriveDistance(-distance);
     }
+    
+    public DriveCalculator getDriveCalculator() {
+        return driveCalculator;
+    }
 
     @Override
     protected void initDefaultCommand() {

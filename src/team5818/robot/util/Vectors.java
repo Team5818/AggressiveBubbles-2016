@@ -19,7 +19,9 @@ public final class Vectors {
      */
     public static Vector2d fromJoystick(Joystick stick,
             boolean invertedThrottle) {
-        int sign = invertedThrottle ? -1 : 1;
+        int sign = 1;
+        if(invertedThrottle)
+            sign *= -1;
         return new Vector2d(stick.getX(), sign * -stick.getY());
     }
 
@@ -37,7 +39,9 @@ public final class Vectors {
      */
     public static Vector2d fromJoystick(Joystick stick, Joystick stick2,
             boolean invertedThrottle) {
-        int sign = invertedThrottle ? -1 : 1;
+        int sign = 1;
+        if(invertedThrottle)
+            sign *= -1;
         return new Vector2d(stick2.getX(), sign * -stick.getY());
     }
 
@@ -55,7 +59,9 @@ public final class Vectors {
      */
     public static Vector2d fromJoystickTank(Joystick stick, Joystick stick2,
             boolean invertedThrottle) {
-        int sign = invertedThrottle ? -1 : 1;
+        int sign = 1;
+        if(invertedThrottle)
+            sign *= -1;
         return new Vector2d(sign * -stick.getY(), sign * -stick2.getY());
     }
 
