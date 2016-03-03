@@ -123,7 +123,7 @@ public class RobotDriver implements Module {
         Vector2d thePowersThatBe;
 
         if (RobotCoDriver.isOverrideDriver()
-                || DriveSide.getMode() == DriveSide.MODE_POWER)
+                || DriveSide.getMode() != DriveSide.MODE_POWER)
             return;
 
         // Puts the Raw Encoders in the SmartDashboard

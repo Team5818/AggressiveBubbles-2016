@@ -187,7 +187,7 @@ public class RobotCoDriver implements Module {
         if (isOverrideDriver()) {
             RobotCommon.runningRobot.driveTrainController
                     .setPowerDirectly(ArcadeDriveCalculator.INSTANCE.compute(Vectors
-                            .fromJoystick(firstJoystick, false)));
+                            .fromJoystick(firstJoystick, true)));
 
         }
     }
