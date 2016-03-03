@@ -50,8 +50,8 @@ public class DriveSide implements EncoderManager, PIDOutput, MovingControl {
     private static double distanceKi = 0.00000001;
     private static double distanceKd = 0.05;
     private static double velocityKp = 0.12;
-    private static double velocityKi = 0.00000001;
-    private static double velocityKd = 0.05;
+    private static double velocityKi = 0.05;
+    private static double velocityKd = 0.00000001;
 
     // Initialize objects.
     private final CANTalon mainTalon;
@@ -97,11 +97,11 @@ public class DriveSide implements EncoderManager, PIDOutput, MovingControl {
         distanceKi =
                 Preferences.getInstance().getDouble("DistanceKi", 0.00000001);
         distanceKd = Preferences.getInstance().getDouble("DistanceKd", 0.05);
-        velocityKp = Preferences.getInstance().getDouble("VelocityKp", 0.12);
+        velocityKp = Preferences.getInstance().getDouble("VelocityKp", 0.001);
         velocityKi =
-                Preferences.getInstance().getDouble("VelocityKi", 0.00000001);
+                Preferences.getInstance().getDouble("VelocityKi", 0.0);
         velocityKd =
-                Preferences.getInstance().getDouble("Velocity" + "Kd", 0.05);
+                Preferences.getInstance().getDouble("Velocity" + "Kd", 0.0);
 
         if (mainTalon == null) {
             throw new IllegalArgumentException("mainTalon cannot be null");
@@ -252,7 +252,7 @@ public class DriveSide implements EncoderManager, PIDOutput, MovingControl {
         vel = Math.min(MAX_VELOCITY, Math.max(-MAX_VELOCITY, vel));
         resetPIDLoop();
         pidLoop.setPID(velocityKp, velocityKi, velocityKd);
-        setPIDFromSmart();
+        //setPIDFromSmart();
         pidWrite(vel / MAX_VELOCITY);
         try {
             Thread.sleep(100);

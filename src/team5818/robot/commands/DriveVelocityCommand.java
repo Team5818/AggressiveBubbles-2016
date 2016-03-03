@@ -12,7 +12,7 @@ public class DriveVelocityCommand extends QuickCommand {
     @Override
     protected void subexecute() {
         RobotCommon.runningRobot.driveTrainController
-                .setVelocity(new Vector2d(100, 100));
+                .setVelocity(new Vector2d(30, 30));
     }
 
 }

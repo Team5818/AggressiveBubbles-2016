@@ -22,7 +22,7 @@ import team5818.robot.util.Vectors;
 public class RobotDriver implements Module {
 
     private enum DriveType {
-        TANK, ARCADE;
+        TANK, ARCADE, ARCADE_VELOCITY;
     }
 
     private enum InputMode {
@@ -155,6 +155,9 @@ public class RobotDriver implements Module {
                     .setDriveCalculator(TankDriveCalculator.INSTANCE);
             driveType = DriveType.TANK;
             inputMode = InputMode.TWO_STICKS;
+        } else if (FIRST_JOYSTICK.getRawButton(BUT_DRIVE_VELOCITY)) {
+            driveType = DriveType.ARCADE_VELOCITY;
+
         }
 
         // Computing Driving Code
@@ -169,18 +172,25 @@ public class RobotDriver implements Module {
                 if (driveType == DriveType.TANK) {
                     thePowersThatBe = tankCalc.compute(Vectors.fromJoystickTank(
                             FIRST_JOYSTICK, SECOND_JOYSTICK, invertThrottle));
-                } else {
+                } else if (driveType == DriveType.ARCADE) {
                     thePowersThatBe = arcadeCalc.compute(Vectors.fromJoystick(
                             FIRST_JOYSTICK, SECOND_JOYSTICK, invertThrottle));
+                } else {
+                    thePowersThatBe = new Vector2d(50, 50);
+
                 }
                 break;
             default:
                 throw new IllegalStateException(
                         "Don't know what mode " + inputMode + " does");
         }
-
-        RobotCommon.runningRobot.driveTrainController
-                .setPowerDirectly(thePowersThatBe);
+        if (driveType == DriveType.ARCADE_VELOCITY) {
+            RobotCommon.runningRobot.driveTrainController
+                    .setVelocity(thePowersThatBe);
+        } else {
+            RobotCommon.runningRobot.driveTrainController
+                    .setPowerDirectly(thePowersThatBe);
+        }
     }
 
     @Override
