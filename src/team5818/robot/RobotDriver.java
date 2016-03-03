@@ -176,8 +176,9 @@ public class RobotDriver implements Module {
                     thePowersThatBe = arcadeCalc.compute(Vectors.fromJoystick(
                             FIRST_JOYSTICK, SECOND_JOYSTICK, invertThrottle));
                 } else {
-                    thePowersThatBe = new Vector2d(50, 50);
-
+                    //thePowersThatBe = new Vector2d(30,30);
+                    thePowersThatBe = arcadeCalc.compute(Vectors.fromJoystick(
+                            FIRST_JOYSTICK, SECOND_JOYSTICK, invertThrottle));
                 }
                 break;
             default:
@@ -186,7 +187,7 @@ public class RobotDriver implements Module {
         }
         if (driveType == DriveType.ARCADE_VELOCITY) {
             RobotCommon.runningRobot.driveTrainController
-                    .setVelocity(thePowersThatBe);
+                    .setPowerDirectly(thePowersThatBe);//change to setVelocity
         } else {
             RobotCommon.runningRobot.driveTrainController
                     .setPowerDirectly(thePowersThatBe);

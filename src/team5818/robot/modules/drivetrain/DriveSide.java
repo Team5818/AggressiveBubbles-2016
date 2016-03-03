@@ -49,9 +49,9 @@ public class DriveSide implements EncoderManager, PIDOutput, MovingControl {
     private static double distanceKp = 0.12;
     private static double distanceKi = 0.00000001;
     private static double distanceKd = 0.05;
-    private static double velocityKp = 0.12;
-    private static double velocityKi = 0.05;
-    private static double velocityKd = 0.00000001;
+    private static double velocityKp = 0.001;
+    private static double velocityKi = 0.0;
+    private static double velocityKd = 0.0;
 
     // Initialize objects.
     private final CANTalon mainTalon;
