@@ -37,7 +37,8 @@ public class RobotDriver implements Module {
             new Joystick(RobotConstants.DRIVER_SECOND_JOYSTICK_PORT);
 
     // First Joystick Buttons
-    private static final int BUT_ONESTICK_ARCADE = 11;
+    private static final int BUT_DRIVE_VELOCITY = 11;
+    private static final int BUT_DRIVE_POWER = 10;
     private static final int BUT_INVERT = 8;
     private static final int BUT_UNINVERT = 9;
     private static final int BUT_TWOSTICK_TANK = 7;
@@ -65,7 +66,7 @@ public class RobotDriver implements Module {
     private double armAngleCollect = 2.3;
     private double armAngleGround = -6;
 
-    //Initializing the JoystickButtons
+    // Initializing the JoystickButtons
     private JoystickButton butCollect =
             new JoystickButton(SECOND_JOYSTICK, BUT_COLLECT);
     private JoystickButton butUncollect =
@@ -78,11 +79,10 @@ public class RobotDriver implements Module {
             new JoystickButton(FIRST_JOYSTICK, BUT_ARM_ANGLE_ZERO);
     private JoystickButton setArmAngleGround =
             new JoystickButton(FIRST_JOYSTICK, BUT_ARM_ANGLE_GROUND);
-    
 
     @Override
     public void initModule() {
-        //Setting Preference values.
+        // Setting Preference values.
         armAngleLow =
                 Preferences.getInstance().getDouble("ArmAngleLow", armAngleLow);
         armAngleHigh = Preferences.getInstance().getDouble("ArmAngleHigh",
@@ -92,19 +92,19 @@ public class RobotDriver implements Module {
         armAngleGround = Preferences.getInstance().getDouble("ArmAngleGround",
                 armAngleGround);
 
-        //Setting local objects of singletons for easy access.
+        // Setting local objects of singletons for easy access.
         DriveSide leftDriveSide =
                 RobotCommon.runningRobot.driveTrain.getLeftMotors();
         DriveSide rightDriveSide =
                 RobotCommon.runningRobot.driveTrain.getRightMotors();
-        
-        //Adding the DriveSide PID Controllers to the smart Smart Dashboard.
+
+        // Adding the DriveSide PID Controllers to the smart Smart Dashboard.
         LiveWindow.addActuator("DriveSide", "Left",
                 leftDriveSide.getPIDController());
         LiveWindow.addActuator("DriveSide", "Right",
                 rightDriveSide.getPIDController());
 
-        //Assigning commands to their respective buttons.
+        // Assigning commands to their respective buttons.
         butCollect.whenPressed(new Collect(Collect.COLLECT_POWER));
         butCollect.whenReleased(new Collect(0));
         butUncollect.whenPressed(new Collect(-Collect.COLLECT_POWER));
@@ -113,8 +113,8 @@ public class RobotDriver implements Module {
         setArmAngleLow.whenPressed(new SetArmAngle(armAngleLow));
         setArmAngleCollect.whenPressed(new SetArmAngle(armAngleCollect));
         setArmAngleGround.whenPressed(new SetArmAngle(armAngleGround));
-        
-        //Setting driving mode to power.
+
+        // Setting driving mode to power.
         new SetDrivePower(0, 0).start();
     }
 
@@ -155,11 +155,6 @@ public class RobotDriver implements Module {
                     .setDriveCalculator(TankDriveCalculator.INSTANCE);
             driveType = DriveType.TANK;
             inputMode = InputMode.TWO_STICKS;
-        } else if (FIRST_JOYSTICK.getRawButton(BUT_ONESTICK_ARCADE)) {
-            RobotCommon.runningRobot.driveTrainController
-                    .setDriveCalculator(ArcadeDriveCalculator.INSTANCE);
-            driveType = DriveType.ARCADE;
-            inputMode = InputMode.ONE_STICK;
         }
 
         // Computing Driving Code
@@ -167,25 +162,25 @@ public class RobotDriver implements Module {
         TankDriveCalculator tankCalc = TankDriveCalculator.INSTANCE;
         switch (inputMode) {
             case ONE_STICK:
-                thePowersThatBe =
-                        arcadeCalc.compute(Vectors.fromJoystick(FIRST_JOYSTICK, invertThrottle));
+                thePowersThatBe = arcadeCalc.compute(
+                        Vectors.fromJoystick(FIRST_JOYSTICK, invertThrottle));
                 break;
             case TWO_STICKS:
                 if (driveType == DriveType.TANK) {
-                    thePowersThatBe = tankCalc.compute(Vectors.fromJoystickTank(FIRST_JOYSTICK,
-                            SECOND_JOYSTICK, invertThrottle));
+                    thePowersThatBe = tankCalc.compute(Vectors.fromJoystickTank(
+                            FIRST_JOYSTICK, SECOND_JOYSTICK, invertThrottle));
                 } else {
-                    thePowersThatBe = arcadeCalc.compute(Vectors.fromJoystick(FIRST_JOYSTICK,
-                            SECOND_JOYSTICK, invertThrottle));
+                    thePowersThatBe = arcadeCalc.compute(Vectors.fromJoystick(
+                            FIRST_JOYSTICK, SECOND_JOYSTICK, invertThrottle));
                 }
                 break;
             default:
                 throw new IllegalStateException(
                         "Don't know what mode " + inputMode + " does");
         }
-        
-        
-        RobotCommon.runningRobot.driveTrainController.setPowerDirectly(thePowersThatBe);
+
+        RobotCommon.runningRobot.driveTrainController
+                .setPowerDirectly(thePowersThatBe);
     }
 
     @Override
