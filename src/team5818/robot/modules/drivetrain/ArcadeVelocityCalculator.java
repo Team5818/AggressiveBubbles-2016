@@ -16,7 +16,7 @@ public enum ArcadeVelocityCalculator implements DriveCalculator{
     public Vector2d compute(Vector2d leftAndRight) {
         ArcadeDriveCalculator arcadeCalc = ArcadeDriveCalculator.INSTANCE;
         Vector2d arcadePowers = arcadeCalc.compute(leftAndRight);
-        Vector2d finalPowers = new Vector2d(arcadePowers.getX() * 100, arcadePowers.getY()*100);
+        Vector2d finalPowers = new Vector2d(arcadePowers.getX() * 50, arcadePowers.getY()*50);
         
         return finalPowers;
     }

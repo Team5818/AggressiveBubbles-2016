@@ -11,6 +11,7 @@ import team5818.robot.commands.SetArmAngle;
 import team5818.robot.commands.SetDrivePower;
 import team5818.robot.modules.Module;
 import team5818.robot.modules.drivetrain.ArcadeDriveCalculator;
+import team5818.robot.modules.drivetrain.ArcadeVelocityCalculator;
 import team5818.robot.modules.drivetrain.DriveSide;
 import team5818.robot.modules.drivetrain.TankDriveCalculator;
 import team5818.robot.util.Vector2d;
@@ -183,6 +184,7 @@ public class RobotDriver implements Module {
         // Computing Driving Code
         ArcadeDriveCalculator arcadeCalc = ArcadeDriveCalculator.INSTANCE;
         TankDriveCalculator tankCalc = TankDriveCalculator.INSTANCE;
+        ArcadeVelocityCalculator velCalc = ArcadeVelocityCalculator.INSTANCE;
         switch (inputMode) {
             case ONE_STICK:
                 thePowersThatBe = arcadeCalc.compute(
@@ -196,7 +198,8 @@ public class RobotDriver implements Module {
                     thePowersThatBe = arcadeCalc.compute(Vectors.fromJoystick(
                             FIRST_JOYSTICK, SECOND_JOYSTICK, invertThrottle));
                 } else {
-                    thePowersThatBe = new Vector2d(30,30);
+                    thePowersThatBe = velCalc.compute(Vectors.fromJoystick(
+                            FIRST_JOYSTICK, SECOND_JOYSTICK, invertThrottle));
 
                 }
                 break;
