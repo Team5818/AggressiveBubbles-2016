@@ -98,7 +98,7 @@ public class DriveTrain implements Module {
     @Override
     public void teleopPeriodicModule() {
         right.setPIDFromSmart();
-        Stream.of(left, right).forEach(DriveSide::attemptStopIfOnTarget);
+        //Stream.of(left, right).forEach(DriveSide::attemptStopIfOnTarget);
         SmartDashboard.putNumber("RightVals", right.getVelocity());
         SmartDashboard.putNumber("RightAvgError",
                 right.getPIDController().getAvgError());

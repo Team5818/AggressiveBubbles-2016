@@ -121,7 +121,7 @@ public class RobotDriver implements Module {
     @Override
     public void teleopPeriodicModule() {
         
-        if(FIRST_JOYSTICK.getAxis(RobotConstants.HAT_Y_PORT) != 0) {
+        if(FIRST_JOYSTICK.getRawAxis(RobotConstants.HAT_Y_PORT) != 0) {
             if(!hasClickedHatY) {
                 hasClickedHatY = true;
                 
@@ -130,7 +130,7 @@ public class RobotDriver implements Module {
         else
             hasClickedHatY = false;
         
-        if(FIRST_JOYSTICK.getAxis(RobotConstants.HAT_X_PORT) != 0) {
+        if(FIRST_JOYSTICK.getRawAxis(RobotConstants.HAT_X_PORT) != 0) {
             if(!hasClickedHatX) {
                 hasClickedHatX = true;
                 
@@ -141,7 +141,7 @@ public class RobotDriver implements Module {
         
         //Drives the robot if it should be done so by Driver.
         if (!RobotCoDriver.isOverrideDriver()
-                || DriveSide.getMode() == DriveSide.MODE_POWER)
+                && DriveSide.getMode() != DriveSide.MODE_DISTANCE)
             drive();
 
         // Puts the Raw Encoders in the SmartDashboard
@@ -196,9 +196,8 @@ public class RobotDriver implements Module {
                     thePowersThatBe = arcadeCalc.compute(Vectors.fromJoystick(
                             FIRST_JOYSTICK, SECOND_JOYSTICK, invertThrottle));
                 } else {
-                    //thePowersThatBe = new Vector2d(30,30);
-                    thePowersThatBe = arcadeCalc.compute(Vectors.fromJoystick(
-                            FIRST_JOYSTICK, SECOND_JOYSTICK, invertThrottle));
+                    thePowersThatBe = new Vector2d(30,30);
+
                 }
                 break;
             default:
@@ -207,7 +206,7 @@ public class RobotDriver implements Module {
         }
         if (driveType == DriveType.ARCADE_VELOCITY) {
             RobotCommon.runningRobot.driveTrainController
-                    .setPowerDirectly(thePowersThatBe);//change to setVelocity
+                    .setVelocity(thePowersThatBe);
         } else {
             RobotCommon.runningRobot.driveTrainController
                     .setPowerDirectly(thePowersThatBe);

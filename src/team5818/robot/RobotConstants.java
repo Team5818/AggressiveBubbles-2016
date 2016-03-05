@@ -88,8 +88,8 @@ public final class RobotConstants {
     /**
      * The port number for the Hat axis
      */
-    public static final int HAT_Y_AXIS = 3;
-    public static final int HAT_X_AXIS = 4;
+    public static final int HAT_Y_PORT = 3;
+    public static final int HAT_X_PORT = 4;
     
     
     
