@@ -43,7 +43,7 @@ public class DriveSide implements EncoderManager, PIDOutput, MovingControl {
     private static final double DEFAULT_MAX_POWER = 1.0;
 
     // The driving mode that the robot is in.
-    private static int driveMode = MODE_POWER;
+    public static int driveMode = MODE_POWER;
 
     // Initialize all the pid constants.
     private static double distanceKp = 0.12;
@@ -259,7 +259,6 @@ public class DriveSide implements EncoderManager, PIDOutput, MovingControl {
             }
         }
         pidLoop.enable();
-        setDriveMode(MODE_VELOCITY);
         pidLoop.setPID(velocityKp, velocityKi, velocityKd);
         // setPIDFromSmart();
         pidLoop.setOutputRange(-DEFAULT_MAX_POWER, DEFAULT_MAX_POWER);

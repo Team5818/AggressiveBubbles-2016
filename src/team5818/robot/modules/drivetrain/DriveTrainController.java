@@ -10,6 +10,18 @@ import team5818.robot.util.Vector2d;
  */
 public class DriveTrainController extends Subsystem {
     
+    /**
+     * The mode for setting direct power to the drive side.
+     */
+    public static final int MODE_POWER = 0;
+    /**
+     * The mode for setting velocity to the drive side.
+     */
+    public static final int MODE_VELOCITY = 1;
+    /**
+     * The mode for setting drive distance to the drive side.
+     */
+    public static final int MODE_DISTANCE = 2;
 
     private static final double ROBOT_WIDTH_IN_INCHES = 2.3 * 12;
 
@@ -46,6 +58,7 @@ public class DriveTrainController extends Subsystem {
     public void setVelocity(Vector2d vector2d) {
         driveTrain.getLeftMotors().setVelocity(vector2d.getX());
         driveTrain.getRightMotors().setVelocity(vector2d.getY());
+        DriveSide.driveMode = MODE_VELOCITY;
     }
 
     public void recalculateAndSetPower(Vector2d joystickData) {
