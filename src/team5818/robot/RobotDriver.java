@@ -43,8 +43,6 @@ public class RobotDriver implements Module {
     private static final int BUT_UNINVERT = 9;
     private static final int BUT_TWOSTICK_TANK = 7;
     private static final int BUT_TWOSTICK_ARCADE = 6;
-
-    // First Joystick Buttons
     private static final int BUT_ARM_ANGLE_HIGH = 5;
     private static final int BUT_ARM_ANGLE_LOW = 4;
     private static final int BUT_ARM_ANGLE_ZERO = 3;
@@ -120,23 +118,24 @@ public class RobotDriver implements Module {
 
     @Override
     public void teleopPeriodicModule() {
-        Vector2d thePowersThatBe;
 
-        if (RobotCoDriver.isOverrideDriver()
-                || DriveSide.getMode() != DriveSide.MODE_POWER)
-            return;
+        if (!RobotCoDriver.isOverrideDriver()
+                || DriveSide.getMode() == DriveSide.MODE_POWER)
+            drive();
 
         // Puts the Raw Encoders in the SmartDashboard
-        if (SECOND_JOYSTICK.getRawButton(BUT_DEBUG)) {
-            SmartDashboard.putNumber("Drive Train Left Pos",
-                    RobotCommon.runningRobot.driveTrain.getLeftMotors()
-                            .getEncPosRaw());
-            SmartDashboard.putNumber("Drive Train Right Pos",
-                    RobotCommon.runningRobot.driveTrain.getRightMotors()
-                            .getEncPosRaw());
-        }
+        if (SECOND_JOYSTICK.getRawButton(BUT_DEBUG))
+            debug();
+        
+    }
 
-        // Inverts the controls if needed.
+    /**
+     * 
+     */
+    public void drive() {
+        Vector2d thePowersThatBe;
+        
+        //Inverting buttons
         if (FIRST_JOYSTICK.getRawButton(BUT_INVERT)) {
             invertThrottle = true;
         }
@@ -193,7 +192,19 @@ public class RobotDriver implements Module {
                     .setPowerDirectly(thePowersThatBe);
         }
     }
-
+    
+    /**
+     * 
+     */
+    public void debug() {
+        SmartDashboard.putNumber("Drive Train Left Pos",
+                RobotCommon.runningRobot.driveTrain.getLeftMotors()
+                        .getEncPosRaw());
+        SmartDashboard.putNumber("Drive Train Right Pos",
+                RobotCommon.runningRobot.driveTrain.getRightMotors()
+                        .getEncPosRaw());
+    }
+    
     @Override
     public void endModule() {
     }
