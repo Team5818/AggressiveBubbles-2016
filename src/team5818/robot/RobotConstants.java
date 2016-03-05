@@ -85,6 +85,13 @@ public final class RobotConstants {
      */
     public static final int CODRIVER_SECOND_JOYSTICK_PORT = 3;
     
+    /**
+     * The port number for the Hat axis
+     */
+    public static final int HAT_Y_AXIS = 3;
+    public static final int HAT_X_AXIS = 4;
+    
+    
     
 
     // TODO redo the math for ROBOT_ENCODER_SCALE

@@ -58,7 +58,9 @@ public class RobotDriver implements Module {
 
     // Weather to invert the throttle
     private static boolean invertThrottle = false;
-
+    private boolean hasClickedHatY = false;
+    private boolean hasClickedHatX = true;
+    
     private double armAngleHigh = 85;
     private double armAngleLow = 40;
     private double armAngleCollect = 2.3;
@@ -118,7 +120,26 @@ public class RobotDriver implements Module {
 
     @Override
     public void teleopPeriodicModule() {
-
+        
+        if(FIRST_JOYSTICK.getAxis(RobotConstants.HAT_Y_PORT) != 0) {
+            if(!hasClickedHatY) {
+                hasClickedHatY = true;
+                
+            }
+        }
+        else
+            hasClickedHatY = false;
+        
+        if(FIRST_JOYSTICK.getAxis(RobotConstants.HAT_X_PORT) != 0) {
+            if(!hasClickedHatX) {
+                hasClickedHatX = true;
+                
+            }
+        }
+        else
+            hasClickedHatX = false;
+        
+        //Drives the robot if it should be done so by Driver.
         if (!RobotCoDriver.isOverrideDriver()
                 || DriveSide.getMode() == DriveSide.MODE_POWER)
             drive();
@@ -130,7 +151,7 @@ public class RobotDriver implements Module {
     }
 
     /**
-     * 
+     * Performs the driving calculation.
      */
     public void drive() {
         Vector2d thePowersThatBe;
@@ -194,7 +215,7 @@ public class RobotDriver implements Module {
     }
     
     /**
-     * 
+     * Does debugging stuff if needed.
      */
     public void debug() {
         SmartDashboard.putNumber("Drive Train Left Pos",
