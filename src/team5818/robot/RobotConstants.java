@@ -6,7 +6,7 @@ import edu.wpi.first.wpilibj.Joystick.ButtonType;
  * Controllers for the robot.
  */
 public final class RobotConstants {
-    
+
     /**
      * width of the robot
      */
@@ -84,21 +84,23 @@ public final class RobotConstants {
      * Port for the co-driver's 2nd joystick.
      */
     public static final int CODRIVER_SECOND_JOYSTICK_PORT = 3;
-    
+
     /**
      * The port number for the Hat axis
      */
-    public static final int HAT_Y_PORT = 3;
-    public static final int HAT_X_PORT = 4;
-    
-    
-    
+    public static final int HAT_Y_PORT = 2;
+    public static final int HAT_X_PORT = 3;
 
     // TODO redo the math for ROBOT_ENCODER_SCALE
     /**
      * The encoder scale to convert to inches/tick.
      */
     public static final double ROBOT_ENCODER_SCALE = .020603;
+    /**
+     * The deadband on the joysticks. It ranges from 0 with no deadband, and 1
+     * with the stick not working
+     */
+    public static final double JOYSTICK_DEADBAND = 0.15;
 
     private RobotConstants() {
     }

@@ -16,6 +16,7 @@ public class SetDrivePower extends Command {
     public SetDrivePower(int pl, int pr) {
         pLeft = pl;
         pRight = pr;
+        requires(RobotCommon.runningRobot.driveTrainController);
     }
 
     @Override

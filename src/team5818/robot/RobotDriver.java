@@ -1,5 +1,6 @@
 package team5818.robot;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
@@ -9,6 +10,7 @@ import team5818.robot.commands.Collect;
 import team5818.robot.commands.DrivePower;
 import team5818.robot.commands.SetArmAngle;
 import team5818.robot.commands.SetDrivePower;
+import team5818.robot.commands.SpinRobot;
 import team5818.robot.modules.Module;
 import team5818.robot.modules.drivetrain.ArcadeDriveCalculator;
 import team5818.robot.modules.drivetrain.ArcadeVelocityCalculator;
@@ -51,6 +53,10 @@ public class RobotDriver implements Module {
 
     // Second Joystick Buttons
     private static final int BUT_DEBUG = 12;
+    private static final int BUT_ROTATE_CW_90 = 6;
+    private static final int BUT_ROTATE_CCW_90 = 5;
+    private static final int BUT_ROTATE_CW_180 = 4;
+    private static final int BUT_ROTATE_CCW_180 = 3;
     private static final int BUT_UNCOLLECT = 2;
     private static final int BUT_COLLECT = 1;
 
@@ -59,9 +65,8 @@ public class RobotDriver implements Module {
 
     // Weather to invert the throttle
     private static boolean invertThrottle = false;
-    private boolean hasClickedHatY = false;
-    private boolean hasClickedHatX = true;
-    
+    private boolean hasStoppedRobot = false;
+
     private double armAngleHigh = 85;
     private double armAngleLow = 40;
     private double armAngleCollect = 2.3;
@@ -80,6 +85,14 @@ public class RobotDriver implements Module {
             new JoystickButton(FIRST_JOYSTICK, BUT_ARM_ANGLE_ZERO);
     private JoystickButton setArmAngleGround =
             new JoystickButton(FIRST_JOYSTICK, BUT_ARM_ANGLE_GROUND);
+    private JoystickButton rotateCW90 =
+            new JoystickButton(SECOND_JOYSTICK, BUT_ROTATE_CW_90);
+    private JoystickButton rotateCCW90 =
+            new JoystickButton(SECOND_JOYSTICK, BUT_ROTATE_CCW_90);
+    private JoystickButton rotateCW180 =
+            new JoystickButton(SECOND_JOYSTICK, BUT_ROTATE_CW_180);
+    private JoystickButton rotateCCW180 =
+            new JoystickButton(SECOND_JOYSTICK, BUT_ROTATE_CCW_180);
 
     @Override
     public void initModule() {
@@ -114,6 +127,10 @@ public class RobotDriver implements Module {
         setArmAngleLow.whenPressed(new SetArmAngle(armAngleLow));
         setArmAngleCollect.whenPressed(new SetArmAngle(armAngleCollect));
         setArmAngleGround.whenPressed(new SetArmAngle(armAngleGround));
+        rotateCW90.whenPressed(new SpinRobot(90));
+        rotateCCW90.whenPressed(new SpinRobot(-90));
+        rotateCW180.whenPressed(new SpinRobot(180));
+        rotateCCW180.whenPressed(new SpinRobot(-180));
 
         // Setting driving mode to power.
         new SetDrivePower(0, 0).start();
@@ -121,34 +138,34 @@ public class RobotDriver implements Module {
 
     @Override
     public void teleopPeriodicModule() {
-        
-        if(FIRST_JOYSTICK.getRawAxis(RobotConstants.HAT_Y_PORT) != 0) {
-            if(!hasClickedHatY) {
-                hasClickedHatY = true;
-                
-            }
-        }
-        else
-            hasClickedHatY = false;
-        
-        if(FIRST_JOYSTICK.getRawAxis(RobotConstants.HAT_X_PORT) != 0) {
-            if(!hasClickedHatX) {
-                hasClickedHatX = true;
-                
-            }
-        }
-        else
-            hasClickedHatX = false;
-        
-        //Drives the robot if it should be done so by Driver.
-        if (!RobotCoDriver.isOverrideDriver()
-                && DriveSide.getMode() != DriveSide.MODE_DISTANCE)
+
+        // Drives the robot if it should be done so by Driver.
+        if (!RobotCoDriver.isOverrideDriver() && usingJoystick()) {
             drive();
+            hasStoppedRobot = false;
+        } else {
+            if (!hasStoppedRobot) {
+                new DrivePower(0, 0).start();
+                hasStoppedRobot = true;
+            }
+        }
 
         // Puts the Raw Encoders in the SmartDashboard
         if (SECOND_JOYSTICK.getRawButton(BUT_DEBUG))
             debug();
-        
+
+    }
+
+    private boolean usingJoystick() {
+        if (Math.abs(FIRST_JOYSTICK.getX()) < RobotConstants.JOYSTICK_DEADBAND
+                && Math.abs(FIRST_JOYSTICK
+                        .getY()) < RobotConstants.JOYSTICK_DEADBAND
+                && Math.abs(SECOND_JOYSTICK
+                        .getX()) < RobotConstants.JOYSTICK_DEADBAND
+                && Math.abs(SECOND_JOYSTICK
+                        .getY()) < RobotConstants.JOYSTICK_DEADBAND)
+            return false;
+        return true;
     }
 
     /**
@@ -156,8 +173,7 @@ public class RobotDriver implements Module {
      */
     public void drive() {
         Vector2d thePowersThatBe;
-        
-        //Inverting buttons
+        // Inverting buttons
         if (FIRST_JOYSTICK.getRawButton(BUT_INVERT)) {
             invertThrottle = true;
         }
@@ -180,7 +196,6 @@ public class RobotDriver implements Module {
             driveType = DriveType.ARCADE_VELOCITY;
 
         }
-
         // Computing Driving Code
         ArcadeDriveCalculator arcadeCalc = ArcadeDriveCalculator.INSTANCE;
         TankDriveCalculator tankCalc = TankDriveCalculator.INSTANCE;
@@ -198,8 +213,9 @@ public class RobotDriver implements Module {
                     thePowersThatBe = arcadeCalc.compute(Vectors.fromJoystick(
                             FIRST_JOYSTICK, SECOND_JOYSTICK, invertThrottle));
                 } else {
-                    thePowersThatBe = velCalc.compute(Vectors.fromJoystick(
-                            FIRST_JOYSTICK, SECOND_JOYSTICK, invertThrottle));
+                    thePowersThatBe =
+                            velCalc.compute(Vectors.fromJoystick(FIRST_JOYSTICK,
+                                    SECOND_JOYSTICK, invertThrottle));
 
                 }
                 break;
@@ -214,8 +230,9 @@ public class RobotDriver implements Module {
             RobotCommon.runningRobot.driveTrainController
                     .setPowerDirectly(thePowersThatBe);
         }
+
     }
-    
+
     /**
      * Does debugging stuff if needed.
      */
@@ -227,7 +244,7 @@ public class RobotDriver implements Module {
                 RobotCommon.runningRobot.driveTrain.getRightMotors()
                         .getEncPosRaw());
     }
-    
+
     @Override
     public void endModule() {
     }

@@ -8,13 +8,12 @@ import team5818.robot.util.Vector2d;
 public class DrivePower extends Command{
     
     private DriveTrain train = RobotCommon.runningRobot.driveTrain;
-    private double driveDistance;
     private double drivePower;
 
-    public DrivePower(double distance, double power, double timeout){
-        driveDistance = distance;
+    public DrivePower(double power, double timeout){
         drivePower = power;
         setTimeout(timeout);
+        requires(RobotCommon.runningRobot.driveTrainController);
     }
     
     @Override
@@ -31,7 +30,7 @@ public class DrivePower extends Command{
 
     @Override
     protected boolean isFinished() {
-        return (train.getAverageDistance() >= driveDistance || isTimedOut());
+        return true;
 
     }
 
