@@ -49,9 +49,10 @@ public class DriveSide implements EncoderManager, PIDOutput, MovingControl {
     private static double distanceKp = 0.12;
     private static double distanceKi = 0.00000001;
     private static double distanceKd = 0.05;
-    private static double velocityKp = 0.0008;
+    private static double velocityKp = 0.0012;
     private static double velocityKi = 0.0001;
     private static double velocityKd = 0.0;
+    private static double velocityKf = 0.002;
 
     // Initialize objects.
     private final CANTalon mainTalon;
@@ -97,10 +98,11 @@ public class DriveSide implements EncoderManager, PIDOutput, MovingControl {
         distanceKi =
                 Preferences.getInstance().getDouble("DistanceKi", 0.00000001);
         distanceKd = Preferences.getInstance().getDouble("DistanceKd", 0.05);
-        velocityKp = Preferences.getInstance().getDouble("VelocityKp", 0.0008);
+        velocityKp = Preferences.getInstance().getDouble("VelocityKp", 0.0012);
         velocityKi = Preferences.getInstance().getDouble("VelocityKi", 0.0001);
         velocityKd =
                 Preferences.getInstance().getDouble("Velocity" + "Kd", 0.0);
+        velocityKf = Preferences.getInstance().getDouble("VelocityKf", 0.002);
 
         if (mainTalon == null) {
             throw new IllegalArgumentException("mainTalon cannot be null");
