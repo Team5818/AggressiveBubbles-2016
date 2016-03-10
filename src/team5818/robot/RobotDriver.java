@@ -140,8 +140,11 @@ public class RobotDriver implements Module {
     public void teleopPeriodicModule() {
 
         // Drives the robot if it should be done so by Driver.
-        if (!RobotCoDriver.isOverrideDriver() && usingJoystick()) {
-            drive();
+        if (!RobotCoDriver.isOverrideDriver()) {
+            buttons();
+            if(usingJoystick()){
+                drive();
+            }    
             hasStoppedRobot = false;
         } else {
             if (!hasStoppedRobot) {
@@ -163,16 +166,15 @@ public class RobotDriver implements Module {
                 && Math.abs(SECOND_JOYSTICK
                         .getX()) < RobotConstants.JOYSTICK_DEADBAND
                 && Math.abs(SECOND_JOYSTICK
-                        .getY()) < RobotConstants.JOYSTICK_DEADBAND)
+                        .getY()) < RobotConstants.JOYSTICK_DEADBAND){
+            Vector2d stop = new Vector2d(0,0);
+            RobotCommon.runningRobot.driveTrainController.setPowerDirectly(stop);
             return false;
+        }
         return true;
     }
-
-    /**
-     * Performs the driving calculation.
-     */
-    public void drive() {
-        Vector2d thePowersThatBe;
+    
+    public void buttons(){
         // Inverting buttons
         if (FIRST_JOYSTICK.getRawButton(BUT_INVERT)) {
             invertThrottle = true;
@@ -196,6 +198,14 @@ public class RobotDriver implements Module {
             driveType = DriveType.ARCADE_VELOCITY;
 
         }
+    }
+
+    /**
+     * Performs the driving calculation.
+     */
+    public void drive() {
+        Vector2d thePowersThatBe;
+
         // Computing Driving Code
         ArcadeDriveCalculator arcadeCalc = ArcadeDriveCalculator.INSTANCE;
         TankDriveCalculator tankCalc = TankDriveCalculator.INSTANCE;

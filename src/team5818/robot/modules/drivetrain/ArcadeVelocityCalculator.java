@@ -9,7 +9,7 @@ import team5818.robot.util.Vector2d;
 public enum ArcadeVelocityCalculator implements DriveCalculator{
     /**
      * the only instance of this calculator
-     */
+     */   
     INSTANCE;
     public static final int MIN_VEL = 10;
     double velX;
@@ -20,11 +20,11 @@ public enum ArcadeVelocityCalculator implements DriveCalculator{
   
         ArcadeDriveCalculator arcadeCalc = ArcadeDriveCalculator.INSTANCE;
         Vector2d arcadePowers = arcadeCalc.compute(leftAndRight);
-        velX = arcadePowers.getX() * 50;
+        velX = arcadePowers.getX() * 100;
         if(Math.abs(velX) <= MIN_VEL){
             velX = 0.0;
         }
-        velY = arcadePowers.getY()*50;
+        velY = arcadePowers.getY()*100;
         if(Math.abs(velY) <= MIN_VEL){
             velY = 0.0;
         }
