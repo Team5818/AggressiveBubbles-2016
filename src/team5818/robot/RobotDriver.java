@@ -168,7 +168,12 @@ public class RobotDriver implements Module {
                 && Math.abs(SECOND_JOYSTICK
                         .getY()) < RobotConstants.JOYSTICK_DEADBAND){
             Vector2d stop = new Vector2d(0,0);
-            RobotCommon.runningRobot.driveTrainController.setPowerDirectly(stop);
+            if(driveType == DriveType.ARCADE_VELOCITY){
+                RobotCommon.runningRobot.driveTrainController.setVelocity(stop);
+            }
+            else{
+                RobotCommon.runningRobot.driveTrainController.setPowerDirectly(stop);
+            }
             return false;
         }
         return true;
