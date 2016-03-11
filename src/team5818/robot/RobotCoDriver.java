@@ -155,6 +155,11 @@ public class RobotCoDriver implements Module {
         butLedOff.whenPressed(new LEDToggle(false));
         butCollect.whenPressed(new Collect(Collect.COLLECT_POWER));
         butCollect.whenReleased(new Collect(0));
+        /*
+         * TODO Check if this call is needed
+         * butSwitchShootFeed .whenPressed(new
+         * SwitchFeed(ComputerVision.CAMERA_SHOOTER));
+         */
         butSwitchShootFeed
                 .whenPressed(new SwitchFeed(ComputerVision.CAMERA_SHOOTER));
         butSwitchDriverFeed
@@ -186,8 +191,8 @@ public class RobotCoDriver implements Module {
         // Control the DriverTrain if Overriding Drive Control
         if (isOverrideDriver()) {
             RobotCommon.runningRobot.driveTrainController
-                    .setPowerDirectly(ArcadeDriveCalculator.INSTANCE.compute(Vectors
-                            .fromJoystick(firstJoystick, true)));
+                    .setPowerDirectly(ArcadeDriveCalculator.INSTANCE.compute(
+                            Vectors.fromJoystick(firstJoystick, true)));
 
         }
     }

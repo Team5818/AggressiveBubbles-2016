@@ -23,10 +23,12 @@ public class SwitchFeed extends Command {
     @Override
     protected void initialize() {
         RobotCommon.runningRobot.vision.See.ChangeFeed(feed);
+        
         if (feed == ComputerVision.CAMERA_DRIVER)
             new LEDToggle(false).start();
         else
             new LEDToggle(true).start();
+       
     }
 
     @Override
