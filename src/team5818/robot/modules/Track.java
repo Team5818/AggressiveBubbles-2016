@@ -6,12 +6,13 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Track implements Module {
 
-    public double BlobCount = -1;
-    public double BlobX = 0;
-    public double BlobY = 0;
-    public double BlobSize = 0;
-    public double ImageWidth = 0;
-    public double ImageHeight = 0;
+    public double blobCount = -1;
+    public double blobWidth = 0;
+    public double blobHeight = 0;
+    public double imageWidth = 0;
+    public double imageHeight = 0;
+    public double blobCenterX = 0;
+    public double blobCenterY = 0;
     public NetworkTable RoboData;
 
     public Track() {
@@ -20,15 +21,16 @@ public class Track implements Module {
     }
 
     public void GetData() {
-        BlobCount = RoboData.getDouble("BLOB_COUNT");
-        ImageWidth = RoboData.getDouble("IMAGE_WIDTH");
-        ImageHeight = RoboData.getDouble("IMAGE_HEIGHT");
-        BlobX = RoboData.getDouble("COG_X");
-        BlobY = RoboData.getDouble("COG_Y");
-        BlobSize = RoboData.getDouble("COG_BOX_SIZE");
+        blobCount = RoboData.getDouble("BLOB_COUNT");
+        imageWidth = RoboData.getDouble("IMAGE_WIDTH");
+        imageHeight = RoboData.getDouble("IMAGE_HEIGHT");
+        blobWidth = RoboData.getDouble("target_width");
+        blobHeight = RoboData.getDouble("target_height");
+    }
 
-        SmartDashboard.putNumber("blobs", BlobCount);
-        SmartDashboard.putNumber("BLocation", BlobX);
+    public void CalculateCenter() {
+        blobCenterX = blobWidth/2;
+        blobCenterY = blobHeight/2;
     }
 
     @Override
