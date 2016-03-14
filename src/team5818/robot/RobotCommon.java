@@ -28,7 +28,6 @@ import team5818.robot.modules.Track;
 import team5818.robot.modules.VisionThread;
 import team5818.robot.modules.drivetrain.ArcadeDriveCalculator;
 import team5818.robot.modules.drivetrain.DriveTrain;
-import team5818.robot.modules.drivetrain.DriveTrainController;
 
 /**
  * Run from {@link Robot}.
@@ -71,9 +70,6 @@ public class RobotCommon extends IterativeRobot {
     /**
      * A helper for the {@link #driveTrain}.
      */
-    public final DriveTrainController driveTrainController =
-            new DriveTrainController(driveTrain,
-                    ArcadeDriveCalculator.INSTANCE);
     private final RobotDriver driver = addModule(new RobotDriver());
     private final RobotCoDriver coDriver = addModule(new RobotCoDriver());
     public final FlyWheel lowerFlywheel = addModule(new FlyWheel(new CANTalon(RobotConstants.TALON_FLYWHEEL_LOWER), 5.0 / 18.8, 140.0, true));

@@ -12,21 +12,21 @@ public class DriveDistanceCommand extends Command {
     double timeout;
     
     public DriveDistanceCommand(double distanceInches, double maxPower, double timeoutSeconds) {
-        requires(RobotCommon.runningRobot.driveTrainController);
+        requires(RobotCommon.runningRobot.driveTrain);
         dist = distanceInches;
         maxP = maxPower;
         timeout = timeoutSeconds;
     }
     
     public DriveDistanceCommand(double distanceInches, double maxPower) {
-        requires(RobotCommon.runningRobot.driveTrainController);
+        requires(RobotCommon.runningRobot.driveTrain);
         dist = distanceInches;
         maxP = maxPower;
         timeout = 10.0;
     }
     
     public DriveDistanceCommand(double distanceInches) {
-        requires(RobotCommon.runningRobot.driveTrainController);
+        requires(RobotCommon.runningRobot.driveTrain);
         dist = distanceInches;
         maxP = 1.0;
         timeout = 10.0;
@@ -41,8 +41,8 @@ public class DriveDistanceCommand extends Command {
     @Override
     protected void initialize() {
         this.setTimeout(timeout);
-        RobotCommon.runningRobot.driveTrainController
-                .driveToTargetXInchesAway(dist, maxP);
+        RobotCommon.runningRobot.driveTrain
+                .setDriveDistance(dist, maxP);
     }
 
     @Override

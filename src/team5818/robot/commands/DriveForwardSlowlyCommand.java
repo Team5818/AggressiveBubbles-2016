@@ -5,12 +5,12 @@ import team5818.robot.RobotCommon;
 public class DriveForwardSlowlyCommand extends QuickCommand {
 
     public DriveForwardSlowlyCommand() {
-        requires(RobotCommon.runningRobot.driveTrainController);
+        requires(RobotCommon.runningRobot.driveTrain);
     }
 
     @Override
     protected void subexecute() {
-        RobotCommon.runningRobot.driveTrainController
-                .driveToTargetXInchesAway(5);
+        RobotCommon.runningRobot.driveTrain
+                .setDriveDistance(5);
     }
 }
