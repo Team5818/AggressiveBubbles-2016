@@ -27,8 +27,8 @@ public class ComputerVision {
      */
     public static final int CAMERA_SHOOTER = 2;
 
-    private USBCam camDriver;
-    private USBCam camShooter;
+    private USBCam cam1;
+    private USBCam cam2;
     private USBCam currcam;
     private Image frame;
     private Solenoid LEDLight;
@@ -45,39 +45,40 @@ public class ComputerVision {
             DriverStation.reportError("LED Ring Not Set Up", false);
         }
 
-        // Set up camDriver
+        // Set up Cam1
         try {
-            camDriver = new USBCam("cam0");
+            cam1 = new USBCam("cam0");
 
-            if (camDriver != null) {
-                camDriver.setSize(640, 360);
-                camDriver.setFPS(30);
-                camDriver.updateSettings();
-                camDriver.openCamera();
+            if (cam1 != null) {
+                cam1.setSize(640, 360);
+                cam1.setFPS(30);
+                cam1.updateSettings();
+                cam1.openCamera();
             }
         } catch (Exception e) {
 
-            DriverStation.reportError("camDriver is not attached.\n", false);
+            DriverStation.reportError("Cam1 is not attached.\n", false);
         }
 
-        // Set up camShooter
+        // Set up Cam2
         try {
-            camShooter = new USBCam("cam1");
+            cam2 = new USBCam("cam1");
 
-            if (camShooter != null) {
-                camShooter.setSize(320, 240);
-                camShooter.setFPS(30);
-                camShooter.updateSettings();
-                camShooter.openCamera();
+            if (cam2 != null) {
+                cam2.setSize(320, 240);
+                cam2.setFPS(30);
+                cam2.setExposureManual(10);
+                cam2.updateSettings();
+                cam2.openCamera();
             }
         } catch (Exception e) {
 
-            DriverStation.reportError("camShooter is not attached.\n", false);
+            DriverStation.reportError("Cam2 is not attached.\n", false);
         }
 
         // Set Frame, Current Camera, and Restart Capture
         frame = NIVision.imaqCreateImage(NIVision.ImageType.IMAGE_RGB, 0);
-        currcam = camDriver;
+        currcam = cam1;
         // TODO change to Camera_Driver when done working on vision
         this.ChangeFeed(CAMERA_SHOOTER);
         currcam.startCapture();
@@ -95,10 +96,10 @@ public class ComputerVision {
      * Stops the camera feed transmission to dashboard.
      */
     public synchronized void EndCV() {
-        if (currcam == camDriver)
-            camDriver.stopCapture();
+        if (currcam == cam1)
+            cam1.stopCapture();
         else
-            camShooter.stopCapture();
+            cam2.stopCapture();
     }
 
     /**
@@ -110,43 +111,36 @@ public class ComputerVision {
      */
     public synchronized void ChangeFeed(int i) {
         try {
-            if (i == CAMERA_DRIVER && camShooter != null) {
-                if (camShooter != null) {
-
-                    camDriver.stopCapture();
-                    // Set Brightness according to preferences
-                    int Brightness = Preferences.getInstance()
-                            .getInt("ShooterCamBrightness", BRIGHTNESS_DEFAULT);
-                    // Set Brightness according to preferences
-                    int Exposure = Preferences.getInstance()
-                            .getInt("ShooterCamExposure", EXPOSURE_DEFAULT);
-                    // Toggle Auto Exposure and brightness according to
-                    // preferences
-                    boolean AutoPref = Preferences.getInstance()
-                            .getBoolean("ShooterCamAutoPref", false);
-
-                    if (AutoPref == false) {
-                        // Set Camera Settings
-                        camShooter.setBrightness(Brightness);
-                        camShooter.setExposureManual(EXPOSURE_DEFAULT);
-                        camShooter.updateSettings();
-                    }
-                    currcam = camShooter;
-                    camShooter.startCapture();
+            if (i == CAMERA_DRIVER && cam2 != null) {
+                if (cam2 != null) {
+                    cam1.stopCapture();
+                    currcam = cam2;
+                    cam2.startCapture();
                 }
-            } else if (i == CAMERA_SHOOTER && camDriver != null) {
-                if (camShooter != null) {
-                    camShooter.stopCapture();
-                    currcam = camDriver;
-                    camDriver.startCapture();
+            } else if (i == CAMERA_SHOOTER && cam1 != null) {
+                if (cam2 != null) {
+                    cam2.stopCapture();
                 }
-
+                // Set Brightness according to preferences
+                int Brightness = Preferences.getInstance()
+                        .getInt("ShooterCamBrightness", BRIGHTNESS_DEFAULT);
+                // Set Brightness according to preferences
+                int Exposure = Preferences.getInstance()
+                        .getInt("ShooterCamExposure", EXPOSURE_DEFAULT);
+                // Toggle Auto Exposure and brightness according to preferences
+                boolean AutoPref = Preferences.getInstance()
+                        .getBoolean("ShooterCamAutoPref", false);
+                if (AutoPref == false) {
+                    // Set Camera Settings
+                    cam1.setBrightness(Brightness);
+                    cam1.setExposureManual(Exposure);
+                    cam1.updateSettings();
+                }
             }
-
+            currcam = cam1;
+            cam1.startCapture();
         } catch (Exception e) {
-            // DriverStation.reportError("Camera Feed Switching Error\n",
-            // false);
-            DriverStation.reportError(e.getMessage(), false);
+            DriverStation.reportError("Camera Feed Switching Error", false);
         }
     }
 
