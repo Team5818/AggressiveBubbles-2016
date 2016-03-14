@@ -26,8 +26,10 @@ public class SpinRobot extends Command {
      */
     public SpinRobot(double angle, double timeout) {
         spinAngle = angle;
+        arcLength = MathUtil.distanceOfArc(RobotConstants.ROBOT_WIDTH_IN_INCHES,
+                spinAngle);
         setTimeout(timeout);
-        requires(RobotCommon.runningRobot.driveTrain);
+        requires(RobotCommon.runningRobot.driveTrainController);
     }
 
     /**
@@ -40,8 +42,9 @@ public class SpinRobot extends Command {
 
     @Override
     protected void initialize() {
-
-        train.setSpinAngle(spinAngle);
+        double negArc = -arcLength;
+        train.getLeftMotors().setDriveDistance(arcLength);
+        train.getRightMotors().setDriveDistance(negArc);
 
     }
 
@@ -52,8 +55,7 @@ public class SpinRobot extends Command {
 
     @Override
     protected boolean isFinished() {
-        return ((train.getLeftMotors().getPIDController().onTarget()
-                && train.getRightMotors().getPIDController().onTarget())
+        return (train.getAverageDistance() >= Math.abs(arcLength)
                 || isTimedOut());
 
     }
