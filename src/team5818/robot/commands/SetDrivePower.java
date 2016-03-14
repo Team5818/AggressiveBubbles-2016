@@ -16,13 +16,13 @@ public class SetDrivePower extends Command {
     public SetDrivePower(int pl, int pr) {
         pLeft = pl;
         pRight = pr;
-        requires(RobotCommon.runningRobot.driveTrain);
+        requires(RobotCommon.runningRobot.driveTrainController);
     }
 
     @Override
     protected void initialize() {
-        RobotCommon.runningRobot.driveTrain
-                .setPower(new Vector2d(pLeft, pRight));
+        RobotCommon.runningRobot.driveTrainController
+                .setPowerDirectly(new Vector2d(pLeft, pRight));
     }
 
     @Override
