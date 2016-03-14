@@ -14,7 +14,7 @@ public class DriveStraight extends Command {
     private boolean ended = false;
 
     public DriveStraight() {
-        requires(RobotCommon.runningRobot.driveTrain);
+        requires(RobotCommon.runningRobot.driveTrainController);
     }
 
     @Override
@@ -24,7 +24,7 @@ public class DriveStraight extends Command {
 
     @Override
     protected void execute() {
-        RobotCommon.runningRobot.driveTrain.setPower(POWER);
+        RobotCommon.runningRobot.driveTrainController.setPowerDirectly(POWER);
     }
 
     @Override

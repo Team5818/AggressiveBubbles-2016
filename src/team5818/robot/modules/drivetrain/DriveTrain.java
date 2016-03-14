@@ -11,38 +11,12 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.tables.TableKeyNotDefinedException;
 import team5818.robot.RobotConstants;
 import team5818.robot.modules.Module;
-import team5818.robot.util.MathUtil;
 import team5818.robot.util.Vector2d;
 
 /**
  * The entire drive thing.
  */
-public class DriveTrain extends Subsystem implements Module {
-
-    /**
-     * The mode for setting direct power to the drive side.
-     */
-    public final int MODE_POWER = 0;
-    /**
-     * The mode for setting velocity to the drive side.
-     */
-    public final int MODE_VELOCITY = 1;
-    /**
-     * The mode for setting drive distance to the drive side.
-     */
-    public final int MODE_DISTANCE = 2;
-    
-    /**
-     * The Maximum velocity the flywheel can reach.
-     */
-    public static final double MAX_VELOCITY = 175;
-
-
-    // The default max power output.
-    public static final double DEFAULT_MAX_POWER = 1.0;
-
-    // The driving mode that the robot is in.
-    private int driveMode = MODE_POWER;
+public class DriveTrain implements Module {
 
     private static final boolean SIX_TALONS =
             Preferences.getInstance().getBoolean("sixTalons", false);
@@ -76,8 +50,6 @@ public class DriveTrain extends Subsystem implements Module {
     private final DriveSide right =
             new DriveSide(RIGHT_FRONT, RIGHT_MIDDLE, RIGHT_BACK, true);
 
-    private DriveCalculator driveCalculator = ArcadeDriveCalculator.INSTANCE;
-
     /**
      * @return the {@link PIDOutput} for the left side
      */
@@ -102,68 +74,11 @@ public class DriveTrain extends Subsystem implements Module {
     public void setPower(Vector2d power) {
         left.setPower(power.getX());
         right.setPower(power.getY());
-        setDriveMode(MODE_POWER);
-    }
-
-    public void setVelocity(Vector2d velocities) {
-        left.setVelocity(velocities.getX());
-        right.setVelocity(velocities.getY());
-        setDriveMode(MODE_VELOCITY);
     }
 
     public double getAverageDistance() {
         double avgDist = (right.getEncPosAbs() + left.getEncPosAbs()) / 2;
         return avgDist;
-    }
-
-    public void setDriveDistance(double dist) {
-        setDriveDistance(dist, DEFAULT_MAX_POWER);
-    }
-
-    public void setDriveDistance(double dist, double maxPower) {
-        left.setDriveDistance(dist, maxPower);
-        right.setDriveDistance(dist, maxPower);
-        setDriveMode(MODE_DISTANCE);
-    }
-
-    public void setDriveDistance(double distLeft, double distRight,
-            double maxPower) {
-        left.setDriveDistance(distLeft, maxPower);
-        right.setDriveDistance(distRight, maxPower);
-        setDriveMode(MODE_DISTANCE);
-    }
-
-    public void setDriveCalculator(DriveCalculator driveCalculator) {
-        if (driveCalculator == null) {
-            throw new NullPointerException("fix your code genius.");
-        }
-        this.driveCalculator = driveCalculator;
-    }
-
-    /**
-     * rotates the robot by the specified degrees. Make negative to rotate
-     * counter clockwise
-     * 
-     * @param degrees
-     *            Degrees to rotate the robot
-     */
-    public void setSpinAngle(double degrees) {
-        setSpinAngle(degrees, DEFAULT_MAX_POWER);
-    }
-    
-    /**
-     * rotates the robot by the specified degrees. Make negative to rotate
-     * counter clockwise
-     * 
-     * @param degrees
-     *            Degrees to rotate the robot
-     */
-    public void setSpinAngle(double degrees, double maxPower) {
-        // To rotate X degrees, simply move left side forward by W
-        // and move right side backwards by W
-        double distance = MathUtil
-                .distanceOfArc(RobotConstants.ROBOT_WIDTH_IN_INCHES, degrees);
-        setDriveDistance(distance, -distance, maxPower);
     }
 
     @Override
@@ -183,33 +98,10 @@ public class DriveTrain extends Subsystem implements Module {
     @Override
     public void teleopPeriodicModule() {
         right.setPIDFromSmart();
-        // Stream.of(left, right).forEach(DriveSide::attemptStopIfOnTarget);
+        //Stream.of(left, right).forEach(DriveSide::attemptStopIfOnTarget);
         SmartDashboard.putNumber("RightVals", right.getVelocity());
         SmartDashboard.putNumber("RightAvgError",
                 right.getPIDController().getAvgError());
-    }
-
-    /**
-     * @return current drive mode
-     */
-    public int getDriveMode() {
-        return driveMode;
-    }
-
-    /**
-     * 
-     * @return The drive calculator being used currently.
-     */
-    public DriveCalculator getDriveCalculator() {
-        return driveCalculator;
-    }
-
-    /**
-     * @param driveMode
-     *            the drive mode you want to put the robot in
-     */
-    public void setDriveMode(int driveMode) {
-        this.driveMode = driveMode;
     }
 
     @Override
@@ -230,12 +122,6 @@ public class DriveTrain extends Subsystem implements Module {
 
     @Override
     public void testPeriodic() {
-
-    }
-
-    @Override
-    protected void initDefaultCommand() {
-        // TODO Auto-generated method stub
 
     }
 

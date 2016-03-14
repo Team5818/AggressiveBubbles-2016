@@ -13,7 +13,7 @@ public class DrivePower extends Command{
     public DrivePower(double power, double timeout){
         drivePower = power;
         setTimeout(timeout);
-        requires(RobotCommon.runningRobot.driveTrain);
+        requires(RobotCommon.runningRobot.driveTrainController);
     }
     
     @Override

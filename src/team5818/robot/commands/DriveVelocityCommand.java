@@ -6,12 +6,12 @@ import team5818.robot.util.Vector2d;
 public class DriveVelocityCommand extends QuickCommand {
 
     public DriveVelocityCommand() {
-        requires(RobotCommon.runningRobot.driveTrain);
+        requires(RobotCommon.runningRobot.driveTrainController);
     }
 
     @Override
     protected void subexecute() {
-        RobotCommon.runningRobot.driveTrain
+        RobotCommon.runningRobot.driveTrainController
                 .setVelocity(new Vector2d(30, 30));
     }
 
