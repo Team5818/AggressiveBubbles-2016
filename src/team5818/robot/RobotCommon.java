@@ -76,8 +76,8 @@ public class RobotCommon extends IterativeRobot {
                     ArcadeDriveCalculator.INSTANCE);
     private final RobotDriver driver = addModule(new RobotDriver());
     private final RobotCoDriver coDriver = addModule(new RobotCoDriver());
-    public final FlyWheel lowerFlywheel = addModule(new FlyWheel(new CANTalon(RobotConstants.TALON_FLYWHEEL_LOWER), 5.0 / 18.8, 140.0, true));
-    public final FlyWheel upperFlywheel = addModule(new FlyWheel(new CANTalon(RobotConstants.TALON_FLYWHEEL_UPPER), 16.0 / 40.0, 240.0, true));
+    public final FlyWheel lowerFlywheel = addModule(new FlyWheel(new CANTalon(RobotConstants.TALON_FLYWHEEL_LOWER), 5.0 / 18.8, 140.0, "Lower", true));
+    public final FlyWheel upperFlywheel = addModule(new FlyWheel(new CANTalon(RobotConstants.TALON_FLYWHEEL_UPPER), 16.0 / 40.0, 240.0, " Upper", true));
     public final VisionThread vision = addModule(new VisionThread());
     public final Arm arm = addModule(new Arm());
     public final Collector collector = addModule(new Collector(false));

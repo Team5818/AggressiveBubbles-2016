@@ -45,6 +45,7 @@ public class FlyWheel extends Subsystem implements PIDSource, Module {
      */
     public static final double KP = 0.001, KI = 0.001, KD = 0.01;
 
+    private String name;
     private PIDController pid;
 
     /**
@@ -57,10 +58,11 @@ public class FlyWheel extends Subsystem implements PIDSource, Module {
      * @param gearRatio
      *            The gearRatio on the flywheel. output/input
      */
-    public FlyWheel(CANTalon talon, double gearRatio, double maxVel,
+    public FlyWheel(CANTalon talon, double gearRatio, double maxVel, String n,
             boolean reversed) {
         gearBoxRatio = gearRatio;
         maxVelocity = maxVel;
+        this.name = n;
         pid = new PIDController(KP, KI, KD, 1.0 / maxVelocity, this, talon);
         pid.setAbsoluteTolerance(TOLERANCE);
         this.talon = talon;
@@ -153,6 +155,7 @@ public class FlyWheel extends Subsystem implements PIDSource, Module {
             status = 100;
         }
         SmartDashboard.putNumber("Flywheel_Ready", status);
+        SmartDashboard.putNumber("Flywheel RPS " + name, getRPS());
     }
 
     @Override
