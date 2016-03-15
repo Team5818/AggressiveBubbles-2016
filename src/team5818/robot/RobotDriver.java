@@ -138,17 +138,18 @@ public class RobotDriver implements Module {
 
     @Override
     public void teleopPeriodicModule() {
+
         // Drives the robot if it should be done so by Driver.
         if (!RobotCoDriver.isOverrideDriver()) {
-            performButtonActions();
-            if (usingJoystick()) {
+            buttons();
+            if(usingJoystick()){
                 drive();
-                hasStoppedRobot = false;
-            } else {
-                if (!hasStoppedRobot) {
-                    stopMovement();
-                    hasStoppedRobot = true;
-                }
+            }    
+            hasStoppedRobot = false;
+        } else {
+            if (!hasStoppedRobot) {
+                new DrivePower(0, 0).start();
+                hasStoppedRobot = true;
             }
         }
 
@@ -158,24 +159,27 @@ public class RobotDriver implements Module {
 
     }
 
-    /**
-     * Stops the robot and maintains the current driving type.
-     */
-    public void stopMovement() {
-        if (driveType == DriveType.ARCADE_VELOCITY) {
-            RobotCommon.runningRobot.driveTrainController
-                    .setVelocity(new Vector2d(0, 0));
-        } else {
-            RobotCommon.runningRobot.driveTrainController
-                    .setPowerDirectly(new Vector2d(0, 0));
+    private boolean usingJoystick() {
+        if (Math.abs(FIRST_JOYSTICK.getX()) < RobotConstants.JOYSTICK_DEADBAND
+                && Math.abs(FIRST_JOYSTICK
+                        .getY()) < RobotConstants.JOYSTICK_DEADBAND
+                && Math.abs(SECOND_JOYSTICK
+                        .getX()) < RobotConstants.JOYSTICK_DEADBAND
+                && Math.abs(SECOND_JOYSTICK
+                        .getY()) < RobotConstants.JOYSTICK_DEADBAND){
+            Vector2d stop = new Vector2d(0,0);
+            if(driveType == DriveType.ARCADE_VELOCITY){
+                RobotCommon.runningRobot.driveTrainController.setVelocity(stop);
+            }
+            else{
+                RobotCommon.runningRobot.driveTrainController.setPowerDirectly(stop);
+            }
+            return false;
         }
+        return true;
     }
-
-    /**
-     * Checks the buttons that need to be checked and perfroms the intended
-     * operation.
-     */
-    public void performButtonActions() {
+    
+    public void buttons(){
         // Inverting buttons
         if (FIRST_JOYSTICK.getRawButton(BUT_INVERT)) {
             invertThrottle = true;
@@ -277,19 +281,6 @@ public class RobotDriver implements Module {
     @Override
     public void testPeriodic() {
         LiveWindow.run();
-    }
-
-    private boolean usingJoystick() {
-        if (Math.abs(FIRST_JOYSTICK.getX()) < RobotConstants.JOYSTICK_DEADBAND
-                && Math.abs(FIRST_JOYSTICK
-                        .getY()) < RobotConstants.JOYSTICK_DEADBAND
-                && Math.abs(SECOND_JOYSTICK
-                        .getX()) < RobotConstants.JOYSTICK_DEADBAND
-                && Math.abs(SECOND_JOYSTICK
-                        .getY()) < RobotConstants.JOYSTICK_DEADBAND) {
-            return false;
-        }
-        return true;
     }
 
 }
