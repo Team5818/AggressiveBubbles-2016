@@ -201,7 +201,8 @@ public class RobotDriver implements Module {
             inputMode = InputMode.TWO_STICKS;
         } else if (FIRST_JOYSTICK.getRawButton(BUT_DRIVE_VELOCITY)) {
             driveType = DriveType.ARCADE_VELOCITY;
-
+        } else if (FIRST_JOYSTICK.getRawButton(BUT_DRIVE_POWER)) {
+            driveType = DriveType.ARCADE;
         }
     }
 
