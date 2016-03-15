@@ -11,6 +11,8 @@ import edu.wpi.first.wpilibj.PIDSourceType;
 import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import team5818.robot.RobotCommon;
 import team5818.robot.RobotConstants;
 import team5818.robot.commands.SetArmAngle;
 import team5818.robot.commands.SetArmPower;
@@ -44,7 +46,7 @@ public class Arm extends Subsystem implements Module, PIDSource, PIDOutput {
 
     public Arm() {
         if(teamNum == 1717){
-        firstArmMotor.setInverted(true);
+        firstArmMotor.setInverted(false);
         }
         else{
             firstArmMotor.setInverted(false);
@@ -81,6 +83,11 @@ public class Arm extends Subsystem implements Module, PIDSource, PIDOutput {
         armPID.setOutputRange(-maxPower, maxPower);
         armPID.setAbsoluteTolerance(10);
         LiveWindow.addActuator("Arm", "PID Controller", armPID);
+    }
+    
+    @Override
+    public void teleopPeriodicModule() {
+        SmartDashboard.putNumber("Potentiometer Angle", getAngle());
     }
 
     /**
