@@ -14,16 +14,19 @@ import edu.wpi.first.wpilibj.Solenoid;
  */
 public class ComputerVision {
 
+    // TODO:switch for actual robot
     private int BRIGHTNESS_DEFAULT = 50;
-    private int EXPOSURE_DEFAULT = 10;
+    private int EXPOSURE_DEFAULT = 20;
 
     /**
      * The driving camera that is directed with the direction we collect.
+     * 
      */
     public static final int CAMERA_DRIVER = 1;
 
     /**
      * The shooter Camera that faces with the flywheel.
+     *
      */
     public static final int CAMERA_SHOOTER = 2;
 
@@ -110,7 +113,8 @@ public class ComputerVision {
      */
     public synchronized void ChangeFeed(int i) {
         try {
-            if (i == CAMERA_DRIVER && camShooter != null) {
+            //TODO:switch for actual robot
+            if (i == CAMERA_SHOOTER && camShooter != null) {
                 if (camShooter != null) {
 
                     camDriver.stopCapture();
@@ -134,7 +138,7 @@ public class ComputerVision {
                     currcam = camShooter;
                     camShooter.startCapture();
                 }
-            } else if (i == CAMERA_SHOOTER && camDriver != null) {
+            } else if (i == CAMERA_DRIVER && camDriver != null) {
                 if (camShooter != null) {
                     camShooter.stopCapture();
                     currcam = camDriver;

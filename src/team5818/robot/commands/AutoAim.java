@@ -6,6 +6,7 @@ import team5818.robot.RobotCommon;
 import team5818.robot.RobotConstants;
 import team5818.robot.modules.Arm;
 import team5818.robot.modules.Track;
+import team5818.robot.modules.drivetrain.DriveTrain;
 
 public class AutoAim extends Command {
 
@@ -84,10 +85,10 @@ public class AutoAim extends Command {
     public void checkCenter() {
         calculateX();
         if (setX < slopX) {
-            new SpinRobot(1);
+            new SetDrivePower(4,-4);
             calculateX();
         } else if (setX > slopY) {
-            new SpinRobot(-1);
+            new SetDrivePower(-4,4);
             calculateX();
         }
 
