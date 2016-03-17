@@ -88,6 +88,7 @@ public class Arm extends Subsystem implements Module, PIDSource, PIDOutput {
     @Override
     public void teleopPeriodicModule() {
         SmartDashboard.putNumber("Potentiometer Angle", getAngle());
+        SmartDashboard.putNumber("Potentiometer Raw", getRawPot());
     }
 
     /**
@@ -120,6 +121,10 @@ public class Arm extends Subsystem implements Module, PIDSource, PIDOutput {
         double a1 = armPotentiometer.getValue() * scale;
         double aFinal = a1 + offset;
         return aFinal;
+    }
+    
+    public double getRawPot() {
+        return armPotentiometer.getValue();
     }
 
     public synchronized boolean getPIDMode() {
@@ -205,7 +210,7 @@ public class Arm extends Subsystem implements Module, PIDSource, PIDOutput {
 
     @Override
     public void pidWrite(double power) {
-        firstArmMotor.set(power);
+        firstArmMotor.set(power * 0.75);
         if (secondArmMotor != null) {
             secondArmMotor.set(power);
         }
