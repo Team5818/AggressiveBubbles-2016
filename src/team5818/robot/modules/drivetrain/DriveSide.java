@@ -32,6 +32,7 @@ public class DriveSide implements EncoderManager, PIDOutput, MovingControl {
     private static double velocityKi = 0.0001;
     private static double velocityKd = 0.0;
     private static double velocityKf = 0.0;
+    private double encoderScale = .020603;
 
     // Initialize objects.
     private final CANTalon mainTalon;
@@ -82,6 +83,7 @@ public class DriveSide implements EncoderManager, PIDOutput, MovingControl {
         velocityKd =
                 Preferences.getInstance().getDouble("Velocity" + "Kd", 0.0);
         velocityKf = Preferences.getInstance().getDouble("VelocityKf", 0.0);
+        encoderScale = Preferences.getInstance().getDouble("Encoder_Scale", .020603);
 
         if (mainTalon == null) {
             throw new IllegalArgumentException("mainTalon cannot be null");
@@ -171,7 +173,7 @@ public class DriveSide implements EncoderManager, PIDOutput, MovingControl {
 
     @Override
     public double getEncPosAbs() {
-        return mainTalon.getPosition() * RobotConstants.ROBOT_ENCODER_SCALE;
+        return mainTalon.getPosition() * encoderScale;
     }
 
     @Override
@@ -186,7 +188,7 @@ public class DriveSide implements EncoderManager, PIDOutput, MovingControl {
      */
     public double getVelocity() {
         double vel = mainTalon.getEncVelocity() * 10.0
-                * RobotConstants.ROBOT_ENCODER_SCALE;
+                * encoderScale;
         if (mainTalon.getInverted()) {
             vel = -vel;
         }
