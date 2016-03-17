@@ -9,7 +9,6 @@ import edu.wpi.first.wpilibj.PIDOutput;
 import edu.wpi.first.wpilibj.PIDSourceType;
 import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import team5818.robot.RobotCommon;
 import team5818.robot.RobotConstants;
 import team5818.robot.encoders.EncoderManager;
 import team5818.robot.util.BetterPIDController;
@@ -21,8 +20,31 @@ import team5818.robot.util.PIDSourceBase;
  * integer between 1 and 3 inclusive.
  */
 public class DriveSide implements EncoderManager, PIDOutput, MovingControl {
-    
-    //DriveTrain train = RobotCommon.runningRobot.driveTrain; 
+
+
+    /**
+     * The Maximum velocity the flywheel can reach.
+     */
+    public static final double MAX_VELOCITY = 175;
+
+    /**
+     * The mode for setting direct power to the drive side.
+     */
+    public static final int MODE_POWER = 0;
+    /**
+     * The mode for setting velocity to the drive side.
+     */
+    public static final int MODE_VELOCITY = 1;
+    /**
+     * The mode for setting drive distance to the drive side.
+     */
+    public static final int MODE_DISTANCE = 2;
+
+    // The default max power output.
+    private static final double DEFAULT_MAX_POWER = 1.0;
+
+    // The driving mode that the robot is in.
+    public static int driveMode = MODE_POWER;
 
     // Initialize all the pid constants.
     private static double distanceKp = 0.12;
@@ -168,7 +190,7 @@ public class DriveSide implements EncoderManager, PIDOutput, MovingControl {
 
     @Override
     public void setDriveDistance(double dist) {
-        setDriveDistance(dist, DriveTrain.DEFAULT_MAX_POWER);
+        setDriveDistance(dist, DEFAULT_MAX_POWER);
     }
 
     @Override
@@ -195,6 +217,14 @@ public class DriveSide implements EncoderManager, PIDOutput, MovingControl {
         return vel;
     }
 
+    /**
+     * Returns the current driving mode. ie velocity, distance, power.
+     * 
+     * @return the current driving mode.
+     */
+    public static int getMode() {
+        return driveMode;
+    }
 
     public BetterPIDController getPIDController() {
         return pidLoop;
@@ -205,9 +235,13 @@ public class DriveSide implements EncoderManager, PIDOutput, MovingControl {
         if (pidLoop.isEnabled() || DriveTrain.getDriveMode() != DriveTrain.MODE_POWER) {
             pidLoop.disable();
         }
+        setDriveMode(MODE_POWER);
         pidWrite(power);
     }
 
+    private void setDriveMode(int dm) {
+        driveMode = dm;
+    }
 
     /**
      * Sets the speed of the motor. The ratio calculates using the gearbox of
@@ -223,7 +257,7 @@ public class DriveSide implements EncoderManager, PIDOutput, MovingControl {
             resetPIDLoop();
             pidSource.setPIDSourceType(PIDSourceType.kRate);
 
-            pidWrite(vel / DriveTrain.MAX_VELOCITY);
+            pidWrite(vel / MAX_VELOCITY);
             try {
                 Thread.sleep(100);
             } catch (InterruptedException e) {
@@ -232,13 +266,14 @@ public class DriveSide implements EncoderManager, PIDOutput, MovingControl {
         pidLoop.enable();
         pidLoop.setPID(velocityKp, velocityKi, velocityKd);
         // setPIDFromSmart();
-        pidLoop.setOutputRange(-DriveTrain.DEFAULT_MAX_POWER, DriveTrain.DEFAULT_MAX_POWER);
+        pidLoop.setOutputRange(-DEFAULT_MAX_POWER, DEFAULT_MAX_POWER);
         pidLoop.setContinuous();
         pidLoop.setSetpoint(vel);
     }
 
     @Override
     public void setDriveDistance(double dist, double maxPower) {
+        setDriveMode(MODE_DISTANCE);
         resetPIDLoop();
         pidLoop.setPID(distanceKp, distanceKi, distanceKd);
         // setPIDFromSmart();
