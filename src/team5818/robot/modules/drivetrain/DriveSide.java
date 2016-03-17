@@ -21,6 +21,7 @@ import team5818.robot.util.PIDSourceBase;
  */
 public class DriveSide implements EncoderManager, PIDOutput, MovingControl {
 
+
     /**
      * The Maximum velocity the flywheel can reach.
      */
@@ -52,7 +53,8 @@ public class DriveSide implements EncoderManager, PIDOutput, MovingControl {
     private static double velocityKp = 0.0012;
     private static double velocityKi = 0.0001;
     private static double velocityKd = 0.0;
-    private static double velocityKf = 0.002;
+    private static double velocityKf = 0.0;
+    private double encoderScale = .020603;
 
     // Initialize objects.
     private final CANTalon mainTalon;
@@ -102,7 +104,8 @@ public class DriveSide implements EncoderManager, PIDOutput, MovingControl {
         velocityKi = Preferences.getInstance().getDouble("VelocityKi", 0.0001);
         velocityKd =
                 Preferences.getInstance().getDouble("Velocity" + "Kd", 0.0);
-        velocityKf = Preferences.getInstance().getDouble("VelocityKf", 0.002);
+        velocityKf = Preferences.getInstance().getDouble("VelocityKf", 0.0);
+        encoderScale = Preferences.getInstance().getDouble("Encoder_Scale", .020603);
 
         if (mainTalon == null) {
             throw new IllegalArgumentException("mainTalon cannot be null");
@@ -192,7 +195,7 @@ public class DriveSide implements EncoderManager, PIDOutput, MovingControl {
 
     @Override
     public double getEncPosAbs() {
-        return mainTalon.getPosition() * RobotConstants.ROBOT_ENCODER_SCALE;
+        return mainTalon.getPosition() * encoderScale;
     }
 
     @Override
@@ -207,7 +210,7 @@ public class DriveSide implements EncoderManager, PIDOutput, MovingControl {
      */
     public double getVelocity() {
         double vel = mainTalon.getEncVelocity() * 10.0
-                * RobotConstants.ROBOT_ENCODER_SCALE;
+                * encoderScale;
         if (mainTalon.getInverted()) {
             vel = -vel;
         }
@@ -229,7 +232,7 @@ public class DriveSide implements EncoderManager, PIDOutput, MovingControl {
 
     @Override
     public void setPower(double power) {
-        if (pidLoop.isEnabled() || driveMode != MODE_POWER) {
+        if (pidLoop.isEnabled() || DriveTrain.getDriveMode() != DriveTrain.MODE_POWER) {
             pidLoop.disable();
         }
         setDriveMode(MODE_POWER);
@@ -249,8 +252,8 @@ public class DriveSide implements EncoderManager, PIDOutput, MovingControl {
      */
     @Override
     public void setVelocity(double vel) {
-        vel = Math.min(MAX_VELOCITY, Math.max(-MAX_VELOCITY, vel));
-        if (driveMode != MODE_VELOCITY) {
+        vel = Math.min(DriveTrain.MAX_VELOCITY, Math.max(-DriveTrain.MAX_VELOCITY, vel));
+        if (DriveTrain.getDriveMode() != DriveTrain.MODE_VELOCITY) {
             resetPIDLoop();
             pidSource.setPIDSourceType(PIDSourceType.kRate);
 

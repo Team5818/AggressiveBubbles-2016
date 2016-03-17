@@ -28,7 +28,6 @@ import team5818.robot.modules.Track;
 import team5818.robot.modules.VisionThread;
 import team5818.robot.modules.drivetrain.ArcadeDriveCalculator;
 import team5818.robot.modules.drivetrain.DriveTrain;
-import team5818.robot.modules.drivetrain.DriveTrainController;
 
 /**
  * Run from {@link Robot}.
@@ -71,13 +70,15 @@ public class RobotCommon extends IterativeRobot {
     /**
      * A helper for the {@link #driveTrain}.
      */
-    public final DriveTrainController driveTrainController =
-            new DriveTrainController(driveTrain,
-                    ArcadeDriveCalculator.INSTANCE);
+
     private final RobotDriver driver = addModule(new RobotDriver());
     private final RobotCoDriver coDriver = addModule(new RobotCoDriver());
-    public final FlyWheel lowerFlywheel = addModule(new FlyWheel(new CANTalon(RobotConstants.TALON_FLYWHEEL_LOWER), 5.0 / 18.8, 140.0, "Lower", true));
-    public final FlyWheel upperFlywheel = addModule(new FlyWheel(new CANTalon(RobotConstants.TALON_FLYWHEEL_UPPER), 16.0 / 40.0, 240.0, " Upper", true));
+    public final FlyWheel lowerFlywheel = addModule(
+            new FlyWheel(new CANTalon(RobotConstants.TALON_FLYWHEEL_LOWER),
+                    5.0 / 18.8, 140.0, "Lower", true));
+    public final FlyWheel upperFlywheel = addModule(
+            new FlyWheel(new CANTalon(RobotConstants.TALON_FLYWHEEL_UPPER),
+                    16.0 / 40.0, 240.0, " Upper", true));
     public final VisionThread vision = addModule(new VisionThread());
     public final Track Targeting = addModule(new Track());
     public final Arm arm = addModule(new Arm());
@@ -121,7 +122,7 @@ public class RobotCommon extends IterativeRobot {
         autoSelected = (Command) chooser.getSelected();
         // autoSelected = SmartDashboard.getString("Auto Selector",
         // defaultAuto);
-        //System.out.println("Auto selected: " + autoSelected);
+        // System.out.println("Auto selected: " + autoSelected);
         autoSelected.start();
         // driveTrainController.rotateDegrees(90, true);
         Scheduler.getInstance().enable();
@@ -139,7 +140,7 @@ public class RobotCommon extends IterativeRobot {
     @Override
     public void autonomousPeriodic() {
         Scheduler.getInstance().run();
-        
+
     }
 
     private PowerDistributionPanel panel;

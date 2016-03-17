@@ -197,8 +197,8 @@ public class RobotCoDriver implements Module {
 
         // Control the DriverTrain if Overriding Drive Control
         if (isOverrideDriver()) {
-            RobotCommon.runningRobot.driveTrainController
-                    .setPowerDirectly(ArcadeDriveCalculator.INSTANCE.compute(Vectors
+            RobotCommon.runningRobot.driveTrain
+                    .setPower(ArcadeDriveCalculator.INSTANCE.compute(Vectors
                             .fromJoystick(firstJoystick, true)));
         }
     }

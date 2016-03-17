@@ -29,7 +29,7 @@ public class SpinRobot extends Command {
         arcLength = MathUtil.distanceOfArc(RobotConstants.ROBOT_WIDTH_IN_INCHES,
                 spinAngle);
         setTimeout(timeout);
-        requires(RobotCommon.runningRobot.driveTrainController);
+        requires(RobotCommon.runningRobot.driveTrain);
     }
 
     /**
