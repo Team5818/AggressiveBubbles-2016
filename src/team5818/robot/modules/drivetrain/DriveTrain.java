@@ -22,15 +22,15 @@ public class DriveTrain extends Subsystem implements Module {
     /**
      * The mode for setting direct power to the drive side.
      */
-    public final int MODE_POWER = 0;
+    public static final int MODE_POWER = 0;
     /**
      * The mode for setting velocity to the drive side.
      */
-    public final int MODE_VELOCITY = 1;
+    public static final int MODE_VELOCITY = 1;
     /**
      * The mode for setting drive distance to the drive side.
      */
-    public final int MODE_DISTANCE = 2;
+    public static final int MODE_DISTANCE = 2;
     
     /**
      * The Maximum velocity the flywheel can reach.
@@ -42,7 +42,7 @@ public class DriveTrain extends Subsystem implements Module {
     public static final double DEFAULT_MAX_POWER = 1.0;
 
     // The driving mode that the robot is in.
-    private int driveMode = MODE_POWER;
+    private static int driveMode = MODE_POWER;
 
     private static final boolean SIX_TALONS =
             Preferences.getInstance().getBoolean("sixTalons", false);
@@ -192,7 +192,7 @@ public class DriveTrain extends Subsystem implements Module {
     /**
      * @return current drive mode
      */
-    public int getDriveMode() {
+    public static int getDriveMode() {
         return driveMode;
     }
 

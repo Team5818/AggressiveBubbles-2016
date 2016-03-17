@@ -22,7 +22,7 @@ import team5818.robot.util.PIDSourceBase;
  */
 public class DriveSide implements EncoderManager, PIDOutput, MovingControl {
     
-    DriveTrain train = RobotCommon.runningRobot.driveTrain; 
+    //DriveTrain train = RobotCommon.runningRobot.driveTrain; 
 
     // Initialize all the pid constants.
     private static double distanceKp = 0.12;
@@ -31,7 +31,7 @@ public class DriveSide implements EncoderManager, PIDOutput, MovingControl {
     private static double velocityKp = 0.0012;
     private static double velocityKi = 0.0001;
     private static double velocityKd = 0.0;
-    private static double velocityKf = 0.002;
+    private static double velocityKf = 0.0;
 
     // Initialize objects.
     private final CANTalon mainTalon;
@@ -81,7 +81,7 @@ public class DriveSide implements EncoderManager, PIDOutput, MovingControl {
         velocityKi = Preferences.getInstance().getDouble("VelocityKi", 0.0001);
         velocityKd =
                 Preferences.getInstance().getDouble("Velocity" + "Kd", 0.0);
-        velocityKf = Preferences.getInstance().getDouble("VelocityKf", 0.002);
+        velocityKf = Preferences.getInstance().getDouble("VelocityKf", 0.0);
 
         if (mainTalon == null) {
             throw new IllegalArgumentException("mainTalon cannot be null");
@@ -200,7 +200,7 @@ public class DriveSide implements EncoderManager, PIDOutput, MovingControl {
 
     @Override
     public void setPower(double power) {
-        if (pidLoop.isEnabled() || train.getDriveMode() != train.MODE_POWER) {
+        if (pidLoop.isEnabled() || DriveTrain.getDriveMode() != DriveTrain.MODE_POWER) {
             pidLoop.disable();
         }
         pidWrite(power);
@@ -217,7 +217,7 @@ public class DriveSide implements EncoderManager, PIDOutput, MovingControl {
     @Override
     public void setVelocity(double vel) {
         vel = Math.min(DriveTrain.MAX_VELOCITY, Math.max(-DriveTrain.MAX_VELOCITY, vel));
-        if (train.getDriveMode() != train.MODE_VELOCITY) {
+        if (DriveTrain.getDriveMode() != DriveTrain.MODE_VELOCITY) {
             resetPIDLoop();
             pidSource.setPIDSourceType(PIDSourceType.kRate);
 
