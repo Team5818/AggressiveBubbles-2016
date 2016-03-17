@@ -190,7 +190,7 @@ public class RobotCoDriver implements Module {
             setOverrideDriver(false);
         }
 
-        if (usingFirstStick()) {
+        if (usingSecondStick()) {
             moveArm();
             hasStoppedArm = false;
         } else {
@@ -199,7 +199,7 @@ public class RobotCoDriver implements Module {
                 stopArm();
             }
         }
-        if (usingSecondStick()) {
+        if (usingFirstStick()) {
             drive();
             hasStoppedArm = false;
         } else {
