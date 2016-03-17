@@ -164,7 +164,7 @@ public class RobotDriver implements Module {
     public void stopMovement() {
         if (driveType == DriveType.ARCADE_VELOCITY) {
             RobotCommon.runningRobot.driveTrain
-            .setPower(new Vector2d(0, 0));
+            .setVelocity(new Vector2d(0, 0));
         } else {
             RobotCommon.runningRobot.driveTrain
                     .setPower(new Vector2d(0, 0));
