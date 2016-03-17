@@ -235,11 +235,9 @@ public class RobotDriver implements Module {
         }
         if (driveType == DriveType.ARCADE_VELOCITY) {
             RobotCommon.runningRobot.driveTrain.setVelocity(thePowersThatBe);
-            stopMovement();
             
         } else {
             RobotCommon.runningRobot.driveTrain.setPower(thePowersThatBe);
-            stopMovement();
         }
 
     }
