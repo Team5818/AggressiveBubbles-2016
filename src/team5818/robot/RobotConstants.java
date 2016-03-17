@@ -102,6 +102,11 @@ public final class RobotConstants {
      */
     public static final double JOYSTICK_DEADBAND = 0.15;
 
+    /**
+     * The Slop factor for Targeting
+     */
+    public static final double SLOP = .02;
+
     private RobotConstants() {
     }
 

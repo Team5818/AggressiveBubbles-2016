@@ -6,6 +6,7 @@ import edu.wpi.first.wpilibj.buttons.JoystickButton;
 import edu.wpi.first.wpilibj.command.CommandGroup;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import team5818.robot.commands.AutoAim;
 import team5818.robot.commands.Collect;
 import team5818.robot.commands.SetArmAngle;
 import team5818.robot.commands.SetArmPower;
@@ -46,6 +47,7 @@ public class RobotCoDriver implements Module {
     private static final int BUT_ARM_ANGLE_HOME = 5;
     private static final int BUT_ARM_ANGLE_ZERO = 4;
     private static final int BUT_SET_ARM_POWER = 2;
+    private static final int BUT_AIM = 1;
 
     // Joystick Two Buttons
     private static final int BUT_SWITCH_SHOOT_FEED = 12;
@@ -57,7 +59,7 @@ public class RobotCoDriver implements Module {
     private static final int BUT_SHOOT_ANGLE_MED_LOW = 3;
     private static final int BUT_SHOOT_ANGLE_LOW = 4;
     private static final int BUT_SPIN_FLYWHEEL = 2;
-    private static final int BUT_COLLECT = 1;
+    private static final int BUT_COLLECT = 1; 
 
     // Different arm angles
     private double shootAngleHigh = 60;
@@ -74,6 +76,8 @@ public class RobotCoDriver implements Module {
             new JoystickButton(firstJoystick, BUT_ARM_ANGLE_HOME);
     JoystickButton butArmAngleZero =
             new JoystickButton(firstJoystick, BUT_ARM_ANGLE_ZERO);
+    JoystickButton butAutoAim =
+            new JoystickButton(firstJoystick, BUT_AIM);
 
     // Second Joystick Buttons
     JoystickButton butSpinFlywheel =
@@ -155,10 +159,13 @@ public class RobotCoDriver implements Module {
         butLedOff.whenPressed(new LEDToggle(false));
         butCollect.whenPressed(new Collect(Collect.COLLECT_POWER));
         butCollect.whenReleased(new Collect(0));
+        butAutoAim.whenPressed(new AutoAim());
+        
         /*
          * TODO Check if this call is needed
          * butSwitchShootFeed .whenPressed(new
          * SwitchFeed(ComputerVision.CAMERA_SHOOTER));
+         *  TODO:switch for actual robot
          */
         butSwitchShootFeed
                 .whenPressed(new SwitchFeed(ComputerVision.CAMERA_SHOOTER));

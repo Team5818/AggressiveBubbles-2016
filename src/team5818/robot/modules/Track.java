@@ -9,6 +9,7 @@ public class Track implements Module {
     public double blobCount = -1;
     public double blobWidth = 0;
     public double blobHeight = 0;
+    public double blobOffsetY = 0;
     public double imageWidth = 0;
     public double imageHeight = 0;
     public double blobCenterX = 0;
@@ -29,9 +30,11 @@ public class Track implements Module {
     }
 
     public void CalculateCenter() {
-        blobCenterX = blobWidth/2;
-        blobCenterY = blobHeight/2;
+        blobCenterX = blobWidth / 2;
+        blobCenterY = blobHeight / 2;
+        blobOffsetY = blobHeight;
     }
+ 
 
     @Override
     public void initModule() {
