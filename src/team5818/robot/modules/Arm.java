@@ -43,13 +43,7 @@ public class Arm extends Subsystem implements Module, PIDSource, PIDOutput {
     private PIDController armPID;
 
     public Arm() {
-        if(teamNum == 1717){
-        firstArmMotor.setInverted(true);
-        }
-        else{
-            firstArmMotor.setInverted(false);
-        }
-        
+
         if (secondArmMotor != null)
             secondArmMotor.setInverted(true);
     }

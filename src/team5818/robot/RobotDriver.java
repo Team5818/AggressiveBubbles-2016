@@ -163,11 +163,11 @@ public class RobotDriver implements Module {
      */
     public void stopMovement() {
         if (driveType == DriveType.ARCADE_VELOCITY) {
-            RobotCommon.runningRobot.driveTrainController
+            RobotCommon.runningRobot.driveTrain
                     .setVelocity(new Vector2d(0, 0));
         } else {
-            RobotCommon.runningRobot.driveTrainController
-                    .setPowerDirectly(new Vector2d(0, 0));
+            RobotCommon.runningRobot.driveTrain
+                    .setPower(new Vector2d(0, 0));
         }
     }
 
@@ -186,12 +186,12 @@ public class RobotDriver implements Module {
 
         // Changes the Control Mode
         if (FIRST_JOYSTICK.getRawButton(BUT_TWOSTICK_ARCADE)) {
-            RobotCommon.runningRobot.driveTrainController
+            RobotCommon.runningRobot.driveTrain
                     .setDriveCalculator(ArcadeDriveCalculator.INSTANCE);
             driveType = DriveType.ARCADE;
             inputMode = InputMode.TWO_STICKS;
         } else if (FIRST_JOYSTICK.getRawButton(BUT_TWOSTICK_TANK)) {
-            RobotCommon.runningRobot.driveTrainController
+            RobotCommon.runningRobot.driveTrain
                     .setDriveCalculator(TankDriveCalculator.INSTANCE);
             driveType = DriveType.TANK;
             inputMode = InputMode.TWO_STICKS;
@@ -236,11 +236,11 @@ public class RobotDriver implements Module {
                         "Don't know what mode " + inputMode + " does");
         }
         if (driveType == DriveType.ARCADE_VELOCITY) {
-            RobotCommon.runningRobot.driveTrainController
+            RobotCommon.runningRobot.driveTrain
                     .setVelocity(thePowersThatBe);
         } else {
-            RobotCommon.runningRobot.driveTrainController
-                    .setPowerDirectly(thePowersThatBe);
+            RobotCommon.runningRobot.driveTrain
+                    .setPower(thePowersThatBe);
         }
 
     }
