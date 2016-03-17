@@ -21,6 +21,7 @@ import team5818.robot.modules.ComputerVision;
 import team5818.robot.modules.FlyWheel;
 import team5818.robot.modules.Module;
 import team5818.robot.modules.drivetrain.ArcadeDriveCalculator;
+import team5818.robot.util.Vector2d;
 import team5818.robot.util.Vectors;
 
 /**
@@ -41,6 +42,7 @@ public class RobotCoDriver implements Module {
 
     // Weather CoDriver is overriding driver control.
     private static boolean overrideDriver = false;
+    private boolean hasStoppedArm = false;
 
     // Joystick One Buttons
     private static final int BUT_PRINT_ANGLE = 7;
@@ -59,7 +61,7 @@ public class RobotCoDriver implements Module {
     private static final int BUT_SHOOT_ANGLE_MED_LOW = 3;
     private static final int BUT_SHOOT_ANGLE_LOW = 4;
     private static final int BUT_SPIN_FLYWHEEL = 2;
-    private static final int BUT_COLLECT = 1; 
+    private static final int BUT_COLLECT = 1;
 
     // Different arm angles
     private double shootAngleHigh = 60;
@@ -76,8 +78,7 @@ public class RobotCoDriver implements Module {
             new JoystickButton(firstJoystick, BUT_ARM_ANGLE_HOME);
     JoystickButton butArmAngleZero =
             new JoystickButton(firstJoystick, BUT_ARM_ANGLE_ZERO);
-    JoystickButton butAutoAim =
-            new JoystickButton(firstJoystick, BUT_AIM);
+    JoystickButton butAutoAim = new JoystickButton(firstJoystick, BUT_AIM);
 
     // Second Joystick Buttons
     JoystickButton butSpinFlywheel =
@@ -160,12 +161,11 @@ public class RobotCoDriver implements Module {
         butCollect.whenPressed(new Collect(Collect.COLLECT_POWER));
         butCollect.whenReleased(new Collect(0));
         butAutoAim.whenPressed(new AutoAim());
-        
+
         /*
-         * TODO Check if this call is needed
-         * butSwitchShootFeed .whenPressed(new
-         * SwitchFeed(ComputerVision.CAMERA_SHOOTER));
-         *  TODO:switch for actual robot
+         * TODO Check if this call is needed butSwitchShootFeed .whenPressed(new
+         * SwitchFeed(ComputerVision.CAMERA_SHOOTER)); TODO:switch for actual
+         * robot
          */
         butSwitchShootFeed
                 .whenPressed(new SwitchFeed(ComputerVision.CAMERA_SHOOTER));
@@ -182,25 +182,72 @@ public class RobotCoDriver implements Module {
             SmartDashboard.putNumber("Lower flywheel", lowerFlywheel.getRPS());
         }
 
-        // Manual Arm Mode
-        if (!arm.getPIDMode()) {
-            arm.setPower(arm.getMaxPower() * secondJoystick.getY());
-        }
-
         // Overrides Driver Control.
         if (secondJoystick.getRawButton(BUT_SPIN_FLYWHEEL)) {
             setOverrideDriver(true);
-
+            stopDrive();
         } else {
             setOverrideDriver(false);
         }
 
-        // Control the DriverTrain if Overriding Drive Control
+        if (usingFirstStick()) {
+            moveArm();
+            hasStoppedArm = false;
+        } else {
+            if(!hasStoppedArm) {
+                hasStoppedArm = true;
+                stopArm();
+            }
+        }
+        if (usingSecondStick()) {
+            drive();
+            hasStoppedArm = false;
+        } else {
+            if(!hasStoppedArm) {
+                hasStoppedArm = true;
+                stopDrive();
+            }
+        }
+    }
+
+    private boolean usingFirstStick() {
+        if (Math.abs(firstJoystick.getX()) < RobotConstants.JOYSTICK_DEADBAND
+                && Math.abs(firstJoystick
+                        .getY()) < RobotConstants.JOYSTICK_DEADBAND) {
+            return false;
+        }
+        return true;
+    }
+
+    private boolean usingSecondStick() {
+        if (Math.abs(secondJoystick.getX()) < RobotConstants.JOYSTICK_DEADBAND
+                && Math.abs(secondJoystick
+                        .getY()) < RobotConstants.JOYSTICK_DEADBAND) {
+            return false;
+        }
+        return true;
+    }
+
+    private void drive() {
         if (isOverrideDriver()) {
             RobotCommon.runningRobot.driveTrain
-                    .setPower(ArcadeDriveCalculator.INSTANCE.compute(Vectors
-                            .fromJoystick(firstJoystick, true)));
+                    .setPower(ArcadeDriveCalculator.INSTANCE.compute(
+                            Vectors.fromJoystick(firstJoystick, true)));
         }
+    }
+
+    private void moveArm() {
+        if (!arm.getPIDMode()) {
+            arm.setPower(arm.getMaxPower() * secondJoystick.getY());
+        }
+    }
+
+    private void stopArm() {
+        arm.setPower(0);
+    }
+
+    private void stopDrive() {
+        RobotCommon.runningRobot.driveTrain.setPower(new Vector2d(0, 0));
     }
 
     @Override

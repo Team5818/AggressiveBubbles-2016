@@ -163,11 +163,9 @@ public class RobotDriver implements Module {
      */
     public void stopMovement() {
         if (driveType == DriveType.ARCADE_VELOCITY) {
-            RobotCommon.runningRobot.driveTrain
-                    .setVelocity(new Vector2d(0, 0));
+            RobotCommon.runningRobot.driveTrain.setVelocity(new Vector2d(0, 0));
         } else {
-            RobotCommon.runningRobot.driveTrain
-                    .setPower(new Vector2d(0, 0));
+            RobotCommon.runningRobot.driveTrain.setPower(new Vector2d(0, 0));
         }
     }
 
@@ -236,11 +234,12 @@ public class RobotDriver implements Module {
                         "Don't know what mode " + inputMode + " does");
         }
         if (driveType == DriveType.ARCADE_VELOCITY) {
-            RobotCommon.runningRobot.driveTrain
-                    .setVelocity(thePowersThatBe);
+            RobotCommon.runningRobot.driveTrain.setVelocity(thePowersThatBe);
+            stopMovement();
+            
         } else {
-            RobotCommon.runningRobot.driveTrain
-                    .setPower(thePowersThatBe);
+            RobotCommon.runningRobot.driveTrain.setPower(thePowersThatBe);
+            stopMovement();
         }
 
     }
