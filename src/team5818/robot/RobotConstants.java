@@ -106,6 +106,11 @@ public final class RobotConstants {
      * The Slop factor for Targeting
      */
     public static final double SLOP = .02;
+    /**
+     * The Camera feild of view for shooting
+     */
+    public static final double CAMFOV = 68.5;
+
 
     private RobotConstants() {
     }

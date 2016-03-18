@@ -4,13 +4,19 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.command.Command;
 import team5818.robot.RobotCommon;
 import team5818.robot.RobotConstants;
+import team5818.robot.RobotDriver;
 import team5818.robot.modules.Arm;
 import team5818.robot.modules.Track;
 import team5818.robot.modules.drivetrain.DriveTrain;
+import team5818.robot.util.Vector2d;
 
 public class AutoAim extends Command {
 
-    public Track aim;
+    private Track aim;
+    private DriveTrain drive;
+
+    private double camFOV;
+
     public double maxTime;
     public double imgHeight;
     public double imgWidth;
@@ -20,16 +26,27 @@ public class AutoAim extends Command {
     public double blobHeight;
     public double setX;
     public double setY;
+    public double locX;
+    public double locY;
     public double blobOffset;
+    public double slopX;
+    public double slopY;
+
     public boolean isCenteredX;
     public boolean isCenteredY;
-    public double slopX;
     public boolean done;
-    public double slopY;
+
+    private double MAX_SPIN_POWER = 0.15;
+    private double MAX_ARM_POWER = 0.5;
 
     public AutoAim() {
         aim = RobotCommon.runningRobot.Targeting;
+        drive = RobotCommon.runningRobot.driveTrain;
+        RobotCommon.runningRobot.setDriveAutoAim();
+        camFOV = RobotConstants.CAMFOV;
+
         maxTime = 5;
+
         imgHeight = 0;
         imgWidth = 0;
         blobCenterX = 0;
@@ -39,88 +56,104 @@ public class AutoAim extends Command {
         setX = 0;
         setY = 0;
         blobOffset = 0;
+        locX = 0;
+        locY = 0;
+
         isCenteredX = false;
         isCenteredY = false;
-        slopX = (RobotConstants.SLOP * blobCenterX);
-        slopY = (RobotConstants.SLOP * blobCenterY);
+        slopX = (RobotConstants.SLOP);
+        slopY = (RobotConstants.SLOP);
         done = false;
     }
 
     @Override
     protected void initialize() {
-        setTimeout(maxTime);
+        setTimeout(1);
         aim.GetData();
         if (aim.blobCount > 0) {
             imgHeight = aim.imageHeight;
             imgWidth = aim.imageWidth;
-            blobCenterX = aim.blobCenterX;
-            blobCenterY = aim.blobCenterY;
             blobWidth = aim.blobWidth;
             blobHeight = aim.blobHeight;
-            blobOffset = aim.blobOffsetY;
-            aim();
-            done = true;
-        } else {
+            locX = aim.blobLocX;
+            locY = aim.blobLocX;
+            if (blobWidth < 70) {
+                blobOffset = aim.blobOffsetClose;
+            } else {
+                blobOffset = aim.blobOffsetFar;
+            }
+        }
+
+        else {
             DriverStation.reportError("No Blobs Found Did Not Aim", false);
         }
     }
 
-    public void calculateX() {
-        setX = (imgWidth - blobWidth) / 2;
+    public void calculateAngleX() {
+        setX = ((imgWidth - locX) / (camFOV));
+
     }
 
-    public void calculateY() {
-        setY = ((imgHeight - blobHeight) / 2) + blobOffset;
+    public void calculateAngleY() {
+        setY = ((imgHeight - (locY + blobOffset)) / (camFOV));
     }
 
     public void aim() {
-        while (!isCenteredX) {
-            checkCenter();
-        }
-        while (!isCenteredY) {
-            checkCenter();
-        }
+        checkCenter();
+    }
+
+    public void setDrive(double left, double right) {
+        Vector2d power = new Vector2d(left, right);
+        drive.setPower(power);
     }
 
     public void checkCenter() {
-        calculateX();
-        if (setX < slopX) {
-            new SetDrivePower(4,-4);
-            calculateX();
-        } else if (setX > slopY) {
-            new SetDrivePower(-4,4);
-            calculateX();
+        calculateAngleX();
+        if (locX < (imgWidth / 2) + (slopX * imgWidth)) {
+            setDrive(MAX_SPIN_POWER, -MAX_SPIN_POWER);
+        } else if (locX > (imgWidth / 2) + slopY) {
+            setDrive(-MAX_SPIN_POWER, MAX_SPIN_POWER);
+        } else {
+            setDrive(0, 0);
         }
 
-        calculateY();
-        if (setY < slopY + blobOffset) {
-            new SetArmPower(.7);
-            calculateY();
-        } else if (setY > slopY + blobOffset) {
-            new SetArmPower(-.7);
-            calculateY();
+        calculateAngleY();
+        if (locY < (imgHeight / 2) + blobOffset) {
+            new SetArmPower(MAX_ARM_POWER);
+        } else if (locY > (imgHeight / 2) + blobOffset) {
+            new SetArmPower(-MAX_ARM_POWER);
+        } else {
         }
+
     }
 
     @Override
     protected void execute() {
         // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    protected boolean isFinished() {
-        if (done || isTimedOut()) {
-            return true;
-        } else {
-            return false;
+        aim.GetData();
+        if (aim.blobCount > 0) {
+            imgHeight = aim.imageHeight;
+            imgWidth = aim.imageWidth;
+            blobWidth = aim.blobWidth;
+            blobHeight = aim.blobHeight;
+            locX = aim.blobLocX;
+            locY = aim.blobLocX;
+            if (blobWidth < 70) {
+                blobOffset = aim.blobOffsetClose;
+            } else {
+                blobOffset = aim.blobOffsetFar;
+            }
         }
     }
 
     @Override
-    protected void end() {
-        // TODO Auto-generated method stub
+    protected boolean isFinished() {
+        return isTimedOut();
+    }
 
+    @Override
+    protected void end() {
+        RobotCommon.runningRobot.setDriveDefault();
     }
 
     @Override

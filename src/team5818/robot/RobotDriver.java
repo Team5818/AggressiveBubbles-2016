@@ -25,7 +25,7 @@ import team5818.robot.util.Vectors;
 public class RobotDriver implements Module {
 
     private enum DriveType {
-        TANK, ARCADE, ARCADE_VELOCITY;
+        TANK, ARCADE, ARCADE_VELOCITY, AUTO_AIM;
     }
 
     private enum InputMode {
@@ -167,6 +167,10 @@ public class RobotDriver implements Module {
         } else {
             RobotCommon.runningRobot.driveTrain.setPower(new Vector2d(0, 0));
         }
+    }
+    
+    public void setAutoAim(){
+        driveType = DriveType.AUTO_AIM;
     }
 
     /**

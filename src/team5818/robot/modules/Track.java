@@ -6,35 +6,34 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Track implements Module {
 
-    public double blobCount = -1;
+    public double blobCount = 0;
     public double blobWidth = 0;
     public double blobHeight = 0;
-    public double blobOffsetY = 0;
+    public double blobOffsetFar = 0;
+    public double blobOffsetClose = 0;
     public double imageWidth = 0;
     public double imageHeight = 0;
-    public double blobCenterX = 0;
-    public double blobCenterY = 0;
+    public double blobLocX = 0;
+    public double blobLocY = 0;
     public NetworkTable RoboData;
 
     public Track() {
         RoboData = NetworkTable.getTable("Targeting");
+        RoboData.setUpdateRate(.1);
 
     }
 
     public void GetData() {
-        blobCount = RoboData.getDouble("BLOB_COUNT");
-        imageWidth = RoboData.getDouble("IMAGE_WIDTH");
-        imageHeight = RoboData.getDouble("IMAGE_HEIGHT");
-        blobWidth = RoboData.getDouble("target_width");
-        blobHeight = RoboData.getDouble("target_height");
+        blobCount = RoboData.getNumber("BLOBS", 0.0);
+        imageWidth = RoboData.getNumber("IMAGE_WIDTH", 0.0);
+        imageHeight = RoboData.getNumber("IMAGE_HEIGHT", 0.0);
+        blobWidth = RoboData.getNumber("WIDTH", 0.0);
+        blobHeight = RoboData.getNumber("HEIGHT", 0.0);
+        blobLocX = RoboData.getNumber("COG_X", 0.0);
+        blobLocY = RoboData.getNumber("COG_Y", 0.0);
+        blobOffsetFar = blobHeight;
+        blobOffsetClose = blobHeight/2;
     }
-
-    public void CalculateCenter() {
-        blobCenterX = blobWidth / 2;
-        blobCenterY = blobHeight / 2;
-        blobOffsetY = blobHeight;
-    }
- 
 
     @Override
     public void initModule() {
