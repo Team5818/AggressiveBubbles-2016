@@ -90,6 +90,14 @@ public final class RobotConstants {
      */
     public static final int HAT_Y_PORT = 2;
     public static final int HAT_X_PORT = 3;
+    /**
+     * The Slop factor for Targeting
+     */
+    public static final double SLOP = 0.0;
+    /**
+     * The Camera feild of view for shooting
+     */
+    public static final double CAMFOV = 68.5;
 
     // TODO redo the math for ROBOT_ENCODER_SCALE
     /**

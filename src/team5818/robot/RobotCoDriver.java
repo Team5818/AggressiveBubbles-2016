@@ -6,6 +6,7 @@ import edu.wpi.first.wpilibj.buttons.JoystickButton;
 import edu.wpi.first.wpilibj.command.CommandGroup;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import team5818.robot.commands.AutoAim;
 import team5818.robot.commands.Collect;
 import team5818.robot.commands.SetArmAngle;
 import team5818.robot.commands.SetArmPower;
@@ -46,6 +47,7 @@ public class RobotCoDriver implements Module {
     private static final int BUT_ARM_ANGLE_HOME = 5;
     private static final int BUT_ARM_ANGLE_ZERO = 4;
     private static final int BUT_SET_ARM_POWER = 2;
+    private static final int BUT_AUTO_AIM = 1;
 
     // Joystick Two Buttons
     private static final int BUT_SWITCH_SHOOT_FEED = 12;
@@ -74,6 +76,7 @@ public class RobotCoDriver implements Module {
             new JoystickButton(firstJoystick, BUT_ARM_ANGLE_HOME);
     JoystickButton butArmAngleZero =
             new JoystickButton(firstJoystick, BUT_ARM_ANGLE_ZERO);
+    JoystickButton butAutoAim = new JoystickButton(firstJoystick, BUT_AUTO_AIM);
 
     // Second Joystick Buttons
     JoystickButton butSpinFlywheel =
@@ -137,6 +140,7 @@ public class RobotCoDriver implements Module {
         stopFlywheel.addParallel(new SetDrivePower(0, 0));
 
         // Assigning commands to the buttons
+        butAutoAim.whenPressed(new AutoAim());
         butSpinFlywheel.whenPressed(startFlywheel);
         butSpinFlywheel.whenReleased(stopFlywheel);
         butShootAngleHigh.whenPressed(new SetArmAngle(shootAngleHigh));
@@ -147,8 +151,6 @@ public class RobotCoDriver implements Module {
         butArmAngleZero.whenPressed(new SetArmAngle(armAngleZero));
         butLedOn.whenPressed(new LEDToggle(true));
         butLedOff.whenPressed(new LEDToggle(false));
-        butCollect.whenPressed(new Collect(Collect.COLLECT_POWER));
-        butCollect.whenReleased(new Collect(0));
         butArmAngleZero.whenPressed(new SetArmAngle(armAngleZero));
         butSetArmPower.whenPressed(new SetArmPower(0));
         butLedOn.whenPressed(new LEDToggle(true));
@@ -159,6 +161,7 @@ public class RobotCoDriver implements Module {
                 .whenPressed(new SwitchFeed(ComputerVision.CAMERA_SHOOTER));
         butSwitchDriverFeed
                 .whenPressed(new SwitchFeed(ComputerVision.CAMERA_DRIVER));
+        
     }
 
     @Override
@@ -186,8 +189,8 @@ public class RobotCoDriver implements Module {
         // Control the DriverTrain if Overriding Drive Control
         if (isOverrideDriver()) {
             RobotCommon.runningRobot.driveTrain
-                    .setPower(ArcadeDriveCalculator.INSTANCE.compute(Vectors
-                            .fromJoystick(firstJoystick, true)));
+                    .setPower(ArcadeDriveCalculator.INSTANCE.compute(
+                            Vectors.fromJoystick(firstJoystick, true)));
 
         }
     }

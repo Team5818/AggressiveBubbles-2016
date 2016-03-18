@@ -24,6 +24,7 @@ import team5818.robot.modules.Arm;
 import team5818.robot.modules.Collector;
 import team5818.robot.modules.FlyWheel;
 import team5818.robot.modules.Module;
+import team5818.robot.modules.Track;
 import team5818.robot.modules.VisionThread;
 import team5818.robot.modules.drivetrain.ArcadeDriveCalculator;
 import team5818.robot.modules.drivetrain.DriveTrain;
@@ -79,6 +80,7 @@ public class RobotCommon extends IterativeRobot {
             new FlyWheel(new CANTalon(RobotConstants.TALON_FLYWHEEL_UPPER),
                     16.0 / 40.0, 240.0, true));
     public final VisionThread vision = addModule(new VisionThread());
+    public final Track targeting = addModule(new Track());
     public final Arm arm = addModule(new Arm());
     public final Collector collector = addModule(new Collector(false));
     final String defaultAuto = "Default";
@@ -143,6 +145,14 @@ public class RobotCommon extends IterativeRobot {
 
     private PowerDistributionPanel panel;
 
+    public void setDriveAutoAim() {
+        driver.setAutoAim();
+    }
+
+    public void setDriveDefault() {
+        driver.stopMovement();
+    }
+    
     /**
      * This function is called periodically during operator control
      */
