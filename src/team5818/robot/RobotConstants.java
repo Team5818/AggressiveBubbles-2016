@@ -10,7 +10,7 @@ public final class RobotConstants {
     /**
      * width of the robot
      */
-    public static final double ROBOT_WIDTH_IN_INCHES = 2.3 * 12;
+    public static final double ROBOT_WIDTH_IN_INCHES = 25;
     /**
      * The talon controlling the left-front wheels.
      */

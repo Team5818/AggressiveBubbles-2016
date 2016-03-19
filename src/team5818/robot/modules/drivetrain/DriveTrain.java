@@ -187,6 +187,8 @@ public class DriveTrain extends Subsystem implements Module {
         SmartDashboard.putNumber("LeftVel", left.getVelocity());
         SmartDashboard.putNumber("LeftPIDInput", left.getPIDInput());
         SmartDashboard.putNumber("RightPIDInput", right.getPIDInput());
+        SmartDashboard.putNumber("RightDist", right.getEncPosAbs());
+        SmartDashboard.putNumber("LeftDist", left.getEncPosAbs());
 
     }
 

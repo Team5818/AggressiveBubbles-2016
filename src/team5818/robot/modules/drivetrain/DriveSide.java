@@ -150,7 +150,7 @@ public class DriveSide implements EncoderManager, PIDOutput, MovingControl {
         } else {
             pidLoop = new BetterPIDController(distanceKp, distanceKi,
                     distanceKd, pidSource, this);
-            pidLoop.setAbsoluteTolerance(1);
+            pidLoop.setAbsoluteTolerance(.5);
         }
     }
 

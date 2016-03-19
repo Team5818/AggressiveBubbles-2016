@@ -3,6 +3,7 @@ package team5818.robot.commands;
 import edu.wpi.first.wpilibj.command.Command;
 import team5818.robot.RobotCommon;
 import team5818.robot.RobotConstants;
+import team5818.robot.modules.drivetrain.DriveSide;
 import team5818.robot.modules.drivetrain.DriveTrain;
 import team5818.robot.util.MathUtil;
 
@@ -17,6 +18,7 @@ public class SpinRobot extends Command {
     private double arcLength;
     private double drivePower;
     private static double defaultTimeout = 6;
+    private double maxP;
 
     /**
      * @param angle
@@ -24,27 +26,32 @@ public class SpinRobot extends Command {
      * @param timeout
      *            - max amount of time command runs until finished
      */
-    public SpinRobot(double angle, double timeout) {
+    public SpinRobot(double angle, double timeout, double maxPower) {
         spinAngle = angle;
         arcLength = MathUtil.distanceOfArc(RobotConstants.ROBOT_WIDTH_IN_INCHES,
                 spinAngle);
         setTimeout(timeout);
         requires(RobotCommon.runningRobot.driveTrain);
+        maxP = maxPower;
     }
 
     /**
      * @param angle
      *            - number of degrees to spin robot sets default timeout of 6s
      */
-    public SpinRobot(double angle) {
-        this(angle, defaultTimeout);
+    public SpinRobot(double angle, double timeout) {
+        this(angle, timeout, .25);
+    }
+    
+    public SpinRobot(double angle){
+        this(angle, defaultTimeout, .25);
     }
 
     @Override
     protected void initialize() {
         double negArc = -arcLength;
-        train.getLeftMotors().setDriveDistance(arcLength);
-        train.getRightMotors().setDriveDistance(negArc);
+        train.getLeftMotors().setDriveDistance(arcLength/2, maxP);
+        train.getRightMotors().setDriveDistance(negArc/2, maxP);
 
     }
 
@@ -55,8 +62,8 @@ public class SpinRobot extends Command {
 
     @Override
     protected boolean isFinished() {
-        return (train.getAverageDistance() >= Math.abs(arcLength)
-                || isTimedOut());
+        DriveSide ds = RobotCommon.runningRobot.driveTrain.getLeftMotors();
+        return (ds.getPIDController().onTarget() || isTimedOut());
 
     }
 
