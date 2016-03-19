@@ -33,6 +33,7 @@ public class Track implements Module {
         blobLocY = RoboData.getNumber("COG_Y", 0.0);
         blobOffsetFar = blobHeight;
         blobOffsetClose = blobHeight / 2;
+        DriverStation.reportError("" + blobLocX + "\n", false);
     }
 
     @Override

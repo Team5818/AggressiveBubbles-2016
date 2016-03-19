@@ -146,14 +146,6 @@ public class RobotCommon extends IterativeRobot {
 
     }
 
-    public void setDriveAutoAim() {
-        driver.setAutoAim();
-    }
-
-    public void setDriveDefault() {
-        driver.stopMovement();
-    }
-
     private PowerDistributionPanel panel;
 
     /**
