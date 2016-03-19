@@ -198,8 +198,10 @@ public class RobotDriver implements Module {
             driveType = DriveType.TANK;
             inputMode = InputMode.TWO_STICKS;
         } else if (FIRST_JOYSTICK.getRawButton(BUT_DRIVE_VELOCITY)) {
+            stopMovement();
             driveType = DriveType.ARCADE_VELOCITY;
         } else if (FIRST_JOYSTICK.getRawButton(BUT_DRIVE_POWER)) {
+            stopMovement();
             driveType = DriveType.ARCADE;
         }
     }

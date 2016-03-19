@@ -184,6 +184,12 @@ public class DriveTrain extends Subsystem implements Module {
     public void teleopPeriodicModule() {
         SmartDashboard.putNumber("RightCounts", right.getEncPosRaw());
         SmartDashboard.putNumber("LeftCounts", left.getEncPosRaw());
+        SmartDashboard.putNumber("RightVel", right.getVelocity());
+        SmartDashboard.putNumber("LeftVel", left.getVelocity());
+        SmartDashboard.putNumber("LeftPIDInput", left.getPIDInput());
+        SmartDashboard.putNumber("RightPIDInput", right.getPIDInput());
+
+
     }
 
     /**
