@@ -111,7 +111,6 @@ public final class RobotConstants {
      */
     public static final double CAMFOV = 68.5;
 
-
     private RobotConstants() {
     }
 

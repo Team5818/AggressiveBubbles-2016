@@ -24,7 +24,7 @@ public class Track implements Module {
     }
 
     public void GetData() {
-        blobCount = RoboData.getNumber("BLOBS", 0.0);
+        blobCount = RoboData.getNumber("BLOB_COUNT", 0.0);
         imageWidth = RoboData.getNumber("IMAGE_WIDTH", 0.0);
         imageHeight = RoboData.getNumber("IMAGE_HEIGHT", 0.0);
         blobWidth = RoboData.getNumber("WIDTH", 0.0);
@@ -32,12 +32,11 @@ public class Track implements Module {
         blobLocX = RoboData.getNumber("COG_X", 0.0);
         blobLocY = RoboData.getNumber("COG_Y", 0.0);
         blobOffsetFar = blobHeight;
-        blobOffsetClose = blobHeight/2;
+        blobOffsetClose = blobHeight / 2;
     }
 
     @Override
     public void initModule() {
 
     }
-
 }

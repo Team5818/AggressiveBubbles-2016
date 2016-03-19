@@ -81,7 +81,7 @@ public class RobotCommon extends IterativeRobot {
             new FlyWheel(new CANTalon(RobotConstants.TALON_FLYWHEEL_UPPER),
                     16.0 / 40.0, 240.0, true, true));
     public final VisionThread vision = addModule(new VisionThread());
-    public final Track Targeting = addModule(new Track());
+    public final Track targeting = addModule(new Track());
     public final Arm arm = addModule(new Arm());
     public final Collector collector = addModule(new Collector(false));
     final String defaultAuto = "Default";
@@ -143,7 +143,6 @@ public class RobotCommon extends IterativeRobot {
     public void autonomousPeriodic() {
         Scheduler.getInstance().run();
         modules.forEach(Module::autoPeriodicModule);
-
 
     }
 

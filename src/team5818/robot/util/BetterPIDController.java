@@ -472,7 +472,7 @@ public class BetterPIDController implements PIDInterface, LiveWindowSendable {
     public synchronized double getF() {
         return m_F;
     }
-    
+
     /**
      * Return the current PID result This is always centered on zero and
      * constrained the the max and min outs $

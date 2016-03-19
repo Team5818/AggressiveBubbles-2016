@@ -40,7 +40,7 @@ public class AutoAim extends Command {
     private double MAX_ARM_POWER = 0.5;
 
     public AutoAim() {
-        aim = RobotCommon.runningRobot.Targeting;
+        aim = RobotCommon.runningRobot.targeting;
         drive = RobotCommon.runningRobot.driveTrain;
         RobotCommon.runningRobot.setDriveAutoAim();
         camFOV = RobotConstants.CAMFOV;
@@ -64,6 +64,7 @@ public class AutoAim extends Command {
         slopX = (RobotConstants.SLOP);
         slopY = (RobotConstants.SLOP);
         done = false;
+        aim();
     }
 
     @Override
@@ -111,18 +112,23 @@ public class AutoAim extends Command {
         calculateAngleX();
         if (locX < (imgWidth / 2) + (slopX * imgWidth)) {
             setDrive(MAX_SPIN_POWER, -MAX_SPIN_POWER);
-        } else if (locX > (imgWidth / 2) + slopY) {
+        } else if (locX > (imgWidth / 2) + (slopX * imgWidth)) {
             setDrive(-MAX_SPIN_POWER, MAX_SPIN_POWER);
-        } else {
+        } else if (locX == (imgWidth / 2) + (slopX * imgWidth)) {
             setDrive(0, 0);
+        } else {
+            DriverStation.reportError("did not align", false);
         }
 
         calculateAngleY();
-        if (locY < (imgHeight / 2) + blobOffset) {
+        if (locY < (imgHeight / 2) + (slopY * imgHeight) + blobOffset) {
             new SetArmPower(MAX_ARM_POWER);
-        } else if (locY > (imgHeight / 2) + blobOffset) {
+        } else if (locY > (imgHeight / 2) + (slopY * imgHeight) + blobOffset) {
             new SetArmPower(-MAX_ARM_POWER);
+        } else if (locY == (imgHeight / 2) + (slopY * imgHeight) + blobOffset) {
+            new SetArmPower(0);
         } else {
+            DriverStation.reportError("did not align", false);
         }
 
     }
@@ -161,5 +167,4 @@ public class AutoAim extends Command {
         // TODO Auto-generated method stub
 
     }
-
 }

@@ -51,7 +51,7 @@ public class RobotCoDriver implements Module {
     private static final int BUT_SHOOT_ANGLE_LOW = 4;
     private static final int BUT_SHOOT_ANGLE_MED = 3;
     private static final int BUT_SET_ARM_POWER = 2;
-    private static final int BUT_AIM = 1;
+    private static final int BUT_AUTO_AIM = 1;
 
     // Joystick Two Buttons
     private static final int BUT_SWITCH_SHOOT_FEED = 12;
@@ -75,7 +75,7 @@ public class RobotCoDriver implements Module {
             new JoystickButton(firstJoystick, BUT_SHOOT_ANGLE_MED);
     JoystickButton butShootAngleHigh =
             new JoystickButton(firstJoystick, BUT_SHOOT_ANGLE_HIGH);
-    JoystickButton butAutoAim = new JoystickButton(firstJoystick, BUT_AIM);
+    JoystickButton butAutoAim = new JoystickButton(firstJoystick, BUT_AUTO_AIM);
 
     // Second Joystick Buttons
     JoystickButton butSpinFlywheel =
@@ -108,8 +108,8 @@ public class RobotCoDriver implements Module {
         // Settings the preferences
         shootAngleHigh = Preferences.getInstance().getDouble("ShootAngleHigh",
                 shootAngleHigh);
-        shootAngleMed = Preferences.getInstance()
-                .getDouble("ShootAngleMed", shootAngleMed);
+        shootAngleMed = Preferences.getInstance().getDouble("ShootAngleMed",
+                shootAngleMed);
         shootAngleLow = Preferences.getInstance().getDouble("ShootAngleLow",
                 shootAngleLow);
 
@@ -125,6 +125,7 @@ public class RobotCoDriver implements Module {
         stopFlywheel.addParallel(new SetDrivePower(0, 0));
 
         // Assigning commands to the buttons
+        butAutoAim.whenPressed(new AutoAim());
         butSpinFlywheel.whenPressed(startFlywheel);
         butSpinFlywheel.whenReleased(stopFlywheel);
         butShootAngleHigh.whenPressed(new SetArmAngle(shootAngleHigh));
@@ -133,8 +134,6 @@ public class RobotCoDriver implements Module {
         butSetArmPower.whenPressed(new SetArmPower(0));
         butLedOn.whenPressed(new LEDToggle(true));
         butLedOff.whenPressed(new LEDToggle(false));
-        butCollect.whenPressed(new Collect(Collect.COLLECT_POWER));
-        butCollect.whenReleased(new Collect(0));
         butLedOn.whenPressed(new LEDToggle(true));
         butLedOff.whenPressed(new LEDToggle(false));
         butCollect.whenPressed(new Collect(Collect.COLLECT_POWER));
@@ -150,6 +149,7 @@ public class RobotCoDriver implements Module {
                 .whenPressed(new SwitchFeed(ComputerVision.CAMERA_SHOOTER));
         butSwitchDriverFeed
                 .whenPressed(new SwitchFeed(ComputerVision.CAMERA_DRIVER));
+
     }
 
     @Override
@@ -173,7 +173,7 @@ public class RobotCoDriver implements Module {
             moveArm();
             hasStoppedArm = false;
         } else {
-            if(!hasStoppedArm) {
+            if (!hasStoppedArm) {
                 hasStoppedArm = true;
                 stopArm();
             }
@@ -182,7 +182,7 @@ public class RobotCoDriver implements Module {
             drive();
             hasStoppedDrive = false;
         } else {
-            if(!hasStoppedDrive) {
+            if (!hasStoppedDrive) {
                 hasStoppedDrive = true;
                 stopDrive();
             }
