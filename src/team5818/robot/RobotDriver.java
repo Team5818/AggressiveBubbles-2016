@@ -134,6 +134,7 @@ public class RobotDriver implements Module {
 
         // Setting driving mode to power.
         new SetDrivePower(0, 0).start();
+        stopMovement();
     }
 
     @Override
