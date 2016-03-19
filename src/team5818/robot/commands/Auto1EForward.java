@@ -29,8 +29,7 @@ public class Auto1EForward extends CommandGroup {
             new DriveDistanceCommand(lowbarDist, .3, 5);
     private DriveDistanceCommand backUp =
             new DriveDistanceCommand(-lowbarDist, .3, 5);
-    private DoNothing sitAround = new DoNothing(2);
-    private DoNothing chill = new DoNothing(2);
+
     private SpinRobot aim = new SpinRobot(-170.0);
     private SpinRobot unAim = new SpinRobot(170.0);
     private Shoot dontMiss = new Shoot(shootAngle, flyUpVel, flyLoVel);
@@ -47,10 +46,8 @@ public class Auto1EForward extends CommandGroup {
 
         this.addSequential(putArmDown);
         this.addSequential(goUnderLowbar);
-        this.addSequential(sitAround);
         this.addSequential(aim);
         this.addSequential(dontMiss);
-        this.addSequential(chill);
         this.addSequential(unAim);
         this.addSequential(armDownAgain);
         this.addSequential(backUp);

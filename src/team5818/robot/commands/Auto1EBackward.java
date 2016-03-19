@@ -13,25 +13,24 @@ import team5818.robot.Field;
 public class Auto1EBackward extends CommandGroup {
 
     public double collectAngle =
-            Preferences.getInstance().getDouble("ArmCollectAngle", -6.0);
+            Preferences.getInstance().getDouble("ArmAngleCollect", 0.0);
     public double shootAngle =
-            Preferences.getInstance().getDouble("ArmShootHigh", 40.0);
+            Preferences.getInstance().getDouble("ShootAngleLow", 40.0);
     public double flyUpVel =
-            Preferences.getInstance().getDouble("UpperFlyVel", 100.0);
+            Preferences.getInstance().getDouble("UpperFlyVel", 192.0);
     public double flyLoVel =
-            Preferences.getInstance().getDouble("LowerFlyVel", 60.0);
-    public double lowbarDist = 60;
+            Preferences.getInstance().getDouble("LowerFlyVel", 112.0);
+    public double lowbarDist = 120;
 
     private SetArmAngle putArmDown = new SetArmAngle(collectAngle);
     private SetArmAngle armDownAgain = new SetArmAngle(collectAngle);
     private DriveDistanceCommand goUnderLowbar =
-            new DriveDistanceCommand(-lowbarDist, .3, 5);
+            new DriveDistanceCommand(-lowbarDist, .5, 5);
     private DriveDistanceCommand backUp =
-            new DriveDistanceCommand(lowbarDist, .3, 5);
-    private DoNothing sitAround = new DoNothing(2);
-    private DoNothing chill = new DoNothing(2);
-    private SpinRobot aim = new SpinRobot(10.0);
-    private SpinRobot unAim = new SpinRobot(-10.0);
+            new DriveDistanceCommand(lowbarDist, .5, 5);
+
+    private SpinRobot aim = new SpinRobot(60.0);
+    private SpinRobot unAim = new SpinRobot(-60.0);
     private Shoot dontMiss = new Shoot(shootAngle, flyUpVel, flyLoVel);
 
     /**
@@ -46,10 +45,8 @@ public class Auto1EBackward extends CommandGroup {
 
         this.addSequential(putArmDown);
         this.addSequential(goUnderLowbar);
-        this.addSequential(sitAround);
         this.addSequential(aim);
         this.addSequential(dontMiss);
-        this.addSequential(chill);
         this.addSequential(unAim);
         this.addSequential(armDownAgain);
         this.addSequential(backUp);
