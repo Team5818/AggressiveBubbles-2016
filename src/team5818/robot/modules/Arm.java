@@ -35,6 +35,8 @@ public class Arm extends Subsystem implements Module, PIDSource, PIDOutput {
     private double offset;
     private double maxPower;
     private double minPower;
+    private double armMotorRatio = 0.75;
+    private double armPowerIdle = 0.1;
     private boolean pidMode = false;
 
     private static final AnalogInput armPotentiometer =
@@ -61,6 +63,8 @@ public class Arm extends Subsystem implements Module, PIDSource, PIDOutput {
                     DEFAULT_OFFSET);
             maxPower = Preferences.getInstance().getDouble("ArmMaxPower", DEFAULT_MAXPOWER);
             minPower = Preferences.getInstance().getDouble("ArmMinPower", DEFAULT_MINPOWER);
+            armMotorRatio = Preferences.getInstance().getDouble("ArmMotorRatio", armMotorRatio);
+            armPowerIdle = Preferences.getInstance().getDouble("ArmPowerIdle", armPowerIdle);
             kp = Preferences.getInstance().getDouble("ArmKp", DEFAULT_KP);//remove .'s
             ki = Preferences.getInstance().getDouble("ArmKi", DEFAULT_KI);
             kd = Preferences.getInstance().getDouble("ArmKd", DEFAULT_KD);
@@ -206,7 +210,9 @@ public class Arm extends Subsystem implements Module, PIDSource, PIDOutput {
 
     @Override
     public void pidWrite(double power) {
-        firstArmMotor.set(power * 0.75);
+        
+        power += armPowerIdle * Math.cos(getAngle()/180*Math.PI);
+        firstArmMotor.set(power * armMotorRatio);
         if (secondArmMotor != null) {
             secondArmMotor.set(power);
         }
