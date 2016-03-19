@@ -43,6 +43,7 @@ public class RobotCoDriver implements Module {
     // Weather CoDriver is overriding driver control.
     private static boolean overrideDriver = false;
     private boolean hasStoppedArm = false;
+    private boolean hasStoppedDrive = false;
 
     // Joystick One Buttons
     private static final int BUT_PRINT_ANGLE = 7;
@@ -201,10 +202,10 @@ public class RobotCoDriver implements Module {
         }
         if (usingFirstStick()) {
             drive();
-            hasStoppedArm = false;
+            hasStoppedDrive = false;
         } else {
-            if(!hasStoppedArm) {
-                hasStoppedArm = true;
+            if(!hasStoppedDrive) {
+                hasStoppedDrive = true;
                 stopDrive();
             }
         }
