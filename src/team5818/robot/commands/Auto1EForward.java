@@ -1,5 +1,6 @@
 package team5818.robot.commands;
 
+
 import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.CommandGroup;
@@ -10,7 +11,7 @@ import team5818.robot.Field;
  * basic auto routine 
  *
  */
-public class Auto1E extends CommandGroup {
+public class Auto1EForward extends CommandGroup {
 
     public double collectAngle =
             Preferences.getInstance().getDouble("ArmCollectAngle", -6.0);
@@ -25,13 +26,13 @@ public class Auto1E extends CommandGroup {
     private SetArmAngle putArmDown = new SetArmAngle(collectAngle);
     private SetArmAngle armDownAgain = new SetArmAngle(collectAngle);
     private DriveDistanceCommand goUnderLowbar =
-            new DriveDistanceCommand(-lowbarDist, .3, 5);
-    private DriveDistanceCommand backUp =
             new DriveDistanceCommand(lowbarDist, .3, 5);
+    private DriveDistanceCommand backUp =
+            new DriveDistanceCommand(-lowbarDist, .3, 5);
     private DoNothing sitAround = new DoNothing(2);
     private DoNothing chill = new DoNothing(2);
-    private SpinRobot aim = new SpinRobot(10.0);
-    private SpinRobot unAim = new SpinRobot(-10.0);
+    private SpinRobot aim = new SpinRobot(-170.0);
+    private SpinRobot unAim = new SpinRobot(170.0);
     private Shoot dontMiss = new Shoot(shootAngle, flyUpVel, flyLoVel);
 
     /**
@@ -42,7 +43,7 @@ public class Auto1E extends CommandGroup {
      * spin counter clockwise
      * move back under
      */
-    public Auto1E() {
+    public Auto1EForward() {
 
         this.addSequential(putArmDown);
         this.addSequential(goUnderLowbar);

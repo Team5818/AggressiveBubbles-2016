@@ -54,7 +54,7 @@ public class DriveSide implements EncoderManager, PIDOutput, MovingControl {
     private static double velocityKi = 0.0001;
     private static double velocityKd = 0.0;
     private static double velocityKf = 0.0;
-    private double encoderScale = .020603;
+    private double encoderScale = -.020603;
    private double pidInput = 0.0; 
 
     // Initialize objects.
@@ -106,7 +106,7 @@ public class DriveSide implements EncoderManager, PIDOutput, MovingControl {
         velocityKd =
                 Preferences.getInstance().getDouble("Velocity" + "Kd", 0.0);
         velocityKf = Preferences.getInstance().getDouble("VelocityKf", 0.0);
-        encoderScale = Preferences.getInstance().getDouble("Encoder_Scale", .020603);
+        encoderScale = Preferences.getInstance().getDouble("EncoderScale", -.020603);
 
         if (mainTalon == null) {
             throw new IllegalArgumentException("mainTalon cannot be null");
@@ -150,7 +150,7 @@ public class DriveSide implements EncoderManager, PIDOutput, MovingControl {
         } else {
             pidLoop = new BetterPIDController(distanceKp, distanceKi,
                     distanceKd, pidSource, this);
-            pidLoop.setAbsoluteTolerance(10);
+            pidLoop.setAbsoluteTolerance(1);
         }
     }
 

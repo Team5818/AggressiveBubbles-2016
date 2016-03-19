@@ -31,12 +31,11 @@ public class DriveTrain extends Subsystem implements Module {
      * The mode for setting drive distance to the drive side.
      */
     public static final int MODE_DISTANCE = 2;
-    
+
     /**
      * The Maximum velocity the flywheel can reach.
      */
     public static final double MAX_VELOCITY = 175;
-
 
     // The default max power output.
     public static final double DEFAULT_MAX_POWER = 1.0;
@@ -150,7 +149,7 @@ public class DriveTrain extends Subsystem implements Module {
     public void setSpinAngle(double degrees) {
         setSpinAngle(degrees, DEFAULT_MAX_POWER);
     }
-    
+
     /**
      * rotates the robot by the specified degrees. Make negative to rotate
      * counter clockwise
@@ -189,6 +188,14 @@ public class DriveTrain extends Subsystem implements Module {
         SmartDashboard.putNumber("LeftPIDInput", left.getPIDInput());
         SmartDashboard.putNumber("RightPIDInput", right.getPIDInput());
 
+    }
+
+    @Override
+    public void autoPeriodicModule() {
+        SmartDashboard.putNumber("RightDist", right.getEncPosAbs());
+        SmartDashboard.putNumber("LeftDist", left.getEncPosAbs());
+        SmartDashboard.putNumber("RightVel", right.getVelocity());
+        SmartDashboard.putNumber("LeftVel", left.getVelocity());
 
     }
 
@@ -243,4 +250,3 @@ public class DriveTrain extends Subsystem implements Module {
     }
 
 }
-
