@@ -47,8 +47,9 @@ public class RobotCoDriver implements Module {
 
     // Joystick One Buttons
     private static final int BUT_PRINT_ANGLE = 7;
-    private static final int BUT_ARM_ANGLE_HOME = 5;
-    private static final int BUT_ARM_ANGLE_ZERO = 4;
+    private static final int BUT_SHOOT_ANGLE_HIGH = 5;
+    private static final int BUT_SHOOT_ANGLE_LOW = 4;
+    private static final int BUT_SHOOT_ANGLE_MED = 3;
     private static final int BUT_SET_ARM_POWER = 2;
     private static final int BUT_AIM = 1;
 
@@ -57,42 +58,29 @@ public class RobotCoDriver implements Module {
     private static final int BUT_SWITCH_DRIVER_FEED = 11;
     private static final int BUT_LED_ON = 8;
     private static final int BUT_LED_OFF = 7;
-    private static final int BUT_SHOOT_ANGLE_HIGH = 5;
-    private static final int BUT_SHOOT_ANGLE_MED_HIGH = 4;
-    private static final int BUT_SHOOT_ANGLE_MED_LOW = 3;
-    private static final int BUT_SHOOT_ANGLE_LOW = 4;
     private static final int BUT_SPIN_FLYWHEEL = 2;
     private static final int BUT_COLLECT = 1;
 
     // Different arm angles
     private double shootAngleHigh = 60;
-    private double shootAngleMedHigh = 50;
-    private double shootAngleMedLow = 40;
+    private double shootAngleMed = 40;
     private double shootAngleLow = 30;
-    private double armAngleZero = 0;
-    private double armAngleHome = 85;
 
     // First Joystick Buttons
     JoystickButton butSetArmPower =
             new JoystickButton(firstJoystick, BUT_SET_ARM_POWER);
-    JoystickButton butArmAngleHome =
-            new JoystickButton(firstJoystick, BUT_ARM_ANGLE_HOME);
-    JoystickButton butArmAngleZero =
-            new JoystickButton(firstJoystick, BUT_ARM_ANGLE_ZERO);
+    JoystickButton butShootAngleLow =
+            new JoystickButton(firstJoystick, BUT_SHOOT_ANGLE_LOW);
+    JoystickButton butShootAngleMed =
+            new JoystickButton(firstJoystick, BUT_SHOOT_ANGLE_MED);
+    JoystickButton butShootAngleHigh =
+            new JoystickButton(firstJoystick, BUT_SHOOT_ANGLE_HIGH);
     JoystickButton butAutoAim = new JoystickButton(firstJoystick, BUT_AIM);
 
     // Second Joystick Buttons
     JoystickButton butSpinFlywheel =
             new JoystickButton(secondJoystick, BUT_SPIN_FLYWHEEL);
     JoystickButton butCollect = new JoystickButton(secondJoystick, BUT_COLLECT);
-    JoystickButton butShootAngleLow =
-            new JoystickButton(secondJoystick, BUT_SHOOT_ANGLE_LOW);
-    JoystickButton butShootAngleMedLow =
-            new JoystickButton(secondJoystick, BUT_SHOOT_ANGLE_MED_LOW);
-    JoystickButton butShootAngleMedHigh =
-            new JoystickButton(secondJoystick, BUT_SHOOT_ANGLE_MED_HIGH);
-    JoystickButton butShootAngleHigh =
-            new JoystickButton(secondJoystick, BUT_SHOOT_ANGLE_HIGH);
     JoystickButton butLedOn = new JoystickButton(secondJoystick, BUT_LED_ON);
     JoystickButton butLedOff = new JoystickButton(secondJoystick, BUT_LED_OFF);
     JoystickButton butSwitchShootFeed =
@@ -120,16 +108,10 @@ public class RobotCoDriver implements Module {
         // Settings the preferences
         shootAngleHigh = Preferences.getInstance().getDouble("ShootAngleHigh",
                 shootAngleHigh);
-        shootAngleMedHigh = Preferences.getInstance()
-                .getDouble("ShootAngleMedHigh", shootAngleMedHigh);
-        shootAngleMedLow = Preferences.getInstance()
-                .getDouble("ShootAngleMedLow", shootAngleMedLow);
+        shootAngleMed = Preferences.getInstance()
+                .getDouble("ShootAngleMed", shootAngleMed);
         shootAngleLow = Preferences.getInstance().getDouble("ShootAngleLow",
                 shootAngleLow);
-        armAngleHome = Preferences.getInstance().getDouble("ArmAngleHome",
-                armAngleHome);
-        armAngleZero = Preferences.getInstance().getDouble("ArmAngleZero",
-                armAngleZero);
 
         // Making the command groups
         CommandGroup startFlywheel = new CommandGroup();
@@ -146,17 +128,13 @@ public class RobotCoDriver implements Module {
         butSpinFlywheel.whenPressed(startFlywheel);
         butSpinFlywheel.whenReleased(stopFlywheel);
         butShootAngleHigh.whenPressed(new SetArmAngle(shootAngleHigh));
-        butShootAngleMedHigh.whenPressed(new SetArmAngle(shootAngleMedHigh));
-        butShootAngleMedLow.whenPressed(new SetArmAngle(shootAngleMedLow));
+        butShootAngleMed.whenPressed(new SetArmAngle(shootAngleMed));
         butShootAngleLow.whenPressed(new SetArmAngle(shootAngleLow));
-        butArmAngleHome.whenPressed(new SetArmAngle(armAngleHome));
-        butArmAngleZero.whenPressed(new SetArmAngle(armAngleZero));
+        butSetArmPower.whenPressed(new SetArmPower(0));
         butLedOn.whenPressed(new LEDToggle(true));
         butLedOff.whenPressed(new LEDToggle(false));
         butCollect.whenPressed(new Collect(Collect.COLLECT_POWER));
         butCollect.whenReleased(new Collect(0));
-        butArmAngleZero.whenPressed(new SetArmAngle(armAngleZero));
-        butSetArmPower.whenPressed(new SetArmPower(0));
         butLedOn.whenPressed(new LEDToggle(true));
         butLedOff.whenPressed(new LEDToggle(false));
         butCollect.whenPressed(new Collect(Collect.COLLECT_POWER));

@@ -26,6 +26,7 @@ public class Arm extends Subsystem implements Module, PIDSource, PIDOutput {
     protected static final double DEFAULT_SCALE = 0.047;
     protected static final double DEFAULT_OFFSET = -9.587;
     protected static final double DEFAULT_MAXPOWER = 0.8;
+    protected static final double DEFAULT_MINPOWER = -.4;
     protected static final double DEFAULT_KP = 0.01;
     protected static final double DEFAULT_KI = 0.0;
     protected static final double DEFAULT_KD = 0.0;
@@ -33,6 +34,7 @@ public class Arm extends Subsystem implements Module, PIDSource, PIDOutput {
     private double scale;
     private double offset;
     private double maxPower;
+    private double minPower;
     private boolean pidMode = false;
 
     private static final AnalogInput armPotentiometer =
@@ -57,7 +59,8 @@ public class Arm extends Subsystem implements Module, PIDSource, PIDOutput {
                     DEFAULT_SCALE);
             offset = Preferences.getInstance().getDouble("ArmPotOffset",
                     DEFAULT_OFFSET);
-            maxPower = Preferences.getInstance().getDouble("MaxArmPower", DEFAULT_MAXPOWER);
+            maxPower = Preferences.getInstance().getDouble("ArmMaxPower", DEFAULT_MAXPOWER);
+            minPower = Preferences.getInstance().getDouble("ArmMinPower", DEFAULT_MINPOWER);
             kp = Preferences.getInstance().getDouble("ArmKp", DEFAULT_KP);//remove .'s
             ki = Preferences.getInstance().getDouble("ArmKi", DEFAULT_KI);
             kd = Preferences.getInstance().getDouble("ArmKd", DEFAULT_KD);
