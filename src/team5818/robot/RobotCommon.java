@@ -76,10 +76,10 @@ public class RobotCommon extends IterativeRobot {
     private final RobotCoDriver coDriver = addModule(new RobotCoDriver());
     public final FlyWheel lowerFlywheel = addModule(
             new FlyWheel(new CANTalon(RobotConstants.TALON_FLYWHEEL_LOWER),
-                    5.0 / 18.8, 140.0, "Lower", true));
+                    5.0 / 18.8, 140.0, true, true));
     public final FlyWheel upperFlywheel = addModule(
             new FlyWheel(new CANTalon(RobotConstants.TALON_FLYWHEEL_UPPER),
-                    16.0 / 40.0, 240.0, " Upper", true));
+                    16.0 / 40.0, 240.0, true, true));
     public final VisionThread vision = addModule(new VisionThread());
     public final Track Targeting = addModule(new Track());
     public final Arm arm = addModule(new Arm());

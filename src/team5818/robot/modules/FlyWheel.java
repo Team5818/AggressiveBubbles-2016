@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.PIDOutput;
 import edu.wpi.first.wpilibj.PIDSource;
 import edu.wpi.first.wpilibj.PIDSourceType;
+import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -31,7 +32,7 @@ public class FlyWheel extends Subsystem implements PIDSource, Module {
      * The gearbox ratio between the motor shaft to the wheel.
      */
     private final double gearBoxRatio;
-    public final double maxVelocity;
+    private final double maxVelocity;
 
     public static final double MAX_VELOCITY_UPPER = 240;
     public static final double MAX_VELOCITY_LOWER = 140;
@@ -43,10 +44,11 @@ public class FlyWheel extends Subsystem implements PIDSource, Module {
      * constant izone = Integration Zone for when to cut off the integral klrr =
      * Closed Loop Ramp Rate constant.
      */
-    public static final double KP = 0.001, KI = 0.001, KD = 0.01;
-
-    private String name;
+    private double Kp = 0.01, Ki = 0.0001, Kd = 0.001;
+    
     private PIDController pid;
+    
+    private final String name;
 
     /**
      * 
@@ -58,12 +60,22 @@ public class FlyWheel extends Subsystem implements PIDSource, Module {
      * @param gearRatio
      *            The gearRatio on the flywheel. output/input
      */
-    public FlyWheel(CANTalon talon, double gearRatio, double maxVel, String n,
+    public FlyWheel(CANTalon talon, double gearRatio, double maxVel, boolean lowerFly,
             boolean reversed) {
         gearBoxRatio = gearRatio;
         maxVelocity = maxVel;
-        this.name = n;
-        pid = new PIDController(KP, KI, KD, 1.0 / maxVelocity, this, talon);
+        if(lowerFly) {
+            Kp = Preferences.getInstance().getDouble("FlyLowerKp", 0.01);
+            Ki = Preferences.getInstance().getDouble("FlyLowerKi", 0.0001);
+            Kd = Preferences.getInstance().getDouble("FlyLowerKd", 0.001);
+            name = "Lower";
+        } else {
+            Kp = Preferences.getInstance().getDouble("FlyUpperKp", 0.01);
+            Ki = Preferences.getInstance().getDouble("FlyUpperKi", 0.0001);
+            Kd = Preferences.getInstance().getDouble("FlyUpperKd", 0.001);
+            name  = "Upper";
+        }
+        pid = new PIDController(Kp, Ki, Kd, 1.0 / maxVelocity, this, talon);
         pid.setAbsoluteTolerance(TOLERANCE);
         this.talon = talon;
         talon.setInverted(reversed);
