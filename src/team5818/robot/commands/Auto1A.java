@@ -6,7 +6,7 @@ import team5818.robot.Field;
 
 /**
  * @author Petey
- * basic auto routine 
+ * basic auto routine for portcullis
  *
  */
 

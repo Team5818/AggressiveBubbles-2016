@@ -2,7 +2,12 @@ package team5818.robot.commands;
 
 import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.command.CommandGroup;
-
+/**
+ * 
+ * @author Petey
+ *basic auto routine. Drives over chaval, maybe 
+ *
+ */
 public class Auto2A extends CommandGroup{
     
     public double shootAngle =

@@ -8,7 +8,7 @@ import team5818.robot.Field;
 
 /**
  * @author Petey
- * basic auto routine 
+ * basic auto routine, goes forward through lowbar and shoots 
  *
  */
 public class Auto1EForward extends CommandGroup {

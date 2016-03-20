@@ -7,7 +7,7 @@ import team5818.robot.Field;
 
 /**
  * @author Petey
- * basic auto routine 
+ * basic auto routine, goes backward through lowbar and shoots
  *
  */
 public class Auto1EBackward extends CommandGroup {
