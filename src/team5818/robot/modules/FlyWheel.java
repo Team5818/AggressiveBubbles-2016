@@ -44,7 +44,7 @@ public class FlyWheel extends Subsystem implements PIDSource, Module {
      * constant izone = Integration Zone for when to cut off the integral klrr =
      * Closed Loop Ramp Rate constant.
      */
-    private double Kp = 0.01, Ki = 0.0001, Kd = 0.001;
+    private double Kp, Ki, Kd, Kf;
     
     private PIDController pid;
     
@@ -68,14 +68,16 @@ public class FlyWheel extends Subsystem implements PIDSource, Module {
             Kp = Preferences.getInstance().getDouble("FlyLowerKp", 0.01);
             Ki = Preferences.getInstance().getDouble("FlyLowerKi", 0.0001);
             Kd = Preferences.getInstance().getDouble("FlyLowerKd", 0.001);
+            Kf = Preferences.getInstance().getDouble("FlyLowerKf", 1/MAX_VELOCITY_LOWER);
             name = "Lower";
         } else {
             Kp = Preferences.getInstance().getDouble("FlyUpperKp", 0.01);
             Ki = Preferences.getInstance().getDouble("FlyUpperKi", 0.0001);
             Kd = Preferences.getInstance().getDouble("FlyUpperKd", 0.001);
+            Kf = Preferences.getInstance().getDouble("FlyUpperKf", 1/MAX_VELOCITY_UPPER);
             name  = "Upper";
         }
-        pid = new PIDController(Kp, Ki, Kd, 1.0 / maxVelocity, this, talon);
+        pid = new PIDController(Kp, Ki, Kd, Kf, this, talon);
         pid.setAbsoluteTolerance(TOLERANCE);
         this.talon = talon;
         talon.setInverted(reversed);
