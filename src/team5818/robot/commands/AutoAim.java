@@ -25,8 +25,8 @@ public class AutoAim extends Command {
     public double blobCenterY;
     public double blobWidth;
     public double blobHeight;
-    public double setX;
-    public double setY;
+    // public double setX;
+    // public double setY;
     public double locX;
     public double locY;
     public double blobOffset;
@@ -52,8 +52,8 @@ public class AutoAim extends Command {
         blobCenterY = 0;
         blobWidth = 0;
         blobHeight = 0;
-        setX = 0;
-        setY = 0;
+        // setX = 0;
+        // setY = 0;
         blobOffset = 0;
         locX = 0;
         locY = 0;
@@ -90,13 +90,18 @@ public class AutoAim extends Command {
         }
     }
 
-    public void calculateAngleX() {
-        setX = -((imgWidth / 2 - (locX))) / imgWidth * camFOV;
+    public double calculateAngleX() {
+        double setX = -((imgWidth / 2 - (locX))) / imgWidth * camFOV;
+        DriverStation.reportError(""+setX, false);
+        return setX;
 
     }
 
-    public void calculateAngleY() {
-        setY = RobotCommon.runningRobot.arm.getAngle() + ((imgHeight / 2 - (locY))) / imgHeight * camFOV;
+    public double calculateAngleY() {
+        double setY = RobotCommon.runningRobot.arm.getAngle()
+                + ((imgHeight / 2 - (locY))) / imgHeight * camFOV/2;
+        DriverStation.reportError(""+setY, false);
+        return setY;
     }
 
     public void setDrive(double left, double right) {
@@ -105,20 +110,20 @@ public class AutoAim extends Command {
     }
 
     public void aim() {
-        calculateAngleX();
+        // calculateAngleX();
         if ((locX < (imgWidth / 2) + (slopX * (imgWidth))
                 || (locX > (imgWidth / 2) + (slopX * imgWidth)))) {
-            new SpinRobot(setX).start();
+            new SpinRobot(calculateAngleX()).start();
         } else if (locX == (imgWidth / 2) + (slopX * imgWidth)) {
         } else {
             DriverStation.reportError("did not align", false);
         }
 
-        calculateAngleY();
+        // calculateAngleY();
         if ((locY < (imgHeight / 2) + (slopY * imgHeight) + blobOffset)
                 || (locY > (imgHeight / 2) + (slopY * imgHeight)
                         + blobOffset)) {
-            new SetArmAngle(setY).start();
+            new SetArmAngle(calculateAngleY()).start();
         } else if (locY == (imgHeight / 2) + (slopY * imgHeight) + blobOffset) {
         } else {
             DriverStation.reportError("did not align", false);
