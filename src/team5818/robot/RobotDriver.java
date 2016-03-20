@@ -4,13 +4,17 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
+import edu.wpi.first.wpilibj.command.CommandGroup;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import team5818.robot.commands.Collect;
 import team5818.robot.commands.DrivePower;
+import team5818.robot.commands.LEDToggle;
 import team5818.robot.commands.SetArmAngle;
 import team5818.robot.commands.SetDrivePower;
 import team5818.robot.commands.SpinRobot;
+import team5818.robot.commands.SwitchFeed;
+import team5818.robot.modules.ComputerVision;
 import team5818.robot.modules.Module;
 import team5818.robot.modules.drivetrain.ArcadeDriveCalculator;
 import team5818.robot.modules.drivetrain.ArcadeVelocityCalculator;
@@ -25,7 +29,7 @@ import team5818.robot.util.Vectors;
 public class RobotDriver implements Module {
 
     private enum DriveType {
-        TANK, ARCADE, ARCADE_VELOCITY, AUTO_AIM;
+        TANK, ARCADE, ARCADE_VELOCITY;
     }
 
     private enum InputMode {
@@ -50,9 +54,11 @@ public class RobotDriver implements Module {
     private static final int BUT_ARM_ANGLE_LOW = 4;
     private static final int BUT_ARM_ANGLE_ZERO = 3;
     private static final int BUT_ARM_ANGLE_GROUND = 2;
+    private static final int BUT_OVERRIDE_CODRIVER = 1;
 
     // Second Joystick Buttons
-    private static final int BUT_DEBUG = 12;
+    private static final int BUT_SWITCH_FEED_SHOOT = 12;
+    private static final int BUT_SWITCH_FEED_DRIVE = 11;
     private static final int BUT_ROTATE_CW_90 = 6;
     private static final int BUT_ROTATE_CCW_90 = 5;
     private static final int BUT_ROTATE_CW_180 = 4;
@@ -93,6 +99,10 @@ public class RobotDriver implements Module {
             new JoystickButton(SECOND_JOYSTICK, BUT_ROTATE_CW_180);
     private JoystickButton rotateCCW180 =
             new JoystickButton(SECOND_JOYSTICK, BUT_ROTATE_CCW_180);
+    private JoystickButton butSwitchFeedDrive =
+            new JoystickButton(SECOND_JOYSTICK, BUT_SWITCH_FEED_DRIVE);
+    private JoystickButton butSwitchFeedShoot =
+            new JoystickButton(SECOND_JOYSTICK, BUT_SWITCH_FEED_SHOOT);
 
     @Override
     public void initModule() {
@@ -131,17 +141,26 @@ public class RobotDriver implements Module {
         rotateCCW90.whenPressed(new SpinRobot(-90));
         rotateCW180.whenPressed(new SpinRobot(180));
         rotateCCW180.whenPressed(new SpinRobot(-180));
+        CommandGroup switchFeedShoot = new CommandGroup();
+        switchFeedShoot
+                .addParallel(new SwitchFeed(ComputerVision.CAMERA_SHOOTER));
+        switchFeedShoot.addParallel(new LEDToggle(true));
+        butSwitchFeedShoot.whenPressed(switchFeedShoot);
+        CommandGroup switchFeedDrive = new CommandGroup();
+        switchFeedDrive
+                .addParallel(new SwitchFeed(ComputerVision.CAMERA_DRIVER));
+        switchFeedDrive.addParallel(new LEDToggle(false));
+        butSwitchFeedDrive.whenPressed(switchFeedDrive);
 
         // Setting driving mode to power.
-        new SetDrivePower(0, 0).start();
         stopMovement();
     }
 
     @Override
     public void teleopPeriodicModule() {
         // Drives the robot if it should be done so by Driver.
+        performButtonActions();
         if (!RobotCoDriver.isOverrideDriver()) {
-            performButtonActions();
             if (usingJoystick()) {
                 drive();
                 hasStoppedRobot = false;
@@ -152,11 +171,6 @@ public class RobotDriver implements Module {
                 }
             }
         }
-
-        // Puts the Raw Encoders in the SmartDashboard
-        if (SECOND_JOYSTICK.getRawButton(BUT_DEBUG))
-            debug();
-
     }
 
     /**
@@ -168,10 +182,6 @@ public class RobotDriver implements Module {
         } else {
             RobotCommon.runningRobot.driveTrain.setPower(new Vector2d(0, 0));
         }
-    }
-    
-    public void setAutoAim(){
-        driveType = DriveType.AUTO_AIM;
     }
 
     /**
@@ -187,6 +197,10 @@ public class RobotDriver implements Module {
             invertThrottle = false;
         }
 
+        if(FIRST_JOYSTICK.getRawButton(BUT_OVERRIDE_CODRIVER)) {
+            RobotCoDriver.setOverrideDriver(false);
+        }
+        
         // Changes the Control Mode
         if (FIRST_JOYSTICK.getRawButton(BUT_TWOSTICK_ARCADE)) {
             RobotCommon.runningRobot.driveTrain
@@ -199,11 +213,11 @@ public class RobotDriver implements Module {
             driveType = DriveType.TANK;
             inputMode = InputMode.TWO_STICKS;
         } else if (FIRST_JOYSTICK.getRawButton(BUT_DRIVE_VELOCITY)) {
-            stopMovement();
             driveType = DriveType.ARCADE_VELOCITY;
-        } else if (FIRST_JOYSTICK.getRawButton(BUT_DRIVE_POWER)) {
             stopMovement();
+        } else if (FIRST_JOYSTICK.getRawButton(BUT_DRIVE_POWER)) {
             driveType = DriveType.ARCADE;
+            stopMovement();
         }
     }
 
@@ -242,24 +256,10 @@ public class RobotDriver implements Module {
         }
         if (driveType == DriveType.ARCADE_VELOCITY) {
             RobotCommon.runningRobot.driveTrain.setVelocity(thePowersThatBe);
-        } else if (driveType == DriveType.AUTO_AIM) {
-
         } else {
             RobotCommon.runningRobot.driveTrain.setPower(thePowersThatBe);
         }
 
-    }
-
-    /**
-     * Does debugging stuff if needed.
-     */
-    public void debug() {
-        SmartDashboard.putNumber("Drive Train Left Pos",
-                RobotCommon.runningRobot.driveTrain.getLeftMotors()
-                        .getEncPosRaw());
-        SmartDashboard.putNumber("Drive Train Right Pos",
-                RobotCommon.runningRobot.driveTrain.getRightMotors()
-                        .getEncPosRaw());
     }
 
     @Override
