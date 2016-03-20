@@ -20,7 +20,7 @@ public class Auto1EBackward extends CommandGroup {
             Preferences.getInstance().getDouble("UpperFlyVel", 192.0);
     public double flyLoVel =
             Preferences.getInstance().getDouble("LowerFlyVel", 112.0);
-    public double lowbarDist = 120;
+    public double lowbarDist = 180;
 
     private SetArmAngle putArmDown = new SetArmAngle(collectAngle);
     private SetArmAngle armDownAgain = new SetArmAngle(collectAngle);
