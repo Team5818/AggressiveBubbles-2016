@@ -95,7 +95,7 @@ public class RobotCoDriver implements Module {
     private double shootAngleMed = 40;
     private double shootAngleLow = 30;
     
-    private double coDriveDamp;
+    private double coDriveDamp = 0.25;
 
     @Override
     public void initModule() {
@@ -117,7 +117,7 @@ public class RobotCoDriver implements Module {
                 shootAngleMed);
         shootAngleLow = Preferences.getInstance().getDouble("ShootAngleLow",
                 shootAngleLow);
-        coDriveDamp = Preferences.getInstance().getDouble("CoDriveDamp", 0.4);
+        coDriveDamp = Preferences.getInstance().getDouble("CoDriveDamp", 0.25);
 
         // Making the command groups
         CommandGroup startFlywheel = new CommandGroup();
