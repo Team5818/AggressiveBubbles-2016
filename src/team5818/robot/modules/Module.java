@@ -30,6 +30,12 @@ public interface Module {
      */
     public default void teleopPeriodicModule() {
     }
+    /**
+     * called periodically during auto
+     */
+    
+    public default void autoPeriodicModule(){   
+    }
 
     public default void testPeriodic() {
     }

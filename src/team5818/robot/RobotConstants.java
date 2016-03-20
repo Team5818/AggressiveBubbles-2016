@@ -10,7 +10,7 @@ public final class RobotConstants {
     /**
      * width of the robot
      */
-    public static final double ROBOT_WIDTH_IN_INCHES = 2.3 * 12;
+    public static final double ROBOT_WIDTH_IN_INCHES = 25;
     /**
      * The talon controlling the left-front wheels.
      */
@@ -90,14 +90,6 @@ public final class RobotConstants {
      */
     public static final int HAT_Y_PORT = 2;
     public static final int HAT_X_PORT = 3;
-    /**
-     * The Slop factor for Targeting
-     */
-    public static final double SLOP = 0.0;
-    /**
-     * The Camera feild of view for shooting
-     */
-    public static final double CAMFOV = 68.5;
 
     // TODO redo the math for ROBOT_ENCODER_SCALE
     /**
@@ -109,6 +101,15 @@ public final class RobotConstants {
      * with the stick not working
      */
     public static final double JOYSTICK_DEADBAND = 0.15;
+
+    /**
+     * The Slop factor for Targeting
+     */
+    public static final double SLOP = .02;
+    /**
+     * The Camera feild of view for shooting
+     */
+    public static final double CAMFOV = 68.5;
 
     private RobotConstants() {
     }

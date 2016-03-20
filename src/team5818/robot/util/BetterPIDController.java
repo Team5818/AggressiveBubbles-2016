@@ -769,7 +769,7 @@ public class BetterPIDController implements PIDInterface, LiveWindowSendable {
      * Return true if PIDController is enabled.
      */
     @Override
-    public boolean isEnabled() {
+    public synchronized boolean isEnabled() {
         return m_enabled;
     }
 

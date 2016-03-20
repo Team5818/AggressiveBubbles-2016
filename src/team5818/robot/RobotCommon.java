@@ -16,8 +16,9 @@ import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import team5818.robot.commands.Auto1E;
+import team5818.robot.commands.Auto1EBackward;
 import team5818.robot.commands.DoNothingAuto;
+import team5818.robot.commands.DriveDistanceTest;
 import team5818.robot.commands.SpinTest;
 import team5818.robot.commands.TestDriveVel;
 import team5818.robot.modules.Arm;
@@ -75,10 +76,10 @@ public class RobotCommon extends IterativeRobot {
     private final RobotCoDriver coDriver = addModule(new RobotCoDriver());
     public final FlyWheel lowerFlywheel = addModule(
             new FlyWheel(new CANTalon(RobotConstants.TALON_FLYWHEEL_LOWER),
-                    5.0 / 18.8, 140.0, true));
+                    5.0 / 18.8, 140.0, true, true));
     public final FlyWheel upperFlywheel = addModule(
             new FlyWheel(new CANTalon(RobotConstants.TALON_FLYWHEEL_UPPER),
-                    16.0 / 40.0, 240.0, true));
+                    16.0 / 40.0, 240.0, false, true));
     public final VisionThread vision = addModule(new VisionThread());
     public final Track targeting = addModule(new Track());
     public final Arm arm = addModule(new Arm());
@@ -98,9 +99,10 @@ public class RobotCommon extends IterativeRobot {
         modules.forEach(Module::initModule);
         chooser = new SendableChooser();
         chooser.addDefault("Default Auto", defaultAuto);
-        chooser.addObject("Lowbar Auto", new Auto1E());
+        chooser.addObject("Lowbar Auto", new Auto1EBackward());
         chooser.addObject("Do Nothing Auto", new DoNothingAuto());
         chooser.addObject("Drive Velocity", new TestDriveVel());
+        chooser.addObject("Drive Test", new DriveDistanceTest());
         SmartDashboard.putData("Auto choices", chooser);
         panel = new PowerDistributionPanel();
     }
@@ -140,19 +142,12 @@ public class RobotCommon extends IterativeRobot {
     @Override
     public void autonomousPeriodic() {
         Scheduler.getInstance().run();
+        modules.forEach(Module::autoPeriodicModule);
 
     }
 
     private PowerDistributionPanel panel;
 
-    public void setDriveAutoAim() {
-        driver.setAutoAim();
-    }
-
-    public void setDriveDefault() {
-        driver.stopMovement();
-    }
-    
     /**
      * This function is called periodically during operator control
      */

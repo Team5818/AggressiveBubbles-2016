@@ -22,14 +22,14 @@ public class DriveDistanceCommand extends Command {
         requires(RobotCommon.runningRobot.driveTrain);
         dist = distanceInches;
         maxP = maxPower;
-        timeout = 10.0;
+        timeout = 5.0;
     }
     
     public DriveDistanceCommand(double distanceInches) {
         requires(RobotCommon.runningRobot.driveTrain);
         dist = distanceInches;
-        maxP = 1.0;
-        timeout = 10.0;
+        maxP = .5;
+        timeout = 5.0;
     }
     
     protected void end()
@@ -55,7 +55,16 @@ public class DriveDistanceCommand extends Command {
         DriveSide ds = RobotCommon.runningRobot.driveTrain.getLeftMotors();
         
         System.out.println(ds.getPIDController().getError()+ " onTarget "+ds.getPIDController().onTarget() );
-        return isTimedOut() || RobotCommon.runningRobot.driveTrain.getLeftMotors().getPIDController().onTarget();
+        
+        boolean timedOut = isTimedOut(); 
+        boolean onTarget = RobotCommon.runningRobot.driveTrain.getLeftMotors().getPIDController().onTarget();
+        if(timedOut){
+            return true;
+        }
+        if(onTarget){
+            return true;
+        }
+        return false;
     }
 
     @Override

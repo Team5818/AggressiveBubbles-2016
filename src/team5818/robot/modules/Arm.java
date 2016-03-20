@@ -11,6 +11,8 @@ import edu.wpi.first.wpilibj.PIDSourceType;
 import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import team5818.robot.RobotCommon;
 import team5818.robot.RobotConstants;
 import team5818.robot.commands.SetArmAngle;
 import team5818.robot.commands.SetArmPower;
@@ -24,6 +26,7 @@ public class Arm extends Subsystem implements Module, PIDSource, PIDOutput {
     protected static final double DEFAULT_SCALE = 0.047;
     protected static final double DEFAULT_OFFSET = -9.587;
     protected static final double DEFAULT_MAXPOWER = 0.8;
+    protected static final double DEFAULT_MINPOWER = -.4;
     protected static final double DEFAULT_KP = 0.01;
     protected static final double DEFAULT_KI = 0.0;
     protected static final double DEFAULT_KD = 0.0;
@@ -31,6 +34,9 @@ public class Arm extends Subsystem implements Module, PIDSource, PIDOutput {
     private double scale;
     private double offset;
     private double maxPower;
+    private double minPower;
+    private double armMotorRatio = 0.75;
+    private double armPowerIdle = 0.1;
     private boolean pidMode = false;
 
     private static final AnalogInput armPotentiometer =
@@ -43,7 +49,6 @@ public class Arm extends Subsystem implements Module, PIDSource, PIDOutput {
     private PIDController armPID;
 
     public Arm() {
-
         if (secondArmMotor != null)
             secondArmMotor.setInverted(true);
     }
@@ -56,7 +61,10 @@ public class Arm extends Subsystem implements Module, PIDSource, PIDOutput {
                     DEFAULT_SCALE);
             offset = Preferences.getInstance().getDouble("ArmPotOffset",
                     DEFAULT_OFFSET);
-            maxPower = Preferences.getInstance().getDouble("MaxArmPower", DEFAULT_MAXPOWER);
+            maxPower = Preferences.getInstance().getDouble("ArmMaxPower", DEFAULT_MAXPOWER);
+            minPower = Preferences.getInstance().getDouble("ArmMinPower", DEFAULT_MINPOWER);
+            armMotorRatio = Preferences.getInstance().getDouble("ArmMotorRatio", armMotorRatio);
+            armPowerIdle = Preferences.getInstance().getDouble("ArmPowerIdle", armPowerIdle);
             kp = Preferences.getInstance().getDouble("ArmKp", DEFAULT_KP);//remove .'s
             ki = Preferences.getInstance().getDouble("ArmKi", DEFAULT_KI);
             kd = Preferences.getInstance().getDouble("ArmKd", DEFAULT_KD);
@@ -75,6 +83,12 @@ public class Arm extends Subsystem implements Module, PIDSource, PIDOutput {
         armPID.setOutputRange(-maxPower, maxPower);
         armPID.setAbsoluteTolerance(10);
         LiveWindow.addActuator("Arm", "PID Controller", armPID);
+    }
+    
+    @Override
+    public void teleopPeriodicModule() {
+        SmartDashboard.putNumber("Potentiometer Angle", getAngle());
+        SmartDashboard.putNumber("Potentiometer Raw", getRawPot());
     }
 
     /**
@@ -107,6 +121,10 @@ public class Arm extends Subsystem implements Module, PIDSource, PIDOutput {
         double a1 = armPotentiometer.getValue() * scale;
         double aFinal = a1 + offset;
         return aFinal;
+    }
+    
+    public double getRawPot() {
+        return armPotentiometer.getValue();
     }
 
     public synchronized boolean getPIDMode() {
@@ -192,7 +210,9 @@ public class Arm extends Subsystem implements Module, PIDSource, PIDOutput {
 
     @Override
     public void pidWrite(double power) {
-        firstArmMotor.set(power);
+        
+        power += armPowerIdle * Math.cos(getAngle()/180*Math.PI);
+        firstArmMotor.set(power * armMotorRatio);
         if (secondArmMotor != null) {
             secondArmMotor.set(power);
         }

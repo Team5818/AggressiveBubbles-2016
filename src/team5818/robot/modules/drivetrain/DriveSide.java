@@ -54,7 +54,8 @@ public class DriveSide implements EncoderManager, PIDOutput, MovingControl {
     private static double velocityKi = 0.0001;
     private static double velocityKd = 0.0;
     private static double velocityKf = 0.0;
-    private double encoderScale = .020603;
+    private double encoderScale = -.020603;
+   private double pidInput = 0.0; 
 
     // Initialize objects.
     private final CANTalon mainTalon;
@@ -105,7 +106,7 @@ public class DriveSide implements EncoderManager, PIDOutput, MovingControl {
         velocityKd =
                 Preferences.getInstance().getDouble("Velocity" + "Kd", 0.0);
         velocityKf = Preferences.getInstance().getDouble("VelocityKf", 0.0);
-        encoderScale = Preferences.getInstance().getDouble("Encoder_Scale", .020603);
+        encoderScale = Preferences.getInstance().getDouble("EncoderScale", -.020603);
 
         if (mainTalon == null) {
             throw new IllegalArgumentException("mainTalon cannot be null");
@@ -131,6 +132,7 @@ public class DriveSide implements EncoderManager, PIDOutput, MovingControl {
                 } else {
                     val = getEncPosAbs();
                 }
+                pidInput = val;
                 return val;
             }
 
@@ -148,7 +150,7 @@ public class DriveSide implements EncoderManager, PIDOutput, MovingControl {
         } else {
             pidLoop = new BetterPIDController(distanceKp, distanceKi,
                     distanceKd, pidSource, this);
-            pidLoop.setAbsoluteTolerance(10);
+            pidLoop.setAbsoluteTolerance(.5);
         }
     }
 
@@ -197,6 +199,8 @@ public class DriveSide implements EncoderManager, PIDOutput, MovingControl {
     public double getEncPosAbs() {
         return mainTalon.getPosition() * encoderScale;
     }
+    
+
 
     @Override
     public double getEncPosRaw() {
@@ -215,6 +219,10 @@ public class DriveSide implements EncoderManager, PIDOutput, MovingControl {
             vel = -vel;
         }
         return vel;
+    }
+    
+    public double getPIDInput(){
+        return pidInput;
     }
 
     /**
@@ -235,6 +243,7 @@ public class DriveSide implements EncoderManager, PIDOutput, MovingControl {
         if (pidLoop.isEnabled() || DriveTrain.getDriveMode() != DriveTrain.MODE_POWER) {
             pidLoop.disable();
         }
+        setCoast(false);
         setDriveMode(MODE_POWER);
         pidWrite(power);
     }
@@ -256,19 +265,20 @@ public class DriveSide implements EncoderManager, PIDOutput, MovingControl {
         if (DriveTrain.getDriveMode() != DriveTrain.MODE_VELOCITY) {
             resetPIDLoop();
             pidSource.setPIDSourceType(PIDSourceType.kRate);
-
-            pidWrite(vel / MAX_VELOCITY);
-            try {
-                Thread.sleep(100);
-            } catch (InterruptedException e) {
-            }
         }
         pidLoop.enable();
-        pidLoop.setPID(velocityKp, velocityKi, velocityKd);
+        pidLoop.setPID(velocityKp, velocityKi, velocityKd, velocityKf);
         // setPIDFromSmart();
         pidLoop.setOutputRange(-DEFAULT_MAX_POWER, DEFAULT_MAX_POWER);
         pidLoop.setContinuous();
+        setCoast(true);
         pidLoop.setSetpoint(vel);
+    }
+
+    private void setCoast(boolean b) {
+        mainTalon.enableBrakeMode(!b);
+        secondaryTalon.enableBrakeMode(!b);
+        thirdTalon.enableBrakeMode(!b);
     }
 
     @Override
@@ -282,6 +292,7 @@ public class DriveSide implements EncoderManager, PIDOutput, MovingControl {
         pidLoop.setOutputRange(-maxPower, maxPower);
         mainTalon.setPosition(0);
         pidLoop.setContinuous();
+        setCoast(false);
         pidLoop.setSetpoint(dist);
         SmartDashboard.putNumber("distance", dist);
         pidLoop.enable();
