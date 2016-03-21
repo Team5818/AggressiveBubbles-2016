@@ -37,10 +37,11 @@ public class AutoAim extends Command {
     public boolean isCenteredY;
     public boolean done;
 
-    private double MAX_SPIN_POWER = 0.15;
-    private double MAX_ARM_POWER = 0.5;
+    /*
+     * private double MAX_SPIN_POWER = 0.15; private double MAX_ARM_POWER = 0.5;
+     */
 
-    public AutoAim() {
+    public AutoAim(boolean interrupted) {
         track = RobotCommon.runningRobot.targeting;
         camFOV = RobotConstants.CAMFOV;
 
@@ -52,8 +53,6 @@ public class AutoAim extends Command {
         blobCenterY = 0;
         blobWidth = 0;
         blobHeight = 0;
-        // setX = 0;
-        // setY = 0;
         blobOffset = 0;
         locX = 0;
         locY = 0;
@@ -62,7 +61,7 @@ public class AutoAim extends Command {
         isCenteredY = false;
         slopX = (RobotConstants.SLOP);
         slopY = (RobotConstants.SLOP);
-        done = false;
+        done = interrupted;
     }
 
     @Override
@@ -91,28 +90,27 @@ public class AutoAim extends Command {
     }
 
     public double calculateAngleX() {
-        double setX = -((imgWidth / 2 - (locX))) / imgWidth * camFOV;
-        DriverStation.reportError(""+setX, false);
+        double setX = -((imgWidth / 2 - (locX))) / imgWidth * camFOV / 2;
+        DriverStation.reportError("" + setX, false);
         return setX;
 
     }
 
     public double calculateAngleY() {
         double setY = RobotCommon.runningRobot.arm.getAngle()
-                + ((imgHeight / 2 - (locY))) / imgHeight * camFOV/2;
-        if(locY > imgHeight/2){
-            setY -= 2;
-        }
-        else{
-            setY -= 1;
+                + ((imgHeight / 2 - (locY))) / imgHeight * camFOV / 2;
+        if (locY > imgHeight / 2) {
+            setY -= 0;
+        } else {
+            setY -= 0;
         }
         return setY;
     }
 
-    public void setDrive(double left, double right) {
-        Vector2d power = new Vector2d(left, right);
-        drive.setPower(power);
-    }
+    /*
+     * public void setDrive(double left, double right) { Vector2d power = new
+     * Vector2d(left, right); drive.setPower(power); }
+     */
 
     public void aim() {
         // calculateAngleX();
@@ -147,17 +145,20 @@ public class AutoAim extends Command {
             blobHeight = track.blobHeight;
             locX = track.blobLocX;
             locY = track.blobLocX;
-            if (blobWidth < 70) {
-                blobOffset = track.blobOffsetClose;
-            } else {
-                blobOffset = track.blobOffsetFar;
-            }
+            /*
+             * if (blobWidth < 70) { blobOffset = track.blobOffsetClose; } else
+             * { blobOffset = track.blobOffsetFar; }
+             */
         }
     }
 
     @Override
     protected boolean isFinished() {
-        return isTimedOut();
+        if (done || isTimedOut()) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     @Override

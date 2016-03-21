@@ -72,7 +72,8 @@ public class RobotCoDriver implements Module {
     // Second Joystick Buttons
     JoystickButton butSpinFlywheel =
             new JoystickButton(secondJoystick, BUT_SPIN_FLYWHEEL);
-    JoystickButton butStopFlywheel = new JoystickButton(secondJoystick, BUT_STOP_FLYWHEEL);
+    JoystickButton butStopFlywheel =
+            new JoystickButton(secondJoystick, BUT_STOP_FLYWHEEL);
     JoystickButton butCollect = new JoystickButton(secondJoystick, BUT_COLLECT);
     JoystickButton butLedOn = new JoystickButton(secondJoystick, BUT_LED_ON);
     JoystickButton butLedOff = new JoystickButton(secondJoystick, BUT_LED_OFF);
@@ -84,17 +85,17 @@ public class RobotCoDriver implements Module {
     private FlyWheel lowerFlywheel;
     private FlyWheel upperFlywheel;
     private Arm arm;
-    
+
     // Weather CoDriver is overriding driver control.
     private static boolean overrideDriver = false;
     private boolean hasStoppedArm = false;
     private boolean hasStoppedDrive = false;
-    
+
     // Different arm angles
     private double shootAngleHigh = 60;
     private double shootAngleMed = 40;
     private double shootAngleLow = 30;
-    
+
     private double coDriveDamp = 0.25;
 
     @Override
@@ -129,14 +130,26 @@ public class RobotCoDriver implements Module {
         stopFlywheel.addParallel(new SetFlywheelPower(0));
         stopFlywheel.addParallel(new SetDrivePower(0, 0));
         CommandGroup switchFeedShoot = new CommandGroup();
-        switchFeedShoot.addParallel(new SwitchFeed(ComputerVision.CAMERA_SHOOTER));
+        switchFeedShoot
+                .addParallel(new SwitchFeed(ComputerVision.CAMERA_SHOOTER));
         switchFeedShoot.addParallel(new LEDToggle(true));
         CommandGroup switchFeedDrive = new CommandGroup();
-        switchFeedDrive.addParallel(new SwitchFeed(ComputerVision.CAMERA_DRIVER));
+        switchFeedDrive
+                .addParallel(new SwitchFeed(ComputerVision.CAMERA_DRIVER));
         switchFeedDrive.addParallel(new LEDToggle(false));
+
+        //Making command for AutoAim and Shoot
+        CommandGroup aimAndShoot = new CommandGroup();
+        aimAndShoot.addParallel(startFlywheel);
+        aimAndShoot.addParallel(new AutoAim(false));
+        aimAndShoot.addSequential(new Collect(Collect.COLLECT_POWER));
         
+        //Making command for stopping AutoAim and Shooting
+        CommandGroup stopAimAndShoot = new CommandGroup();
+        stopAimAndShoot.addParallel(stopFlywheel);
+        stopAimAndShoot.addParallel(new AutoAim(true));
+
         // Assigning commands to the buttons
-        butAutoAim.whenPressed(new AutoAim());
         butSpinFlywheel.whenPressed(startFlywheel);
         butStopFlywheel.whenPressed(stopFlywheel);
         butShootAngleHigh.whenPressed(new SetArmAngle(shootAngleHigh));
@@ -149,11 +162,10 @@ public class RobotCoDriver implements Module {
         butLedOff.whenPressed(new LEDToggle(false));
         butCollect.whenPressed(new Collect(Collect.COLLECT_POWER));
         butCollect.whenReleased(new Collect(0));
-        butAutoAim.whenPressed(new AutoAim());
-        butSwitchShootFeed
-                .whenPressed(switchFeedShoot);
-        butSwitchDriverFeed
-                .whenPressed(switchFeedDrive);
+        butAutoAim.whenPressed(aimAndShoot);
+        butAutoAim.whenReleased(aimAndShoot);
+        butSwitchShootFeed.whenPressed(switchFeedShoot);
+        butSwitchDriverFeed.whenPressed(switchFeedDrive);
     }
 
     @Override
@@ -213,7 +225,8 @@ public class RobotCoDriver implements Module {
         if (isOverrideDriver()) {
             RobotCommon.runningRobot.driveTrain
                     .setPower(ArcadeDriveCalculator.INSTANCE.compute(
-                            new Vector2d(firstJoystick.getX() * coDriveDamp, firstJoystick.getY() * coDriveDamp)));
+                            new Vector2d(firstJoystick.getX() * coDriveDamp,
+                                    firstJoystick.getY() * coDriveDamp)));
         }
     }
 
