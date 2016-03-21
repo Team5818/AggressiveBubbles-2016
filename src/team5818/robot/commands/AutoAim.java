@@ -100,7 +100,12 @@ public class AutoAim extends Command {
     public double calculateAngleY() {
         double setY = RobotCommon.runningRobot.arm.getAngle()
                 + ((imgHeight / 2 - (locY))) / imgHeight * camFOV/2;
-        DriverStation.reportError(""+setY, false);
+        if(locY > imgHeight/2){
+            setY -= 2;
+        }
+        else{
+            setY -= 1;
+        }
         return setY;
     }
 

@@ -30,7 +30,7 @@ public class Track implements Module {
         blobWidth = RoboData.getNumber("WIDTH", 0.0);
         blobHeight = RoboData.getNumber("HEIGHT", 0.0);
         blobLocX = RoboData.getNumber("COG_X", 0.0);
-        blobLocY = RoboData.getNumber("COG_Y", 0.0) + 20;
+        blobLocY = RoboData.getNumber("COG_Y", 0.0) + 15;
         blobOffsetFar = blobHeight;
         blobOffsetClose = blobHeight / 2;
         DriverStation.reportError("" + blobLocX + "\n", false);
