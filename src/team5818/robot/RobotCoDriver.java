@@ -140,14 +140,14 @@ public class RobotCoDriver implements Module {
 
         //Making command for AutoAim and Shoot
         CommandGroup aimAndShoot = new CommandGroup();
-        aimAndShoot.addParallel(startFlywheel);
-        aimAndShoot.addParallel(new AutoAim(false));
+        aimAndShoot.addSequential(new AutoAim(false));
+        aimAndShoot.addSequential(startFlywheel);
         aimAndShoot.addSequential(new Collect(Collect.COLLECT_POWER));
         
         //Making command for stopping AutoAim and Shooting
         CommandGroup stopAimAndShoot = new CommandGroup();
-        stopAimAndShoot.addParallel(stopFlywheel);
-        stopAimAndShoot.addParallel(new AutoAim(true));
+        stopAimAndShoot.addSequential(stopFlywheel);
+        stopAimAndShoot.addSequential(new AutoAim(true));
 
         // Assigning commands to the buttons
         butSpinFlywheel.whenPressed(startFlywheel);

@@ -90,7 +90,7 @@ public class AutoAim extends Command {
     }
 
     public double calculateAngleX() {
-        double setX = -((imgWidth / 2 - (locX))) / imgWidth * camFOV / 2;
+        double setX = (((imgWidth / 2 - (locX))) / imgWidth * camFOV) / 2;
         DriverStation.reportError("" + setX, false);
         return setX;
 
