@@ -1,5 +1,6 @@
 package team5818.robot.commands;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.command.Command;
 import team5818.robot.RobotCommon;
 import team5818.robot.RobotConstants;
@@ -28,9 +29,9 @@ public class SpinRobot extends Command {
      */
     public SpinRobot(double angle, double timeout, double maxPower) {
         spinAngle = angle;
-        arcLength = MathUtil.distanceOfArc(RobotConstants.ROBOT_WIDTH_IN_INCHES,
+        arcLength = MathUtil.distanceOfArc(RobotConstants.ROBOT_WIDTH_IN_INCHES/2,
                 spinAngle);
-        setTimeout(timeout);
+        setTimeout(15);
         requires(RobotCommon.runningRobot.driveTrain);
         maxP = maxPower;
     }
@@ -49,9 +50,7 @@ public class SpinRobot extends Command {
 
     @Override
     protected void initialize() {
-        double negArc = -arcLength;
-        train.getLeftMotors().setDriveDistance(arcLength/2, maxP);
-        train.getRightMotors().setDriveDistance(negArc/2, maxP);
+        train.setSpinAngle(spinAngle, maxP);
 
     }
 
@@ -63,7 +62,7 @@ public class SpinRobot extends Command {
     @Override
     protected boolean isFinished() {
         DriveSide ds = RobotCommon.runningRobot.driveTrain.getLeftMotors();
-        return (ds.getPIDController().onTarget() || isTimedOut());
+        return (ds.getPIDController().onTarget() || ds.getEncPosAbs() >= arcLength || isTimedOut());
 
     }
 

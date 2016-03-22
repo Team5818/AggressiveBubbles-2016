@@ -53,6 +53,7 @@ public class RobotCoDriver implements Module {
     private static final int BUT_SWITCH_DRIVER_FEED = 11;
     private static final int BUT_LED_ON = 8;
     private static final int BUT_LED_OFF = 7;
+    private static final int BUT_UNCOLLECT = 5;
     private static final int BUT_OVERRIDE_DRIVER = 4;
     private static final int BUT_STOP_FLYWHEEL = 3;
     private static final int BUT_SPIN_FLYWHEEL = 2;
@@ -75,6 +76,7 @@ public class RobotCoDriver implements Module {
     JoystickButton butStopFlywheel =
             new JoystickButton(secondJoystick, BUT_STOP_FLYWHEEL);
     JoystickButton butCollect = new JoystickButton(secondJoystick, BUT_COLLECT);
+    JoystickButton butUncollect = new JoystickButton(secondJoystick, BUT_UNCOLLECT);
     JoystickButton butLedOn = new JoystickButton(secondJoystick, BUT_LED_ON);
     JoystickButton butLedOff = new JoystickButton(secondJoystick, BUT_LED_OFF);
     JoystickButton butSwitchShootFeed =
@@ -162,8 +164,10 @@ public class RobotCoDriver implements Module {
         butLedOff.whenPressed(new LEDToggle(false));
         butCollect.whenPressed(new Collect(Collect.COLLECT_POWER));
         butCollect.whenReleased(new Collect(0));
+        butUncollect.whenPressed(new Collect(-Collect.COLLECT_POWER));
+        butUncollect.whenReleased(new Collect(0));
         butAutoAim.whenPressed(aimAndShoot);
-        butAutoAim.whenReleased(aimAndShoot);
+        butAutoAim.whenReleased(stopAimAndShoot);
         butSwitchShootFeed.whenPressed(switchFeedShoot);
         butSwitchDriverFeed.whenPressed(switchFeedDrive);
     }
