@@ -55,8 +55,7 @@ public class DriveSide implements EncoderManager, PIDOutput, MovingControl {
     private static double velocityKd = 0.0;
     private static double velocityKf = 0.0;
     private double encoderScale = -.020603;
-    private double pidInput = 0.0; 
-    private boolean usingStandardEncoder = true;
+   private double pidInput = 0.0; 
 
     // Initialize objects.
     private final CANTalon mainTalon;
@@ -107,11 +106,8 @@ public class DriveSide implements EncoderManager, PIDOutput, MovingControl {
         velocityKd =
                 Preferences.getInstance().getDouble("Velocity" + "Kd", 0.0);
         velocityKf = Preferences.getInstance().getDouble("VelocityKf", 0.0);
-        usingStandardEncoder = Preferences.getInstance().getBoolean("UsingStandardEncoder", true);
-        if(usingStandardEncoder)
-            encoderScale = Preferences.getInstance().getDouble("EncoderScaleStandard", -.020603);
-        else
-            encoderScale = Preferences.getInstance().getDouble("EncoderScaleSim", -.020603);
+        encoderScale = Preferences.getInstance().getDouble("EncoderScale", -.020603);
+
         if (mainTalon == null) {
             throw new IllegalArgumentException("mainTalon cannot be null");
         }

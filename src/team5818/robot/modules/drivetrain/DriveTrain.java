@@ -161,7 +161,7 @@ public class DriveTrain extends Subsystem implements Module {
         // To rotate X degrees, simply move left side forward by W
         // and move right side backwards by W
         double distance = MathUtil
-                .distanceOfArc(RobotConstants.ROBOT_WIDTH_IN_INCHES/2, degrees);
+                .distanceOfArc(RobotConstants.ROBOT_WIDTH_IN_INCHES, degrees);
         setDriveDistance(distance, -distance, maxPower);
     }
 
