@@ -47,6 +47,7 @@ public class Arm extends Subsystem implements Module, PIDSource, PIDOutput {
             new CANTalon(RobotConstants.TALON_SECOND_ARM_MOTOR);
 
     private PIDController armPID;
+    private double armPowerIdleRatio = 1.5;
 
     public Arm() {
         if (secondArmMotor != null)
@@ -65,6 +66,7 @@ public class Arm extends Subsystem implements Module, PIDSource, PIDOutput {
             minPower = Preferences.getInstance().getDouble("ArmMinPower", DEFAULT_MINPOWER);
             armMotorRatio = Preferences.getInstance().getDouble("ArmMotorRatio", armMotorRatio);
             armPowerIdle = Preferences.getInstance().getDouble("ArmPowerIdle", armPowerIdle);
+            armPowerIdleRatio  = Preferences.getInstance().getDouble("ArmPowerIdleRatio", 1.5);
             kp = Preferences.getInstance().getDouble("ArmKp", DEFAULT_KP);//remove .'s
             ki = Preferences.getInstance().getDouble("ArmKi", DEFAULT_KI);
             kd = Preferences.getInstance().getDouble("ArmKd", DEFAULT_KD);
@@ -211,8 +213,8 @@ public class Arm extends Subsystem implements Module, PIDSource, PIDOutput {
     @Override
     public void pidWrite(double power) {
         
-        power += armPowerIdle * Math.cos(getAngle()/180*Math.PI);
-        firstArmMotor.set(power * armMotorRatio);
+        power -= armPowerIdle * Math.cos(getAngle()/180*Math.PI);
+        firstArmMotor.set(power * armMotorRatio * 1.5);
         if (secondArmMotor != null) {
             secondArmMotor.set(power);
         }
