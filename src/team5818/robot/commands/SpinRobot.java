@@ -31,7 +31,7 @@ public class SpinRobot extends Command {
         spinAngle = angle;
         arcLength = MathUtil.distanceOfArc(RobotConstants.ROBOT_WIDTH_IN_INCHES/2,
                 spinAngle);
-        setTimeout(15);
+        setTimeout(timeout);
         requires(RobotCommon.runningRobot.driveTrain);
         maxP = maxPower;
     }
