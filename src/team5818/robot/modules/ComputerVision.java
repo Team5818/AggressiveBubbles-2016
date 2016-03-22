@@ -22,13 +22,13 @@ public class ComputerVision {
      * The driving camera that is directed with the direction we collect.
      * 
      */
-    public static final int CAMERA_DRIVER = 1;
+    public static int CAMERA_DRIVER = 1;
 
     /**
      * The shooter Camera that faces with the flywheel.
      *
      */
-    public static final int CAMERA_SHOOTER = 2;
+    public static int CAMERA_SHOOTER = 2;
 
     private USBCam camDriver;
     private USBCam camShooter;
@@ -40,6 +40,7 @@ public class ComputerVision {
      * Initializes the light ring and the cameras. Begins the capture.
      */
     public ComputerVision() {
+        //TODO add camera port to preferences.
 
         // Try to set up LED Ring
         try {

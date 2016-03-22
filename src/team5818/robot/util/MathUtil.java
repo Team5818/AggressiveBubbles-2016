@@ -16,7 +16,7 @@ public class MathUtil {
      * @return the length of the arc
      */
     public static double distanceOfArc(double radius, double degrees) {
-        return radius * Math.toRadians(degrees);
+        return radius * degrees * 180 / Math.PI;
     }
 
     private MathUtil() {
