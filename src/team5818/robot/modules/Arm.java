@@ -214,7 +214,7 @@ public class Arm extends Subsystem implements Module, PIDSource, PIDOutput {
     public void pidWrite(double power) {
         
         power -= armPowerIdle * Math.cos(getAngle()/180*Math.PI);
-        firstArmMotor.set(power * armMotorRatio * 1.5);
+        firstArmMotor.set(power * armMotorRatio);
         if (secondArmMotor != null) {
             secondArmMotor.set(power);
         }

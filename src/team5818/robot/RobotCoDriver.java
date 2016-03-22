@@ -166,7 +166,7 @@ public class RobotCoDriver implements Module {
         butCollect.whenReleased(new Collect(0));
         butUncollect.whenPressed(new Collect(-Collect.COLLECT_POWER));
         butUncollect.whenReleased(new Collect(0));
-        //butAutoAim.whenPressed(aimAndShoot);
+        //butAutoAim.whenPressed(new AutoAim(false));
         //butAutoAim.whenReleased(aimAndShoot);
         butSwitchShootFeed.whenPressed(switchFeedShoot);
         butSwitchDriverFeed.whenPressed(switchFeedDrive);
