@@ -4,6 +4,7 @@ import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.CommandGroup;
 import team5818.robot.Field;
+import team5818.robot.modules.FlyWheel;
 
 /**
  * @author Petey
@@ -12,28 +13,22 @@ import team5818.robot.Field;
  */
 public class Auto1EBackward extends CommandGroup {
 
-    public double collectAngle =
-            Preferences.getInstance().getDouble("ArmAngleCollect", 0.0);
-    public double shootAngle =
-            Preferences.getInstance().getDouble("ShootAngleLow", 40.0);
+    public double collectAngle = 3.0;
+            //Preferences.getInstance().getDouble("ArmAngleCollect", 3.0);
     public double flyUpVel =
-            Preferences.getInstance().getDouble("UpperFlyVel", 192.0);
+            Preferences.getInstance().getDouble("UpperFlyVel", FlyWheel.SHOOT_VELOCITY_UPPER);
     public double flyLoVel =
-            Preferences.getInstance().getDouble("LowerFlyVel", 112.0);
+            Preferences.getInstance().getDouble("LowerFlyVel", FlyWheel.SHOOT_VELOCITY_LOWER);
     public double lowbarDist = 180;
 
     private SetArmAngle putArmDown = new SetArmAngle(collectAngle);
-    private SetArmAngle armDownAgain = new SetArmAngle(collectAngle);
-    private SetArmAngle findTarget = new SetArmAngle(40);
     private DriveDistanceCommand goUnderLowbar =
             new DriveDistanceCommand(-lowbarDist, .5, 5);
-    private DriveDistanceCommand backUp =
-            new DriveDistanceCommand(lowbarDist, .5, 5);
+    private SpinRobot spin = new SpinRobot(40.0);
+    private SetArmAngle findTarget = new SetArmAngle(40);
+    private SetFlywheelVelocity setFlyVel = new SetFlywheelVelocity(flyUpVel, flyLoVel);
     private AutoAim autoAim = new AutoAim();
-
-    private SpinRobot spin = new SpinRobot(60.0);
-    private SpinRobot unAim = new SpinRobot(-60.0);
-    private Shoot dontMiss = new Shoot(flyUpVel, flyLoVel);
+    private Shoot dontMiss = new Shoot();
 
     /**
      * move arm down
@@ -49,11 +44,10 @@ public class Auto1EBackward extends CommandGroup {
         this.addSequential(goUnderLowbar);
         this.addSequential(spin);
         this.addSequential(findTarget);
-        
+        this.addSequential(setFlyVel);
+        this.addSequential(autoAim);
         this.addSequential(dontMiss);
-        this.addSequential(unAim);
-        this.addSequential(armDownAgain);
-        this.addSequential(backUp);
+
     }
 
 }
