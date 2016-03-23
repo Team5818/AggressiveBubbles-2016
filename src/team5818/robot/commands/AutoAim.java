@@ -25,6 +25,7 @@ public class AutoAim extends Command {
     public double blobCenterY;
     public double blobWidth;
     public double blobHeight;
+    private double power;
     // public double setX;
     // public double setY;
     public double locX;
@@ -36,12 +37,15 @@ public class AutoAim extends Command {
     public boolean isCenteredX;
     public boolean isCenteredY;
     public boolean done;
+    private double MAX_POWER = 0.4;
+    private double MIN_POWER = 0.1;
 
-    /*
-     * private double MAX_SPIN_POWER = 0.15; private double MAX_ARM_POWER = 0.5;
+    /**
+     * the offset in degrees.
+     * 
+     * @param offset
      */
-
-    public AutoAim() {
+    public AutoAim(double offset) {
         track = RobotCommon.runningRobot.targeting;
         camFOV = RobotConstants.CAMFOV;
 
@@ -53,7 +57,7 @@ public class AutoAim extends Command {
         blobCenterY = 0;
         blobWidth = 0;
         blobHeight = 0;
-        blobOffset = 0;
+        blobOffset = offset;
         locX = 0;
         locY = 0;
 
@@ -61,6 +65,7 @@ public class AutoAim extends Command {
         isCenteredY = false;
         slopX = (RobotConstants.SLOP);
         slopY = (RobotConstants.SLOP);
+        requires(RobotCommon.runningRobot.driveTrain);
     }
 
     @Override
@@ -74,12 +79,7 @@ public class AutoAim extends Command {
             blobWidth = track.blobWidth;
             blobHeight = track.blobHeight;
             locX = track.blobLocX;
-            locY = track.blobLocY;
-            if (blobWidth < 70) {
-                blobOffset = track.blobOffsetClose;
-            } else {
-                blobOffset = track.blobOffsetFar;
-            }
+            locY = track.blobLocY + blobOffset;
             aim();
         }
 
@@ -89,7 +89,7 @@ public class AutoAim extends Command {
     }
 
     public double calculateAngleX() {
-        double setX = (((imgWidth / 2 - (locX))) / imgWidth * camFOV) / 2;
+        double setX = -(((imgWidth / 2 - (locX))) / imgWidth * camFOV);
         DriverStation.reportError("" + setX, false);
         return setX;
 
@@ -97,7 +97,8 @@ public class AutoAim extends Command {
 
     public double calculateAngleY() {
         double setY = RobotCommon.runningRobot.arm.getAngle()
-                + ((imgHeight / 2 - (locY))) / imgHeight * camFOV / 2;
+                + ((imgHeight / 2 - (locY))) / imgHeight * camFOV / 2
+                + blobOffset;
         if (locY > imgHeight / 2) {
             setY -= 0;
         } else {
@@ -112,10 +113,9 @@ public class AutoAim extends Command {
      */
 
     public void aim() {
-        // calculateAngleX();
         if ((locX < (imgWidth / 2) + (slopX * (imgWidth))
                 || (locX > (imgWidth / 2) + (slopX * imgWidth)))) {
-            new SpinRobot(calculateAngleX()).start();
+            // new SpinRobot(calculateAngleX()).start();
         } else if (locX == (imgWidth / 2) + (slopX * imgWidth)) {
         } else {
             DriverStation.reportError("did not align", false);
@@ -135,7 +135,6 @@ public class AutoAim extends Command {
 
     @Override
     protected void execute() {
-        // TODO Auto-generated method stub
         track.GetData();
         if (track.blobCount > 0) {
             imgHeight = track.imageHeight;
@@ -144,6 +143,21 @@ public class AutoAim extends Command {
             blobHeight = track.blobHeight;
             locX = track.blobLocX;
             locY = track.blobLocX;
+
+            calculateAngleX();
+            double angle = calculateAngleX();
+            power = angle * .02;
+            if (power > MAX_POWER)
+                power = MAX_POWER;
+            else if (power < -MAX_POWER)
+                power = -MAX_POWER;
+            if (power > 0 && power < MIN_POWER) {
+                power = MIN_POWER;
+            } else if (power < 0 && power > -MIN_POWER) {
+                power = MIN_POWER;
+            }
+            RobotCommon.runningRobot.driveTrain
+                    .setPower(new Vector2d(power, -power));
             /*
              * if (blobWidth < 70) { blobOffset = track.blobOffsetClose; } else
              * { blobOffset = track.blobOffsetFar; }
@@ -153,7 +167,7 @@ public class AutoAim extends Command {
 
     @Override
     protected boolean isFinished() {
-        return isTimedOut();
+        return isTimedOut() || Math.abs(calculateAngleX()) <= 1;
 
     }
 
@@ -164,7 +178,6 @@ public class AutoAim extends Command {
 
     @Override
     protected void interrupted() {
-       
 
     }
 }

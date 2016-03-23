@@ -32,7 +32,7 @@ public class Auto1EForward extends CommandGroup {
 
     private SpinRobot spin = new SpinRobot(-170.0);
     private SetArmAngle findTarget = new SetArmAngle(40);
-    private AutoAim autoAim = new AutoAim();
+    private AutoAim autoAim = new AutoAim(5);
     private SpinRobot unAim = new SpinRobot(170.0);
     private Shoot dontMiss = new Shoot(flyUpVel, flyLoVel);
 

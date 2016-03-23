@@ -29,7 +29,8 @@ public class Auto1EBackward extends CommandGroup {
             new DriveDistanceCommand(-lowbarDist, .5, 5);
     private DriveDistanceCommand backUp =
             new DriveDistanceCommand(lowbarDist, .5, 5);
-    private AutoAim autoAim = new AutoAim();
+    
+    private AutoAim autoAim = new AutoAim(5);
 
     private SpinRobot spin = new SpinRobot(60.0);
     private SpinRobot unAim = new SpinRobot(-60.0);
