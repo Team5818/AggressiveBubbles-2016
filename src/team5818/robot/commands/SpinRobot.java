@@ -18,7 +18,7 @@ public class SpinRobot extends Command {
     private double spinAngle;
     private double arcLength;
     private double drivePower;
-    private static double defaultTimeout = 6;
+    public static final double DEFAULT_TIMEOUT = 6;
     private double maxP;
 
     /**
@@ -45,7 +45,7 @@ public class SpinRobot extends Command {
     }
     
     public SpinRobot(double angle){
-        this(angle, defaultTimeout, .25);
+        this(angle, DEFAULT_TIMEOUT, .25);
     }
 
     @Override
@@ -62,7 +62,7 @@ public class SpinRobot extends Command {
     @Override
     protected boolean isFinished() {
         DriveSide ds = RobotCommon.runningRobot.driveTrain.getLeftMotors();
-        return (ds.getPIDController().onTarget() || ds.getEncPosAbs() >= arcLength || isTimedOut());
+        return (ds.getPIDController().onTarget() || isTimedOut());
 
     }
 

@@ -136,10 +136,10 @@ public class RobotDriver implements Module {
         setArmAngleLow.whenPressed(new SetArmAngle(armAngleLow));
         setArmAngleCollect.whenPressed(new SetArmAngle(armAngleCollect));
         setArmAngleGround.whenPressed(new LowerArmToGround());
-        rotateCW90.whenPressed(new SpinRobot(90));
-        rotateCCW90.whenPressed(new SpinRobot(-90));
-        rotateCW180.whenPressed(new SpinRobot(180));
-        rotateCCW180.whenPressed(new SpinRobot(-180));
+        rotateCW90.whenPressed(new SpinRobot(81, SpinRobot.DEFAULT_TIMEOUT, 0.6));
+        rotateCCW90.whenPressed(new SpinRobot(-81, SpinRobot.DEFAULT_TIMEOUT, 0.6));
+        rotateCW180.whenPressed(new SpinRobot(175, SpinRobot.DEFAULT_TIMEOUT, 0.6));
+        rotateCCW180.whenPressed(new SpinRobot(-175, SpinRobot.DEFAULT_TIMEOUT, 0.6));
         CommandGroup switchFeedShoot = new CommandGroup();
         switchFeedShoot
                 .addParallel(new SwitchFeed(ComputerVision.CAMERA_SHOOTER));
