@@ -41,7 +41,7 @@ public class AutoAim extends Command {
      * private double MAX_SPIN_POWER = 0.15; private double MAX_ARM_POWER = 0.5;
      */
 
-    public AutoAim(boolean interrupted) {
+    public AutoAim() {
         track = RobotCommon.runningRobot.targeting;
         camFOV = RobotConstants.CAMFOV;
 
@@ -61,7 +61,6 @@ public class AutoAim extends Command {
         isCenteredY = false;
         slopX = (RobotConstants.SLOP);
         slopY = (RobotConstants.SLOP);
-        done = interrupted;
     }
 
     @Override
@@ -154,11 +153,8 @@ public class AutoAim extends Command {
 
     @Override
     protected boolean isFinished() {
-        if (done || isTimedOut()) {
-            return true;
-        } else {
-            return false;
-        }
+        return isTimedOut();
+
     }
 
     @Override
@@ -168,7 +164,7 @@ public class AutoAim extends Command {
 
     @Override
     protected void interrupted() {
-        // TODO Auto-generated method stub
+       
 
     }
 }

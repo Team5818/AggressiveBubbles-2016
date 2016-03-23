@@ -32,7 +32,7 @@ public class Auto2A extends CommandGroup{
     private DoNothing chill = new DoNothing(2);
     private SpinRobot aim = new SpinRobot(-170.0);
     private SpinRobot unAim = new SpinRobot(170.0);
-    private Shoot dontMiss = new Shoot(shootAngle, flyUpVel, flyLoVel);
+    private Shoot dontMiss = new Shoot(flyUpVel, flyLoVel);
 
     /**
      * move arm down
