@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import team5818.robot.commands.Collect;
 import team5818.robot.commands.DrivePower;
 import team5818.robot.commands.LEDToggle;
+import team5818.robot.commands.LowerArmToGround;
 import team5818.robot.commands.SetArmAngle;
 import team5818.robot.commands.SetDrivePower;
 import team5818.robot.commands.SpinRobot;
@@ -52,7 +53,7 @@ public class RobotDriver implements Module {
     private static final int BUT_TWOSTICK_ARCADE = 6;
     private static final int BUT_ARM_ANGLE_HIGH = 5;
     private static final int BUT_ARM_ANGLE_LOW = 4;
-    private static final int BUT_ARM_ANGLE_ZERO = 3;
+    private static final int BUT_ARM_ANGLE_COLLECT = 3;
     private static final int BUT_ARM_ANGLE_GROUND = 2;
     private static final int BUT_OVERRIDE_CODRIVER = 1;
 
@@ -75,8 +76,7 @@ public class RobotDriver implements Module {
 
     private double armAngleHigh = 85;
     private double armAngleLow = 40;
-    private double armAngleCollect = 2.3;
-    private double armAngleGround = -6;
+    private double armAngleCollect = -1;
 
     // Initializing the JoystickButtons
     private JoystickButton butCollect =
@@ -88,7 +88,7 @@ public class RobotDriver implements Module {
     private JoystickButton setArmAngleLow =
             new JoystickButton(FIRST_JOYSTICK, BUT_ARM_ANGLE_LOW);
     private JoystickButton setArmAngleCollect =
-            new JoystickButton(FIRST_JOYSTICK, BUT_ARM_ANGLE_ZERO);
+            new JoystickButton(FIRST_JOYSTICK, BUT_ARM_ANGLE_COLLECT);
     private JoystickButton setArmAngleGround =
             new JoystickButton(FIRST_JOYSTICK, BUT_ARM_ANGLE_GROUND);
     private JoystickButton rotateCW90 =
@@ -113,8 +113,7 @@ public class RobotDriver implements Module {
                 armAngleHigh);
         armAngleCollect = Preferences.getInstance().getDouble("ArmAngleCollect",
                 armAngleCollect);
-        armAngleGround = Preferences.getInstance().getDouble("ArmAngleGround",
-                armAngleGround);
+
 
         // Setting local objects of singletons for easy access.
         DriveSide leftDriveSide =
@@ -136,11 +135,11 @@ public class RobotDriver implements Module {
         setArmAngleHigh.whenPressed(new SetArmAngle(armAngleHigh));
         setArmAngleLow.whenPressed(new SetArmAngle(armAngleLow));
         setArmAngleCollect.whenPressed(new SetArmAngle(armAngleCollect));
-        setArmAngleGround.whenPressed(new SetArmAngle(armAngleGround));
-        rotateCW90.whenPressed(new SpinRobot(90));
-        rotateCCW90.whenPressed(new SpinRobot(-90));
-        rotateCW180.whenPressed(new SpinRobot(180));
-        rotateCCW180.whenPressed(new SpinRobot(-180));
+        setArmAngleGround.whenPressed(new LowerArmToGround());
+        rotateCW90.whenPressed(new SpinRobot(81, SpinRobot.DEFAULT_TIMEOUT, 0.6));
+        rotateCCW90.whenPressed(new SpinRobot(-81, SpinRobot.DEFAULT_TIMEOUT, 0.6));
+        rotateCW180.whenPressed(new SpinRobot(175, SpinRobot.DEFAULT_TIMEOUT, 0.6));
+        rotateCCW180.whenPressed(new SpinRobot(-175, SpinRobot.DEFAULT_TIMEOUT, 0.6));
         CommandGroup switchFeedShoot = new CommandGroup();
         switchFeedShoot
                 .addParallel(new SwitchFeed(ComputerVision.CAMERA_SHOOTER));

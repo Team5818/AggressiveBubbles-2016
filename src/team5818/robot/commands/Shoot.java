@@ -14,7 +14,8 @@ public class Shoot extends CommandGroup {
     private LEDToggle lightUp = new LEDToggle(true);
     private LEDToggle lightsOff = new LEDToggle(false);
     private SwitchFeed switchCam = new SwitchFeed(ComputerVision.CAMERA_SHOOTER);
-    private CommandGroup prepareShot = new CommandGroup();
+    private SwitchFeed switchBack = new SwitchFeed(ComputerVision.CAMERA_DRIVER);
+
 
     /**
      * The maximum time the shooter can be on in nano seconds.
@@ -29,20 +30,15 @@ public class Shoot extends CommandGroup {
      * @param flyLoVel
      *            velocity to spin lower fly to
      */
-    public Shoot(double angle, double flyUpVel, double flyLoVel) {
-        
-         SetFlywheelVelocity setFlyVelocity =
-                new SetFlywheelVelocity(flyUpVel, flyLoVel);
-        
-        SetArmAngle setArmAngle = new SetArmAngle(angle);
-        prepareShot.addParallel(setArmAngle);
-        prepareShot.addParallel(setFlyVelocity);
-        this.addSequential(prepareShot);
+    public Shoot() {
+
+   
         this.addSequential(lightUp);
         this.addSequential(switchCam);
         this.addSequential(collectIn);
         this.addSequential(lightsOff);
         this.addSequential(flyToZero);
+        this.addSequential(switchBack);
     }
 
 }
