@@ -4,6 +4,7 @@ import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.CommandGroup;
 import team5818.robot.Field;
+import team5818.robot.modules.ComputerVision;
 import team5818.robot.modules.FlyWheel;
 
 /**
@@ -13,8 +14,8 @@ import team5818.robot.modules.FlyWheel;
  */
 public class Auto1EBackward extends CommandGroup {
 
-    public double collectAngle = 3;
-            //Preferences.getInstance().getDouble("ArmAngleCollect", 3.0);
+    public double collectAngle =
+            Preferences.getInstance().getDouble("ArmAngleZero", 1.5);
     public double flyUpVel =
             Preferences.getInstance().getDouble("UpperFlyVel", FlyWheel.SHOOT_VELOCITY_UPPER);
     public double flyLoVel =
@@ -28,7 +29,8 @@ public class Auto1EBackward extends CommandGroup {
     private SetArmAngle findTarget = new SetArmAngle(20);
     private LEDToggle lightUp = new LEDToggle(true);
     private SetFlywheelVelocity setFlyVel = new SetFlywheelVelocity(flyUpVel, flyLoVel);
-    private AutoAim autoAim = new AutoAim(-14);
+    private SwitchFeed switchCam = new SwitchFeed(ComputerVision.CAMERA_SHOOTER);
+    private AutoAim autoAim = new AutoAim();
     private Shoot dontMiss = new Shoot();
 
     /**
@@ -41,15 +43,15 @@ public class Auto1EBackward extends CommandGroup {
      */
     public Auto1EBackward() {
 
+        this.addSequential(lightUp);
+        this.addSequential(switchCam);
         this.addSequential(putArmDown);
         this.addSequential(goUnderLowbar);
-        this.addSequential(spin);
-        this.addSequential(lightUp);
         this.addSequential(findTarget);
+        this.addSequential(spin);
         this.addSequential(setFlyVel);
         this.addSequential(autoAim);
         this.addSequential(dontMiss);
-
     }
 
 }

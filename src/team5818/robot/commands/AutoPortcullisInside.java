@@ -26,7 +26,7 @@ public class AutoPortcullisInside extends CommandGroup{
             new DriveDistanceCommand(lowbarDist, .3, 5);
     private SetArmAngle findTarget = new SetArmAngle(40);
     private SetFlywheelVelocity setFlyVel = new SetFlywheelVelocity(flyUpVel, flyLoVel);
-    private AutoAim aim = new AutoAim(-14);
+    private AutoAim aim = new AutoAim();
     private Shoot dontMiss = new Shoot();
 
     /**

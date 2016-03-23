@@ -31,7 +31,6 @@ public class Track implements Module {
         blobHeight = RoboData.getNumber("HEIGHT", 0.0);
         blobLocX = RoboData.getNumber("COG_X", 0.0);
         blobLocY = RoboData.getNumber("COG_Y", 0.0);
-        DriverStation.reportError("" + blobLocX + "\n", false);
     }
 
     @Override

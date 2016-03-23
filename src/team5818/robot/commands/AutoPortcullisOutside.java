@@ -29,7 +29,7 @@ public class AutoPortcullisOutside extends CommandGroup{
     private SpinRobot spin2 = new SpinRobot(-30);
     private SetArmAngle findTarget = new SetArmAngle(40);
     private SetFlywheelVelocity setFlyVel = new SetFlywheelVelocity(flyUpVel, flyLoVel);
-    private AutoAim aim = new AutoAim(-14);
+    private AutoAim aim = new AutoAim();
     private Shoot dontMiss = new Shoot();
 
     /**

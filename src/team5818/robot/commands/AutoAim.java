@@ -13,6 +13,7 @@ import team5818.robot.util.Vector2d;
 
 public class AutoAim extends Command {
 
+    public static final double DEFAULT_Y_OFFSET = -12;
     private Track track;
     private DriveTrain drive;
 
@@ -37,8 +38,8 @@ public class AutoAim extends Command {
     public boolean isCenteredX;
     public boolean isCenteredY;
     public boolean done;
-    private double MAX_POWER = 0.4;
-    private double MIN_POWER = 0.1;
+    private double MAX_POWER = 0.3;
+    private double MIN_POWER = 0.14;
 
     /**
      * the offset in degrees.
@@ -49,7 +50,8 @@ public class AutoAim extends Command {
         track = RobotCommon.runningRobot.targeting;
         camFOV = RobotConstants.CAMFOV;
 
-        maxTime = 5;
+        maxTime = 4;
+        setTimeout(maxTime);
 
         imgHeight = 0;
         imgWidth = 0;
@@ -66,12 +68,16 @@ public class AutoAim extends Command {
         slopX = (RobotConstants.SLOP);
         slopY = (RobotConstants.SLOP);
         requires(RobotCommon.runningRobot.driveTrain);
+        requires(RobotCommon.runningRobot.arm);
+    }
+    
+    public AutoAim() {
+        this(DEFAULT_Y_OFFSET);
     }
 
     @Override
     protected void initialize() {
         SmartDashboard.putNumber("Is tracked", 0);
-        setTimeout(maxTime);
         track.GetData();
         if (track.blobCount > 0) {
             imgHeight = track.imageHeight;
@@ -89,8 +95,8 @@ public class AutoAim extends Command {
     }
 
     public double calculateAngleX() {
-        double setX = -(((imgWidth / 2 - (locX))) / imgWidth * camFOV);
-        DriverStation.reportError("" + setX, false);
+        double setX = (((imgWidth / 2 - (locX))) / imgWidth * camFOV);
+        SmartDashboard.putNumber("AutoAim X Error", setX);
         return setX;
 
     }
@@ -125,7 +131,7 @@ public class AutoAim extends Command {
         if ((locY < (imgHeight / 2) + (slopY * imgHeight) + blobOffset)
                 || (locY > (imgHeight / 2) + (slopY * imgHeight)
                         + blobOffset)) {
-            new SetArmAngle(calculateAngleY()).start();
+            RobotCommon.runningRobot.arm.goToAngle(calculateAngleY());
         } else if (locY == (imgHeight / 2) + (slopY * imgHeight) + blobOffset) {
         } else {
             DriverStation.reportError("did not align", false);
@@ -143,10 +149,10 @@ public class AutoAim extends Command {
             blobHeight = track.blobHeight;
             locX = track.blobLocX;
             locY = track.blobLocX;
-
+            SmartDashboard.putNumber("locX", locX);
             calculateAngleX();
             double angle = calculateAngleX();
-            power = angle * .02;
+            power = angle * .015;
             if (power > MAX_POWER)
                 power = MAX_POWER;
             else if (power < -MAX_POWER)
@@ -154,10 +160,10 @@ public class AutoAim extends Command {
             if (power > 0 && power < MIN_POWER) {
                 power = MIN_POWER;
             } else if (power < 0 && power > -MIN_POWER) {
-                power = MIN_POWER;
+                power = -MIN_POWER;
             }
             RobotCommon.runningRobot.driveTrain
-                    .setPower(new Vector2d(power, -power));
+                    .setPower(new Vector2d(-power, power));
             /*
              * if (blobWidth < 70) { blobOffset = track.blobOffsetClose; } else
              * { blobOffset = track.blobOffsetFar; }
@@ -167,17 +173,24 @@ public class AutoAim extends Command {
 
     @Override
     protected boolean isFinished() {
-        return isTimedOut() || Math.abs(calculateAngleX()) <= 1;
+        if(isTimedOut()) {
+            DriverStation.reportError("Timedout AutoAim", false);
+            return true;
+        }
+        return Math.abs(calculateAngleX()) <= 0.5;
 
     }
 
     @Override
     protected void end() {
         SmartDashboard.putNumber("Is aimed", 100);
+        RobotCommon.runningRobot.driveTrain
+        .setPower(new Vector2d(0, 0));
     }
 
     @Override
     protected void interrupted() {
-
+        RobotCommon.runningRobot.driveTrain
+        .setPower(new Vector2d(0, 0));
     }
 }
