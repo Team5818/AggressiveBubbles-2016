@@ -30,13 +30,9 @@ public class Shoot extends CommandGroup {
      * @param flyLoVel
      *            velocity to spin lower fly to
      */
-    public Shoot( double flyUpVel, double flyLoVel) {
-        
-         SetFlywheelVelocity setFlyVelocity =
-                new SetFlywheelVelocity(flyUpVel, flyLoVel);
-        
+    public Shoot() {
+
    
-        this.addSequential(setFlyVelocity);
         this.addSequential(lightUp);
         this.addSequential(switchCam);
         this.addSequential(collectIn);

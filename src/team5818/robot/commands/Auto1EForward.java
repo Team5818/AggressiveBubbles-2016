@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.CommandGroup;
 import team5818.robot.Field;
+import team5818.robot.modules.FlyWheel;
 
 /**
  * @author Petey
@@ -14,27 +15,23 @@ import team5818.robot.Field;
 public class Auto1EForward extends CommandGroup {
 
     public double collectAngle =
-            Preferences.getInstance().getDouble("ArmCollectAngle", -6.0);
+            Preferences.getInstance().getDouble("ArmCollectAngle", 3.0);
     public double shootAngle =
             Preferences.getInstance().getDouble("ArmShootHigh", 40.0);
     public double flyUpVel =
-            Preferences.getInstance().getDouble("UpperFlyVel", 100.0);
+            Preferences.getInstance().getDouble("UpperFlyVel", FlyWheel.SHOOT_VELOCITY_UPPER);
     public double flyLoVel =
-            Preferences.getInstance().getDouble("LowerFlyVel", 60.0);
-    public double lowbarDist = 60;
+            Preferences.getInstance().getDouble("LowerFlyVel", FlyWheel.SHOOT_VELOCITY_LOWER);
+    public double lowbarDist = 180;
 
     private SetArmAngle putArmDown = new SetArmAngle(collectAngle);
-    private SetArmAngle armDownAgain = new SetArmAngle(collectAngle);
     private DriveDistanceCommand goUnderLowbar =
             new DriveDistanceCommand(lowbarDist, .3, 5);
-    private DriveDistanceCommand backUp =
-            new DriveDistanceCommand(-lowbarDist, .3, 5);
-
     private SpinRobot spin = new SpinRobot(-170.0);
     private SetArmAngle findTarget = new SetArmAngle(40);
-    private AutoAim autoAim = new AutoAim(5);
-    private SpinRobot unAim = new SpinRobot(170.0);
-    private Shoot dontMiss = new Shoot(flyUpVel, flyLoVel);
+    private SetFlywheelVelocity setFlyVel = new SetFlywheelVelocity(flyUpVel, flyLoVel);
+    private AutoAim autoAim = new AutoAim(-14);
+    private Shoot dontMiss = new Shoot();
 
     /**
      * move arm down
@@ -50,11 +47,10 @@ public class Auto1EForward extends CommandGroup {
         this.addSequential(goUnderLowbar);
         this.addSequential(spin);
         this.addSequential(findTarget);
+        this.addSequential(setFlyVel);
         this.addSequential(autoAim);
         this.addSequential(dontMiss);
-        this.addSequential(unAim);
-        this.addSequential(armDownAgain);
-        this.addSequential(backUp);
+
     }
 
 }
