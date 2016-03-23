@@ -13,7 +13,7 @@ import team5818.robot.modules.FlyWheel;
  */
 public class Auto1EBackward extends CommandGroup {
 
-    public double collectAngle = 3.0;
+    public double collectAngle = 3;
             //Preferences.getInstance().getDouble("ArmAngleCollect", 3.0);
     public double flyUpVel =
             Preferences.getInstance().getDouble("UpperFlyVel", FlyWheel.SHOOT_VELOCITY_UPPER);
@@ -25,7 +25,8 @@ public class Auto1EBackward extends CommandGroup {
     private DriveDistanceCommand goUnderLowbar =
             new DriveDistanceCommand(-lowbarDist, .5, 5);
     private SpinRobot spin = new SpinRobot(40.0);
-    private SetArmAngle findTarget = new SetArmAngle(40);
+    private SetArmAngle findTarget = new SetArmAngle(20);
+    private LEDToggle lightUp = new LEDToggle(true);
     private SetFlywheelVelocity setFlyVel = new SetFlywheelVelocity(flyUpVel, flyLoVel);
     private AutoAim autoAim = new AutoAim(-14);
     private Shoot dontMiss = new Shoot();
@@ -43,6 +44,7 @@ public class Auto1EBackward extends CommandGroup {
         this.addSequential(putArmDown);
         this.addSequential(goUnderLowbar);
         this.addSequential(spin);
+        this.addSequential(lightUp);
         this.addSequential(findTarget);
         this.addSequential(setFlyVel);
         this.addSequential(autoAim);

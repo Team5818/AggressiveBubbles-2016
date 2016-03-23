@@ -226,5 +226,10 @@ public class Arm extends Subsystem implements Module, PIDSource, PIDOutput {
         // TODO Auto-generated method stub
 
     }
+    
+    public void autoPeriodicModule(){
+        SmartDashboard.putNumber("Potentiometer Angle", getAngle());
+
+    }
 
 }
