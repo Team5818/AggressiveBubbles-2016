@@ -6,6 +6,7 @@ import edu.wpi.first.wpilibj.buttons.JoystickButton;
 import edu.wpi.first.wpilibj.command.CommandGroup;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import team5818.robot.commands.AutoAim;
 import team5818.robot.commands.Collect;
 import team5818.robot.commands.SetArmAngle;
 import team5818.robot.commands.SetArmPower;
@@ -45,6 +46,7 @@ public class RobotCoDriver implements Module {
     private static final int BUT_SHOOT_ANGLE_LOW = 4;
     private static final int BUT_SHOOT_ANGLE_MED = 3;
     private static final int BUT_SET_ARM_POWER = 2;
+    private static final int BUT_AUTO_AIM = 1;
 
     // Joystick Two Buttons
     private static final int BUT_SWITCH_SHOOT_FEED = 12;
@@ -59,7 +61,6 @@ public class RobotCoDriver implements Module {
     // First Joystick Buttons
     JoystickButton butSetArmPower =
             new JoystickButton(firstJoystick, BUT_SET_ARM_POWER);
-<<<<<<< HEAD
     JoystickButton butShootAngleLow =
             new JoystickButton(firstJoystick, BUT_SHOOT_ANGLE_LOW);
     JoystickButton butShootAngleMed =
@@ -67,12 +68,6 @@ public class RobotCoDriver implements Module {
     JoystickButton butShootAngleHigh =
             new JoystickButton(firstJoystick, BUT_SHOOT_ANGLE_HIGH);
     JoystickButton butAutoAim = new JoystickButton(firstJoystick, BUT_AUTO_AIM);
-=======
-    JoystickButton butArmAngleHome =
-            new JoystickButton(firstJoystick, BUT_ARM_ANGLE_HOME);
-    JoystickButton butArmAngleZero =
-            new JoystickButton(firstJoystick, BUT_ARM_ANGLE_ZERO);
->>>>>>> parent of 39e7c0e... Added Computer vision back in as well as working on auto aim
 
     // Second Joystick Buttons
     JoystickButton butSpinFlywheel =
@@ -141,6 +136,7 @@ public class RobotCoDriver implements Module {
         switchFeedDrive.addParallel(new LEDToggle(false));
         
         // Assigning commands to the buttons
+        butAutoAim.whenPressed(new AutoAim());
         butSpinFlywheel.whenPressed(startFlywheel);
         butStopFlywheel.whenPressed(stopFlywheel);
         butShootAngleHigh.whenPressed(new SetArmAngle(shootAngleHigh));
@@ -149,13 +145,6 @@ public class RobotCoDriver implements Module {
         butSetArmPower.whenPressed(new SetArmPower(0));
         butLedOn.whenPressed(new LEDToggle(true));
         butLedOff.whenPressed(new LEDToggle(false));
-<<<<<<< HEAD
-=======
-        butCollect.whenPressed(new Collect(Collect.COLLECT_POWER));
-        butCollect.whenReleased(new Collect(0));
-        butArmAngleZero.whenPressed(new SetArmAngle(armAngleZero));
-        butSetArmPower.whenPressed(new SetArmPower(0));
->>>>>>> parent of 39e7c0e... Added Computer vision back in as well as working on auto aim
         butLedOn.whenPressed(new LEDToggle(true));
         butLedOff.whenPressed(new LEDToggle(false));
         butCollect.whenPressed(new Collect(Collect.COLLECT_POWER));
@@ -164,11 +153,7 @@ public class RobotCoDriver implements Module {
         butSwitchShootFeed
                 .whenPressed(switchFeedShoot);
         butSwitchDriverFeed
-<<<<<<< HEAD
                 .whenPressed(switchFeedDrive);
-=======
-                .whenPressed(new SwitchFeed(ComputerVision.CAMERA_DRIVER));
->>>>>>> parent of 39e7c0e... Added Computer vision back in as well as working on auto aim
     }
 
     @Override
@@ -227,15 +212,10 @@ public class RobotCoDriver implements Module {
     private void drive() {
         if (isOverrideDriver()) {
             RobotCommon.runningRobot.driveTrain
-<<<<<<< HEAD
                     .setPower(ArcadeDriveCalculator.INSTANCE.compute(
                             new Vector2d(firstJoystick.getX() * coDriveDamp, firstJoystick.getY() * coDriveDamp)));
         }
     }
-=======
-                    .setPower(ArcadeDriveCalculator.INSTANCE.compute(Vectors
-                            .fromJoystick(firstJoystick, true)));
->>>>>>> parent of 39e7c0e... Added Computer vision back in as well as working on auto aim
 
     private void moveArm() {
         if (!arm.getPIDMode()) {
