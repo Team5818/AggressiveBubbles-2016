@@ -75,7 +75,7 @@ public class RobotDriver implements Module {
 
     private double armAngleHigh = 85;
     private double armAngleLow = 40;
-    private double armAngleCollect = -1;
+    private double armAngleCollect = 2.5;
     private double armAngleGround = -7.8;
 
     // Initializing the JoystickButtons
