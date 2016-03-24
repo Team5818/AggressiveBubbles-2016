@@ -16,9 +16,7 @@ import team5818.robot.modules.FlyWheel;
 public class Auto1EForward extends CommandGroup {
 
     public double collectAngle =
-            Preferences.getInstance().getDouble("ArmAngleZero", 1.5);
-    public double shootAngle =
-            Preferences.getInstance().getDouble("ArmShootHigh", 40.0);
+            Preferences.getInstance().getDouble("ArmAngleCollect", 1.5);
     public double flyUpVel =
             Preferences.getInstance().getDouble("UpperFlyVel", FlyWheel.SHOOT_VELOCITY_UPPER);
     public double flyLoVel =
