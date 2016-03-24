@@ -23,13 +23,13 @@ public class ComputerVision {
      * The driving camera that is directed with the direction we collect.
      * 
      */
-    public static int CAMERA_DRIVER = 1;
+    public static int CAMERA_DRIVER = 2;
 
     /**
      * The shooter Camera that faces with the flywheel.
      *
      */
-    public static int CAMERA_SHOOTER = 2;
+    public static int CAMERA_SHOOTER = 1;
 
     private USBCam camDriver;
     private USBCam camShooter;
@@ -52,7 +52,7 @@ public class ComputerVision {
 
         // Set up camDriver
         try {
-            camDriver = new USBCam("cam0");
+            camDriver = new USBCam("cam" + CAMERA_DRIVER);
 
             if (camDriver != null) {
                 camDriver.setSize(640, 360);
@@ -67,7 +67,7 @@ public class ComputerVision {
 
         // Set up camShooter
         try {
-            camShooter = new USBCam("cam1");
+            camShooter = new USBCam("cam" + CAMERA_SHOOTER);
 
             if (camShooter != null) {
                 camShooter.setSize(320, 240);
@@ -152,7 +152,8 @@ public class ComputerVision {
         } catch (Exception e) {
             // DriverStation.reportError("Camera Feed Switching Error\n",
             // false);
-            DriverStation.reportError(e.getMessage(), false);
+            if(e.getMessage() != null)
+                DriverStation.reportError(e.getMessage(), false);
         }
     }
 
