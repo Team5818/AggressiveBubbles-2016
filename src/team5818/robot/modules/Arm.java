@@ -48,6 +48,7 @@ public class Arm extends Subsystem implements Module, PIDSource, PIDOutput {
 
     private PIDController armPID;
     private double armPowerIdleRatio = 1.5;
+    private double armAngleGround = -7;
 
     public Arm() {
         if (secondArmMotor != null)
@@ -62,6 +63,7 @@ public class Arm extends Subsystem implements Module, PIDSource, PIDOutput {
                     DEFAULT_SCALE);
             offset = Preferences.getInstance().getDouble("ArmPotOffset",
                     DEFAULT_OFFSET);
+            armAngleGround  = Preferences.getInstance().getDouble("ArmAngleGround", -7);
             maxPower = Preferences.getInstance().getDouble("ArmMaxPower", DEFAULT_MAXPOWER);
             minPower = Preferences.getInstance().getDouble("ArmMinPower", DEFAULT_MINPOWER);
             armMotorRatio = Preferences.getInstance().getDouble("ArmMotorRatio", armMotorRatio);
@@ -91,6 +93,11 @@ public class Arm extends Subsystem implements Module, PIDSource, PIDOutput {
     public void teleopPeriodicModule() {
         SmartDashboard.putNumber("Potentiometer Angle", getAngle());
         SmartDashboard.putNumber("Potentiometer Raw", getRawPot());
+        if(getAngle() <= armAngleGround) {
+            SmartDashboard.putNumber("Arm Lowest", 100);
+        } else {
+            SmartDashboard.putNumber("Arm Lowest", 0);
+        }
     }
 
     /**

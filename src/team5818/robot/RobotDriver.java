@@ -77,6 +77,7 @@ public class RobotDriver implements Module {
     private double armAngleHigh = 85;
     private double armAngleLow = 40;
     private double armAngleCollect = -1;
+    private double armAngleGround = -7.8;
 
     // Initializing the JoystickButtons
     private JoystickButton butCollect =
@@ -103,7 +104,6 @@ public class RobotDriver implements Module {
             new JoystickButton(SECOND_JOYSTICK, BUT_SWITCH_FEED_DRIVE);
     private JoystickButton butSwitchFeedShoot =
             new JoystickButton(SECOND_JOYSTICK, BUT_SWITCH_FEED_SHOOT);
-
     @Override
     public void initModule() {
         // Setting Preference values.
@@ -113,6 +113,8 @@ public class RobotDriver implements Module {
                 armAngleHigh);
         armAngleCollect = Preferences.getInstance().getDouble("ArmAngleCollect",
                 armAngleCollect);
+        armAngleGround = Preferences.getInstance().getDouble("ArmAngleGround",
+                armAngleGround);
 
 
         // Setting local objects of singletons for easy access.
@@ -135,7 +137,7 @@ public class RobotDriver implements Module {
         setArmAngleHigh.whenPressed(new SetArmAngle(armAngleHigh));
         setArmAngleLow.whenPressed(new SetArmAngle(armAngleLow));
         setArmAngleCollect.whenPressed(new SetArmAngle(armAngleCollect));
-        setArmAngleGround.whenPressed(new LowerArmToGround());
+        //setArmAngleGround.whenPressed(new SetArmAngle(armAngleGround));
         rotateCW90.whenPressed(new SpinRobot(81, SpinRobot.DEFAULT_TIMEOUT, 0.6));
         rotateCCW90.whenPressed(new SpinRobot(-81, SpinRobot.DEFAULT_TIMEOUT, 0.6));
         rotateCW180.whenPressed(new SpinRobot(175, SpinRobot.DEFAULT_TIMEOUT, 0.6));
