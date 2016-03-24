@@ -103,14 +103,13 @@ public class RobotCommon extends IterativeRobot {
         runningRobot = this;
         modules.forEach(Module::initModule);
         chooser = new SendableChooser();
-        chooser.addDefault("Default Auto", new DoNothing((double)10));
+        chooser.addObject("Do Nothing Auto", new DoNothingAuto());
         chooser.addObject("Lowbar Backward", new Auto1EBackward());
         chooser.addObject("Lowbar Forward", new Auto1EForward());
         chooser.addObject("Portcullis Inside", new AutoPortcullisInside());
         chooser.addObject("Portcullis Outside", new AutoPortcullisOutside());
         chooser.addObject("Rough/Ramparts Inside", new AutoRoughRampartsInside());
         chooser.addObject("Rough/Ramparts Outside", new AutoRoughRampartsOutside());
-        chooser.addObject("Do Nothing Auto", new DoNothingAuto());
         chooser.addObject("Portcullis 2", new AutoPortcullisUniversal(2));
         chooser.addObject("Portcullis 3", new AutoPortcullisUniversal(3));
         chooser.addObject("Portcullis 4", new AutoPortcullisUniversal(4));
