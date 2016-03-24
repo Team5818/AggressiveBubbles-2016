@@ -6,6 +6,7 @@ import com.ni.vision.NIVision.Image;
 import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Preferences;
+import team5818.robot.RobotConstants;
 import team5818.robot.modules.USBCam;
 import edu.wpi.first.wpilibj.Solenoid;
 
@@ -44,7 +45,7 @@ public class ComputerVision {
 
         // Try to set up LED Ring
         try {
-            LEDLight = new Solenoid(0);
+            LEDLight = new Solenoid(RobotConstants.SOLENOID_LED);
         } catch (Exception e) {
             DriverStation.reportError("LED Ring Not Set Up", false);
         }

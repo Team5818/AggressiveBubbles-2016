@@ -35,7 +35,7 @@ public class Arm extends Subsystem implements Module, PIDSource, PIDOutput {
     private double offset;
     private double maxPower;
     private double minPower;
-    private double armMotorRatio = 0.75;
+    private double armMotorRatio = 1;
     private double armPowerIdle = 0.1;
     private boolean pidMode = false;
 
@@ -47,7 +47,7 @@ public class Arm extends Subsystem implements Module, PIDSource, PIDOutput {
             new CANTalon(RobotConstants.TALON_SECOND_ARM_MOTOR);
 
     private PIDController armPID;
-    private double armPowerIdleRatio = 1.5;
+    private double armPowerIdleRatio = 1;
     private double armAngleGround = -7;
 
     public Arm() {
@@ -68,7 +68,7 @@ public class Arm extends Subsystem implements Module, PIDSource, PIDOutput {
             minPower = Preferences.getInstance().getDouble("ArmMinPower", DEFAULT_MINPOWER);
             armMotorRatio = Preferences.getInstance().getDouble("ArmMotorRatio", armMotorRatio);
             armPowerIdle = Preferences.getInstance().getDouble("ArmPowerIdle", armPowerIdle);
-            armPowerIdleRatio  = Preferences.getInstance().getDouble("ArmPowerIdleRatio", 1.5);
+            armPowerIdleRatio  = Preferences.getInstance().getDouble("ArmPowerIdleRatio", armPowerIdleRatio);
             kp = Preferences.getInstance().getDouble("ArmKp", DEFAULT_KP);//remove .'s
             ki = Preferences.getInstance().getDouble("ArmKi", DEFAULT_KI);
             kd = Preferences.getInstance().getDouble("ArmKd", DEFAULT_KD);
