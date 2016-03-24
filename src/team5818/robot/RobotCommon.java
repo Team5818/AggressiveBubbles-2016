@@ -24,6 +24,7 @@ import team5818.robot.commands.AutoPortcullisUniversal;
 import team5818.robot.commands.AutoRoughRampartsInside;
 import team5818.robot.commands.AutoRoughRampartsOutside;
 import team5818.robot.commands.AutoRoughTerrainUniversal;
+import team5818.robot.commands.DoNothing;
 import team5818.robot.commands.DoNothingAuto;
 import team5818.robot.modules.Arm;
 import team5818.robot.modules.Collector;
@@ -83,7 +84,7 @@ public class RobotCommon extends IterativeRobot {
                     5.0 / 18.8, 140.0, true, true));
     public final FlyWheel upperFlywheel = addModule(
             new FlyWheel(new CANTalon(RobotConstants.TALON_FLYWHEEL_UPPER),
-                    16.0 / 40.0, 240.0, false, true));
+                    16.0 / 40.0, 240.0, false, false));
     public final VisionThread vision = addModule(new VisionThread());
     public final Track targeting = addModule(new Track());
     public final Arm arm = addModule(new Arm());
@@ -102,7 +103,7 @@ public class RobotCommon extends IterativeRobot {
         runningRobot = this;
         modules.forEach(Module::initModule);
         chooser = new SendableChooser();
-        chooser.addDefault("Default Auto", defaultAuto);
+        chooser.addDefault("Default Auto", new DoNothing((double)10));
         chooser.addObject("Lowbar Backward", new Auto1EBackward());
         chooser.addObject("Lowbar Forward", new Auto1EForward());
         chooser.addObject("Portcullis Inside", new AutoPortcullisInside());

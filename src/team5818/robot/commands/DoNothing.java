@@ -6,7 +6,7 @@ public class DoNothing extends Command{
     
     double maxTime;
     
-    DoNothing(double timeout){
+    public DoNothing(double timeout){
         maxTime = timeout;
     }
     
