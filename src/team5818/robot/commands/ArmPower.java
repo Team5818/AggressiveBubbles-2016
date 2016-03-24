@@ -21,7 +21,7 @@ public class ArmPower extends Command{
     @Override
     protected void initialize() {
         arm.setPower(armPower);
-        setTimeout(armPower);
+        setTimeout(maxTime);
         
     }
 
