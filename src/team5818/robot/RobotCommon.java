@@ -18,9 +18,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import team5818.robot.commands.Auto1EBackward;
 import team5818.robot.commands.DoNothingAuto;
-import team5818.robot.commands.DriveDistanceTest;
-import team5818.robot.commands.SpinTest;
-import team5818.robot.commands.TestDriveVel;
 import team5818.robot.modules.Arm;
 import team5818.robot.modules.Collector;
 import team5818.robot.modules.FlyWheel;
@@ -101,8 +98,6 @@ public class RobotCommon extends IterativeRobot {
         chooser.addDefault("Default Auto", defaultAuto);
         chooser.addObject("Lowbar Auto", new Auto1EBackward());
         chooser.addObject("Do Nothing Auto", new DoNothingAuto());
-        chooser.addObject("Drive Velocity", new TestDriveVel());
-        chooser.addObject("Drive Test", new DriveDistanceTest());
         SmartDashboard.putData("Auto choices", chooser);
         panel = new PowerDistributionPanel();
     }
