@@ -127,8 +127,8 @@ public class Arm extends Subsystem implements Module, PIDSource, PIDOutput {
      */
 
     public double getAngle() {
-        double a1 = armPotentiometer.getValue() * scale;
-        double aFinal = a1 + offset;
+        double a1 = armPotentiometer.getValue() + offset;
+        double aFinal = a1*scale;
         return aFinal;
     }
     
