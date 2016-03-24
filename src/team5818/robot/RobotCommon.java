@@ -20,8 +20,10 @@ import team5818.robot.commands.Auto1EBackward;
 import team5818.robot.commands.Auto1EForward;
 import team5818.robot.commands.AutoPortcullisInside;
 import team5818.robot.commands.AutoPortcullisOutside;
+import team5818.robot.commands.AutoPortcullisUniversal;
 import team5818.robot.commands.AutoRoughRampartsInside;
 import team5818.robot.commands.AutoRoughRampartsOutside;
+import team5818.robot.commands.AutoRoughRampartsUniversal;
 import team5818.robot.commands.DoNothingAuto;
 import team5818.robot.modules.Arm;
 import team5818.robot.modules.Collector;
@@ -54,7 +56,7 @@ public class RobotCommon extends IterativeRobot {
                 super.forEach(action);
             } catch (Exception e) {
                 DriverStation.reportError(
-                        "Error iterating modules: " + e.getMessage() + "\n",
+                        "Error iterating modules: " + e.getMessage() + "\n",    
                         false);
             }
         };
@@ -108,6 +110,14 @@ public class RobotCommon extends IterativeRobot {
         chooser.addObject("Rough/Ramparts Inside", new AutoRoughRampartsInside());
         chooser.addObject("Rough/Ramparts Outside", new AutoRoughRampartsOutside());
         chooser.addObject("Do Nothing Auto", new DoNothingAuto());
+        chooser.addObject("Portcullis 2", new AutoPortcullisUniversal(2));
+        chooser.addObject("Portcullis 3", new AutoPortcullisUniversal(3));
+        chooser.addObject("Portcullis 4", new AutoPortcullisUniversal(4));
+        chooser.addObject("Portcullis 5", new AutoPortcullisUniversal(5));
+        chooser.addObject("Rough/Ramparts 2", new AutoRoughRampartsUniversal(2));
+        chooser.addObject("Rough/Ramparts 3", new AutoRoughRampartsUniversal(3));
+        chooser.addObject("Rough/Ramparts 4", new AutoRoughRampartsUniversal(4));
+        chooser.addObject("Rough/Ramparts 5", new AutoRoughRampartsUniversal(5));
         SmartDashboard.putData("Auto choices", chooser);
         panel = new PowerDistributionPanel();
     }
