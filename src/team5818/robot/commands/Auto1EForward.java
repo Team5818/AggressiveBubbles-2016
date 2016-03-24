@@ -25,7 +25,6 @@ public class Auto1EForward extends CommandGroup {
             Preferences.getInstance().getDouble("LowerFlyVel", FlyWheel.SHOOT_VELOCITY_LOWER);
     public double lowbarDist = 180;
 
-    private CommandGroup driveOver = new CommandGroup();
     private SetArmAngle putArmDown = new SetArmAngle(collectAngle);
     private DriveDistanceCommand goUnderLowbar =
             new DriveDistanceCommand(lowbarDist, .6, 5);
@@ -47,12 +46,11 @@ public class Auto1EForward extends CommandGroup {
      * move back under
      */
     public Auto1EForward() {
-        driveOver.addParallel(putArmDown);
-        driveOver.addParallel(goUnderLowbar);
         
         this.addSequential(lightUp);
         this.addSequential(switchCam);
-        this.addSequential(driveOver);
+        this.addSequential(putArmDown);
+        this.addSequential(goUnderLowbar);
         this.addSequential(setFlyVel);
         this.addSequential(findTarget);
         this.addSequential(spin);

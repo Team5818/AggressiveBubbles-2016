@@ -11,7 +11,6 @@ import team5818.robot.modules.Arm;
  */
 public class SetArmAngle extends Command {
 
-    public double killThreshold = 18.0;
     public double targetAngle;
     public Arm arm;
     private boolean hasInitialized = false;
@@ -51,9 +50,6 @@ public class SetArmAngle extends Command {
     @Override
     protected void end() {
         hasInitialized = false;
-        if(targetAngle <= killThreshold){
-            arm.setPower(0);
-        }
     }
 
     @Override
