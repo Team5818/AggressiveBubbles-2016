@@ -2,6 +2,7 @@ package team5818.robot.commands;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import team5818.robot.RobotCommon;
 import team5818.robot.modules.FlyWheel;
 
@@ -22,7 +23,7 @@ public class SetFlywheelVelocity extends Command {
             RobotCommon.runningRobot.upperFlywheel;
     private static final FlyWheel flyLo =
             RobotCommon.runningRobot.lowerFlywheel;
-    private static double defaultTimeout = 3;
+    private static double defaultTimeout = 2;
 
     /**
      * @param vel
@@ -52,7 +53,11 @@ public class SetFlywheelVelocity extends Command {
     }
 
     @Override
-    protected boolean isFinished() {        
+    protected boolean isFinished() {   
+        if(isTimedOut()) {
+            DriverStation.reportError("Timedout flywheel", false);
+            return true;
+        }
         return (isTimedOut() || hasReachedVelocity());
     }
 

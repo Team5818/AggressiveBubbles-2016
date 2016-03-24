@@ -10,6 +10,7 @@ public class DriveVelocityCommand extends Command{
     private double velocityL;
     private double velocityR;
     private double distance;
+    private double initialDist;
     DriveTrain train = RobotCommon.runningRobot.driveTrain;
 
     
@@ -18,18 +19,16 @@ public class DriveVelocityCommand extends Command{
         velocityR = velR;
         distance = dist;
         requires(RobotCommon.runningRobot.driveTrain);
-        setTimeout(5);
-
-        
+        setTimeout(5);        
     }
     
     public DriveVelocityCommand(double vel, double dist){
         this(vel, vel, dist);
-
     }
 
     @Override
     protected void initialize() {
+        initialDist = train.getAverageDistance();
         train.setVelocity(new Vector2d(velocityL, velocityR));
     }
 
@@ -41,7 +40,7 @@ public class DriveVelocityCommand extends Command{
 
     @Override
     protected boolean isFinished() {
-        return (train.getAverageDistance() >= distance || isTimedOut());
+        return (Math.abs(train.getAverageDistance() - initialDist) >= Math.abs(distance) || isTimedOut());
 
     }
 

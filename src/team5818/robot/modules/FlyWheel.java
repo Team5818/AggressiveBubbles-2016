@@ -36,8 +36,8 @@ public class FlyWheel extends Subsystem implements PIDSource, Module {
 
     public static final double MAX_VELOCITY_UPPER = 240;
     public static final double MAX_VELOCITY_LOWER = 140;
-    public static final double SHOOT_VELOCITY_UPPER = 192;
-    public static final double SHOOT_VELOCITY_LOWER = 112;
+    public static final double SHOOT_VELOCITY_UPPER = 100;
+    public static final double SHOOT_VELOCITY_LOWER = 80;
     
     /**
      * The constants for the PID loop. kp = P constant ki = I constant kd = D

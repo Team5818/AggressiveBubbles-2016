@@ -4,6 +4,8 @@ import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.CommandGroup;
 import team5818.robot.Field;
+import team5818.robot.modules.ComputerVision;
+import team5818.robot.modules.FlyWheel;
 
 /**
  * @author Petey
@@ -13,25 +15,23 @@ import team5818.robot.Field;
 public class Auto1EBackward extends CommandGroup {
 
     public double collectAngle =
-            Preferences.getInstance().getDouble("ArmAngleCollect", 0.0);
-    public double shootAngle =
-            Preferences.getInstance().getDouble("ShootAngleLow", 40.0);
+            Preferences.getInstance().getDouble("ArmAngleZero", 1.5);
     public double flyUpVel =
-            Preferences.getInstance().getDouble("UpperFlyVel", 192.0);
+            Preferences.getInstance().getDouble("UpperFlyVel", FlyWheel.SHOOT_VELOCITY_UPPER);
     public double flyLoVel =
-            Preferences.getInstance().getDouble("LowerFlyVel", 112.0);
+            Preferences.getInstance().getDouble("LowerFlyVel", FlyWheel.SHOOT_VELOCITY_LOWER);
     public double lowbarDist = 180;
 
     private SetArmAngle putArmDown = new SetArmAngle(collectAngle);
-    private SetArmAngle armDownAgain = new SetArmAngle(collectAngle);
     private DriveDistanceCommand goUnderLowbar =
             new DriveDistanceCommand(-lowbarDist, .5, 5);
-    private DriveDistanceCommand backUp =
-            new DriveDistanceCommand(lowbarDist, .5, 5);
-
-    private SpinRobot aim = new SpinRobot(60.0);
-    private SpinRobot unAim = new SpinRobot(-60.0);
-    private Shoot dontMiss = new Shoot(shootAngle, flyUpVel, flyLoVel);
+    private SpinRobot spin = new SpinRobot(40.0);
+    private SetArmAngle findTarget = new SetArmAngle(20);
+    private LEDToggle lightUp = new LEDToggle(true);
+    private SetFlywheelVelocity setFlyVel = new SetFlywheelVelocity(flyUpVel, flyLoVel);
+    private SwitchFeed switchCam = new SwitchFeed(ComputerVision.CAMERA_SHOOTER);
+    private AutoAim autoAim = new AutoAim();
+    private Shoot dontMiss = new Shoot();
 
     /**
      * move arm down
@@ -43,13 +43,15 @@ public class Auto1EBackward extends CommandGroup {
      */
     public Auto1EBackward() {
 
+        this.addSequential(lightUp);
+        this.addSequential(switchCam);
         this.addSequential(putArmDown);
         this.addSequential(goUnderLowbar);
-        this.addSequential(aim);
+        this.addSequential(findTarget);
+        this.addSequential(spin);
+        this.addSequential(setFlyVel);
+        this.addSequential(autoAim);
         this.addSequential(dontMiss);
-        this.addSequential(unAim);
-        this.addSequential(armDownAgain);
-        this.addSequential(backUp);
     }
 
 }

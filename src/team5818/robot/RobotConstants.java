@@ -91,11 +91,6 @@ public final class RobotConstants {
     public static final int HAT_Y_PORT = 2;
     public static final int HAT_X_PORT = 3;
 
-    // TODO redo the math for ROBOT_ENCODER_SCALE
-    /**
-     * The encoder scale to convert to inches/tick.
-     */
-    public static final double ROBOT_ENCODER_SCALE = .020603;
     /**
      * The deadband on the joysticks. It ranges from 0 with no deadband, and 1
      * with the stick not working

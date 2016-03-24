@@ -7,15 +7,12 @@ import team5818.robot.modules.Arm;
 
 public class LowerArmToGround extends Command{
     
-    double collectAngle = Preferences.getInstance().getDouble("ArmCollectAngle",-6);
-    double groundAngle = Preferences.getInstance().getDouble("ArmGroundAngle", -20);
-    double armPower = Preferences.getInstance().getDouble("MaxArmPower",.8);
-    double stallBuffer = -.2;
+    double armPower = -.6;
+    double stallBuffer = 0;
     double currentAngle;
     double lastAngle;
     
     private Arm arm;
-    SetArmAngle goToCollectAngle = new SetArmAngle(collectAngle);
     private boolean hasInitialized = false;
     private double maxTime = 3;
     
@@ -23,25 +20,30 @@ public class LowerArmToGround extends Command{
     protected void initialize() {
         arm = RobotCommon.runningRobot.arm;
         hasInitialized = true;
-        goToCollectAngle.start();
-        currentAngle = 0;
+        lastAngle = 2000;
+        currentAngle = 1000;
         setTimeout(maxTime);
     }
 
     @Override
     protected void execute() {
-        lastAngle = currentAngle;
-        currentAngle = arm.getAngle();
-        if(goToCollectAngle.isFinished()){
-            arm.setPower(-armPower);
-        }
-        
+    arm.setPower(armPower);
+    lastAngle = currentAngle;
+    currentAngle = arm.getAngle();
+    try {
+        Thread.sleep(100);
+    } catch (InterruptedException e) {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
+    }
     }
 
     @Override
     protected boolean isFinished() {
-        return (arm.getAngle() <= groundAngle || currentAngle - lastAngle > stallBuffer || isTimedOut());
-
+         if((currentAngle - lastAngle > stallBuffer) || isTimedOut()){
+             return true;
+         }
+    return false;     
     }
 
     @Override
