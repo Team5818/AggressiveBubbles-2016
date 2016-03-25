@@ -8,7 +8,7 @@ import team5818.robot.modules.FlyWheel;
 
 /**
  * @author Petey
- * basic auto routine for portcullis
+ * basic auto routine for ramparts, drives forward
  *
  */
 
@@ -59,6 +59,7 @@ public class AutoRampartsUniversal extends CommandGroup{
             redirectAngle = 0;
             redirectTimeout = 0;
         }
+     
         
         redirectDist = Math.sqrt(Math.pow(defenseWidth,2) + Math.pow(60, 2));
         
