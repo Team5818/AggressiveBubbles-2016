@@ -27,6 +27,7 @@ import team5818.robot.commands.AutoRoughRampartsOutside;
 import team5818.robot.commands.AutoRoughTerrainUniversal;
 import team5818.robot.commands.DoNothing;
 import team5818.robot.commands.DoNothingAuto;
+import team5818.robot.commands.SpybotAuto;
 import team5818.robot.modules.Arm;
 import team5818.robot.modules.Collector;
 import team5818.robot.modules.FlyWheel;
@@ -120,6 +121,7 @@ public class RobotCommon extends IterativeRobot {
         chooser.addObject("F-Ramparts 3", new AutoRampartsUniversal(2));
         chooser.addObject("F-Ramparts 4", new AutoRampartsUniversal(2));
         chooser.addObject("F-Ramparts 5", new AutoRampartsUniversal(2));
+        chooser.addObject("Spybot", new SpybotAuto());
 
         
         chooser.addObject("Portcullis Inside", new AutoPortcullisInside());
