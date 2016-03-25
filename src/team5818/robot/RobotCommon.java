@@ -108,18 +108,18 @@ public class RobotCommon extends IterativeRobot {
         chooser.addObject("Lowbar Backward", new Auto1EBackward());
         chooser.addObject("Lowbar Forward", new Auto1EForward());
 
-        chooser.addObject("Portcullis 2", new AutoPortcullisUniversal(2));
-        chooser.addObject("Portcullis 3", new AutoPortcullisUniversal(3));
-        chooser.addObject("Portcullis 4", new AutoPortcullisUniversal(4));
-        chooser.addObject("Portcullis 5", new AutoPortcullisUniversal(5));
-        chooser.addObject("Rough Terrain 2", new AutoRoughTerrainUniversal(2));
-        chooser.addObject("Rough Terrain 3", new AutoRoughTerrainUniversal(3));
-        chooser.addObject("Rough Terrain 4", new AutoRoughTerrainUniversal(4));
-        chooser.addObject("Rough Terrain 5", new AutoRoughTerrainUniversal(5));
-        chooser.addObject("Ramparts 2", new AutoRampartsUniversal(2));
-        chooser.addObject("Ramparts 3", new AutoRampartsUniversal(2));
-        chooser.addObject("Ramparts 4", new AutoRampartsUniversal(2));
-        chooser.addObject("Ramparts 5", new AutoRampartsUniversal(2));
+        chooser.addObject("F-Portcullis 2", new AutoPortcullisUniversal(2));
+        chooser.addObject("F-Portcullis 3", new AutoPortcullisUniversal(3));
+        chooser.addObject("F-Portcullis 4", new AutoPortcullisUniversal(4));
+        chooser.addObject("F-Portcullis 5", new AutoPortcullisUniversal(5));
+        chooser.addObject("B-Rough Terrain 2", new AutoRoughTerrainUniversal(2));
+        chooser.addObject("B-Rough Terrain 3", new AutoRoughTerrainUniversal(3));
+        chooser.addObject("B-Rough Terrain 4", new AutoRoughTerrainUniversal(4));
+        chooser.addObject("B-Rough Terrain 5", new AutoRoughTerrainUniversal(5));
+        chooser.addObject("F-Ramparts 2", new AutoRampartsUniversal(2));
+        chooser.addObject("F-Ramparts 3", new AutoRampartsUniversal(2));
+        chooser.addObject("F-Ramparts 4", new AutoRampartsUniversal(2));
+        chooser.addObject("F-Ramparts 5", new AutoRampartsUniversal(2));
 
         
         chooser.addObject("Portcullis Inside", new AutoPortcullisInside());
