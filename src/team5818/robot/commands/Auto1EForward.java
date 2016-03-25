@@ -32,7 +32,7 @@ public class Auto1EForward extends CommandGroup {
     private LEDToggle lightUp = new LEDToggle(true);
     private SwitchFeed switchCam = new SwitchFeed(ComputerVision.CAMERA_SHOOTER);
     private LowerArmToGround lowerArm = new LowerArmToGround();
-    private AutoAim autoAim = new AutoAim();
+    private AutoAim autoAim = new AutoAim(5);
     private Shoot dontMiss = new Shoot();
 
     /**
@@ -44,7 +44,6 @@ public class Auto1EForward extends CommandGroup {
      * move back under
      */
     public Auto1EForward() {
-        
         
         this.addSequential(lightUp);
         this.addSequential(switchCam);

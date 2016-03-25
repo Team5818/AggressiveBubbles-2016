@@ -37,7 +37,6 @@ public class AutoAim extends Command {
     
     
     
-    public double maxTime;
     public double imgHeight;
     public double imgWidth;
     public double blobCenterX;
@@ -64,15 +63,14 @@ public class AutoAim extends Command {
      * 
      * @param offset
      */
-    public AutoAim(double offset, double flyup, double flylo) {
+    public AutoAim(double offset, double flyup, double flylo, double timeout) {
         track = RobotCommon.runningRobot.targeting;
         camFOV = RobotConstants.CAMFOV;
 
         this.flyUpVel = flyup;
         this.flyLoVel = flylo;
         
-        maxTime = 4;
-        setTimeout(maxTime);
+        setTimeout(timeout);
 
         imgHeight = 0;
         imgWidth = 0;
@@ -92,8 +90,11 @@ public class AutoAim extends Command {
         requires(RobotCommon.runningRobot.arm);
     }
     
+    public AutoAim(double timeout) {
+        this(DEFAULT_Y_OFFSET,defaultFlyUpVel, defaultFlyLoVel, timeout);
+    }
     public AutoAim() {
-        this(DEFAULT_Y_OFFSET,defaultFlyUpVel, defaultFlyLoVel);
+        this(DEFAULT_Y_OFFSET,defaultFlyUpVel, defaultFlyLoVel, 2);
     }
 
     @Override
@@ -194,13 +195,21 @@ public class AutoAim extends Command {
 
     @Override
     protected boolean isFinished() {
-
         boolean flyToSpeed =  (flyUpVel <= flyUp.getRPS() + tolerance
                 && flyUpVel >= flyUp.getRPS() - tolerance
                 && flyLoVel <= flyLo.getRPS() + tolerance
                 && flyLoVel >= flyLo.getRPS() - tolerance);
+        boolean atTarget = Math.abs(calculateAngleX()) <= 0.5;
         
-        return ((flyToSpeed && Math.abs(calculateAngleX()) <= 0.5) || this.isTimedOut());
+        if(isTimedOut()) {
+            DriverStation.reportError("Timedout AutoAim", false);
+            DriverStation.reportError("Flywheel to speed: " + flyToSpeed + "At angle: " + atTarget, false);
+            return true;
+        }
+        
+        
+        
+        return ((flyToSpeed && atTarget) || this.isTimedOut());
 
     }
 
