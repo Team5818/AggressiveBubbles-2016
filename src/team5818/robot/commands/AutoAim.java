@@ -1,12 +1,14 @@
 package team5818.robot.commands;
 
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import team5818.robot.RobotCommon;
 import team5818.robot.RobotConstants;
 import team5818.robot.RobotDriver;
 import team5818.robot.modules.Arm;
+import team5818.robot.modules.FlyWheel;
 import team5818.robot.modules.Track;
 import team5818.robot.modules.drivetrain.DriveTrain;
 import team5818.robot.util.Vector2d;
@@ -19,6 +21,22 @@ public class AutoAim extends Command {
 
     private double camFOV;
 
+    public static double tolerance = FlyWheel.TOLERANCE;
+    public double flyUpVel;
+    public double flyLoVel;
+    
+    public static double defaultFlyUpVel =
+            Preferences.getInstance().getDouble("UpperFlyVel", FlyWheel.SHOOT_VELOCITY_UPPER);
+    public static double defaultFlyLoVel =
+            Preferences.getInstance().getDouble("LowerFlyVel", FlyWheel.SHOOT_VELOCITY_LOWER);
+    
+    private static final FlyWheel flyUp =
+            RobotCommon.runningRobot.upperFlywheel;
+    private static final FlyWheel flyLo =
+            RobotCommon.runningRobot.lowerFlywheel;
+    
+    
+    
     public double maxTime;
     public double imgHeight;
     public double imgWidth;
@@ -46,10 +64,13 @@ public class AutoAim extends Command {
      * 
      * @param offset
      */
-    public AutoAim(double offset) {
+    public AutoAim(double offset, double flyup, double flylo) {
         track = RobotCommon.runningRobot.targeting;
         camFOV = RobotConstants.CAMFOV;
 
+        this.flyUpVel = flyup;
+        this.flyLoVel = flylo;
+        
         maxTime = 4;
         setTimeout(maxTime);
 
@@ -72,7 +93,7 @@ public class AutoAim extends Command {
     }
     
     public AutoAim() {
-        this(DEFAULT_Y_OFFSET);
+        this(DEFAULT_Y_OFFSET,defaultFlyUpVel, defaultFlyLoVel);
     }
 
     @Override
@@ -173,11 +194,13 @@ public class AutoAim extends Command {
 
     @Override
     protected boolean isFinished() {
-        if(isTimedOut()) {
-            DriverStation.reportError("Timedout AutoAim", false);
-            return true;
-        }
-        return Math.abs(calculateAngleX()) <= 0.5;
+
+        boolean flyToSpeed =  (flyUpVel <= flyUp.getRPS() + tolerance
+                && flyUpVel >= flyUp.getRPS() - tolerance
+                && flyLoVel <= flyLo.getRPS() + tolerance
+                && flyLoVel >= flyLo.getRPS() - tolerance);
+        
+        return ((flyToSpeed && Math.abs(calculateAngleX()) <= 0.5) || this.isTimedOut());
 
     }
 
