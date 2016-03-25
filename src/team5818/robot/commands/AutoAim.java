@@ -94,7 +94,7 @@ public class AutoAim extends Command {
         this(DEFAULT_Y_OFFSET,defaultFlyUpVel, defaultFlyLoVel, timeout);
     }
     public AutoAim() {
-        this(DEFAULT_Y_OFFSET,defaultFlyUpVel, defaultFlyLoVel, 2);
+        this(DEFAULT_Y_OFFSET,defaultFlyUpVel, defaultFlyLoVel, 4);
     }
 
     @Override
