@@ -34,6 +34,18 @@ public class Track implements Module {
     }
 
     @Override
+    public void teleopPeriodicModule() {
+        SmartDashboard.putNumber("Blob Count", blobCount);
+        SmartDashboard.putNumber("Image Width", imageWidth);
+        SmartDashboard.putNumber("Image Height", imageHeight);
+        SmartDashboard.putNumber("Blob Width", blobWidth);
+        SmartDashboard.putNumber("Blob Height", blobHeight);
+        SmartDashboard.putNumber("blobLocX", blobLocX);
+        SmartDashboard.putNumber("blobLocY", blobLocY);
+        
+        
+    }
+    @Override
     public void initModule() {
 
     }
