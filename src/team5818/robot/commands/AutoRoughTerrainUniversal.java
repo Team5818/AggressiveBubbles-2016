@@ -16,6 +16,7 @@ public class AutoRoughTerrainUniversal extends CommandGroup{
     double  defenseWidth = 48;
     private double redirectDist;
     private double redirectAngle;
+    private double findTargetAngle;
     double defenseDist = 120;
     double armAngle = Preferences.getInstance().getDouble("ArmAngleLow", 20.0);
     private double redirectTimeout = 3;
@@ -41,22 +42,30 @@ public class AutoRoughTerrainUniversal extends CommandGroup{
     
     public AutoRoughTerrainUniversal(int position){
         
-        if(position == 2 || position == 5){
+        if(position == 2){
             redirectAngle = -30;
+            findTargetAngle = -redirectAngle+20;
         }
         else if(position == 3){
             redirectAngle = 30;
+            findTargetAngle = -redirectAngle;
         }
         
-        else{
+        else if(position==4){
             redirectAngle = 0;
             redirectTimeout = 0;
+            findTargetAngle = 0;
         }
+        else{
+            redirectAngle = -30;
+            findTargetAngle = -redirectAngle;        
+        }
+     
         
         redirectDist = Math.sqrt(Math.pow(defenseWidth,2) + Math.pow(60, 2));
         redirect = new SpinRobot(redirectAngle, redirectTimeout);
         driveDiagonal = new DriveDistanceCommand(redirectDist);
-        spin = new SpinRobot(-redirectAngle);
+        spin = new SpinRobot(findTargetAngle,2,0.5);
         
         driveOver.addParallel(lowerArm);
         driveOver.addParallel(driveVel);

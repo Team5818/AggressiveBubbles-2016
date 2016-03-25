@@ -17,6 +17,7 @@ public class AutoRampartsUniversal extends CommandGroup{
     private double robotVel = 70;
     private double redirectDist;
     private double redirectAngle;
+    private double findTargetAngle;
     private double redirectTimeout = 3;
     public double defenseDist = 80;
     public double defenseLength = 40;
@@ -51,16 +52,23 @@ public class AutoRampartsUniversal extends CommandGroup{
      * move back under
      */
     public AutoRampartsUniversal(int position) {
-        if(position == 2 || position == 5){
+        if(position == 2){
             redirectAngle = -30;
+            findTargetAngle = -130-redirectAngle;
         }
         else if(position == 3){
             redirectAngle = 30;
+            findTargetAngle = 180-redirectAngle;
         }
         
-        else{
+        else if(position==4){
             redirectAngle = 0;
             redirectTimeout = 0;
+            findTargetAngle = 180;
+        }
+        else{
+            redirectAngle = -30;
+            findTargetAngle = -180-redirectAngle;        
         }
      
         
@@ -68,7 +76,7 @@ public class AutoRampartsUniversal extends CommandGroup{
         
         redirect = new SpinRobot(redirectAngle, redirectTimeout);
         driveDiagonal = new DriveDistanceCommand(redirectDist);
-        spin = new SpinRobot(-redirectAngle);
+        spin = new SpinRobot(findTargetAngle,2,0.5);
         
         toRamparts.addParallel(driveToRamparts);
         toRamparts.addParallel(armToCollect);

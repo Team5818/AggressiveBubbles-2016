@@ -8,7 +8,7 @@ import team5818.robot.modules.FlyWheel;
 
 /**
  * @author Petey
- * basic auto routine for portcullis
+ * basic auto routine for portcullis drives forward
  *
  */
 
@@ -16,6 +16,7 @@ public class AutoPortcullisUniversal extends CommandGroup{
     double  defenseWidth = 48;
     private double redirectDist;
     private double redirectAngle;
+    private double findTargetAngle;
     private double redirectTimeout = 3;
     public double defenseDist = 120;
     public double flyUpVel =
@@ -45,23 +46,31 @@ public class AutoPortcullisUniversal extends CommandGroup{
      * move back under
      */
     public AutoPortcullisUniversal(int position) {
-        if(position == 2 || position == 5){
+        if(position == 2){
             redirectAngle = -30;
+            findTargetAngle = -130-redirectAngle;
         }
         else if(position == 3){
             redirectAngle = 30;
+            findTargetAngle = 180-redirectAngle;
         }
         
-        else{
+        else if(position==4){
             redirectAngle = 0;
             redirectTimeout = 0;
+            findTargetAngle = 180;
         }
+        else{
+            redirectAngle = -30;
+            findTargetAngle = -180-redirectAngle;        
+        }
+     
         
         redirectDist = Math.sqrt(Math.pow(defenseWidth,2) + Math.pow(60, 2));
         
         redirect = new SpinRobot(redirectAngle, redirectTimeout);
         driveDiagonal = new DriveDistanceCommand(redirectDist);
-        spin = new SpinRobot(-redirectAngle);
+        spin = new SpinRobot(findTargetAngle, 2, 0.5);
         
 
         
