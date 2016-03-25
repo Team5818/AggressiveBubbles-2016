@@ -73,6 +73,8 @@ public class AutoRoughTerrainUniversal extends CommandGroup{
         this.addSequential(lightUp);
         this.addSequential(switchCam);
         this.addSequential(driveOver);
+        this.addSequential(redirect);
+        this.addSequential(driveDiagonal);
         this.addSequential(findTarget);
         this.addSequential(spin);
         this.addSequential(setFlyVel);
