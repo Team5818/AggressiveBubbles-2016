@@ -15,13 +15,13 @@ public class SpybotAuto extends CommandGroup{
     public double flyLoVel =
             Preferences.getInstance().getDouble("LowerFlyVel", FlyWheel.SHOOT_VELOCITY_LOWER);
     
-    private SetFlywheelVelocity setFlyVel = new SetFlywheelVelocity(flyUpVel, flyLoVel, 3);
+    private SetFlywheelVelocity setFlyVel = new SetFlywheelVelocity(flyUpVel, flyLoVel, 5);
     private SetArmAngle aim = new SetArmAngle(shootAngle);
     private Shoot shoot = new Shoot();
     private LowerArmToGround armToGround = new LowerArmToGround();
     private DriveDistanceCommand backUp = new DriveDistanceCommand(-60);
-    private DriveVelocityCommand driveArc = new DriveVelocityCommand(20*velocityRatio,20, 51.84);
-    private DriveDistanceCommand throughLowbar = new DriveDistanceCommand(-200);
+    private DriveVelocityCommand driveArc = new DriveVelocityCommand(20,20*velocityRatio, 51.84);
+    private DriveDistanceCommand throughLowbar = new DriveDistanceCommand(200);
     private Collect collect = new Collect(-.8);
     private SpinRobot rotate = new SpinRobot(180,2,.05);
     private DriveDistanceCommand backThrough = new DriveDistanceCommand(180);        
@@ -30,8 +30,8 @@ public class SpybotAuto extends CommandGroup{
         this.addSequential(setFlyVel);
         //this.addSequential(aim);
         this.addSequential(shoot);
-        this.addSequential(armToGround);
         this.addSequential(backUp);
+        this.addSequential(armToGround);
         this.addSequential(driveArc);
         this.addSequential(throughLowbar);
         this.addSequential(collect);
