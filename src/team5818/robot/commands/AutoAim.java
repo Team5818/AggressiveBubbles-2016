@@ -13,7 +13,7 @@ import team5818.robot.util.Vector2d;
 
 public class AutoAim extends Command {
 
-    public static final double DEFAULT_Y_OFFSET = -12;
+    public static final double DEFAULT_Y_OFFSET = -5;
     private Track track;
     private DriveTrain drive;
 
