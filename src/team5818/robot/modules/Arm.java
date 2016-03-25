@@ -231,6 +231,12 @@ public class Arm extends Subsystem implements Module, PIDSource, PIDOutput {
         }
 
     }
+    
+    public void zeroPot(){
+        Preferences.getInstance().putDouble("ArmPotOffset", -getRawPot());
+        offset = -getRawPot();
+        
+    }
 
     @Override
     protected void initDefaultCommand() {

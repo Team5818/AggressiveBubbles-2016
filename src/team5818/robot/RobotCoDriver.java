@@ -51,6 +51,7 @@ public class RobotCoDriver implements Module {
     // Joystick Two Buttons
     private static final int BUT_SWITCH_SHOOT_FEED = 12;
     private static final int BUT_SWITCH_DRIVER_FEED = 11;
+    private static final int BUT_ZERO_POT = 9;
     private static final int BUT_LED_ON = 8;
     private static final int BUT_LED_OFF = 7;
     private static final int BUT_UNCOLLECT = 5;
@@ -174,19 +175,8 @@ public class RobotCoDriver implements Module {
 
     @Override
     public void teleopPeriodicModule() {
-        // Printing the Arm Angle on the SmartDashboard.
-        if (firstJoystick.getRawButton(BUT_PRINT_ANGLE)) {
-            SmartDashboard.putNumber("Arm Angle = ", arm.getAngle());
-            SmartDashboard.putNumber("Upper flywheel", upperFlywheel.getRPS());
-            SmartDashboard.putNumber("Lower flywheel", lowerFlywheel.getRPS());
-        }
 
-        // Overrides Driver Control.
-        if (secondJoystick.getRawButton(BUT_OVERRIDE_DRIVER)) {
-            setOverrideDriver(true);
-            stopDrive();
-        }
-
+        performButtonActions();
         if (usingSecondStick()) {
             moveArm();
             hasStoppedArm = false;
@@ -246,6 +236,24 @@ public class RobotCoDriver implements Module {
 
     private void stopDrive() {
         RobotCommon.runningRobot.driveTrain.setPower(new Vector2d(0, 0));
+    }
+    
+    private void performButtonActions(){
+        if(secondJoystick.getRawButton(BUT_ZERO_POT)){
+            arm.zeroPot();
+        }
+        // Printing the Arm Angle on the SmartDashboard.
+        if (firstJoystick.getRawButton(BUT_PRINT_ANGLE)) {
+            SmartDashboard.putNumber("Arm Angle = ", arm.getAngle());
+            SmartDashboard.putNumber("Upper flywheel", upperFlywheel.getRPS());
+            SmartDashboard.putNumber("Lower flywheel", lowerFlywheel.getRPS());
+        }
+
+        // Overrides Driver Control.
+        if (secondJoystick.getRawButton(BUT_OVERRIDE_DRIVER)) {
+            setOverrideDriver(true);
+            stopDrive();
+        }
     }
 
     @Override
