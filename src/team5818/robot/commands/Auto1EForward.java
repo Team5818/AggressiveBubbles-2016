@@ -50,9 +50,10 @@ public class Auto1EForward extends CommandGroup {
         this.addSequential(switchCam);
         this.addSequential(putArmDown);
         this.addSequential(goUnderLowbar);
-        this.addSequential(setFlyVel);
+        
         this.addSequential(findTarget);
         this.addSequential(spin);
+        this.addSequential(setFlyVel);
         this.addSequential(autoAim);
         this.addSequential(dontMiss);
 
