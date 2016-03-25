@@ -76,7 +76,6 @@ public class RobotDriver implements Module {
     private double armAngleHigh = 85;
     private double armAngleLow = 40;
     private double armAngleCollect = 2.5;
-    private double armAngleGround = -7.8;
 
     // Initializing the JoystickButtons
     private JoystickButton butCollect =
@@ -110,8 +109,6 @@ public class RobotDriver implements Module {
                 armAngleHigh);
         armAngleCollect = Preferences.getInstance().getDouble("ArmAngleCollect",
                 armAngleCollect);
-        armAngleGround = Preferences.getInstance().getDouble("ArmAngleGround",
-                armAngleGround);
 
 
         // Setting local objects of singletons for easy access.
