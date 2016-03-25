@@ -30,7 +30,7 @@ public class AutoPortcullisUniversal extends CommandGroup{
             new DriveDistanceCommand(defenseDist, .3, 5);
     private SpinRobot redirect;
     private DriveDistanceCommand driveDiagonal;
-    private SetArmAngle findTarget = new SetArmAngle(40);
+    private SetArmAngle findTarget = new SetArmAngle(25);
     private SpinRobot spin;
     private SetFlywheelVelocity setFlyVel = new SetFlywheelVelocity(flyUpVel, flyLoVel);
     private AutoAim aim = new AutoAim();
@@ -46,10 +46,10 @@ public class AutoPortcullisUniversal extends CommandGroup{
      */
     public AutoPortcullisUniversal(int position) {
         if(position == 2 || position == 5){
-            redirectAngle = -39;
+            redirectAngle = -30;
         }
         else if(position == 3){
-            redirectAngle = 39;
+            redirectAngle = 30;
         }
         
         else{

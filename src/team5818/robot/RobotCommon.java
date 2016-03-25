@@ -21,6 +21,7 @@ import team5818.robot.commands.Auto1EForward;
 import team5818.robot.commands.AutoPortcullisInside;
 import team5818.robot.commands.AutoPortcullisOutside;
 import team5818.robot.commands.AutoPortcullisUniversal;
+import team5818.robot.commands.AutoRampartsUniversal;
 import team5818.robot.commands.AutoRoughRampartsInside;
 import team5818.robot.commands.AutoRoughRampartsOutside;
 import team5818.robot.commands.AutoRoughTerrainUniversal;
@@ -106,10 +107,7 @@ public class RobotCommon extends IterativeRobot {
         chooser.addObject("Do Nothing Auto", new DoNothingAuto());
         chooser.addObject("Lowbar Backward", new Auto1EBackward());
         chooser.addObject("Lowbar Forward", new Auto1EForward());
-        chooser.addObject("Portcullis Inside", new AutoPortcullisInside());
-        chooser.addObject("Portcullis Outside", new AutoPortcullisOutside());
-        chooser.addObject("Rough/Ramparts Inside", new AutoRoughRampartsInside());
-        chooser.addObject("Rough/Ramparts Outside", new AutoRoughRampartsOutside());
+
         chooser.addObject("Portcullis 2", new AutoPortcullisUniversal(2));
         chooser.addObject("Portcullis 3", new AutoPortcullisUniversal(3));
         chooser.addObject("Portcullis 4", new AutoPortcullisUniversal(4));
@@ -118,6 +116,16 @@ public class RobotCommon extends IterativeRobot {
         chooser.addObject("Rough Terrain 3", new AutoRoughTerrainUniversal(3));
         chooser.addObject("Rough Terrain 4", new AutoRoughTerrainUniversal(4));
         chooser.addObject("Rough Terrain 5", new AutoRoughTerrainUniversal(5));
+        chooser.addObject("Ramparts 2", new AutoRampartsUniversal(2));
+        chooser.addObject("Ramparts 3", new AutoRampartsUniversal(2));
+        chooser.addObject("Ramparts 4", new AutoRampartsUniversal(2));
+        chooser.addObject("Ramparts 5", new AutoRampartsUniversal(2));
+
+        
+        chooser.addObject("Portcullis Inside", new AutoPortcullisInside());
+        chooser.addObject("Portcullis Outside", new AutoPortcullisOutside());
+        chooser.addObject("Rough/Ramparts Inside", new AutoRoughRampartsInside());
+        chooser.addObject("Rough/Ramparts Outside", new AutoRoughRampartsOutside());
         SmartDashboard.putData("Auto choices", chooser);
         panel = new PowerDistributionPanel();
     }
@@ -191,6 +199,9 @@ public class RobotCommon extends IterativeRobot {
     public void disabledInit() {
         driveTrain.getLeftMotors().getPIDController().disable();
         driveTrain.getRightMotors().getPIDController().disable();
+        arm.setPower(0);
+        lowerFlywheel.setPower(0);
+        upperFlywheel.setPower(0);
     }
 
 }

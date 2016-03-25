@@ -8,7 +8,7 @@ import team5818.robot.modules.Arm;
 
 public class LowerArmToGround extends CommandGroup{
     
-    double armPower = -.6;
+    double armPower = -.4;
     double collectAngle = Preferences.getInstance().getDouble("ArmAngleCollect", 3.0);
     SetArmAngle goToCollect = new SetArmAngle(collectAngle);
     ArmPower armToGround = new ArmPower(armPower);

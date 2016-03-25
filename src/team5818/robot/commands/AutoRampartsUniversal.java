@@ -20,6 +20,7 @@ public class AutoRampartsUniversal extends CommandGroup{
     private double redirectTimeout = 3;
     public double defenseDist = 80;
     public double defenseLength = 40;
+    public double collectAngle = Preferences.getInstance().getDouble("ArmAngleCollect", -1);
     public double flyUpVel =
             Preferences.getInstance().getDouble("UpperFlyVel", FlyWheel.SHOOT_VELOCITY_UPPER);
     public double flyLoVel =
@@ -29,11 +30,13 @@ public class AutoRampartsUniversal extends CommandGroup{
     private LEDToggle lightUp = new LEDToggle(true);
     private DriveDistanceCommand driveToRamparts =
             new DriveDistanceCommand(defenseDist, .3, 5);
-    private LowerArmToGround armToGround = new LowerArmToGround();
+    private SetArmAngle armToCollect = new SetArmAngle(collectAngle);
+    private CommandGroup toRamparts = new CommandGroup();
+    private ArmPower armToGround = new ArmPower(-.4);
     private DriveVelocityCommand driveOverRamparts = new DriveVelocityCommand(robotVel, defenseLength);
     private SpinRobot redirect;
     private DriveDistanceCommand driveDiagonal;
-    private SetArmAngle findTarget = new SetArmAngle(40);
+    private SetArmAngle findTarget = new SetArmAngle(20);
     private SpinRobot spin;
     private SetFlywheelVelocity setFlyVel = new SetFlywheelVelocity(flyUpVel, flyLoVel);
     private AutoAim aim = new AutoAim();
@@ -49,10 +52,10 @@ public class AutoRampartsUniversal extends CommandGroup{
      */
     public AutoRampartsUniversal(int position) {
         if(position == 2 || position == 5){
-            redirectAngle = -39;
+            redirectAngle = -30;
         }
         else if(position == 3){
-            redirectAngle = 39;
+            redirectAngle = 30;
         }
         
         else{
@@ -67,10 +70,13 @@ public class AutoRampartsUniversal extends CommandGroup{
         driveDiagonal = new DriveDistanceCommand(redirectDist);
         spin = new SpinRobot(-redirectAngle);
         
+        toRamparts.addParallel(driveToRamparts);
+        toRamparts.addParallel(armToCollect);
+        
 
         this.addSequential(lightUp);
         this.addSequential(switchCam);
-        this.addSequential(driveToRamparts);
+        this.addSequential(toRamparts);
         this.addSequential(armToGround);
         this.addSequential(driveOverRamparts);
         this.addSequential(redirect);

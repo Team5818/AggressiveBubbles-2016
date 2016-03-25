@@ -30,7 +30,7 @@ public class AutoRoughTerrainUniversal extends CommandGroup{
     private DriveVelocityCommand driveVel = new DriveVelocityCommand(-50,  -defenseDist);
     private SpinRobot redirect;
     private DriveDistanceCommand driveDiagonal;
-    private SetArmAngle findTarget = new SetArmAngle(30);
+    private SetArmAngle findTarget = new SetArmAngle(25);
     private SpinRobot spin;
     private AutoAim aim = new AutoAim();
     private SetFlywheelVelocity setFlyVel = new SetFlywheelVelocity(flyUpVel, flyLoVel);
@@ -42,10 +42,10 @@ public class AutoRoughTerrainUniversal extends CommandGroup{
     public AutoRoughTerrainUniversal(int position){
         
         if(position == 2 || position == 5){
-            redirectAngle = -39;
+            redirectAngle = -30;
         }
         else if(position == 3){
-            redirectAngle = 39;
+            redirectAngle = 30;
         }
         
         else{

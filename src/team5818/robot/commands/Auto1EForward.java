@@ -23,11 +23,11 @@ public class Auto1EForward extends CommandGroup {
             Preferences.getInstance().getDouble("LowerFlyVel", FlyWheel.SHOOT_VELOCITY_LOWER);
     public double lowbarDist = 180;
 
-    private SetArmAngle putArmDown = new SetArmAngle(collectAngle);
+    private LowerArmToGround putArmDown = new LowerArmToGround();
     private DriveDistanceCommand goUnderLowbar =
             new DriveDistanceCommand(lowbarDist, .6, 5);
     private SpinRobot spin = new SpinRobot(-140, 2, 0.5);
-    private SetArmAngle findTarget = new SetArmAngle(40);
+    private SetArmAngle findTarget = new SetArmAngle(25);
     private SetFlywheelVelocity setFlyVel = new SetFlywheelVelocity(flyUpVel, flyLoVel, 0);
     private LEDToggle lightUp = new LEDToggle(true);
     private SwitchFeed switchCam = new SwitchFeed(ComputerVision.CAMERA_SHOOTER);
