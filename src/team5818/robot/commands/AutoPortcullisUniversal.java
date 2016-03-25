@@ -25,7 +25,6 @@ public class AutoPortcullisUniversal extends CommandGroup{
     
     private SwitchFeed switchCam = new SwitchFeed(ComputerVision.CAMERA_SHOOTER);
     private LEDToggle lightUp = new LEDToggle(true);
-    private CommandGroup driveUnder = new CommandGroup();
     private LowerArmToGround armToGround = new LowerArmToGround();
     private DriveDistanceCommand driveToPortcullis =
             new DriveDistanceCommand(defenseDist, .3, 5);
@@ -64,13 +63,13 @@ public class AutoPortcullisUniversal extends CommandGroup{
         driveDiagonal = new DriveDistanceCommand(redirectDist);
         spin = new SpinRobot(-redirectAngle);
         
-        driveUnder.addParallel(armToGround);
-        driveUnder.addParallel(driveToPortcullis);
+
         
 
         this.addSequential(lightUp);
         this.addSequential(switchCam);
-        this.addSequential(driveUnder);
+        this.addSequential(armToGround);
+        this.addSequential(driveToPortcullis);
         this.addSequential(redirect);
         this.addSequential(driveDiagonal);
         this.addSequential(findTarget);
