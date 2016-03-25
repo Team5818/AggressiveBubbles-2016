@@ -89,6 +89,10 @@ public class Arm extends Subsystem implements Module, PIDSource, PIDOutput {
         LiveWindow.addActuator("Arm", "PID Controller", armPID);
     }
     
+    @Override public void initTeleop() {
+        RobotCommon.runningRobot.arm.setPower(0);
+    }
+    
     @Override
     public void teleopPeriodicModule() {
         SmartDashboard.putNumber("Potentiometer Angle", getAngle());
