@@ -6,6 +6,9 @@ import team5818.robot.modules.FlyWheel;
 
 public class SpybotAuto extends CommandGroup{
 
+    public static boolean WITH_LOWBAR = true;
+    public static boolean WITH_OUT_LOWBAR = false;
+    
     public double velocityRatio = 2.66;
     
     public double shootAngle = 31.0;
@@ -26,17 +29,20 @@ public class SpybotAuto extends CommandGroup{
     private SpinRobot rotate = new SpinRobot(180,2,.05);
     private DriveDistanceCommand backThrough = new DriveDistanceCommand(180);        
     
-    public SpybotAuto(){
+    public SpybotAuto(boolean lowbar){
         this.addSequential(setFlyVel);
         this.addSequential(aim);
         this.addSequential(shoot);
-        this.addSequential(backUp);
-        this.addSequential(armToGround);
-        this.addSequential(driveArc);
-        this.addSequential(throughLowbar);
-        this.addSequential(collect);
-        this.addSequential(rotate);
-        this.addSequential(backThrough);
+        
+        if(lowbar) {
+            this.addSequential(backUp);
+            this.addSequential(armToGround);
+            this.addSequential(driveArc);
+            this.addSequential(throughLowbar);
+            this.addSequential(collect);
+            this.addSequential(rotate);
+            this.addSequential(backThrough);
+        }
     }
     
 }

@@ -31,14 +31,28 @@ public class Shoot extends CommandGroup {
      *            velocity to spin lower fly to
      */
     public Shoot() {
-
-   
         this.addSequential(lightUp);
         this.addSequential(switchCam);
         this.addSequential(collectIn);
         this.addSequential(lightsOff);
         this.addSequential(flyToZero);
         this.addSequential(switchBack);
+    }
+    
+    /**
+     * Will only shoot if auto aim has aimed.
+     * 
+     * @param aim
+     */
+    public Shoot(AutoAim aim) {
+        if(aim.foundTarget()) {
+            this.addSequential(lightUp);
+            this.addSequential(switchCam);
+            this.addSequential(collectIn);
+            this.addSequential(lightsOff);
+            this.addSequential(flyToZero);
+            this.addSequential(switchBack);
+        }
     }
 
 }

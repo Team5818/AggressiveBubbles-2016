@@ -41,7 +41,7 @@ public class AutoRampartsUniversal extends CommandGroup{
     private SpinRobot spin;
     private SetFlywheelVelocity setFlyVel = new SetFlywheelVelocity(flyUpVel, flyLoVel);
     private AutoAim aim = new AutoAim();
-    private Shoot dontMiss = new Shoot();
+    private Shoot dontMiss;
 
     /**
      * move arm down
@@ -93,6 +93,7 @@ public class AutoRampartsUniversal extends CommandGroup{
         this.addSequential(spin);
         this.addSequential(setFlyVel);
         this.addSequential(aim);
+        dontMiss = new Shoot(aim);
         this.addSequential(dontMiss);
 
     }

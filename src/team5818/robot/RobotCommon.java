@@ -117,13 +117,14 @@ public class RobotCommon extends IterativeRobot {
         chooser.addObject("B-Rough Terrain 3", new AutoRoughTerrainUniversal(3));
         chooser.addObject("B-Rough Terrain 4", new AutoRoughTerrainUniversal(4));
         chooser.addObject("B-Rough Terrain 5", new AutoRoughTerrainUniversal(5));
-        chooser.addObject("F-Ramparts 2", new AutoRampartsUniversal(2));
-        chooser.addObject("F-Ramparts 3", new AutoRampartsUniversal(2));
-        chooser.addObject("F-Ramparts 4", new AutoRampartsUniversal(2));
-        chooser.addObject("F-Ramparts 5", new AutoRampartsUniversal(2));
-        chooser.addObject("Spybot", new SpybotAuto());
+        chooser.addObject("Spybot Shoot Only", new SpybotAuto(SpybotAuto.WITH_LOWBAR));
+        chooser.addObject("Spybot With Lowbar", new SpybotAuto(SpybotAuto.WITH_OUT_LOWBAR));
 
         /* NOT WORKING AUTO ROUTINES!! */
+        //chooser.addObject("F-Ramparts 2", new AutoRampartsUniversal(2));
+        //chooser.addObject("F-Ramparts 3", new AutoRampartsUniversal(2));
+        //chooser.addObject("F-Ramparts 4", new AutoRampartsUniversal(2));
+        //chooser.addObject("F-Ramparts 5", new AutoRampartsUniversal(2));
         //chooser.addObject("Lowbar Backward", new Auto1EBackward());
         //chooser.addObject("Portcullis Inside", new AutoPortcullisInside());
         //chooser.addObject("Portcullis Outside", new AutoPortcullisOutside());
