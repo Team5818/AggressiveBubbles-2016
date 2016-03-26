@@ -18,7 +18,7 @@ public class AutoPortcullisUniversal extends CommandGroup{
     private double redirectAngle;
     private double findTargetAngle;
     private double redirectTimeout = 3;
-    public double defenseDist = 135;
+    public double defenseDist = 115;
     public double flyUpVel =
             Preferences.getInstance().getDouble("UpperFlyVel", FlyWheel.SHOOT_VELOCITY_UPPER);
     public double flyLoVel =
