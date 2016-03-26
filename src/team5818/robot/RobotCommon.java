@@ -105,10 +105,10 @@ public class RobotCommon extends IterativeRobot {
         runningRobot = this;
         modules.forEach(Module::initModule);
         chooser = new SendableChooser();
+        
+        //Adding auto routines to SmartDashboard.
         chooser.addObject("Do Nothing Auto", new DoNothingAuto());
-        chooser.addObject("Lowbar Backward", new Auto1EBackward());
         chooser.addObject("Lowbar Forward", new Auto1EForward());
-
         chooser.addObject("F-Portcullis 2", new AutoPortcullisUniversal(2));
         chooser.addObject("F-Portcullis 3", new AutoPortcullisUniversal(3));
         chooser.addObject("F-Portcullis 4", new AutoPortcullisUniversal(4));
@@ -123,11 +123,12 @@ public class RobotCommon extends IterativeRobot {
         chooser.addObject("F-Ramparts 5", new AutoRampartsUniversal(2));
         chooser.addObject("Spybot", new SpybotAuto());
 
-        
-        chooser.addObject("Portcullis Inside", new AutoPortcullisInside());
-        chooser.addObject("Portcullis Outside", new AutoPortcullisOutside());
-        chooser.addObject("Rough/Ramparts Inside", new AutoRoughRampartsInside());
-        chooser.addObject("Rough/Ramparts Outside", new AutoRoughRampartsOutside());
+        /* NOT WORKING AUTO ROUTINES!! */
+        //chooser.addObject("Lowbar Backward", new Auto1EBackward());
+        //chooser.addObject("Portcullis Inside", new AutoPortcullisInside());
+        //chooser.addObject("Portcullis Outside", new AutoPortcullisOutside());
+        //chooser.addObject("Rough/Ramparts Inside", new AutoRoughRampartsInside());
+        //chooser.addObject("Rough/Ramparts Outside", new AutoRoughRampartsOutside());
         SmartDashboard.putData("Auto choices", chooser);
         panel = new PowerDistributionPanel();
     }
