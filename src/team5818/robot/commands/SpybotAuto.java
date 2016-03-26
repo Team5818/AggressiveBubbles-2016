@@ -8,7 +8,7 @@ public class SpybotAuto extends CommandGroup{
 
     public double velocityRatio = 2.66;
     
-    public double shootAngle = 60.0;
+    public double shootAngle = 31.0;
     
     public double flyUpVel =
             Preferences.getInstance().getDouble("UpperFlyVel", FlyWheel.SHOOT_VELOCITY_UPPER);
@@ -28,7 +28,7 @@ public class SpybotAuto extends CommandGroup{
     
     public SpybotAuto(){
         this.addSequential(setFlyVel);
-        //this.addSequential(aim);
+        this.addSequential(aim);
         this.addSequential(shoot);
         this.addSequential(backUp);
         this.addSequential(armToGround);
