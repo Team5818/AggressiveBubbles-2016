@@ -46,6 +46,7 @@ public class AutoPortcullisUniversal extends CommandGroup{
      * move back under
      */
     public AutoPortcullisUniversal(int position) {
+        setTimeout(15);
         if(position == 2){
             redirectAngle = -30;
             findTargetAngle = -130-redirectAngle;

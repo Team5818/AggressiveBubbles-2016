@@ -41,7 +41,7 @@ public class AutoRoughTerrainUniversal extends CommandGroup{
 
     
     public AutoRoughTerrainUniversal(int position){
-        
+        setTimeout(15);
         if(position == 2){
             redirectAngle = -30;
             findTargetAngle = -redirectAngle+20;

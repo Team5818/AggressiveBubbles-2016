@@ -52,6 +52,7 @@ public class AutoRampartsUniversal extends CommandGroup{
      * move back under
      */
     public AutoRampartsUniversal(int position) {
+        setTimeout(15);
         if(position == 2){
             redirectAngle = -30;
             findTargetAngle = -130-redirectAngle;

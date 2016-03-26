@@ -30,6 +30,7 @@ public class SpybotAuto extends CommandGroup{
     private DriveDistanceCommand backThrough = new DriveDistanceCommand(180);        
     
     public SpybotAuto(boolean lowbar){
+        setTimeout(15);
         this.addSequential(setFlyVel);
         this.addSequential(aim);
         this.addSequential(shoot);
