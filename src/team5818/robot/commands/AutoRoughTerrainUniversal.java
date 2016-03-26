@@ -62,7 +62,7 @@ public class AutoRoughTerrainUniversal extends CommandGroup{
         }
      
         
-        redirectDist = -Math.sqrt(Math.pow(defenseWidth,2) + Math.pow(60, 2));
+        redirectDist = -Math.sqrt(Math.pow(defenseWidth,2) + Math.pow(40, 2));
         redirect = new SpinRobot(redirectAngle, redirectTimeout);
         driveDiagonal = new DriveDistanceCommand(redirectDist);
         spin = new SpinRobot(findTargetAngle,2,0.5);
