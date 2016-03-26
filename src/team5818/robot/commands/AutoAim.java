@@ -55,10 +55,9 @@ public class AutoAim extends Command {
     public boolean isCenteredX;
     public boolean isCenteredY;
     public boolean done;
-    private boolean atTarget = false;
     private double MAX_POWER = 0.3;
     private double MIN_POWER = 0.14;
-    
+
     /**
      * the offset in degrees.
      * 
@@ -200,7 +199,7 @@ public class AutoAim extends Command {
                 && flyUpVel >= flyUp.getRPS() - tolerance
                 && flyLoVel <= flyLo.getRPS() + tolerance
                 && flyLoVel >= flyLo.getRPS() - tolerance);
-        atTarget = Math.abs(calculateAngleX()) <= 0.5;
+        boolean atTarget = Math.abs(calculateAngleX()) <= 0.5;
         
         if(isTimedOut()) {
             DriverStation.reportError("Timedout AutoAim", false);
@@ -209,14 +208,6 @@ public class AutoAim extends Command {
         }
         
         return ((flyToSpeed && atTarget) || this.isTimedOut());
-    }
-    
-    /**
-     * Returns weather the auto aim has locked on target.
-     * @return if aimed to shoot to target.
-     */
-    public boolean foundTarget() {
-        return atTarget;
     }
 
     @Override

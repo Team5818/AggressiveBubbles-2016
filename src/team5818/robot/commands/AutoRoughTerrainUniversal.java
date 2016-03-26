@@ -35,7 +35,7 @@ public class AutoRoughTerrainUniversal extends CommandGroup{
     private SpinRobot spin;
     private AutoAim aim = new AutoAim(2);
     private SetFlywheelVelocity setFlyVel = new SetFlywheelVelocity(flyUpVel, flyLoVel);
-    private Shoot shoot;
+    private Shoot shoot = new Shoot();
     private SwitchFeed switchCam = new SwitchFeed(ComputerVision.CAMERA_SHOOTER);
     private LEDToggle lightUp = new LEDToggle(true);
 
@@ -79,7 +79,6 @@ public class AutoRoughTerrainUniversal extends CommandGroup{
         this.addSequential(spin);
         this.addSequential(setFlyVel);
         this.addSequential(aim);
-        shoot = new Shoot(aim);
         this.addSequential(shoot);
         
     }

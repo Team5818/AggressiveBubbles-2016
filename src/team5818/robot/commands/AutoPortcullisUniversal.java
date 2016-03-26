@@ -35,7 +35,7 @@ public class AutoPortcullisUniversal extends CommandGroup{
     private SpinRobot spin;
     private SetFlywheelVelocity setFlyVel = new SetFlywheelVelocity(flyUpVel, flyLoVel);
     private AutoAim aim = new AutoAim();
-    private Shoot dontMiss;
+    private Shoot dontMiss = new Shoot();
 
     /**
      * move arm down
@@ -85,7 +85,6 @@ public class AutoPortcullisUniversal extends CommandGroup{
         this.addSequential(spin);
         this.addSequential(setFlyVel);
         this.addSequential(aim);
-        dontMiss = new Shoot(aim);
         this.addSequential(dontMiss);
 
     }
