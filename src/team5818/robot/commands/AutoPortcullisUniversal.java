@@ -28,13 +28,13 @@ public class AutoPortcullisUniversal extends CommandGroup{
     private LEDToggle lightUp = new LEDToggle(true);
     private LowerArmToGround armToGround = new LowerArmToGround();
     private DriveDistanceCommand driveToPortcullis =
-            new DriveDistanceCommand(defenseDist, .3, 5);
+            new DriveDistanceCommand(defenseDist, .6, 5);
     private SpinRobot redirect;
     private DriveDistanceCommand driveDiagonal;
     private SetArmAngle findTarget = new SetArmAngle(25);
     private SpinRobot spin;
     private SetFlywheelVelocity setFlyVel = new SetFlywheelVelocity(flyUpVel, flyLoVel);
-    private AutoAim aim = new AutoAim();
+    private AutoAim aim = new AutoAim(3);
     private Shoot dontMiss = new Shoot();
 
     /**
@@ -73,18 +73,20 @@ public class AutoPortcullisUniversal extends CommandGroup{
         driveDiagonal = new DriveDistanceCommand(redirectDist);
         spin = new SpinRobot(findTargetAngle, 2, 0.5);
         
-
+        CommandGroup armSpin = new CommandGroup();
+        armSpin.addParallel(lightUp);
+        armSpin.addParallel(switchCam);
+        armSpin.addParallel(spin);
+        armSpin.addParallel(findTarget);
+        armSpin.addParallel(setFlyVel);
+        
         
 
-        this.addSequential(lightUp);
-        this.addSequential(switchCam);
         this.addSequential(armToGround);
         this.addSequential(driveToPortcullis);
         this.addSequential(redirect);
         this.addSequential(driveDiagonal);
-        this.addSequential(findTarget);
-        this.addSequential(spin);
-        this.addSequential(setFlyVel);
+        this.addSequential(armSpin);
         this.addSequential(aim);
         this.addSequential(dontMiss);
 

@@ -38,10 +38,10 @@ public class Track implements Module {
         }
 
         RoboData = NetworkTable.getTable("Targeting");
-        RoboData.setUpdateRate(.1);
-
+        NetworkTable.setUpdateRate(.2);
     }
 
+<<<<<<< HEAD
     public void GetData(){
         if (AutoAim.udp) {
             try {
@@ -77,6 +77,16 @@ public class Track implements Module {
             blobLocX = RoboData.getNumber("COG_X", 0.0);
             blobLocY = RoboData.getNumber("COG_Y", 0.0);
         }
+=======
+    public void GetData() {
+        blobCount = RoboData.getNumber("BLOB_COUNT", -1.0);
+        imageWidth = 320;//RoboData.getNumber("IMAGE_WIDTH", 0.0);
+        imageHeight = 240;
+       // blobWidth = //RoboData.getNumber("WIDTH", 320.0);
+       // blobHeight = RoboData.getNumber("HEIGHT", 240.0);
+        blobLocX = RoboData.getNumber("COG_X", 0.0);
+        blobLocY = RoboData.getNumber("COG_Y", 0.0);
+>>>>>>> origin/development
     }
 
     @Override

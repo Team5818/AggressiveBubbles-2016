@@ -57,8 +57,8 @@ public class AutoAim extends Command {
     public boolean isCenteredX;
     public boolean isCenteredY;
     public boolean done;
-    private double MAX_POWER = 0.3;
-    private double MIN_POWER = 0.14;
+    private double MAX_POWER = 0.2;
+    private double MIN_POWER = 0.11;
 
     /**
      * the offset in degrees.
@@ -97,7 +97,7 @@ public class AutoAim extends Command {
     }
 
     public AutoAim() {
-        this(DEFAULT_Y_OFFSET, defaultFlyUpVel, defaultFlyLoVel, 15);
+        this(DEFAULT_Y_OFFSET, defaultFlyUpVel, defaultFlyLoVel, 2.5);
     }
 
     @Override
@@ -112,6 +112,7 @@ public class AutoAim extends Command {
             blobHeight = track.blobHeight;
             locX = track.blobLocX;
             locY = track.blobLocY + blobOffset;
+            aimY();
             aim();
         }
 
@@ -136,7 +137,7 @@ public class AutoAim extends Command {
         } else {
             setY -= 0;
         }
-        return setY;
+        return setY - 3;
     }
 
     /*
@@ -153,6 +154,9 @@ public class AutoAim extends Command {
             DriverStation.reportError("did not align", false);
         }
 
+    }
+
+    public void aimY() {
         // calculateAngleY();
         if ((locY < (imgHeight / 2) + (slopY * imgHeight) + blobOffset)
                 || (locY > (imgHeight / 2) + (slopY * imgHeight)
@@ -162,7 +166,6 @@ public class AutoAim extends Command {
         } else {
             DriverStation.reportError("did not align", false);
         }
-
     }
 
     @Override
@@ -204,7 +207,8 @@ public class AutoAim extends Command {
                 && flyUpVel >= flyUp.getRPS() - tolerance
                 && flyLoVel <= flyLo.getRPS() + tolerance
                 && flyLoVel >= flyLo.getRPS() - tolerance);
-        boolean atTarget = Math.abs(calculateAngleX()) <= 0.5;
+
+        boolean atTarget = Math.abs(calculateAngleX()) <= 1.5;
 
         if (isTimedOut()) {
             DriverStation.reportError("Timedout AutoAim", false);
