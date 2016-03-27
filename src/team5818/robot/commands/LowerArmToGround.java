@@ -8,10 +8,10 @@ import team5818.robot.modules.Arm;
 
 public class LowerArmToGround extends CommandGroup{
     
-    double armPower = -.4;
+    public static double ARM_POWER = -.4;
     double collectAngle = Preferences.getInstance().getDouble("ArmAngleCollect", 3.0);
     SetArmAngle goToCollect = new SetArmAngle(collectAngle);
-    ArmPower armToGround = new ArmPower(armPower);
+    ArmPower armToGround = new ArmPower(ARM_POWER);
     
     public LowerArmToGround(){
         this.addSequential(goToCollect);

@@ -23,7 +23,9 @@ public class Auto1EForward extends CommandGroup {
             Preferences.getInstance().getDouble("LowerFlyVel", FlyWheel.SHOOT_VELOCITY_LOWER);
     public double lowbarDist = 180;
 
-    private LowerArmToGround putArmDown = new LowerArmToGround();
+    private SetArmAngle armToCollect = new SetArmAngle(collectAngle);
+    private CommandGroup driveUnder = new CommandGroup();
+    private ArmPower armToGround = new ArmPower(LowerArmToGround.ARM_POWER); 
     private DriveDistanceCommand goUnderLowbar =
             new DriveDistanceCommand(lowbarDist, .6, 5);
     private SpinRobot spin = new SpinRobot(-140, 2, 0.5);
@@ -31,7 +33,6 @@ public class Auto1EForward extends CommandGroup {
     private SetFlywheelVelocity setFlyVel = new SetFlywheelVelocity(flyUpVel, flyLoVel, 0);
     private LEDToggle lightUp = new LEDToggle(true);
     private SwitchFeed switchCam = new SwitchFeed(ComputerVision.CAMERA_SHOOTER);
-    private LowerArmToGround lowerArm = new LowerArmToGround();
     private AutoAim autoAim = new AutoAim();
     private Shoot dontMiss = new Shoot();
 
@@ -44,12 +45,13 @@ public class Auto1EForward extends CommandGroup {
      * move back under
      */
     public Auto1EForward() {
+        driveUnder.addParallel(armToGround);
+        driveUnder.addParallel(goUnderLowbar);
         
         this.addSequential(lightUp);
         this.addSequential(switchCam);
-        this.addSequential(putArmDown);
-        this.addSequential(goUnderLowbar);
-        
+        this.addSequential(armToCollect);
+        this.addSequential(driveUnder);
         this.addSequential(findTarget);
         this.addSequential(spin);
         this.addSequential(setFlyVel);

@@ -19,6 +19,8 @@ public class AutoPortcullisUniversal extends CommandGroup{
     private double findTargetAngle;
     private double redirectTimeout = 3;
     public double defenseDist = 115;
+    public double collectAngle =
+            Preferences.getInstance().getDouble("ArmAngleCollect", 1.5);
     public double flyUpVel =
             Preferences.getInstance().getDouble("UpperFlyVel", FlyWheel.SHOOT_VELOCITY_UPPER);
     public double flyLoVel =
@@ -26,9 +28,11 @@ public class AutoPortcullisUniversal extends CommandGroup{
     
     private SwitchFeed switchCam = new SwitchFeed(ComputerVision.CAMERA_SHOOTER);
     private LEDToggle lightUp = new LEDToggle(true);
-    private LowerArmToGround armToGround = new LowerArmToGround();
+    private SetArmAngle armToCollect = new SetArmAngle(collectAngle);
+    private CommandGroup driveUnder = new CommandGroup();
+    private ArmPower armToGround = new ArmPower(LowerArmToGround.ARM_POWER); 
     private DriveDistanceCommand driveToPortcullis =
-            new DriveDistanceCommand(defenseDist, .6, 5);
+            new DriveDistanceCommand(defenseDist, .6, 5);    
     private SpinRobot redirect;
     private DriveDistanceCommand driveDiagonal;
     private SetArmAngle findTarget = new SetArmAngle(25);
@@ -73,6 +77,9 @@ public class AutoPortcullisUniversal extends CommandGroup{
         driveDiagonal = new DriveDistanceCommand(redirectDist);
         spin = new SpinRobot(findTargetAngle, 2, 0.5);
         
+        driveUnder.addParallel(armToGround);
+        driveUnder.addParallel(driveToPortcullis);
+        
         CommandGroup armSpin = new CommandGroup();
         armSpin.addParallel(lightUp);
         armSpin.addParallel(switchCam);
@@ -81,9 +88,8 @@ public class AutoPortcullisUniversal extends CommandGroup{
         armSpin.addParallel(setFlyVel);
         
         
-
-        this.addSequential(armToGround);
-        this.addSequential(driveToPortcullis);
+        this.addSequential(armToCollect);
+        this.addSequential(driveUnder);
         this.addSequential(redirect);
         this.addSequential(driveDiagonal);
         this.addSequential(armSpin);
