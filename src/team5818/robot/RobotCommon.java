@@ -20,9 +20,14 @@ import team5818.robot.commands.Auto1EBackward;
 import team5818.robot.commands.Auto1EForward;
 import team5818.robot.commands.AutoPortcullisInside;
 import team5818.robot.commands.AutoPortcullisOutside;
+import team5818.robot.commands.AutoPortcullisUniversal;
+import team5818.robot.commands.AutoRampartsUniversal;
 import team5818.robot.commands.AutoRoughRampartsInside;
 import team5818.robot.commands.AutoRoughRampartsOutside;
+import team5818.robot.commands.AutoRoughTerrainUniversal;
+import team5818.robot.commands.DoNothing;
 import team5818.robot.commands.DoNothingAuto;
+import team5818.robot.commands.SpybotAuto;
 import team5818.robot.modules.Arm;
 import team5818.robot.modules.Collector;
 import team5818.robot.modules.FlyWheel;
@@ -54,7 +59,7 @@ public class RobotCommon extends IterativeRobot {
                 super.forEach(action);
             } catch (Exception e) {
                 DriverStation.reportError(
-                        "Error iterating modules: " + e.getMessage() + "\n",
+                        "Error iterating modules: " + e.getMessage() + "\n",    
                         false);
             }
         };
@@ -81,7 +86,7 @@ public class RobotCommon extends IterativeRobot {
                     5.0 / 18.8, 140.0, true, true));
     public final FlyWheel upperFlywheel = addModule(
             new FlyWheel(new CANTalon(RobotConstants.TALON_FLYWHEEL_UPPER),
-                    16.0 / 40.0, 240.0, false, true));
+                    16.0 / 40.0, 240.0, false, false));
     public final VisionThread vision = addModule(new VisionThread());
     public final Track targeting = addModule(new Track());
     public final Arm arm = addModule(new Arm());
@@ -100,14 +105,31 @@ public class RobotCommon extends IterativeRobot {
         runningRobot = this;
         modules.forEach(Module::initModule);
         chooser = new SendableChooser();
-        chooser.addDefault("Default Auto", defaultAuto);
-        chooser.addObject("Lowbar Backward", new Auto1EBackward());
-        chooser.addObject("Lowbar Forward", new Auto1EForward());
-        chooser.addObject("Portcullis Inside", new AutoPortcullisInside());
-        chooser.addObject("Portcullis Outside", new AutoPortcullisOutside());
-        chooser.addObject("Rough/Ramparts Inside", new AutoRoughRampartsInside());
-        chooser.addObject("Rough/Ramparts Outside", new AutoRoughRampartsOutside());
+        
+        //Adding auto routines to SmartDashboard.
         chooser.addObject("Do Nothing Auto", new DoNothingAuto());
+        chooser.addObject("Lowbar Forward", new Auto1EForward());
+        chooser.addObject("F-Portcullis 2", new AutoPortcullisUniversal(2));
+        chooser.addObject("F-Portcullis 3", new AutoPortcullisUniversal(3));
+        chooser.addObject("F-Portcullis 4", new AutoPortcullisUniversal(4));
+        chooser.addObject("F-Portcullis 5", new AutoPortcullisUniversal(5));
+        chooser.addObject("B-Rough Terrain 2", new AutoRoughTerrainUniversal(2));
+        chooser.addObject("B-Rough Terrain 3", new AutoRoughTerrainUniversal(3));
+        chooser.addObject("B-Rough Terrain 4", new AutoRoughTerrainUniversal(4));
+        chooser.addObject("B-Rough Terrain 5", new AutoRoughTerrainUniversal(5));
+        chooser.addObject("Spybot W/O Lowbar", new SpybotAuto(SpybotAuto.WITH_OUT_LOWBAR));
+        chooser.addObject("Spybot W Lowbar", new SpybotAuto(SpybotAuto.WITH_LOWBAR));
+
+        /* NOT WORKING AUTO ROUTINES!! */
+        //chooser.addObject("F-Ramparts 2", new AutoRampartsUniversal(2));
+        //chooser.addObject("F-Ramparts 3", new AutoRampartsUniversal(2));
+        //chooser.addObject("F-Ramparts 4", new AutoRampartsUniversal(2));
+        //chooser.addObject("F-Ramparts 5", new AutoRampartsUniversal(2));
+        //chooser.addObject("Lowbar Backward", new Auto1EBackward());
+        //chooser.addObject("Portcullis Inside", new AutoPortcullisInside());
+        //chooser.addObject("Portcullis Outside", new AutoPortcullisOutside());
+        //chooser.addObject("Rough/Ramparts Inside", new AutoRoughRampartsInside());
+        //chooser.addObject("Rough/Ramparts Outside", new AutoRoughRampartsOutside());
         SmartDashboard.putData("Auto choices", chooser);
         panel = new PowerDistributionPanel();
     }
@@ -181,6 +203,11 @@ public class RobotCommon extends IterativeRobot {
     public void disabledInit() {
         driveTrain.getLeftMotors().getPIDController().disable();
         driveTrain.getRightMotors().getPIDController().disable();
+        arm.setPower(0);
+        lowerFlywheel.setPower(0);
+        upperFlywheel.setPower(0);
+        arm.getFirstMotor().enableBrakeMode(true);
+        arm.getSecondMotor().enableBrakeMode(true);
     }
 
 }

@@ -105,6 +105,7 @@ public final class RobotConstants {
      * The Camera feild of view for shooting
      */
     public static final double CAMFOV = 68.5;
+    public static final int SOLENOID_LED = 0;
 
     private RobotConstants() {
     }

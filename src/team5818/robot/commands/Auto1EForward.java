@@ -16,20 +16,18 @@ import team5818.robot.modules.FlyWheel;
 public class Auto1EForward extends CommandGroup {
 
     public double collectAngle =
-            Preferences.getInstance().getDouble("ArmAngleZero", 1.5);
-    public double shootAngle =
-            Preferences.getInstance().getDouble("ArmShootHigh", 40.0);
+            Preferences.getInstance().getDouble("ArmAngleCollect", 1.5);
     public double flyUpVel =
             Preferences.getInstance().getDouble("UpperFlyVel", FlyWheel.SHOOT_VELOCITY_UPPER);
     public double flyLoVel =
             Preferences.getInstance().getDouble("LowerFlyVel", FlyWheel.SHOOT_VELOCITY_LOWER);
     public double lowbarDist = 180;
 
-    private SetArmAngle putArmDown = new SetArmAngle(collectAngle);
+    private LowerArmToGround putArmDown = new LowerArmToGround();
     private DriveDistanceCommand goUnderLowbar =
             new DriveDistanceCommand(lowbarDist, .6, 5);
     private SpinRobot spin = new SpinRobot(-140, 2, 0.5);
-    private SetArmAngle findTarget = new SetArmAngle(40);
+    private SetArmAngle findTarget = new SetArmAngle(25);
     private SetFlywheelVelocity setFlyVel = new SetFlywheelVelocity(flyUpVel, flyLoVel, 0);
     private LEDToggle lightUp = new LEDToggle(true);
     private SwitchFeed switchCam = new SwitchFeed(ComputerVision.CAMERA_SHOOTER);
@@ -51,9 +49,11 @@ public class Auto1EForward extends CommandGroup {
         this.addSequential(switchCam);
         this.addSequential(putArmDown);
         this.addSequential(goUnderLowbar);
-        this.addSequential(setFlyVel);
+        
         this.addSequential(findTarget);
         this.addSequential(spin);
+        this.addSequential(setFlyVel);
+        this.addSequential(new DriveDistanceCommand(-10, .6, 5));
         this.addSequential(autoAim);
         this.addSequential(dontMiss);
 

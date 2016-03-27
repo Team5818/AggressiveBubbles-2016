@@ -54,7 +54,6 @@ public class RobotDriver implements Module {
     private static final int BUT_ARM_ANGLE_HIGH = 5;
     private static final int BUT_ARM_ANGLE_LOW = 4;
     private static final int BUT_ARM_ANGLE_COLLECT = 3;
-    private static final int BUT_ARM_ANGLE_GROUND = 2;
     private static final int BUT_OVERRIDE_CODRIVER = 1;
 
     // Second Joystick Buttons
@@ -76,8 +75,7 @@ public class RobotDriver implements Module {
 
     private double armAngleHigh = 85;
     private double armAngleLow = 40;
-    private double armAngleCollect = -1;
-    private double armAngleGround = -7.8;
+    private double armAngleCollect = 2.5;
 
     // Initializing the JoystickButtons
     private JoystickButton butCollect =
@@ -90,8 +88,6 @@ public class RobotDriver implements Module {
             new JoystickButton(FIRST_JOYSTICK, BUT_ARM_ANGLE_LOW);
     private JoystickButton setArmAngleCollect =
             new JoystickButton(FIRST_JOYSTICK, BUT_ARM_ANGLE_COLLECT);
-    private JoystickButton setArmAngleGround =
-            new JoystickButton(FIRST_JOYSTICK, BUT_ARM_ANGLE_GROUND);
     private JoystickButton rotateCW90 =
             new JoystickButton(SECOND_JOYSTICK, BUT_ROTATE_CW_90);
     private JoystickButton rotateCCW90 =
@@ -113,8 +109,6 @@ public class RobotDriver implements Module {
                 armAngleHigh);
         armAngleCollect = Preferences.getInstance().getDouble("ArmAngleCollect",
                 armAngleCollect);
-        armAngleGround = Preferences.getInstance().getDouble("ArmAngleGround",
-                armAngleGround);
 
 
         // Setting local objects of singletons for easy access.
@@ -137,7 +131,6 @@ public class RobotDriver implements Module {
         setArmAngleHigh.whenPressed(new SetArmAngle(armAngleHigh));
         setArmAngleLow.whenPressed(new SetArmAngle(armAngleLow));
         setArmAngleCollect.whenPressed(new SetArmAngle(armAngleCollect));
-        //setArmAngleGround.whenPressed(new SetArmAngle(armAngleGround));
         rotateCW90.whenPressed(new SpinRobot(81, SpinRobot.DEFAULT_TIMEOUT, 0.6));
         rotateCCW90.whenPressed(new SpinRobot(-81, SpinRobot.DEFAULT_TIMEOUT, 0.6));
         rotateCW180.whenPressed(new SpinRobot(175, SpinRobot.DEFAULT_TIMEOUT, 0.6));

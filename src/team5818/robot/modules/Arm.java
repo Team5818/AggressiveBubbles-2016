@@ -35,7 +35,7 @@ public class Arm extends Subsystem implements Module, PIDSource, PIDOutput {
     private double offset;
     private double maxPower;
     private double minPower;
-    private double armMotorRatio = 0.75;
+    private double armMotorRatio = 1;
     private double armPowerIdle = 0.1;
     private boolean pidMode = false;
 
@@ -47,7 +47,7 @@ public class Arm extends Subsystem implements Module, PIDSource, PIDOutput {
             new CANTalon(RobotConstants.TALON_SECOND_ARM_MOTOR);
 
     private PIDController armPID;
-    private double armPowerIdleRatio = 1.5;
+    private double armPowerIdleRatio = 1;
     private double armAngleGround = -7;
 
     public Arm() {
@@ -68,7 +68,7 @@ public class Arm extends Subsystem implements Module, PIDSource, PIDOutput {
             minPower = Preferences.getInstance().getDouble("ArmMinPower", DEFAULT_MINPOWER);
             armMotorRatio = Preferences.getInstance().getDouble("ArmMotorRatio", armMotorRatio);
             armPowerIdle = Preferences.getInstance().getDouble("ArmPowerIdle", armPowerIdle);
-            armPowerIdleRatio  = Preferences.getInstance().getDouble("ArmPowerIdleRatio", 1.5);
+            armPowerIdleRatio  = Preferences.getInstance().getDouble("ArmPowerIdleRatio", armPowerIdleRatio);
             kp = Preferences.getInstance().getDouble("ArmKp", DEFAULT_KP);//remove .'s
             ki = Preferences.getInstance().getDouble("ArmKi", DEFAULT_KI);
             kd = Preferences.getInstance().getDouble("ArmKd", DEFAULT_KD);
@@ -127,8 +127,8 @@ public class Arm extends Subsystem implements Module, PIDSource, PIDOutput {
      */
 
     public double getAngle() {
-        double a1 = armPotentiometer.getValue() * scale;
-        double aFinal = a1 + offset;
+        double a1 = armPotentiometer.getValue() + offset;
+        double aFinal = a1*scale;
         return aFinal;
     }
     
@@ -220,12 +220,26 @@ public class Arm extends Subsystem implements Module, PIDSource, PIDOutput {
     @Override
     public void pidWrite(double power) {
         
-        power += 0.095 * Math.abs(Math.cos(getAngle()/180*Math.PI));
+        power += armPowerIdle * Math.abs(Math.cos(getAngle()/180*Math.PI));
         firstArmMotor.set(power * armMotorRatio);
         if (secondArmMotor != null) {
             secondArmMotor.set(power);
         }
 
+    }
+    
+    public void zeroPot(){
+        Preferences.getInstance().putDouble("ArmPotOffset", -getRawPot());
+        offset = -getRawPot();
+        
+    }
+    
+    public CANTalon getFirstMotor(){
+        return this.firstArmMotor;
+    }
+    
+    public CANTalon getSecondMotor(){
+        return this.secondArmMotor;
     }
 
     @Override

@@ -31,8 +31,6 @@ public class Shoot extends CommandGroup {
      *            velocity to spin lower fly to
      */
     public Shoot() {
-
-   
         this.addSequential(lightUp);
         this.addSequential(switchCam);
         this.addSequential(collectIn);
