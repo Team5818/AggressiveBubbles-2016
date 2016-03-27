@@ -1,5 +1,7 @@
 package team5818.robot.commands;
 
+import java.io.IOException;
+
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.command.Command;
@@ -24,19 +26,19 @@ public class AutoAim extends Command {
     public static double tolerance = FlyWheel.TOLERANCE;
     public double flyUpVel;
     public double flyLoVel;
-    
-    public static double defaultFlyUpVel =
-            Preferences.getInstance().getDouble("UpperFlyVel", FlyWheel.SHOOT_VELOCITY_UPPER);
-    public static double defaultFlyLoVel =
-            Preferences.getInstance().getDouble("LowerFlyVel", FlyWheel.SHOOT_VELOCITY_LOWER);
-    
+
+    public static double defaultFlyUpVel = Preferences.getInstance()
+            .getDouble("UpperFlyVel", FlyWheel.SHOOT_VELOCITY_UPPER);
+    public static double defaultFlyLoVel = Preferences.getInstance()
+            .getDouble("LowerFlyVel", FlyWheel.SHOOT_VELOCITY_LOWER);
+
     private static final FlyWheel flyUp =
             RobotCommon.runningRobot.upperFlywheel;
     private static final FlyWheel flyLo =
             RobotCommon.runningRobot.lowerFlywheel;
     
-    
-    
+    public static boolean udp = true;
+
     public double imgHeight;
     public double imgWidth;
     public double blobCenterX;
@@ -69,7 +71,7 @@ public class AutoAim extends Command {
 
         this.flyUpVel = flyup;
         this.flyLoVel = flylo;
-        
+
         setTimeout(timeout);
 
         imgHeight = 0;
@@ -89,18 +91,20 @@ public class AutoAim extends Command {
         requires(RobotCommon.runningRobot.driveTrain);
         requires(RobotCommon.runningRobot.arm);
     }
-    
+
     public AutoAim(double timeout) {
-        this(DEFAULT_Y_OFFSET,defaultFlyUpVel, defaultFlyLoVel, timeout);
+        this(DEFAULT_Y_OFFSET, defaultFlyUpVel, defaultFlyLoVel, timeout);
     }
+
     public AutoAim() {
-        this(DEFAULT_Y_OFFSET,defaultFlyUpVel, defaultFlyLoVel, 15);
+        this(DEFAULT_Y_OFFSET, defaultFlyUpVel, defaultFlyLoVel, 15);
     }
 
     @Override
     protected void initialize() {
         SmartDashboard.putNumber("Is tracked", 0);
         track.GetData();
+
         if (track.blobCount > 0) {
             imgHeight = track.imageHeight;
             imgWidth = track.imageWidth;
@@ -164,6 +168,7 @@ public class AutoAim extends Command {
     @Override
     protected void execute() {
         track.GetData();
+
         if (track.blobCount > 0) {
             imgHeight = track.imageHeight;
             imgWidth = track.imageWidth;
@@ -195,31 +200,30 @@ public class AutoAim extends Command {
 
     @Override
     protected boolean isFinished() {
-        boolean flyToSpeed =  (flyUpVel <= flyUp.getRPS() + tolerance
+        boolean flyToSpeed = (flyUpVel <= flyUp.getRPS() + tolerance
                 && flyUpVel >= flyUp.getRPS() - tolerance
                 && flyLoVel <= flyLo.getRPS() + tolerance
                 && flyLoVel >= flyLo.getRPS() - tolerance);
         boolean atTarget = Math.abs(calculateAngleX()) <= 0.5;
-        
-        if(isTimedOut()) {
+
+        if (isTimedOut()) {
             DriverStation.reportError("Timedout AutoAim", false);
-            DriverStation.reportError("Flywheel to speed: " + flyToSpeed + "At angle: " + atTarget, false);
+            DriverStation.reportError("Flywheel to speed: " + flyToSpeed
+                    + "At angle: " + atTarget, false);
             return true;
         }
-        
+
         return ((flyToSpeed && atTarget) || this.isTimedOut());
     }
 
     @Override
     protected void end() {
         SmartDashboard.putNumber("Is aimed", 100);
-        RobotCommon.runningRobot.driveTrain
-        .setPower(new Vector2d(0, 0));
+        RobotCommon.runningRobot.driveTrain.setPower(new Vector2d(0, 0));
     }
 
     @Override
     protected void interrupted() {
-        RobotCommon.runningRobot.driveTrain
-        .setPower(new Vector2d(0, 0));
+        RobotCommon.runningRobot.driveTrain.setPower(new Vector2d(0, 0));
     }
 }
