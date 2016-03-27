@@ -53,6 +53,7 @@ public class Auto1EForward extends CommandGroup {
         this.addSequential(findTarget);
         this.addSequential(spin);
         this.addSequential(setFlyVel);
+        this.addSequential(new DriveDistanceCommand(-10, .6, 5));
         this.addSequential(autoAim);
         this.addSequential(dontMiss);
 

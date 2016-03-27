@@ -11,14 +11,9 @@ public class SpybotAuto extends CommandGroup{
     
     public double velocityRatio = 2.66;
     
-    public double shootAngle = 31.0;
+    public double shootAngle = 37.0;
     
-    public double flyUpVel =
-            Preferences.getInstance().getDouble("UpperFlyVel", FlyWheel.SHOOT_VELOCITY_UPPER);
-    public double flyLoVel =
-            Preferences.getInstance().getDouble("LowerFlyVel", FlyWheel.SHOOT_VELOCITY_LOWER);
-    
-    private SetFlywheelVelocity setFlyVel = new SetFlywheelVelocity(flyUpVel, flyLoVel, 5);
+    private SetFlywheelVelocity setFlyVel = new SetFlywheelVelocity(FlyWheel.SHOOT_VELOCITY_UPPER, FlyWheel.SHOOT_VELOCITY_LOWER, 7);
     private SetArmAngle aim = new SetArmAngle(shootAngle);
     private Shoot shoot = new Shoot();
     private LowerArmToGround armToGround = new LowerArmToGround();

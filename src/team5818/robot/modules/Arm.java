@@ -233,6 +233,14 @@ public class Arm extends Subsystem implements Module, PIDSource, PIDOutput {
         offset = -getRawPot();
         
     }
+    
+    public CANTalon getFirstMotor(){
+        return this.firstArmMotor;
+    }
+    
+    public CANTalon getSecondMotor(){
+        return this.secondArmMotor;
+    }
 
     @Override
     protected void initDefaultCommand() {
