@@ -10,8 +10,20 @@ public enum ArcadeDriveCalculator implements DriveCalculator {
      * The only instance of this calculator.
      */
     INSTANCE;
-    
-    
+
+    public static final int JOYSTICK_MODE_CURVE = 1;
+    public static final int JOYSTICK_MODE_REGULAR = 0;
+
+
+
+    @Override
+    public Vector2d compute(Vector2d leftAndRight) {
+        if (joystickMode == JOYSTICK_MODE_CURVE)
+            return computeTurnsDifferent(leftAndRight);
+        else
+            return computeDefault(leftAndRight);
+    }
+
     public Vector2d computeDefault(Vector2d in) {
         double rotateValue = -in.getX();
         double moveValue = in.getY();
@@ -36,18 +48,13 @@ public enum ArcadeDriveCalculator implements DriveCalculator {
         }
         return new Vector2d(leftMotorSpeed, rightMotorSpeed);
     }
-    
-    
-    public static final double TURNMULT = 0.5;
-    public static final double TURNPOWER = 2;
-    
-    public static final double FORWARDMULT = 1;
-    public static final double FORWARDPOWER = 1;
-    
+
     public Vector2d computeTurnsDifferent(Vector2d in) {
-        double rotateValue = Math.signum(-in.getX())*Math.pow(Math.abs(in.getX()),TURNPOWER)*TURNMULT; // Less sensitive turning 
-        double moveValue = Math.signum(-in.getY())*Math.pow(Math.abs(in.getY()),FORWARDPOWER)*FORWARDMULT; // Less sensitive turning 
-        
+        double rotateValue = Math.signum(-in.getX())
+                * Math.pow(Math.abs(in.getX()), turnPower) * turnMult; // Less
+        double moveValue = Math.signum(-in.getY())
+                * Math.pow(Math.abs(in.getY()), forwardPower) * forwardMult; // Less
+
         double leftMotorSpeed;
         double rightMotorSpeed;
         if (moveValue > 0.0) {
@@ -69,18 +76,9 @@ public enum ArcadeDriveCalculator implements DriveCalculator {
         }
         return new Vector2d(leftMotorSpeed, rightMotorSpeed);
     }
-    
-    public static final int JOYSTICK_MODE = 0; // CHANGE THIS TO CHANGE DRIVE MODE
 
-    @Override
-    public Vector2d compute(Vector2d leftAndRight) {
-        if(JOYSTICK_MODE != 1)
-        {
-            return this.computeDefault(leftAndRight);
-        }else
-        {
-            return this.computeTurnsDifferent(leftAndRight);
-        }
+    public int getJoystickMode(int mode) {
+        return joystickMode;
     }
 
 }
