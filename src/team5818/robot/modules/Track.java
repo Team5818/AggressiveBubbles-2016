@@ -32,13 +32,14 @@ public class Track implements Module {
     public Track() {
 
         try {
-            socket = new DatagramSocket(null);
-            InetSocketAddress address = new InetSocketAddress("10.58.18.191", portNum);
+            socket = new DatagramSocket(portNum);
+            InetSocketAddress address =
+                    new InetSocketAddress("10.58.18.191", portNum);
             socket.setSoTimeout(100);
-            socket.connect(address);
+            socket.bind(address);
         } catch (SocketException e) {
             // TODO Auto-generated catch block
-           e.printStackTrace();
+            e.printStackTrace();
 
         }
 
@@ -53,26 +54,27 @@ public class Track implements Module {
     public void GetData() {
         if (AutoAim.udp) {
             try {
-                byte[] buff = new byte[256];
-                DatagramPacket packet = new DatagramPacket(buff, 256);
+                byte[] buff = new byte[16];
+                DatagramPacket packet = new DatagramPacket(buff, 16);
+                
                 socket.receive(packet);
 
                 String s = new String(buff);
 
                 DriverStation.reportError(s, false);
-                DriverStation.reportError((Arrays.toString(buff)),false);
+                //DriverStation.reportError((Arrays.toString(buff)), false);
 
-                String[] string_array = s.split(",");//might be "/"
+                //String[] string_array = s.split(",");// might be "/"
 
-                blobCount = Integer.parseInt(string_array[0]);
-                blobLocX = Integer.parseInt(string_array[1]);
-                blobLocY = Integer.parseInt(string_array[2]);
+                blobCount = 5818;//Integer.parseInt(string_array[0]);
+                blobLocX = 5818;//Integer.parseInt(string_array[1]);
+                blobLocY = 5818;//Integer.parseInt(string_array[2]);
 
-                DriverStation.reportError("" + blobCount, false);
 
             } catch (IOException e) {
                 e.printStackTrace();
-                DriverStation.reportError("NOPE" + " " + socket.getPort() +" " + socket.getInetAddress(), false);
+                DriverStation.reportError("NOPE" + " " + socket.getPort() + " "
+                        + socket.getInetAddress(), false);
                 blobCount = -2;
                 blobLocX = -2;
                 blobLocY = -2;
@@ -82,10 +84,10 @@ public class Track implements Module {
         } else {
 
             blobCount = RoboData.getNumber("BLOB_COUNT", -1.0);
-            //imageWidth = RoboData.getNumber("IMAGE_WIDTH", 0.0);
-            //imageHeight = RoboData.getNumber("IMAGE_HEIGHT", 0.0);
-            //blobWidth = RoboData.getNumber("WIDTH", 320.0);
-            //blobHeight = RoboData.getNumber("HEIGHT", 240.0);
+            // imageWidth = RoboData.getNumber("IMAGE_WIDTH", 0.0);
+            // imageHeight = RoboData.getNumber("IMAGE_HEIGHT", 0.0);
+            // blobWidth = RoboData.getNumber("WIDTH", 320.0);
+            // blobHeight = RoboData.getNumber("HEIGHT", 240.0);
             blobLocX = RoboData.getNumber("COG_X", 0.0);
             blobLocY = RoboData.getNumber("COG_Y", 0.0);
         }
@@ -95,10 +97,10 @@ public class Track implements Module {
     @Override
     public void teleopPeriodicModule() {
         SmartDashboard.putNumber("Blob Count", blobCount);
-       // SmartDashboard.putNumber("Image Width", imageWidth);
-       // SmartDashboard.putNumber("Image Height", imageHeight);
-       // SmartDashboard.putNumber("Blob Width", blobWidth);
-       // SmartDashboard.putNumber("Blob Height", blobHeight);
+        // SmartDashboard.putNumber("Image Width", imageWidth);
+        // SmartDashboard.putNumber("Image Height", imageHeight);
+        // SmartDashboard.putNumber("Blob Width", blobWidth);
+        // SmartDashboard.putNumber("Blob Height", blobHeight);
         SmartDashboard.putNumber("blobLocX", blobLocX);
         SmartDashboard.putNumber("blobLocY", blobLocY);
 
