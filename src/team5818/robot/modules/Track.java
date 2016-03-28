@@ -3,6 +3,8 @@ package team5818.robot.modules;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.SocketException;
 import java.util.Arrays;
@@ -30,18 +32,25 @@ public class Track implements Module {
     public Track() {
 
         try {
-            socket = new DatagramSocket(portNum);
+            socket = new DatagramSocket(null);
+            InetSocketAddress address = new InetSocketAddress("192.168.43.36", portNum);
             socket.setSoTimeout(100);
+            socket.connect(address);
         } catch (SocketException e) {
             // TODO Auto-generated catch block
-            e.printStackTrace();
+           e.printStackTrace();
+
         }
 
-        RoboData = NetworkTable.getTable("Targeting");
-        NetworkTable.setUpdateRate(.2);
+        try {
+            RoboData = NetworkTable.getTable("Targeting");
+            NetworkTable.setUpdateRate(.2);
+        } catch (Exception e) {
+            DriverStation.reportError("no data table", false);
+        }
     }
 
-    public void GetData(){
+    public void GetData() {
         if (AutoAim.udp) {
             try {
                 byte[] buff = new byte[256];
@@ -58,8 +67,12 @@ public class Track implements Module {
                 blobCount = Integer.parseInt(string_array[0]);
                 blobLocX = Integer.parseInt(string_array[1]);
                 blobLocY = Integer.parseInt(string_array[2]);
+
+                DriverStation.reportError("" + blobCount, false);
+
             } catch (IOException e) {
                 e.printStackTrace();
+                DriverStation.reportError("NOPE" + " " + socket.getPort() +" " + socket.getInetAddress(), false);
                 blobCount = -2;
                 blobLocX = -2;
                 blobLocY = -2;

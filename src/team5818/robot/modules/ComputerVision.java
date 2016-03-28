@@ -23,13 +23,13 @@ public class ComputerVision {
      * The driving camera that is directed with the direction we collect.
      * 
      */
-    public static int CAMERA_DRIVER = 2;
+    public static int CAMERA_DRIVER = 1;
 
     /**
      * The shooter Camera that faces with the flywheel.
      *
      */
-    public static int CAMERA_SHOOTER = 1;
+    public static int CAMERA_SHOOTER = 2;
 
     private USBCam camDriver;
     private USBCam camShooter;
@@ -82,7 +82,7 @@ public class ComputerVision {
 
         // Set Frame, Current Camera, and Restart Capture
         frame = NIVision.imaqCreateImage(NIVision.ImageType.IMAGE_RGB, 0);
-        currcam = camDriver;
+        currcam = camShooter;
         // TODO change to Camera_Driver when done working on vision
         this.ChangeFeed(CAMERA_SHOOTER);
         currcam.startCapture();
