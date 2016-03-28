@@ -14,8 +14,8 @@ public enum ArcadeDriveCalculator implements DriveCalculator {
     public static final int JOYSTICK_MODE_CURVE = 1;
     public static final int JOYSTICK_MODE_REGULAR = 0;
 
-    private static int joystickMode = 0;
-    private static double turnMult = 0.5;
+    private static int joystickMode = JOYSTICK_MODE_CURVE;
+    private static double turnMult = 1;
     private static double turnPower = 2;
 
     private static double forwardMult = 1;
