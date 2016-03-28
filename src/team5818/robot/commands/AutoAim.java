@@ -58,7 +58,7 @@ public class AutoAim extends Command {
     public boolean isCenteredY;
     public boolean done;
     private double MAX_POWER = 0.2;
-    private double MIN_POWER = 0.11;
+    private double MIN_POWER = 0.08;
 
     /**
      * the offset in degrees.
@@ -97,7 +97,7 @@ public class AutoAim extends Command {
     }
 
     public AutoAim() {
-        this(DEFAULT_Y_OFFSET, defaultFlyUpVel, defaultFlyLoVel, 2.5);
+        this(DEFAULT_Y_OFFSET, defaultFlyUpVel, defaultFlyLoVel, 2);
     }
 
     @Override
