@@ -1,6 +1,7 @@
 package team5818.robot.commands;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Preferences;
@@ -59,6 +60,18 @@ public class AutoAim extends Command {
     public boolean done;
     private double MAX_POWER = 0.2;
     private double MIN_POWER = 0.11;
+    // the P I and D terms of the PID loop.
+    private double Kp = 0.015, Ki = 0, Kd = 0;
+    // -1 keeps all old integral values. else Num iterations to keep
+    private int numI = -1;
+    // The tolerence of which to be done if entered.
+    private double tolerence = 1;
+    // The arraylist of errors
+    private ArrayList errorArr;
+    // Number of errors that have been summed. If numI == -1
+    private int numErr;
+    // Sum of all the errors. if numI == -1
+    private int errSum;
 
     /**
      * the offset in degrees.
@@ -102,6 +115,18 @@ public class AutoAim extends Command {
 
     @Override
     protected void initialize() {
+        // Preferences for PID loop
+        Kp = Preferences.getInstance().getDouble("AutoAimKp", Kp);
+        Ki = Preferences.getInstance().getDouble("AutoAimKi", Ki);
+        Kd = Preferences.getInstance().getDouble("AutoAimKd", Kd);
+        tolerence =
+                Preferences.getInstance().getDouble("AutoAimTol", tolerence);
+
+        // Reinitializing the PID loop values.
+        errorArr = new ArrayList<Double>();
+        errSum = 0;
+        numErr = 0;
+
         SmartDashboard.putNumber("Is tracked", 0);
         track.GetData();
 
@@ -169,21 +194,60 @@ public class AutoAim extends Command {
             locX = track.blobLocX;
             locY = track.blobLocX;
             SmartDashboard.putNumber("locX", locX);
-            calculateAngleX();
-            double angle = calculateAngleX();
-            power = angle * .015;
-            if (power > MAX_POWER)
-                power = MAX_POWER;
-            else if (power < -MAX_POWER)
-                power = -MAX_POWER;
-            if (power > 0 && power < MIN_POWER) {
-                power = MIN_POWER;
-            } else if (power < 0 && power > -MIN_POWER) {
-                power = -MIN_POWER;
+            /* --- PID LOOP --- */
+
+            // Calculating the error.
+            double error = calculateAngleX();
+
+            // P I and D values
+            double P = 0, I = 0, D = 0;
+
+            // P term
+            P = error * Kp;
+
+            // I term
+            errorArr.add(0, error);
+            if (numI == -1) {
+                errSum += error;
+                I = errSum / numErr * Ki;
+            } else {
+                for (int i = 0; i < errorArr.size(); i++) {
+                    if (i > numI) {
+                        errorArr.remove(i);
+                        i--;
+                    } else
+                        I += (double) errorArr.get(i);
+                }
+                I = (I / numI) * Ki;
             }
+
+            // D term
+            if (errorArr.size() > 2)
+                D = ((double) errorArr.get(1) - (double) errorArr.get(0)) * Kd;
+
+            // power
+            power = P + I + D;
+
+            // Keeps the power within certain bounds.
+            power = keepInBounds(power, MIN_POWER, MAX_POWER);
+
+            // Powers the drive train with power.
             RobotCommon.runningRobot.driveTrain
                     .setPower(new Vector2d(-power, power));
         }
+    }
+
+    private double keepInBounds(double pow, double min, double max) {
+        if (pow > max)
+            pow = max;
+        else if (pow < -max)
+            pow = -max;
+        if (pow > 0 && pow < min) {
+            pow = min;
+        } else if (pow < 0 && power > -min) {
+            pow = -min;
+        }
+        return 0;
     }
 
     @Override
@@ -193,16 +257,16 @@ public class AutoAim extends Command {
                 && flyLoVel <= flyLo.getRPS() + tolerance
                 && flyLoVel >= flyLo.getRPS() - tolerance);
 
-        boolean atTarget = Math.abs(calculateAngleX()) <= 1.5;
+        boolean atTarget = Math.abs(calculateAngleX()) <= tolerence;
 
         if (isTimedOut()) {
-            DriverStation.reportError("Timedout AutoAim", false);
+            DriverStation.reportError("Timedout AutoAim: ", false);
             DriverStation.reportError("Flywheel to speed: " + flyToSpeed
-                    + "At angle: " + atTarget, false);
+                    + ". At angle: " + atTarget, false);
             return true;
         }
 
-        return ((flyToSpeed && atTarget) || this.isTimedOut());
+        return flyToSpeed && atTarget;
     }
 
     @Override
