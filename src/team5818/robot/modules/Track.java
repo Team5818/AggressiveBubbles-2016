@@ -50,10 +50,10 @@ public class Track implements Module {
 
                 String s = new String(buff);
 
-                System.out.println(s);
-                System.out.println(Arrays.toString(buff));
+                DriverStation.reportError(s, false);
+                DriverStation.reportError((Arrays.toString(buff)),false);
 
-                String[] string_array = s.split(",");
+                String[] string_array = s.split(",");//might be "/"
 
                 blobCount = Integer.parseInt(string_array[0]);
                 blobLocX = Integer.parseInt(string_array[1]);
