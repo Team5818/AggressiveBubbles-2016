@@ -33,7 +33,7 @@ public class Track implements Module {
 
         try {
             socket = new DatagramSocket(null);
-            InetSocketAddress address = new InetSocketAddress("192.168.43.36", portNum);
+            InetSocketAddress address = new InetSocketAddress("10.58.18.191", portNum);
             socket.setSoTimeout(100);
             socket.connect(address);
         } catch (SocketException e) {
@@ -82,10 +82,10 @@ public class Track implements Module {
         } else {
 
             blobCount = RoboData.getNumber("BLOB_COUNT", -1.0);
-            imageWidth = RoboData.getNumber("IMAGE_WIDTH", 0.0);
-            imageHeight = RoboData.getNumber("IMAGE_HEIGHT", 0.0);
-            blobWidth = RoboData.getNumber("WIDTH", 320.0);
-            blobHeight = RoboData.getNumber("HEIGHT", 240.0);
+            //imageWidth = RoboData.getNumber("IMAGE_WIDTH", 0.0);
+            //imageHeight = RoboData.getNumber("IMAGE_HEIGHT", 0.0);
+            //blobWidth = RoboData.getNumber("WIDTH", 320.0);
+            //blobHeight = RoboData.getNumber("HEIGHT", 240.0);
             blobLocX = RoboData.getNumber("COG_X", 0.0);
             blobLocY = RoboData.getNumber("COG_Y", 0.0);
         }
@@ -95,10 +95,10 @@ public class Track implements Module {
     @Override
     public void teleopPeriodicModule() {
         SmartDashboard.putNumber("Blob Count", blobCount);
-        SmartDashboard.putNumber("Image Width", imageWidth);
-        SmartDashboard.putNumber("Image Height", imageHeight);
-        SmartDashboard.putNumber("Blob Width", blobWidth);
-        SmartDashboard.putNumber("Blob Height", blobHeight);
+       // SmartDashboard.putNumber("Image Width", imageWidth);
+       // SmartDashboard.putNumber("Image Height", imageHeight);
+       // SmartDashboard.putNumber("Blob Width", blobWidth);
+       // SmartDashboard.putNumber("Blob Height", blobHeight);
         SmartDashboard.putNumber("blobLocX", blobLocX);
         SmartDashboard.putNumber("blobLocY", blobLocY);
 

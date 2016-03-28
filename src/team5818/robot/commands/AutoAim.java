@@ -37,7 +37,7 @@ public class AutoAim extends Command {
     private static final FlyWheel flyLo =
             RobotCommon.runningRobot.lowerFlywheel;
     
-    public static boolean udp = true;
+    public static boolean udp = false;
 
     public double imgHeight;
     public double imgWidth;
