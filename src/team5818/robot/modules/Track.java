@@ -61,14 +61,24 @@ public class Track implements Module {
 
                 String s = new String(buff);
 
-                DriverStation.reportError(s, false);
-                //DriverStation.reportError((Arrays.toString(buff)), false);
+                //DriverStation.reportError(s, false);
 
-                //String[] string_array = s.split(",");// might be "/"
+                String[] string_array = s.split(",");
+               
+                //for(int i = 0; i<= 2; i++){
+                //DriverStation.reportError(string_array[i], false);
+                //}
 
-                blobCount = 5818;//Integer.parseInt(string_array[0]);
-                blobLocX = 5818;//Integer.parseInt(string_array[1]);
-                blobLocY = 5818;//Integer.parseInt(string_array[2]);
+
+                blobCount = Integer.parseInt(string_array[0]);
+                if(blobCount>0){
+                blobLocX = Integer.parseInt(string_array[1]);
+                blobLocY = Integer.parseInt(string_array[2]);
+                }
+                else{
+                    blobLocX = -2;
+                    blobLocY = -2;
+                }
 
 
             } catch (IOException e) {
@@ -96,6 +106,7 @@ public class Track implements Module {
 
     @Override
     public void teleopPeriodicModule() {
+        GetData();
         SmartDashboard.putNumber("Blob Count", blobCount);
         // SmartDashboard.putNumber("Image Width", imageWidth);
         // SmartDashboard.putNumber("Image Height", imageHeight);

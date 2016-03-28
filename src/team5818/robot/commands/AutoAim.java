@@ -36,7 +36,7 @@ public class AutoAim extends Command {
             RobotCommon.runningRobot.upperFlywheel;
     private static final FlyWheel flyLo =
             RobotCommon.runningRobot.lowerFlywheel;
-    
+
     public static boolean udp = true;
 
     public double imgHeight;
@@ -74,8 +74,8 @@ public class AutoAim extends Command {
 
         setTimeout(timeout);
 
-        imgHeight = 0;
-        imgWidth = 0;
+        imgHeight = 480;
+        imgWidth = 320;
         blobCenterX = 0;
         blobCenterY = 0;
         blobWidth = 0;
@@ -106,10 +106,10 @@ public class AutoAim extends Command {
         track.GetData();
 
         if (track.blobCount > 0) {
-            imgHeight = track.imageHeight;
-            imgWidth = track.imageWidth;
-            blobWidth = track.blobWidth;
-            blobHeight = track.blobHeight;
+            // imgHeight = track.imageHeight;
+            // imgWidth = track.imageWidth;
+            // blobWidth = track.blobWidth;
+            // blobHeight = track.blobHeight;
             locX = track.blobLocX;
             locY = track.blobLocY + blobOffset;
             aimY();
@@ -140,15 +140,9 @@ public class AutoAim extends Command {
         return setY - 3;
     }
 
-    /*
-     * public void setDrive(double left, double right) { Vector2d power = new
-     * Vector2d(left, right); drive.setPower(power); }
-     */
-
     public void aim() {
         if ((locX < (imgWidth / 2) + (slopX * (imgWidth))
                 || (locX > (imgWidth / 2) + (slopX * imgWidth)))) {
-            // new SpinRobot(calculateAngleX()).start();
         } else if (locX == (imgWidth / 2) + (slopX * imgWidth)) {
         } else {
             DriverStation.reportError("did not align", false);
@@ -157,7 +151,6 @@ public class AutoAim extends Command {
     }
 
     public void aimY() {
-        // calculateAngleY();
         if ((locY < (imgHeight / 2) + (slopY * imgHeight) + blobOffset)
                 || (locY > (imgHeight / 2) + (slopY * imgHeight)
                         + blobOffset)) {
@@ -173,10 +166,6 @@ public class AutoAim extends Command {
         track.GetData();
 
         if (track.blobCount > 0) {
-            imgHeight = track.imageHeight;
-            imgWidth = track.imageWidth;
-            blobWidth = track.blobWidth;
-            blobHeight = track.blobHeight;
             locX = track.blobLocX;
             locY = track.blobLocX;
             SmartDashboard.putNumber("locX", locX);
@@ -194,10 +183,6 @@ public class AutoAim extends Command {
             }
             RobotCommon.runningRobot.driveTrain
                     .setPower(new Vector2d(-power, power));
-            /*
-             * if (blobWidth < 70) { blobOffset = track.blobOffsetClose; } else
-             * { blobOffset = track.blobOffsetFar; }
-             */
         }
     }
 
