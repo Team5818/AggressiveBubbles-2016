@@ -18,6 +18,7 @@ import team5818.robot.util.Vector2d;
 public class AutoAim extends Command {
 
     public static final double DEFAULT_Y_OFFSET = -8; //calibrated for lowbar
+    public static final double DEFAULT_TIMEOUT = 2;
     private Track track;
     private DriveTrain drive;
 
@@ -100,9 +101,13 @@ public class AutoAim extends Command {
     public AutoAim(double offset, double timeout) {
         this(offset, defaultFlyUpVel, defaultFlyLoVel, timeout);
     }
+    
+    public AutoAim(double offset) {
+        this(offset, defaultFlyUpVel, defaultFlyLoVel, DEFAULT_TIMEOUT);
+    }
 
     public AutoAim() {
-        this(DEFAULT_Y_OFFSET, defaultFlyUpVel, defaultFlyLoVel, 2);
+        this(DEFAULT_Y_OFFSET, defaultFlyUpVel, defaultFlyLoVel, DEFAULT_TIMEOUT );
     }
 
     @Override
