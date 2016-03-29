@@ -191,6 +191,8 @@ public class RobotCoDriver implements Module {
         }
         if (usingFirstStick()) {
             drive();
+            if(autoAim.isRunning())
+                autoAim.cancel();
             hasStoppedDrive = false;
         } else {
             if (!hasStoppedDrive) {
