@@ -149,11 +149,6 @@ public class AutoAim extends Command {
         double setY = RobotCommon.runningRobot.arm.getAngle()
                 + ((imgHeight / 2 - (locY))) / imgHeight * camFOV / 2
                 + blobOffset;
-        if (locY > imgHeight / 2) {
-            setY -= 0;
-        } else {
-            setY -= 0;
-        }
         return setY;
     }
 
