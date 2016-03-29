@@ -59,6 +59,11 @@ public class AutoAim extends Command {
     public boolean done;
     private double MAX_POWER = 0.2;
     private double MIN_POWER = 0.08;
+    private double Kp = 0.04, Ki = 0.0041, Kd = 0;
+    private double errSum = 0;
+    private double err = 0;
+    private int errCount = 0;
+    
 
     /**
      * the offset in degrees.
@@ -104,6 +109,13 @@ public class AutoAim extends Command {
     protected void initialize() {
         SmartDashboard.putNumber("Is tracked", 0);
         track.GetData();
+        Kp = Preferences.getInstance().getDouble("AutoAimKp", Kp);
+        Ki = Preferences.getInstance().getDouble("AutoAimKi", Ki);
+        Kd = Preferences.getInstance().getDouble("AutoAimKd", Kd);
+        
+        errSum = 0;
+        errCount = 0;
+        err = 0;
 
         if (track.blobCount > 0) {
             // imgHeight = track.imageHeight;
@@ -169,21 +181,32 @@ public class AutoAim extends Command {
             locX = track.blobLocX;
             locY = track.blobLocY;
             SmartDashboard.putNumber("locX", locX);
-            calculateAngleX();
-            double angle = calculateAngleX();
-            power = angle * .015;
-            if (power > MAX_POWER)
-                power = MAX_POWER;
-            else if (power < -MAX_POWER)
-                power = -MAX_POWER;
-            if (power > 0 && power < MIN_POWER) {
-                power = MIN_POWER;
-            } else if (power < 0 && power > -MIN_POWER) {
-                power = -MIN_POWER;
-            }
+            
+            double D = (-err + (err = calculateAngleX())) * Kd;
+            double P = err * Kp;
+            errSum += err;
+            errCount += 1;
+            double I = errSum / errCount * Ki;
+            
+            power = P + I + D;
+            power = keepInBounds(power, MIN_POWER, MAX_POWER);
             RobotCommon.runningRobot.driveTrain
                     .setPower(new Vector2d(-power, power));
         }
+    }
+
+    private double keepInBounds(double pow, double min,
+            double max) {
+        if (pow > max)
+            pow = max;
+        else if (pow < -max)
+            pow = -max;
+        if (pow > 0 && pow < min) {
+            pow = min;
+        } else if (pow < 0 && pow > -min) {
+            pow = -min;
+        }
+        return pow;
     }
 
     @Override
@@ -193,7 +216,7 @@ public class AutoAim extends Command {
                 && flyLoVel <= flyLo.getRPS() + tolerance
                 && flyLoVel >= flyLo.getRPS() - tolerance);
 
-        boolean atTarget = Math.abs(calculateAngleX()) <= 1.5;
+        boolean atTarget = Math.abs(calculateAngleX()) <= 0.5;
 
         if (isTimedOut()) {
             DriverStation.reportError("Timedout AutoAim", false);
