@@ -175,6 +175,10 @@ public class AutoAim extends Command {
 
     @Override
     protected void execute() {
+        pidX();
+    }
+
+    public void pidX() {
         track.GetData();
 
         if (track.blobCount > 0) {

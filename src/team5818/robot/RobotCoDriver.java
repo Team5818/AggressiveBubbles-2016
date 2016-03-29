@@ -3,6 +3,7 @@ package team5818.robot;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
+import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.CommandGroup;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -100,9 +101,11 @@ public class RobotCoDriver implements Module {
     private double shootAngleLow = 30;
 
     private double coDriveDamp = 0.25;
+    private AutoAim autoAim;
 
     @Override
     public void initModule() {
+        autoAim = new AutoAim();
         // Setting the singletons to local fields for easy access.
         arm = RobotCommon.runningRobot.arm;
         lowerFlywheel = RobotCommon.runningRobot.lowerFlywheel;
@@ -166,7 +169,8 @@ public class RobotCoDriver implements Module {
         butCollect.whenReleased(new Collect(0));
         butUncollect.whenPressed(new Collect(-Collect.COLLECT_POWER));
         butUncollect.whenReleased(new Collect(0));
-        butAutoAim.whenPressed(new AutoAim());
+        butAutoAim.whenPressed(autoAim);
+        //butAutoAim.whenActive(command);
         //butAutoAim.whenReleased(aimAndShoot);
         butSwitchShootFeed.whenPressed(switchFeedShoot);
         butSwitchDriverFeed.whenPressed(switchFeedDrive);
@@ -217,7 +221,7 @@ public class RobotCoDriver implements Module {
     private void drive() {
         if (isOverrideDriver()) {
             RobotCommon.runningRobot.driveTrain
-                    .setPower(ArcadeDriveCalculator.INSTANCE.compute(
+                    .setPower(ArcadeDriveCalculator.INSTANCE.computeDefault(
                             new Vector2d(firstJoystick.getX() * coDriveDamp,
                                     firstJoystick.getY() * coDriveDamp)));
         }
@@ -238,6 +242,10 @@ public class RobotCoDriver implements Module {
     }
     
     private void performButtonActions(){
+        if (firstJoystick.getRawButton(BUT_AUTO_AIM) && !autoAim.isRunning()) {
+            autoAim.pidX();
+        }
+        
         if(secondJoystick.getRawButton(BUT_ZERO_POT)){
             arm.zeroPot();
         }
