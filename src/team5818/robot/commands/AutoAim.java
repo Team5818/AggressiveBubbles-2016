@@ -167,7 +167,7 @@ public class AutoAim extends Command {
 
         if (track.blobCount > 0) {
             locX = track.blobLocX;
-            locY = track.blobLocX;
+            locY = track.blobLocY;
             SmartDashboard.putNumber("locX", locX);
             calculateAngleX();
             double angle = calculateAngleX();
