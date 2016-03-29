@@ -38,7 +38,7 @@ public class AutoPortcullisUniversal extends CommandGroup{
     private SetArmAngle findTarget = new SetArmAngle(25);
     private SpinRobot spin;
     private SetFlywheelVelocity setFlyVel = new SetFlywheelVelocity(flyUpVel, flyLoVel);
-    private AutoAim aim = new AutoAim(3);
+    private AutoAim aim = new AutoAim(-8, 3);
     private Shoot dontMiss = new Shoot();
 
     /**

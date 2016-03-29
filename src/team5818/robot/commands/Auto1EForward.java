@@ -33,7 +33,7 @@ public class Auto1EForward extends CommandGroup {
     private SetFlywheelVelocity setFlyVel = new SetFlywheelVelocity(flyUpVel, flyLoVel, 0);
     private LEDToggle lightUp = new LEDToggle(true);
     private SwitchFeed switchCam = new SwitchFeed(ComputerVision.CAMERA_SHOOTER);
-    private AutoAim autoAim = new AutoAim();
+    private AutoAim autoAim = new AutoAim(-8,3);
     private Shoot dontMiss = new Shoot();
 
     /**

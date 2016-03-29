@@ -33,7 +33,7 @@ public class AutoRoughTerrainUniversal extends CommandGroup{
     private DriveDistanceCommand driveDiagonal;
     private SetArmAngle findTarget = new SetArmAngle(25);
     private SpinRobot spin;
-    private AutoAim aim = new AutoAim();
+    private AutoAim aim = new AutoAim(-8,3);
     private SetFlywheelVelocity setFlyVel = new SetFlywheelVelocity(flyUpVel, flyLoVel);
     private Shoot shoot = new Shoot();
     private SwitchFeed switchCam = new SwitchFeed(ComputerVision.CAMERA_SHOOTER);
