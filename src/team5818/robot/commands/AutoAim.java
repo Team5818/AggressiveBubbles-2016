@@ -38,6 +38,7 @@ public class AutoAim extends Command {
     private static final FlyWheel flyLo =
             RobotCommon.runningRobot.lowerFlywheel;
 
+    private double towerHeight = 17.08;
     private double camFOV;
     private double imgHeight;
     private double imgWidth;
@@ -197,6 +198,9 @@ public class AutoAim extends Command {
         return pow;
     }
 
+    private double getDistanceFromGoal(double angle) {
+        return towerHeight / Math.atan(angle);
+    }
     @Override
     protected boolean isFinished() {
         boolean flyToSpeed = (flyUpVel <= flyUp.getRPS() + tolerance
