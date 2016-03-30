@@ -38,9 +38,10 @@ public class AutoAim extends Command {
     private Track track;
     private DriveTrain drive;
     
+    // in inches.
+    private double towerHeight = 205;
     private double flyUpVel;
     private double flyLoVel;
-    private double towerHeight = 17.08;
     private double camFOV;
     private double imgHeight;
     private double imgWidth;
@@ -65,7 +66,7 @@ public class AutoAim extends Command {
      * @param offset
      */
     public AutoAim(double offset, double flyup, double flylo, double timeout) {
-        double[] xArr = {7};
+        double[] xArr = {84};
         double[] yArr = {8};
         lookupTable = new LinearLookupTable(xArr, yArr);
         
@@ -212,6 +213,7 @@ public class AutoAim extends Command {
     private double getDistanceFromGoal(double angle) {
         return towerHeight / Math.atan(angle);
     }
+    
     @Override
     protected boolean isFinished() {
         boolean flyToSpeed = (flyUpVel <= flyUp.getRPS() + tolerance

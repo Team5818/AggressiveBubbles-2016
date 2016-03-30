@@ -2,6 +2,7 @@ package team5818.robot.util;
 
 /**
  * Created by Yoseph Alabdulwahab on 3/29/2016.
+ * This is a lookup table class. It 
  */
 public class LinearLookupTable {
 
@@ -11,8 +12,8 @@ public class LinearLookupTable {
     /**
      * Initializes a linear interpolation lookup table.
      *
-     * @param x          the array of x values for this table.
-     * @param y          the array of y values for this table.
+     * @param x the array of x values for this table. Must be in order.
+     * @param y the array of y values for this table. Must be in order.
      */
     public LinearLookupTable(double[] x, double[] y) {
         if (x.length != y.length || x.length == 0)
