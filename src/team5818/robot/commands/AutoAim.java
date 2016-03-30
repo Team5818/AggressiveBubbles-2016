@@ -19,25 +19,25 @@ public class AutoAim extends Command {
 
     public static final double DEFAULT_Y_OFFSET = -8; //calibrated for lowbar
     public static final double DEFAULT_TIMEOUT = 2;
-    private static boolean udp = true;
-    
-    private Track track;
-    private DriveTrain drive;
-
-    public static double tolerance = FlyWheel.TOLERANCE;
-    public double flyUpVel;
-    public double flyLoVel;
 
     public static double defaultFlyUpVel = Preferences.getInstance()
             .getDouble("UpperFlyVel", FlyWheel.SHOOT_VELOCITY_UPPER);
     public static double defaultFlyLoVel = Preferences.getInstance()
             .getDouble("LowerFlyVel", FlyWheel.SHOOT_VELOCITY_LOWER);
-
+    
     private static final FlyWheel flyUp =
             RobotCommon.runningRobot.upperFlywheel;
     private static final FlyWheel flyLo =
             RobotCommon.runningRobot.lowerFlywheel;
-
+    
+    private static boolean udp = true;
+    public static double tolerance = FlyWheel.TOLERANCE;
+    
+    private Track track;
+    private DriveTrain drive;
+    
+    public double flyUpVel;
+    public double flyLoVel;
     private double towerHeight = 17.08;
     private double camFOV;
     private double imgHeight;
