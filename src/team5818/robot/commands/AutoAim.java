@@ -65,6 +65,10 @@ public class AutoAim extends Command {
      * @param offset
      */
     public AutoAim(double offset, double flyup, double flylo, double timeout) {
+        double[] xArr = {7};
+        double[] yArr = {8};
+        lookupTable = new LinearLookupTable(xArr, yArr);
+        
         track = RobotCommon.runningRobot.targeting;
         camFOV = RobotConstants.CAMFOV;
 
@@ -136,6 +140,11 @@ public class AutoAim extends Command {
         double setY = RobotCommon.runningRobot.arm.getAngle()
                 + ((imgHeight / 2 - (locY))) / imgHeight * camFOV / 2
                 + blobOffset;
+
+//      double setY = RobotCommon.runningRobot.arm.getAngle()
+//              + ((imgHeight / 2 - (locY))) / imgHeight * camFOV / 2;
+//      setY += lookupTable.getEstimate(getDistanceFromGoal(setY));
+      
         return setY;
     }
 
