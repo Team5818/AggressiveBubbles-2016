@@ -211,7 +211,7 @@ public class AutoAim extends Command {
     }
 
     private double getDistanceFromGoal(double angle) {
-        return towerHeight / Math.atan(angle);
+        return towerHeight / Math.tan(angle);
     }
     
     @Override
