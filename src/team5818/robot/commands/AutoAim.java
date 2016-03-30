@@ -19,6 +19,7 @@ public class AutoAim extends Command {
 
     public static final double DEFAULT_Y_OFFSET = -8; //calibrated for lowbar
     public static final double DEFAULT_TIMEOUT = 2;
+    public static boolean UDP = true;
 
     public static double defaultFlyUpVel = Preferences.getInstance()
             .getDouble("UpperFlyVel", FlyWheel.SHOOT_VELOCITY_UPPER);
@@ -30,7 +31,6 @@ public class AutoAim extends Command {
     private static final FlyWheel flyLo =
             RobotCommon.runningRobot.lowerFlywheel;
     
-    private static boolean udp = true;
     public static double tolerance = FlyWheel.TOLERANCE;
     
     private Track track;

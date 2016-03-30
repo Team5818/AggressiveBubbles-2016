@@ -52,7 +52,7 @@ public class Track implements Module {
     }
 
     public void GetData() {
-        if (AutoAim.udp) {
+        if (AutoAim.UDP) {
             try {
                 byte[] buff = new byte[16];
                 DatagramPacket packet = new DatagramPacket(buff, 16);
