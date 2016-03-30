@@ -17,22 +17,33 @@ public class SetFlywheelPower extends Command {
     private static  FlyWheel flyLo;
     private static boolean hasInitialized = false;
     private double maxTime = 1;
+    private double uPow;
+    private double lPow;
 
     /**
      * @param power the desired power to set to the arm.
      */
     public SetFlywheelPower(double power) {
+        this(power,power);
+    }
+    
+    /**
+     * @param power the desired power to set to the arm.
+     */
+    public SetFlywheelPower(double up, double lo) {
         flyUp = RobotCommon.runningRobot.upperFlywheel;
         flyLo = RobotCommon.runningRobot.lowerFlywheel;
         requires(flyUp);
         requires(flyLo);
-        this.power = power;
+        this.uPow = up;
+        this.lPow = lo;
+        
     }
 
     @Override
     protected void initialize() {
-        flyUp.setPower(power);
-        flyLo.setPower(power);
+        flyUp.setPower(uPow);
+        flyLo.setPower(lPow);
         hasInitialized = true;
         setTimeout(maxTime);
         

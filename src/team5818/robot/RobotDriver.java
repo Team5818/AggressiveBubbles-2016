@@ -7,15 +7,19 @@ import edu.wpi.first.wpilibj.buttons.JoystickButton;
 import edu.wpi.first.wpilibj.command.CommandGroup;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import team5818.robot.commands.ArmPower;
 import team5818.robot.commands.Collect;
 import team5818.robot.commands.DrivePower;
 import team5818.robot.commands.LEDToggle;
 import team5818.robot.commands.LowerArmToGround;
 import team5818.robot.commands.SetArmAngle;
 import team5818.robot.commands.SetDrivePower;
+import team5818.robot.commands.SetFlywheelPower;
+import team5818.robot.commands.SetFlywheelVelocity;
 import team5818.robot.commands.SpinRobot;
 import team5818.robot.commands.SwitchFeed;
 import team5818.robot.modules.ComputerVision;
+import team5818.robot.modules.FlyWheel;
 import team5818.robot.modules.Module;
 import team5818.robot.modules.drivetrain.ArcadeDriveCalculator;
 import team5818.robot.modules.drivetrain.ArcadeVelocityCalculator;
@@ -47,13 +51,10 @@ public class RobotDriver implements Module {
     // First Joystick Buttons
     private static final int BUT_DRIVE_VELOCITY = 11;
     private static final int BUT_DRIVE_POWER = 10;
-    private static final int BUT_INVERT = 8;
-    private static final int BUT_UNINVERT = 9;
-    private static final int BUT_TWOSTICK_TANK = 7;
-    private static final int BUT_TWOSTICK_ARCADE = 6;
-    private static final int BUT_ARM_ANGLE_HIGH = 5;
-    private static final int BUT_ARM_ANGLE_LOW = 4;
+    private static final int BUT_OVERRIDE_DRIVER = 5;
+    private static final int BUT_ARM_ANGLE_SHOOTING = 4;
     private static final int BUT_ARM_ANGLE_COLLECT = 3;
+    private static final int BUT_ARM_ANGLE_GROUND = 2;
     private static final int BUT_OVERRIDE_CODRIVER = 1;
 
     // Second Joystick Buttons
@@ -73,8 +74,7 @@ public class RobotDriver implements Module {
     private static boolean invertThrottle = false;
     private boolean hasStoppedRobot = false;
 
-    private double armAngleHigh = 85;
-    private double armAngleLow = 40;
+    private double armAngleShooting = 40;
     private double armAngleCollect = 2.5;
 
     // Initializing the JoystickButtons
@@ -82,12 +82,16 @@ public class RobotDriver implements Module {
             new JoystickButton(SECOND_JOYSTICK, BUT_COLLECT);
     private JoystickButton butUncollect =
             new JoystickButton(SECOND_JOYSTICK, BUT_UNCOLLECT);
-    private JoystickButton setArmAngleHigh =
-            new JoystickButton(FIRST_JOYSTICK, BUT_ARM_ANGLE_HIGH);
-    private JoystickButton setArmAngleLow =
-            new JoystickButton(FIRST_JOYSTICK, BUT_ARM_ANGLE_LOW);
-    private JoystickButton setArmAngleCollect =
+    private JoystickButton butOverrideDriver =
+            new JoystickButton(SECOND_JOYSTICK, BUT_OVERRIDE_DRIVER);
+    private JoystickButton butOverrideCoDriver =
+            new JoystickButton(SECOND_JOYSTICK, BUT_OVERRIDE_CODRIVER);
+    private JoystickButton butArmAngleShooting =
+            new JoystickButton(FIRST_JOYSTICK, BUT_ARM_ANGLE_SHOOTING);
+    private JoystickButton butArmAngleCollect =
             new JoystickButton(FIRST_JOYSTICK, BUT_ARM_ANGLE_COLLECT);
+    private JoystickButton butArmAngleGround =
+            new JoystickButton(FIRST_JOYSTICK, BUT_ARM_ANGLE_GROUND);
     private JoystickButton rotateCW90 =
             new JoystickButton(SECOND_JOYSTICK, BUT_ROTATE_CW_90);
     private JoystickButton rotateCCW90 =
@@ -100,16 +104,14 @@ public class RobotDriver implements Module {
             new JoystickButton(SECOND_JOYSTICK, BUT_SWITCH_FEED_DRIVE);
     private JoystickButton butSwitchFeedShoot =
             new JoystickButton(SECOND_JOYSTICK, BUT_SWITCH_FEED_SHOOT);
+
     @Override
     public void initModule() {
         // Setting Preference values.
-        armAngleLow =
-                Preferences.getInstance().getDouble("ArmAngleLow", armAngleLow);
-        armAngleHigh = Preferences.getInstance().getDouble("ArmAngleHigh",
-                armAngleHigh);
+        armAngleShooting = Preferences.getInstance()
+                .getDouble("ArmAngleShooting", armAngleShooting);
         armAngleCollect = Preferences.getInstance().getDouble("ArmAngleCollect",
                 armAngleCollect);
-
 
         // Setting local objects of singletons for easy access.
         DriveSide leftDriveSide =
@@ -123,27 +125,45 @@ public class RobotDriver implements Module {
         LiveWindow.addActuator("DriveSide", "Right",
                 rightDriveSide.getPIDController());
 
+        // Command Groups
+        CommandGroup armToGround = new CommandGroup();
+        armToGround.addSequential(new SetArmAngle(armAngleCollect));
+        armToGround.addSequential(new ArmPower(LowerArmToGround.ARM_POWER));
+        CommandGroup switchFeedShoot = new CommandGroup();
+        switchFeedShoot
+                .addParallel(new SwitchFeed(ComputerVision.CAMERA_SHOOTER));
+        switchFeedShoot.addParallel(new LEDToggle(true));
+        CommandGroup switchFeedDrive = new CommandGroup();
+        switchFeedDrive
+                .addParallel(new SwitchFeed(ComputerVision.CAMERA_DRIVER));
+        switchFeedDrive.addParallel(new LEDToggle(false));
+        CommandGroup overrideDriver = new CommandGroup();
+        overrideDriver.addParallel(new SetArmAngle(armAngleShooting));
+        overrideDriver.addParallel(new SwitchFeed(ComputerVision.CAMERA_SHOOTER));
+        overrideDriver.addParallel(new SetFlywheelVelocity(FlyWheel.SHOOT_VELOCITY_LOWER, FlyWheel.SHOOT_VELOCITY_LOWER));
+        CommandGroup overrideCoDriver = new CommandGroup();
+        overrideDriver.addParallel(new SwitchFeed(ComputerVision.CAMERA_DRIVER));
+        overrideDriver.addParallel(new SetFlywheelPower(0));
+
         // Assigning commands to their respective buttons.
         butCollect.whenPressed(new Collect(Collect.COLLECT_POWER));
         butCollect.whenReleased(new Collect(0));
         butUncollect.whenPressed(new Collect(-Collect.COLLECT_POWER));
         butUncollect.whenReleased(new Collect(0));
-        setArmAngleHigh.whenPressed(new SetArmAngle(armAngleHigh));
-        setArmAngleLow.whenPressed(new SetArmAngle(armAngleLow));
-        setArmAngleCollect.whenPressed(new SetArmAngle(armAngleCollect));
-        rotateCW90.whenPressed(new SpinRobot(81, SpinRobot.DEFAULT_TIMEOUT, 0.6));
-        rotateCCW90.whenPressed(new SpinRobot(-81, SpinRobot.DEFAULT_TIMEOUT, 0.6));
-        rotateCW180.whenPressed(new SpinRobot(175, SpinRobot.DEFAULT_TIMEOUT, 0.6));
-        rotateCCW180.whenPressed(new SpinRobot(-175, SpinRobot.DEFAULT_TIMEOUT, 0.6));
-        CommandGroup switchFeedShoot = new CommandGroup();
-        switchFeedShoot
-                .addParallel(new SwitchFeed(ComputerVision.CAMERA_SHOOTER));
-        switchFeedShoot.addParallel(new LEDToggle(true));
+        butOverrideDriver.whenPressed(overrideDriver);
+        butOverrideCoDriver.whenPressed(overrideCoDriver);
+        butArmAngleShooting.whenPressed(new SetArmAngle(armAngleShooting));
+        butArmAngleCollect.whenPressed(new SetArmAngle(armAngleCollect));
+        butArmAngleGround.whenPressed(armToGround);
+        rotateCW90
+                .whenPressed(new SpinRobot(81, SpinRobot.DEFAULT_TIMEOUT, 0.6));
+        rotateCCW90.whenPressed(
+                new SpinRobot(-81, SpinRobot.DEFAULT_TIMEOUT, 0.6));
+        rotateCW180.whenPressed(
+                new SpinRobot(175, SpinRobot.DEFAULT_TIMEOUT, 0.6));
+        rotateCCW180.whenPressed(
+                new SpinRobot(-175, SpinRobot.DEFAULT_TIMEOUT, 0.6));
         butSwitchFeedShoot.whenPressed(switchFeedShoot);
-        CommandGroup switchFeedDrive = new CommandGroup();
-        switchFeedDrive
-                .addParallel(new SwitchFeed(ComputerVision.CAMERA_DRIVER));
-        switchFeedDrive.addParallel(new LEDToggle(false));
         butSwitchFeedDrive.whenPressed(switchFeedDrive);
 
         // Setting driving mode to power.
@@ -183,30 +203,16 @@ public class RobotDriver implements Module {
      * operation.
      */
     public void performButtonActions() {
-        // Inverting buttons
-        if (FIRST_JOYSTICK.getRawButton(BUT_INVERT)) {
-            invertThrottle = true;
-        }
-        if (FIRST_JOYSTICK.getRawButton(BUT_UNINVERT)) {
-            invertThrottle = false;
-        }
 
-        if(FIRST_JOYSTICK.getRawButton(BUT_OVERRIDE_CODRIVER)) {
+        if (FIRST_JOYSTICK.getRawButton(BUT_OVERRIDE_CODRIVER)) {
             RobotCoDriver.setOverrideDriver(false);
         }
         
-        // Changes the Control Mode
-        if (FIRST_JOYSTICK.getRawButton(BUT_TWOSTICK_ARCADE)) {
-            RobotCommon.runningRobot.driveTrain
-                    .setDriveCalculator(ArcadeDriveCalculator.INSTANCE);
-            driveType = DriveType.ARCADE;
-            inputMode = InputMode.TWO_STICKS;
-        } else if (FIRST_JOYSTICK.getRawButton(BUT_TWOSTICK_TANK)) {
-            RobotCommon.runningRobot.driveTrain
-                    .setDriveCalculator(TankDriveCalculator.INSTANCE);
-            driveType = DriveType.TANK;
-            inputMode = InputMode.TWO_STICKS;
-        } else if (FIRST_JOYSTICK.getRawButton(BUT_DRIVE_VELOCITY)) {
+        if (FIRST_JOYSTICK.getRawButton(BUT_OVERRIDE_DRIVER)) {
+            RobotCoDriver.setOverrideDriver(true);
+        }
+
+        if (FIRST_JOYSTICK.getRawButton(BUT_DRIVE_VELOCITY)) {
             driveType = DriveType.ARCADE_VELOCITY;
             stopMovement();
         } else if (FIRST_JOYSTICK.getRawButton(BUT_DRIVE_POWER)) {
