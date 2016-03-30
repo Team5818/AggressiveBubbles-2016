@@ -13,6 +13,7 @@ import team5818.robot.modules.Arm;
 import team5818.robot.modules.FlyWheel;
 import team5818.robot.modules.Track;
 import team5818.robot.modules.drivetrain.DriveTrain;
+import team5818.robot.util.LinearLookupTable;
 import team5818.robot.util.Vector2d;
 
 public class AutoAim extends Command {
@@ -21,9 +22,9 @@ public class AutoAim extends Command {
     public static final double DEFAULT_TIMEOUT = 2;
     public static boolean UDP = true;
 
-    public static double defaultFlyUpVel = Preferences.getInstance()
+    private static double defaultFlyUpVel = Preferences.getInstance()
             .getDouble("UpperFlyVel", FlyWheel.SHOOT_VELOCITY_UPPER);
-    public static double defaultFlyLoVel = Preferences.getInstance()
+    private static double defaultFlyLoVel = Preferences.getInstance()
             .getDouble("LowerFlyVel", FlyWheel.SHOOT_VELOCITY_LOWER);
     
     private static final FlyWheel flyUp =
@@ -33,11 +34,12 @@ public class AutoAim extends Command {
     
     public static double tolerance = FlyWheel.TOLERANCE;
     
+    private LinearLookupTable lookupTable;
     private Track track;
     private DriveTrain drive;
     
-    public double flyUpVel;
-    public double flyLoVel;
+    private double flyUpVel;
+    private double flyLoVel;
     private double towerHeight = 17.08;
     private double camFOV;
     private double imgHeight;
