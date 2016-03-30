@@ -19,10 +19,10 @@ public class AutoAim extends Command {
 
     public static final double DEFAULT_Y_OFFSET = -8; //calibrated for lowbar
     public static final double DEFAULT_TIMEOUT = 2;
+    private static boolean udp = true;
+    
     private Track track;
     private DriveTrain drive;
-
-    private double camFOV;
 
     public static double tolerance = FlyWheel.TOLERANCE;
     public double flyUpVel;
@@ -38,26 +38,16 @@ public class AutoAim extends Command {
     private static final FlyWheel flyLo =
             RobotCommon.runningRobot.lowerFlywheel;
 
-    public static boolean udp = true;
-
-    public double imgHeight;
-    public double imgWidth;
-    public double blobCenterX;
-    public double blobCenterY;
-    public double blobWidth;
-    public double blobHeight;
+    private double camFOV;
+    private double imgHeight;
+    private double imgWidth;
     private double power;
-    // public double setX;
-    // public double setY;
-    public double locX;
-    public double locY;
-    public double blobOffset;
-    public double slopX;
-    public double slopY;
+    private double locX;
+    private double locY;
+    private double blobOffset;
+    private double slopX;
+    private double slopY;
 
-    public boolean isCenteredX;
-    public boolean isCenteredY;
-    public boolean done;
     private double MAX_POWER = 0.2;
     private double MIN_POWER = 0.08;
     private double Kp = 0.04, Ki = 0.0041, Kd = 0;
@@ -82,16 +72,10 @@ public class AutoAim extends Command {
 
         imgHeight = 480;
         imgWidth = 320;
-        blobCenterX = 0;
-        blobCenterY = 0;
-        blobWidth = 0;
-        blobHeight = 0;
         blobOffset = offset;
         locX = 0;
         locY = 0;
-
-        isCenteredX = false;
-        isCenteredY = false;
+        
         slopX = (RobotConstants.SLOP);
         slopY = (RobotConstants.SLOP);
         requires(RobotCommon.runningRobot.driveTrain);
