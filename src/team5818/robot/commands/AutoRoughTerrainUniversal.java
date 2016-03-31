@@ -33,7 +33,7 @@ public class AutoRoughTerrainUniversal extends CommandGroup{
     private DriveDistanceCommand driveDiagonal;
     private SetArmAngle findTarget = new SetArmAngle(25);
     private SpinRobot spin;
-    private AutoAim aim = new AutoAim(-8,3);
+    private AutoAim aim;
     private SetFlywheelVelocity setFlyVel = new SetFlywheelVelocity(flyUpVel, flyLoVel);
     private Shoot shoot = new Shoot();
     private SwitchFeed switchCam = new SwitchFeed(ComputerVision.CAMERA_SHOOTER);
@@ -41,26 +41,36 @@ public class AutoRoughTerrainUniversal extends CommandGroup{
 
     
     public AutoRoughTerrainUniversal(int position){
+        double xOffset = Preferences.getInstance().getDouble("AutoRoughXOffset", 0);
+        double yOffset = Preferences.getInstance().getDouble("AutoRoughYOffset", -8);
         setTimeout(15);
         if(position == 2){
             redirectAngle = -30;
             findTargetAngle = -redirectAngle+20;
+            xOffset = Preferences.getInstance().getDouble("AutoRough2XOffset", 0);
+            yOffset = Preferences.getInstance().getDouble("AutoRough2YOffset", -8);
         }
         else if(position == 3){
             redirectAngle = 30;
             findTargetAngle = -redirectAngle;
+            xOffset = Preferences.getInstance().getDouble("AutoRough3XOffset", 0);
+            yOffset = Preferences.getInstance().getDouble("AutoRough3YOffset", -8);
         }
         
         else if(position==4){
             redirectAngle = 0;
             redirectTimeout = 0;
             findTargetAngle = 0;
+            xOffset = Preferences.getInstance().getDouble("AutoRough4XOffset", 0);
+            yOffset = Preferences.getInstance().getDouble("AutoRough4YOffset", -8);
         }
         else{
             redirectAngle = -30;
-            findTargetAngle = -redirectAngle;        
+            findTargetAngle = -redirectAngle;
+            xOffset = Preferences.getInstance().getDouble("AutoRough5XOffset", 0);
+            yOffset = Preferences.getInstance().getDouble("AutoRough5YOffset", -8);
         }
-     
+        aim = new AutoAim(xOffset, yOffset, 3);
         
         redirectDist = -Math.sqrt(Math.pow(defenseWidth,2) + Math.pow(40, 2));
         redirect = new SpinRobot(redirectAngle, redirectTimeout);

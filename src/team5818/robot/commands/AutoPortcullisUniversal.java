@@ -14,6 +14,7 @@ import team5818.robot.modules.FlyWheel;
 
 public class AutoPortcullisUniversal extends CommandGroup{
     double  defenseWidth = 48;
+    private double xOffSet = 0;
     private double redirectDist;
     private double redirectAngle;
     private double findTargetAngle;
@@ -38,7 +39,7 @@ public class AutoPortcullisUniversal extends CommandGroup{
     private SetArmAngle findTarget = new SetArmAngle(25);
     private SpinRobot spin;
     private SetFlywheelVelocity setFlyVel = new SetFlywheelVelocity(flyUpVel, flyLoVel);
-    private AutoAim aim = new AutoAim(-8, 3);
+    private AutoAim aim;
     private Shoot dontMiss = new Shoot();
 
     /**
@@ -51,25 +52,35 @@ public class AutoPortcullisUniversal extends CommandGroup{
      */
     public AutoPortcullisUniversal(int position) {
         setTimeout(15);
+        double xOffset = Preferences.getInstance().getDouble("AutoPortcullisXOffset", 0);
+        double yOffset = Preferences.getInstance().getDouble("AutoPortcullisYOffset", -8);
         if(position == 2){
             redirectAngle = -30;
             findTargetAngle = -130-redirectAngle;
+            xOffset = Preferences.getInstance().getDouble("AutoPortcullis2XOffset", 0);
+            yOffset = Preferences.getInstance().getDouble("AutoPortcullis2YOffset", -8);
         }
         else if(position == 3){
             redirectAngle = 30;
             findTargetAngle = 180-redirectAngle;
+            xOffset = Preferences.getInstance().getDouble("AutoPortcullis3XOffset", 0);
+            yOffset = Preferences.getInstance().getDouble("AutoPortcullis3YOffset", -8);
         }
         
         else if(position==4){
             redirectAngle = 0;
             redirectTimeout = 0;
             findTargetAngle = 180;
+            xOffset = Preferences.getInstance().getDouble("AutoPortcullis4XOffset", 0);
+            yOffset = Preferences.getInstance().getDouble("AutoPortcullis4YOffset", -8);
         }
         else{
             redirectAngle = -30;
-            findTargetAngle = -180-redirectAngle;        
+            findTargetAngle = -180-redirectAngle;  
+            xOffset = Preferences.getInstance().getDouble("AutoPortcullis5XOffset", 0);
+            yOffset = Preferences.getInstance().getDouble("AutoPortcullis5YOffset", -8);
         }
-     
+        aim = new AutoAim(xOffset, yOffset, 3);
         
         redirectDist = Math.sqrt(Math.pow(defenseWidth,2) + Math.pow(60, 2));
         

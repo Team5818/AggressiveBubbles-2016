@@ -18,6 +18,8 @@ import team5818.robot.util.Vector2d;
 
 public class AutoAim extends Command {
 
+
+    private static final double DEFAULT_X_OFFSET = 0;
     public static final double DEFAULT_Y_OFFSET = -8; //calibrated for lowbar
     public static final double DEFAULT_TIMEOUT = 2;
     public static boolean UDP = true;
@@ -48,7 +50,8 @@ public class AutoAim extends Command {
     private double power;
     private double locX;
     private double locY;
-    private double blobOffset;
+    private double yOffset = 0;
+    private double xOffset = 0;
     private double slopX;
     private double slopY;
 
@@ -65,7 +68,7 @@ public class AutoAim extends Command {
      * 
      * @param offset
      */
-    public AutoAim(double offset, double flyup, double flylo, double timeout) {
+    public AutoAim(double xOffset, double yOffset, double flyup, double flylo, double timeout) {
         double[] xArr = {84};
         double[] yArr = {8};
         lookupTable = new LinearLookupTable(xArr, yArr);
@@ -80,7 +83,8 @@ public class AutoAim extends Command {
 
         imgHeight = 480;
         imgWidth = 320;
-        blobOffset = offset;
+        this.yOffset = yOffset;
+        this.xOffset = xOffset;
         locX = 0;
         locY = 0;
         
@@ -90,16 +94,16 @@ public class AutoAim extends Command {
         requires(RobotCommon.runningRobot.arm);
     }
 
-    public AutoAim(double offset, double timeout) {
-        this(offset, defaultFlyUpVel, defaultFlyLoVel, timeout);
+    public AutoAim(double xOffset, double yOffset, double timeout) {
+        this(xOffset, yOffset, defaultFlyUpVel, defaultFlyLoVel, timeout);
     }
     
-    public AutoAim(double offset) {
-        this(offset, defaultFlyUpVel, defaultFlyLoVel, DEFAULT_TIMEOUT);
+    public AutoAim(double xOffset, double yOffset) {
+        this(xOffset, yOffset, defaultFlyUpVel, defaultFlyLoVel, DEFAULT_TIMEOUT);
     }
 
     public AutoAim() {
-        this(DEFAULT_Y_OFFSET, defaultFlyUpVel, defaultFlyLoVel, DEFAULT_TIMEOUT );
+        this(DEFAULT_X_OFFSET, DEFAULT_Y_OFFSET, defaultFlyUpVel, defaultFlyLoVel, DEFAULT_TIMEOUT);
     }
 
     @Override
@@ -120,7 +124,7 @@ public class AutoAim extends Command {
             // blobWidth = track.blobWidth;
             // blobHeight = track.blobHeight;
             locX = track.blobLocX;
-            locY = track.blobLocY + blobOffset;
+            locY = track.blobLocY + yOffset;
             aimY();
             aim();
         }
@@ -132,6 +136,7 @@ public class AutoAim extends Command {
 
     public double calculateAngleX() {
         double setX = (((imgWidth / 2 - (locX))) / imgWidth * camFOV);
+        setX += xOffset;
         SmartDashboard.putNumber("AutoAim X Error", setX);
         return setX;
 
@@ -139,8 +144,8 @@ public class AutoAim extends Command {
 
     public double calculateAngleY() {
         double setY = RobotCommon.runningRobot.arm.getAngle()
-                + ((imgHeight / 2 - (locY))) / imgHeight * camFOV / 2
-                + blobOffset;
+                + ((imgHeight / 2 - (locY))) / imgHeight * camFOV / 2;
+        setY += yOffset;
 
 //      double setY = RobotCommon.runningRobot.arm.getAngle()
 //              + ((imgHeight / 2 - (locY))) / imgHeight * camFOV / 2;
@@ -160,11 +165,11 @@ public class AutoAim extends Command {
     }
 
     public void aimY() {
-        if ((locY < (imgHeight / 2) + (slopY * imgHeight) + blobOffset)
+        if ((locY < (imgHeight / 2) + (slopY * imgHeight) + yOffset)
                 || (locY > (imgHeight / 2) + (slopY * imgHeight)
-                        + blobOffset)) {
+                        + yOffset)) {
             RobotCommon.runningRobot.arm.goToAngle(calculateAngleY());
-        } else if (locY == (imgHeight / 2) + (slopY * imgHeight) + blobOffset) {
+        } else if (locY == (imgHeight / 2) + (slopY * imgHeight) + yOffset) {
         } else {
             DriverStation.reportError("did not align", false);
         }
