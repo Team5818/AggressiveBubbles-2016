@@ -30,9 +30,11 @@ public class ComputerVision {
      *
      */
     public static int CAMERA_SHOOTER = 2;
+    public static int CAMERA_BACK = 3;
 
     private USBCam camDriver;
     private USBCam camShooter;
+    private USBCam camBack;
     private USBCam currcam;
     private Image frame;
     private Solenoid LEDLight;
@@ -41,7 +43,7 @@ public class ComputerVision {
      * Initializes the light ring and the cameras. Begins the capture.
      */
     public ComputerVision() {
-        //TODO add camera port to preferences.
+        // TODO add camera port to preferences.
 
         // Try to set up LED Ring
         try {
@@ -78,6 +80,20 @@ public class ComputerVision {
         } catch (Exception e) {
 
             DriverStation.reportError("camShooter is not attached.\n", false);
+        }
+
+        try {
+            camShooter = new USBCam("cam" + CAMERA_BACK);
+
+            if (camBack != null) {
+                camBack.setSize(640, 360);
+                camBack.setFPS(30);
+                camBack.updateSettings();
+                camBack.openCamera();
+            }
+        } catch (Exception e) {
+
+            DriverStation.reportError("camBack is not attached.\n", false);
         }
 
         // Set Frame, Current Camera, and Restart Capture
@@ -146,13 +162,18 @@ public class ComputerVision {
                     currcam = camDriver;
                     camDriver.startCapture();
                 }
-
+            } else if (i == CAMERA_BACK && camBack != null) {
+                if (camBack != null) {
+                    camBack.stopCapture();
+                    currcam = camBack;
+                    camBack.startCapture();
+                }
             }
 
         } catch (Exception e) {
             // DriverStation.reportError("Camera Feed Switching Error\n",
             // false);
-            if(e.getMessage() != null)
+            if (e.getMessage() != null)
                 DriverStation.reportError(e.getMessage(), false);
         }
     }

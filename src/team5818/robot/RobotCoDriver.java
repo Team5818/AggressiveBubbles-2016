@@ -42,6 +42,8 @@ public class RobotCoDriver implements Module {
             new Joystick(RobotConstants.CODRIVER_SECOND_JOYSTICK_PORT);
 
     // Joystick One Buttons
+    private static final int BUT_TOPSPIN_SHOT = 9;
+    public static final int BUT_PERFORM_AUTO = 8;
     private static final int BUT_PRINT_ANGLE = 7;
     private static final int BUT_SHOOT_ANGLE_HIGH = 5;
     private static final int BUT_SHOOT_ANGLE_LOW = 4;
@@ -62,6 +64,8 @@ public class RobotCoDriver implements Module {
     private static final int BUT_COLLECT = 1;
 
     // First Joystick Buttons
+    JoystickButton butTopSpinShot =
+            new JoystickButton(firstJoystick, BUT_TOPSPIN_SHOT);
     JoystickButton butSetArmPower =
             new JoystickButton(firstJoystick, BUT_SET_ARM_POWER);
     JoystickButton butShootAngleLow =
@@ -78,7 +82,8 @@ public class RobotCoDriver implements Module {
     JoystickButton butStopFlywheel =
             new JoystickButton(secondJoystick, BUT_STOP_FLYWHEEL);
     JoystickButton butCollect = new JoystickButton(secondJoystick, BUT_COLLECT);
-    JoystickButton butUncollect = new JoystickButton(secondJoystick, BUT_UNCOLLECT);
+    JoystickButton butUncollect =
+            new JoystickButton(secondJoystick, BUT_UNCOLLECT);
     JoystickButton butLedOn = new JoystickButton(secondJoystick, BUT_LED_ON);
     JoystickButton butLedOff = new JoystickButton(secondJoystick, BUT_LED_OFF);
     JoystickButton butSwitchShootFeed =
@@ -125,6 +130,10 @@ public class RobotCoDriver implements Module {
         shootAngleLow = Preferences.getInstance().getDouble("ShootAngleLow",
                 shootAngleLow);
         coDriveDamp = Preferences.getInstance().getDouble("CoDriveDamp", 0.25);
+        double armTopSpinAngle = Preferences.getInstance().getDouble("ArmAngleTopSpin", 35);
+        double flyTopSpinVelLow = Preferences.getInstance().getDouble("FlyTopSpinVelLow", 100);
+        double flyTopSpinVelUp = Preferences.getInstance().getDouble("FlyTopSpinVelUp", 100);
+        
 
         // Making the command groups
         CommandGroup startFlywheel = new CommandGroup();
@@ -142,17 +151,19 @@ public class RobotCoDriver implements Module {
         switchFeedDrive
                 .addParallel(new SwitchFeed(ComputerVision.CAMERA_DRIVER));
         switchFeedDrive.addParallel(new LEDToggle(false));
+        CommandGroup topSpinShot = new CommandGroup();
+        topSpinShot.addParallel(new SetFlywheelVelocity(flyTopSpinVelLow, flyTopSpinVelUp));
+        topSpinShot.addParallel(new SetArmAngle(armTopSpinAngle));
+        // Making command for AutoAim and Shoot
+        // CommandGroup aimAndShoot = new CommandGroup();
+        // aimAndShoot.addSequential(new AutoAim(false));
+        // aimAndShoot.addSequential(startFlywheel);
+        // aimAndShoot.addSequential(new Collect(Collect.COLLECT_POWER));
 
-        //Making command for AutoAim and Shoot
-        //CommandGroup aimAndShoot = new CommandGroup();
-        //aimAndShoot.addSequential(new AutoAim(false));
-        //aimAndShoot.addSequential(startFlywheel);
-        //aimAndShoot.addSequential(new Collect(Collect.COLLECT_POWER));
-        
-        //Making command for stopping AutoAim and Shooting
-        //CommandGroup stopAimAndShoot = new CommandGroup();
-        //stopAimAndShoot.addSequential(stopFlywheel);
-        //stopAimAndShoot.addSequential(new AutoAim(true));
+        // Making command for stopping AutoAim and Shooting
+        // CommandGroup stopAimAndShoot = new CommandGroup();
+        // stopAimAndShoot.addSequential(stopFlywheel);
+        // stopAimAndShoot.addSequential(new AutoAim(true));
 
         // Assigning commands to the buttons
         butSpinFlywheel.whenPressed(startFlywheel);
@@ -170,8 +181,8 @@ public class RobotCoDriver implements Module {
         butUncollect.whenPressed(new Collect(-Collect.COLLECT_POWER));
         butUncollect.whenReleased(new Collect(0));
         butAutoAim.whenPressed(autoAim);
-        //butAutoAim.whenActive(command);
-        //butAutoAim.whenReleased(aimAndShoot);
+        // butAutoAim.whenActive(command);
+        // butAutoAim.whenReleased(aimAndShoot);
         butSwitchShootFeed.whenPressed(switchFeedShoot);
         butSwitchDriverFeed.whenPressed(switchFeedDrive);
     }
@@ -191,7 +202,7 @@ public class RobotCoDriver implements Module {
         }
         if (usingFirstStick()) {
             drive();
-            if(autoAim.isRunning())
+            if (autoAim.isRunning())
                 autoAim.cancel();
             hasStoppedDrive = false;
         } else {
@@ -242,13 +253,14 @@ public class RobotCoDriver implements Module {
     private void stopDrive() {
         RobotCommon.runningRobot.driveTrain.setPower(new Vector2d(0, 0));
     }
-    
-    private void performButtonActions(){
+
+    private void performButtonActions() {
+
         if (firstJoystick.getRawButton(BUT_AUTO_AIM) && !autoAim.isRunning()) {
             autoAim.pidX();
         }
-        
-        if(secondJoystick.getRawButton(BUT_ZERO_POT)){
+
+        if (secondJoystick.getRawButton(BUT_ZERO_POT)) {
             arm.zeroPot();
         }
         // Printing the Arm Angle on the SmartDashboard.

@@ -93,8 +93,8 @@ public class RobotCommon extends IterativeRobot {
     public final Collector collector = addModule(new Collector(false));
     final String defaultAuto = "Default";
     final String customAuto = "My Auto";
-    Command autoSelected;
-    SendableChooser chooser;
+    private Command autoSelected;
+    private SendableChooser chooser;
 
     /**
      * This function is run when the robot is first started up and should be
@@ -182,6 +182,10 @@ public class RobotCommon extends IterativeRobot {
     public void teleopPeriodic() {
         Scheduler.getInstance().run();
         modules.forEach(Module::teleopPeriodicModule);
+        if(RobotCoDriver.firstJoystick.getRawButton(RobotCoDriver.BUT_PERFORM_AUTO)) {
+            Command autoSelected = (Command) chooser.getSelected();
+            autoSelected.start();
+        }
     }
 
     @Override

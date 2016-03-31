@@ -51,6 +51,8 @@ public class RobotDriver implements Module {
     // First Joystick Buttons
     private static final int BUT_DRIVE_VELOCITY = 11;
     private static final int BUT_DRIVE_POWER = 10;
+    private static final int BUT_INVERT = 9;
+    private static final int BUT_UNINVERT = 8;
     private static final int BUT_OVERRIDE_DRIVER = 5;
     private static final int BUT_ARM_ANGLE_SHOOTING = 4;
     private static final int BUT_ARM_ANGLE_COLLECT = 3;
@@ -78,6 +80,10 @@ public class RobotDriver implements Module {
     private double armAngleCollect = 2.5;
 
     // Initializing the JoystickButtons
+    private JoystickButton butUnInvert =
+            new JoystickButton(FIRST_JOYSTICK, BUT_UNINVERT);
+    private JoystickButton butInvert =
+            new JoystickButton(FIRST_JOYSTICK, BUT_INVERT);
     private JoystickButton butCollect =
             new JoystickButton(SECOND_JOYSTICK, BUT_COLLECT);
     private JoystickButton butUncollect =
@@ -139,13 +145,18 @@ public class RobotDriver implements Module {
         switchFeedDrive.addParallel(new LEDToggle(false));
         CommandGroup overrideDriver = new CommandGroup();
         overrideDriver.addParallel(new SetArmAngle(armAngleShooting));
-        overrideDriver.addParallel(new SwitchFeed(ComputerVision.CAMERA_SHOOTER));
-        overrideDriver.addParallel(new SetFlywheelVelocity(FlyWheel.SHOOT_VELOCITY_LOWER, FlyWheel.SHOOT_VELOCITY_LOWER));
+        overrideDriver
+                .addParallel(new SwitchFeed(ComputerVision.CAMERA_SHOOTER));
+        overrideDriver.addParallel(new SetFlywheelVelocity(
+                FlyWheel.SHOOT_VELOCITY_LOWER, FlyWheel.SHOOT_VELOCITY_LOWER));
         CommandGroup overrideCoDriver = new CommandGroup();
-        overrideDriver.addParallel(new SwitchFeed(ComputerVision.CAMERA_DRIVER));
+        overrideDriver
+                .addParallel(new SwitchFeed(ComputerVision.CAMERA_DRIVER));
         overrideDriver.addParallel(new SetFlywheelPower(0));
 
         // Assigning commands to their respective buttons.
+        butInvert.whenPressed(new SwitchFeed(ComputerVision.CAMERA_BACK));
+        butUnInvert.whenPressed(new SwitchFeed(ComputerVision.CAMERA_DRIVER));
         butCollect.whenPressed(new Collect(Collect.COLLECT_POWER));
         butCollect.whenReleased(new Collect(0));
         butUncollect.whenPressed(new Collect(-Collect.COLLECT_POWER));
@@ -204,10 +215,18 @@ public class RobotDriver implements Module {
      */
     public void performButtonActions() {
 
+        // Inverting buttons
+        if (FIRST_JOYSTICK.getRawButton(BUT_INVERT)) {
+            invertThrottle = true;
+        }
+        if (FIRST_JOYSTICK.getRawButton(BUT_UNINVERT)) {
+            invertThrottle = false;
+        }
+
         if (FIRST_JOYSTICK.getRawButton(BUT_OVERRIDE_CODRIVER)) {
             RobotCoDriver.setOverrideDriver(false);
         }
-        
+
         if (FIRST_JOYSTICK.getRawButton(BUT_OVERRIDE_DRIVER)) {
             RobotCoDriver.setOverrideDriver(true);
         }
