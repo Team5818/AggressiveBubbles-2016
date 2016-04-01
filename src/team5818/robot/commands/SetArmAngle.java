@@ -14,16 +14,25 @@ public class SetArmAngle extends Command {
     public double targetAngle;
     public Arm arm;
     private boolean hasInitialized = false;
-    private double maxTime = 3;
+    private final static double maxTime = 3;
 
     /**
      * @param angle
      *            target angle
      */
     public SetArmAngle(double angle) {
+        this(angle, maxTime);
+    }
+    
+    /**
+     * @param angle
+     *            target angle
+     */
+    public SetArmAngle(double angle, double timeout) {
         targetAngle = angle;
         arm = RobotCommon.runningRobot.arm;
         requires(arm);
+        setTimeout(timeout);
     }
 
     @Override
@@ -31,7 +40,6 @@ public class SetArmAngle extends Command {
         double offset = RobotCoDriver.secondJoystick.getY() * -2;
         arm.goToAngle(targetAngle + offset);
         hasInitialized = true;
-        setTimeout(maxTime);
     }
 
     @Override

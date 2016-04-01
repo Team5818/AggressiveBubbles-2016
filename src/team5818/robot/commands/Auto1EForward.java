@@ -49,7 +49,7 @@ public class Auto1EForward extends CommandGroup {
         double xOffset = Preferences.getInstance().getDouble("AutoLowbarXOffset", 0);
         double yOffset = Preferences.getInstance().getDouble("AutoLowbarYOffset", -8);
         double shootAngle = Preferences.getInstance().getDouble("ArmAngleShooting", 40);
-        findTarget = new SetArmAngle(shootAngle);
+        findTarget = new SetArmAngle(shootAngle, 2);
         autoAim = new AutoAim(0,AutoAim.DEFAULT_Y_OFFSET, 15);
         //lowbarDist = Preferences.getInstance().getDouble("AutoLowbarDriveDist", lowbarDist);
         driveUnder.addParallel(armToGround);
