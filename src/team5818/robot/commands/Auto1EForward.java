@@ -25,7 +25,7 @@ public class Auto1EForward extends CommandGroup {
     private CommandGroup driveUnder = new CommandGroup();
     private ArmPower armToGround = new ArmPower(LowerArmToGround.ARM_POWER); 
     private DriveDistanceCommand goUnderLowbar =
-            new DriveDistanceCommand(125, .6, 5);
+            new DriveDistanceCommand(131, .6, 5);
     private DriveVelocityCommand getCloseToGoal = new DriveVelocityCommand(DriveTrain.MAX_VELOCITY*0.48,DriveTrain.MAX_VELOCITY*0.52, 80);
     
     
