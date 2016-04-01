@@ -52,33 +52,33 @@ public class AutoPortcullisUniversal extends CommandGroup{
      */
     public AutoPortcullisUniversal(int position) {
         setTimeout(15);
-        double xOffset = Preferences.getInstance().getDouble("AutoPortcullisXOffset", 0);
-        double yOffset = Preferences.getInstance().getDouble("AutoPortcullisYOffset", -8);
+        double xOffset = 0;
+        double yOffset = 0;
         if(position == 2){
             redirectAngle = -30;
             findTargetAngle = -130-redirectAngle;
-            xOffset = Preferences.getInstance().getDouble("AutoPortcullis2XOffset", 0);
-            yOffset = Preferences.getInstance().getDouble("AutoPortcullis2YOffset", -8);
+            xOffset = Preferences.getInstance().getDouble("AutoPortcullis2XOffset", xOffset);
+            yOffset = Preferences.getInstance().getDouble("AutoPortcullis2YOffset", yOffset);
         }
         else if(position == 3){
             redirectAngle = 30;
             findTargetAngle = 180-redirectAngle;
-            xOffset = Preferences.getInstance().getDouble("AutoPortcullis3XOffset", 0);
-            yOffset = Preferences.getInstance().getDouble("AutoPortcullis3YOffset", -8);
+            xOffset = Preferences.getInstance().getDouble("AutoPortcullis3XOffset", xOffset);
+            yOffset = Preferences.getInstance().getDouble("AutoPortcullis3YOffset", yOffset);
         }
         
         else if(position==4){
             redirectAngle = 0;
             redirectTimeout = 0;
             findTargetAngle = 180;
-            xOffset = Preferences.getInstance().getDouble("AutoPortcullis4XOffset", 0);
-            yOffset = Preferences.getInstance().getDouble("AutoPortcullis4YOffset", -8);
+            xOffset = Preferences.getInstance().getDouble("AutoPortcullis4XOffset", xOffset);
+            yOffset = Preferences.getInstance().getDouble("AutoPortcullis4YOffset", yOffset);
         }
         else{
             redirectAngle = -30;
             findTargetAngle = -180-redirectAngle;  
-            xOffset = Preferences.getInstance().getDouble("AutoPortcullis5XOffset", 0);
-            yOffset = Preferences.getInstance().getDouble("AutoPortcullis5YOffset", -8);
+            xOffset = Preferences.getInstance().getDouble("AutoPortcullis5XOffset", xOffset);
+            yOffset = Preferences.getInstance().getDouble("AutoPortcullis5YOffset", yOffset);
         }
         aim = new AutoAim(xOffset, yOffset, 3);
         

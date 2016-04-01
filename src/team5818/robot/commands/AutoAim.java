@@ -47,20 +47,28 @@ public class AutoAim extends Command {
     private double camFOV;
     private double imgHeight;
     private double imgWidth;
-    private double power;
     private double locX;
     private double locY;
-    private double yOffset = 0;
-    private double xOffset = 0;
     private double slopX;
     private double slopY;
 
-    private double MAX_POWER = 0.2;
-    private double MIN_POWER = 0.08;
-    private double Kp = 0.04, Ki = 0.0041, Kd = 0;
-    private double errSum = 0;
-    private double err = 0;
-    private int errCount = 0;
+    private double MAX_POWER_X = 0.2;
+    private double MIN_POWER_X = 0.08;
+    private double xpower;
+    private double xKp = 0.04, xKi = 0.0041, xKd = 0;
+    private double xerrSum = 0;
+    private double xerr = 0;
+    private int xerrCount = 0;
+    private double xOffset = 0;
+    
+    private double MAX_POWER_Y = 0.7;
+    private double MIN_POWER_Y = 0.15;
+    private double ypower;
+    private double yKp = 0.09, yKi = 0.0081, yKd = 0;
+    private double yerrSum = 0;
+    private double yerr = 0;
+    private int yerrCount = 0;
+    private double yOffset = -10;
     
 
     /**
@@ -91,7 +99,6 @@ public class AutoAim extends Command {
         slopX = (RobotConstants.SLOP);
         slopY = (RobotConstants.SLOP);
         requires(RobotCommon.runningRobot.driveTrain);
-        requires(RobotCommon.runningRobot.arm);
     }
 
     public AutoAim(double xOffset, double yOffset, double timeout) {
@@ -110,13 +117,25 @@ public class AutoAim extends Command {
     protected void initialize() {
         SmartDashboard.putNumber("Is tracked", 0);
         track.GetData();
-        Kp = Preferences.getInstance().getDouble("AutoAimKp", Kp);
-        Ki = Preferences.getInstance().getDouble("AutoAimKi", Ki);
-        Kd = Preferences.getInstance().getDouble("AutoAimKd", Kd);
+        xKp = Preferences.getInstance().getDouble("AutoAimKpX", xKp);
+        xKi = Preferences.getInstance().getDouble("AutoAimKiX", xKi);
+        xKd = Preferences.getInstance().getDouble("AutoAimKdX", xKd);
+        xOffset = Preferences.getInstance().getDouble("AutoAimXOffset", xOffset);
         
-        errSum = 0;
-        errCount = 0;
-        err = 0;
+        xerrSum = 0;
+        xerrCount = 0;
+        xerr = 0;
+        ypower = 0;
+        
+        yKp = Preferences.getInstance().getDouble("AutoAimKpY", yKp);
+        yKi = Preferences.getInstance().getDouble("AutoAimKiY", yKi);
+        yKd = Preferences.getInstance().getDouble("AutoAimKdY", yKd);
+        yOffset = Preferences.getInstance().getDouble("AutoAimYOffset", yOffset);
+        
+        
+        yerrSum = 0;
+        yerrCount = 0;
+        yerr = 0;
 
         if (track.blobCount > 0) {
             // imgHeight = track.imageHeight;
@@ -143,8 +162,8 @@ public class AutoAim extends Command {
     }
 
     public double calculateAngleY() {
-        double setY = RobotCommon.runningRobot.arm.getAngle()
-                + ((imgHeight / 2 - (locY))) / imgHeight * camFOV / 2;
+        double setY = ((imgHeight / 2 - (locY))) / imgHeight * camFOV / 2;
+        SmartDashboard.putNumber("AutoAim Y Angle", setY);
         setY += yOffset;
 
 //      double setY = RobotCommon.runningRobot.arm.getAngle()
@@ -168,7 +187,6 @@ public class AutoAim extends Command {
         if ((locY < (imgHeight / 2) + (slopY * imgHeight) + yOffset)
                 || (locY > (imgHeight / 2) + (slopY * imgHeight)
                         + yOffset)) {
-            RobotCommon.runningRobot.arm.goToAngle(calculateAngleY());
         } else if (locY == (imgHeight / 2) + (slopY * imgHeight) + yOffset) {
         } else {
             DriverStation.reportError("did not align", false);
@@ -178,6 +196,28 @@ public class AutoAim extends Command {
     @Override
     protected void execute() {
         pidX();
+        pidY();
+    }
+    
+    public void pidY() {
+        track.GetData();
+
+        if (track.blobCount > 0) {
+            locX = track.blobLocX;
+            locY = track.blobLocY;
+            SmartDashboard.putNumber("locY", locY);
+            
+            double D = (-yerr + (yerr = calculateAngleY())) * yKd;
+            double P = yerr * yKp;
+            yerrSum += yerr;
+            yerrCount += 1;
+            double I = yerrSum / yerrCount * yKi;
+            DriverStation.reportError("Kp = " + yKp, false);
+            
+            ypower = P + I + D;
+            ypower = keepInBounds(ypower, MIN_POWER_Y, MAX_POWER_Y);
+            RobotCommon.runningRobot.arm.setPower(ypower);
+        }
     }
 
     public void pidX() {
@@ -188,16 +228,16 @@ public class AutoAim extends Command {
             locY = track.blobLocY;
             SmartDashboard.putNumber("locX", locX);
             
-            double D = (-err + (err = calculateAngleX())) * Kd;
-            double P = err * Kp;
-            errSum += err;
-            errCount += 1;
-            double I = errSum / errCount * Ki;
+            double D = (-xerr + (xerr = calculateAngleX())) * xKd;
+            double P = xerr * xKp;
+            xerrSum += xerr;
+            xerrCount += 1;
+            double I = xerrSum / xerrCount * xKi;
             
-            power = P + I + D;
-            power = keepInBounds(power, MIN_POWER, MAX_POWER);
+            xpower = P + I + D;
+            xpower = keepInBounds(xpower, MIN_POWER_X, MAX_POWER_X);
             RobotCommon.runningRobot.driveTrain
-                    .setPower(new Vector2d(-power, power));
+                    .setPower(new Vector2d(-xpower, xpower));
         }
     }
 
@@ -242,6 +282,7 @@ public class AutoAim extends Command {
     protected void end() {
         SmartDashboard.putNumber("Is aimed", 100);
         RobotCommon.runningRobot.driveTrain.setPower(new Vector2d(0, 0));
+        RobotCommon.runningRobot.arm.setPower(0);
     }
 
     @Override

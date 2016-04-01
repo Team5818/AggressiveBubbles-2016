@@ -73,25 +73,21 @@ public class RobotDriver implements Module {
     private InputMode inputMode = InputMode.TWO_STICKS;
 
     // Weather to invert the throttle
-    private static boolean invertThrottle = false;
+    private static boolean invertThrottle = true;
     private boolean hasStoppedRobot = false;
 
     private double armAngleShooting = 40;
-    private double armAngleCollect = 2.5;
+    private double armAngleCollect = -1;
 
     // Initializing the JoystickButtons
-    private JoystickButton butUnInvert =
-            new JoystickButton(FIRST_JOYSTICK, BUT_UNINVERT);
-    private JoystickButton butInvert =
-            new JoystickButton(FIRST_JOYSTICK, BUT_INVERT);
     private JoystickButton butCollect =
             new JoystickButton(SECOND_JOYSTICK, BUT_COLLECT);
     private JoystickButton butUncollect =
             new JoystickButton(SECOND_JOYSTICK, BUT_UNCOLLECT);
     private JoystickButton butOverrideDriver =
-            new JoystickButton(SECOND_JOYSTICK, BUT_OVERRIDE_DRIVER);
+            new JoystickButton(FIRST_JOYSTICK, BUT_OVERRIDE_DRIVER);
     private JoystickButton butOverrideCoDriver =
-            new JoystickButton(SECOND_JOYSTICK, BUT_OVERRIDE_CODRIVER);
+            new JoystickButton(FIRST_JOYSTICK, BUT_OVERRIDE_CODRIVER);
     private JoystickButton butArmAngleShooting =
             new JoystickButton(FIRST_JOYSTICK, BUT_ARM_ANGLE_SHOOTING);
     private JoystickButton butArmAngleCollect =
@@ -150,13 +146,13 @@ public class RobotDriver implements Module {
         overrideDriver.addParallel(new SetFlywheelVelocity(
                 FlyWheel.SHOOT_VELOCITY_LOWER, FlyWheel.SHOOT_VELOCITY_LOWER));
         CommandGroup overrideCoDriver = new CommandGroup();
-        overrideDriver
+        overrideCoDriver
                 .addParallel(new SwitchFeed(ComputerVision.CAMERA_DRIVER));
-        overrideDriver.addParallel(new SetFlywheelPower(0));
+        overrideCoDriver.addParallel(new SetFlywheelPower(0));
 
         // Assigning commands to their respective buttons.
-        butInvert.whenPressed(new SwitchFeed(ComputerVision.CAMERA_BACK));
-        butUnInvert.whenPressed(new SwitchFeed(ComputerVision.CAMERA_DRIVER));
+        //butInvert.whenPressed(new SwitchFeed(ComputerVision.CAMERA_BACK));
+        //butUnInvert.whenPressed(new SwitchFeed(ComputerVision.CAMERA_DRIVER));
         butCollect.whenPressed(new Collect(Collect.COLLECT_POWER));
         butCollect.whenReleased(new Collect(0));
         butUncollect.whenPressed(new Collect(-Collect.COLLECT_POWER));
@@ -291,7 +287,7 @@ public class RobotDriver implements Module {
 
     @Override
     public void initTeleop() {
-
+        new SwitchFeed(ComputerVision.CAMERA_DRIVER).start();
     }
 
     @Override

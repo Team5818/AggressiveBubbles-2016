@@ -47,7 +47,7 @@ public class RobotCoDriver implements Module {
     private static final int BUT_PRINT_ANGLE = 7;
     private static final int BUT_SHOOT_ANGLE_HIGH = 5;
     private static final int BUT_SHOOT_ANGLE_LOW = 4;
-    private static final int BUT_SHOOT_ANGLE_MED = 3;
+    private static final int BUT_SHOOT_ANGLE_COLLECT = 3;
     private static final int BUT_SET_ARM_POWER = 2;
     private static final int BUT_AUTO_AIM = 1;
 
@@ -70,8 +70,8 @@ public class RobotCoDriver implements Module {
             new JoystickButton(firstJoystick, BUT_SET_ARM_POWER);
     JoystickButton butShootAngleLow =
             new JoystickButton(firstJoystick, BUT_SHOOT_ANGLE_LOW);
-    JoystickButton butShootAngleMed =
-            new JoystickButton(firstJoystick, BUT_SHOOT_ANGLE_MED);
+    JoystickButton buArmAngleCollect =
+            new JoystickButton(firstJoystick, BUT_SHOOT_ANGLE_COLLECT);
     JoystickButton butShootAngleHigh =
             new JoystickButton(firstJoystick, BUT_SHOOT_ANGLE_HIGH);
     JoystickButton butAutoAim = new JoystickButton(firstJoystick, BUT_AUTO_AIM);
@@ -90,6 +90,8 @@ public class RobotCoDriver implements Module {
             new JoystickButton(secondJoystick, BUT_SWITCH_SHOOT_FEED);
     JoystickButton butSwitchDriverFeed =
             new JoystickButton(secondJoystick, BUT_SWITCH_DRIVER_FEED);
+    JoystickButton butOverrideDriver =
+            new JoystickButton(secondJoystick, BUT_OVERRIDE_DRIVER);
 
     private FlyWheel lowerFlywheel;
     private FlyWheel upperFlywheel;
@@ -107,6 +109,8 @@ public class RobotCoDriver implements Module {
 
     private double coDriveDamp = 0.25;
     private AutoAim autoAim;
+    private double armAngleShooting = 35;
+    private double armAngleCollect = 2.5;
 
     @Override
     public void initModule() {
@@ -130,10 +134,16 @@ public class RobotCoDriver implements Module {
         shootAngleLow = Preferences.getInstance().getDouble("ShootAngleLow",
                 shootAngleLow);
         coDriveDamp = Preferences.getInstance().getDouble("CoDriveDamp", 0.25);
-        double armTopSpinAngle = Preferences.getInstance().getDouble("ArmAngleTopSpin", 35);
-        double flyTopSpinVelLow = Preferences.getInstance().getDouble("FlyTopSpinVelLow", 100);
-        double flyTopSpinVelUp = Preferences.getInstance().getDouble("FlyTopSpinVelUp", 100);
-        
+        double armTopSpinAngle =
+                Preferences.getInstance().getDouble("ArmAngleTopSpin", 35);
+        double flyTopSpinVelLow =
+                Preferences.getInstance().getDouble("FlyTopSpinVelLow", 100);
+        double flyTopSpinVelUp =
+                Preferences.getInstance().getDouble("FlyTopSpinVelUp", 100);
+        armAngleShooting = Preferences.getInstance()
+                .getDouble("ArmAngleShooting", armAngleShooting);
+        armAngleCollect = Preferences.getInstance().getDouble("ArmAngleCollect",
+                armAngleCollect);
 
         // Making the command groups
         CommandGroup startFlywheel = new CommandGroup();
@@ -152,8 +162,14 @@ public class RobotCoDriver implements Module {
                 .addParallel(new SwitchFeed(ComputerVision.CAMERA_DRIVER));
         switchFeedDrive.addParallel(new LEDToggle(false));
         CommandGroup topSpinShot = new CommandGroup();
-        topSpinShot.addParallel(new SetFlywheelVelocity(flyTopSpinVelLow, flyTopSpinVelUp));
+        topSpinShot.addParallel(
+                new SetFlywheelVelocity(flyTopSpinVelLow, flyTopSpinVelUp));
         topSpinShot.addParallel(new SetArmAngle(armTopSpinAngle));
+        CommandGroup overrideDriver = new CommandGroup();
+        overrideDriver.addParallel(new SwitchFeed(ComputerVision.CAMERA_SHOOTER));
+        overrideDriver.addParallel(new SetArmAngle(armAngleShooting));
+        overrideDriver.addParallel(new SetFlywheelVelocity(FlyWheel.SHOOT_VELOCITY_LOWER, FlyWheel.SHOOT_VELOCITY_UPPER));
+        
         // Making command for AutoAim and Shoot
         // CommandGroup aimAndShoot = new CommandGroup();
         // aimAndShoot.addSequential(new AutoAim(false));
@@ -169,7 +185,7 @@ public class RobotCoDriver implements Module {
         butSpinFlywheel.whenPressed(startFlywheel);
         butStopFlywheel.whenPressed(stopFlywheel);
         butShootAngleHigh.whenPressed(new SetArmAngle(shootAngleHigh));
-        butShootAngleMed.whenPressed(new SetArmAngle(shootAngleMed));
+        buArmAngleCollect.whenPressed(new SetArmAngle(armAngleCollect));
         butShootAngleLow.whenPressed(new SetArmAngle(shootAngleLow));
         butSetArmPower.whenPressed(new SetArmPower(0));
         butLedOn.whenPressed(new LEDToggle(true));
@@ -181,6 +197,7 @@ public class RobotCoDriver implements Module {
         butUncollect.whenPressed(new Collect(-Collect.COLLECT_POWER));
         butUncollect.whenReleased(new Collect(0));
         butAutoAim.whenPressed(autoAim);
+        butOverrideDriver.whenPressed(overrideDriver);
         // butAutoAim.whenActive(command);
         // butAutoAim.whenReleased(aimAndShoot);
         butSwitchShootFeed.whenPressed(switchFeedShoot);

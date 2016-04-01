@@ -26,6 +26,7 @@ public class SpinRobot extends Command {
      *            - number of degrees to rotate robot
      * @param timeout
      *            - max amount of time command runs until finished
+     *            @param maxPower
      */
     public SpinRobot(double angle, double timeout, double maxPower) {
         spinAngle = angle;

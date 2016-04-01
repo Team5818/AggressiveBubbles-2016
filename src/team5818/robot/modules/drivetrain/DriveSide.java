@@ -53,7 +53,7 @@ public class DriveSide implements EncoderManager, PIDOutput, MovingControl {
     private static double velocityKp = 0.0012;
     private static double velocityKi = 0.0001;
     private static double velocityKd = 0.0;
-    private static double velocityKf = 0.0;
+    private static double velocityKf = 1/DriveTrain.MAX_VELOCITY/2;
     private double encoderScale = -.020603;
     private double pidInput = 0.0; 
     private boolean usingStandardEncoder = true;

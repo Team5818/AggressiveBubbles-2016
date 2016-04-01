@@ -41,34 +41,34 @@ public class AutoRoughTerrainUniversal extends CommandGroup{
 
     
     public AutoRoughTerrainUniversal(int position){
-        double xOffset = Preferences.getInstance().getDouble("AutoRoughXOffset", 0);
-        double yOffset = Preferences.getInstance().getDouble("AutoRoughYOffset", -8);
+        double xOffset = 0;
+        double yOffset = 0;
         setTimeout(15);
         if(position == 2){
             redirectAngle = -30;
             findTargetAngle = -redirectAngle+20;
-            xOffset = Preferences.getInstance().getDouble("AutoRough2XOffset", 0);
-            yOffset = Preferences.getInstance().getDouble("AutoRough2YOffset", -8);
+            xOffset = Preferences.getInstance().getDouble("AutoRough2XOffset", xOffset);
+            yOffset = Preferences.getInstance().getDouble("AutoRough2YOffset", yOffset);
         }
         else if(position == 3){
             redirectAngle = 30;
             findTargetAngle = -redirectAngle;
-            xOffset = Preferences.getInstance().getDouble("AutoRough3XOffset", 0);
-            yOffset = Preferences.getInstance().getDouble("AutoRough3YOffset", -8);
+            xOffset = Preferences.getInstance().getDouble("AutoRough3XOffset", xOffset);
+            yOffset = Preferences.getInstance().getDouble("AutoRough3YOffset", yOffset);
         }
         
         else if(position==4){
             redirectAngle = 0;
             redirectTimeout = 0;
             findTargetAngle = 0;
-            xOffset = Preferences.getInstance().getDouble("AutoRough4XOffset", 0);
-            yOffset = Preferences.getInstance().getDouble("AutoRough4YOffset", -8);
+            xOffset = Preferences.getInstance().getDouble("AutoRough4XOffset", xOffset);
+            yOffset = Preferences.getInstance().getDouble("AutoRough4YOffset", yOffset);
         }
         else{
             redirectAngle = -30;
             findTargetAngle = -redirectAngle;
-            xOffset = Preferences.getInstance().getDouble("AutoRough5XOffset", 0);
-            yOffset = Preferences.getInstance().getDouble("AutoRough5YOffset", -8);
+            xOffset = Preferences.getInstance().getDouble("AutoRough5XOffset", xOffset);
+            yOffset = Preferences.getInstance().getDouble("AutoRough5YOffset", yOffset);
         }
         aim = new AutoAim(xOffset, yOffset, 3);
         
@@ -80,9 +80,9 @@ public class AutoRoughTerrainUniversal extends CommandGroup{
         driveOver.addParallel(lowerArm);
         driveOver.addParallel(driveVel);
         
-        this.addSequential(lightUp);
-        this.addSequential(switchCam);
-        this.addSequential(driveOver);
+        this.addParallel(lightUp);
+        this.addParallel(switchCam);
+        this.addParallel(driveOver);
         this.addSequential(redirect);
         this.addSequential(driveDiagonal);
         this.addSequential(findTarget);

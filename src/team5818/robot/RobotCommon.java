@@ -25,6 +25,7 @@ import team5818.robot.commands.AutoRampartsUniversal;
 import team5818.robot.commands.AutoRoughRampartsInside;
 import team5818.robot.commands.AutoRoughRampartsOutside;
 import team5818.robot.commands.AutoRoughTerrainUniversal;
+import team5818.robot.commands.AutoTest;
 import team5818.robot.commands.DoNothing;
 import team5818.robot.commands.DoNothingAuto;
 import team5818.robot.commands.SpybotAuto;
@@ -119,6 +120,7 @@ public class RobotCommon extends IterativeRobot {
         chooser.addObject("B-Rough Terrain 5", new AutoRoughTerrainUniversal(5));
         chooser.addObject("Spybot W/O Lowbar", new SpybotAuto(SpybotAuto.WITH_OUT_LOWBAR));
         chooser.addObject("Spybot W Lowbar", new SpybotAuto(SpybotAuto.WITH_LOWBAR));
+        chooser.addObject("!!!AUTO TEST!!!", new AutoTest());
 
         /* NOT WORKING AUTO ROUTINES!! */
         //chooser.addObject("F-Ramparts 2", new AutoRampartsUniversal(2));
