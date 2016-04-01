@@ -19,8 +19,8 @@ import team5818.robot.util.Vector2d;
 public class AutoAim extends Command {
 
 
-    private static final double DEFAULT_X_OFFSET = 0;
-    public static final double DEFAULT_Y_OFFSET = -8; //calibrated for lowbar
+    public  static final double DEFAULT_X_OFFSET = 0;
+    public static final double DEFAULT_Y_OFFSET = -12; //calibrated for lowbar
     public static final double DEFAULT_TIMEOUT = 2;
     public static boolean UDP = true;
 
@@ -200,6 +200,15 @@ public class AutoAim extends Command {
     }
     
     public void pidY() {
+        if(Math.abs(calculateAngleY()) <= 2) {
+            yerrSum = 0;
+            yerrCount = 0;
+        }
+        if(Math.signum(yerr) > Math.signum(calculateAngleY()) || Math.signum(yerr) < Math.signum(calculateAngleY()))
+        {
+            yerrSum = 0;
+            yerrCount = 0;
+        }
         track.GetData();
 
         if (track.blobCount > 0) {
@@ -221,6 +230,15 @@ public class AutoAim extends Command {
     }
 
     public void pidX() {
+        if(Math.abs(calculateAngleX()) <= 2) {
+            xerrSum = 0;
+            xerrCount = 0;
+        }
+        if(Math.signum(xerr) > Math.signum(calculateAngleX()) || Math.signum(xerr) < Math.signum(calculateAngleX()))
+        {
+            xerrSum = 0;
+            xerrCount = 0;
+        }
         track.GetData();
 
         if (track.blobCount > 0) {
@@ -266,16 +284,18 @@ public class AutoAim extends Command {
                 && flyLoVel <= flyLo.getRPS() + tolerance
                 && flyLoVel >= flyLo.getRPS() - tolerance);
 
-        boolean atTarget = Math.abs(calculateAngleX()) <= 0.5;
+        boolean atTargetX = Math.abs(calculateAngleX()) <= 0.5;
+        boolean atTargetY = Math.abs(calculateAngleY()) <= 0.5;
+        
 
         if (isTimedOut()) {
             DriverStation.reportError("Timedout AutoAim", false);
             DriverStation.reportError("Flywheel to speed: " + flyToSpeed
-                    + "At angle: " + atTarget, false);
+                    + "At angle: " + atTargetX, false);
             return true;
         }
 
-        return ((flyToSpeed && atTarget) || this.isTimedOut());
+        return ((atTargetX && atTargetY) || this.isTimedOut());
     }
 
     @Override

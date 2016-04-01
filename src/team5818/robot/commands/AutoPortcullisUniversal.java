@@ -19,13 +19,11 @@ public class AutoPortcullisUniversal extends CommandGroup{
     private double redirectAngle;
     private double findTargetAngle;
     private double redirectTimeout = 3;
-    public double defenseDist = 115;
+    public double defenseDist = 120;
     public double collectAngle =
             Preferences.getInstance().getDouble("ArmAngleCollect", 1.5);
-    public double flyUpVel =
-            Preferences.getInstance().getDouble("UpperFlyVel", FlyWheel.SHOOT_VELOCITY_UPPER);
-    public double flyLoVel =
-            Preferences.getInstance().getDouble("LowerFlyVel", FlyWheel.SHOOT_VELOCITY_LOWER);
+    public double flyUpVel =  FlyWheel.SHOOT_VELOCITY_UPPER;
+    public double flyLoVel = FlyWheel.SHOOT_VELOCITY_LOWER;
     
     private SwitchFeed switchCam = new SwitchFeed(ComputerVision.CAMERA_SHOOTER);
     private LEDToggle lightUp = new LEDToggle(true);
@@ -36,7 +34,7 @@ public class AutoPortcullisUniversal extends CommandGroup{
             new DriveDistanceCommand(defenseDist, .6, 5);    
     private SpinRobot redirect;
     private DriveDistanceCommand driveDiagonal;
-    private SetArmAngle findTarget = new SetArmAngle(25);
+    private SetArmAngle findTarget = new SetArmAngle(30);
     private SpinRobot spin;
     private SetFlywheelVelocity setFlyVel = new SetFlywheelVelocity(flyUpVel, flyLoVel);
     private AutoAim aim;
@@ -55,14 +53,18 @@ public class AutoPortcullisUniversal extends CommandGroup{
         double xOffset = 0;
         double yOffset = 0;
         if(position == 2){
-            redirectAngle = -30;
-            findTargetAngle = -130-redirectAngle;
+            redirectAngle = 45;
+            findTargetAngle = 192;
+            redirectDist = 17;
+            //findTargetAngle = -130-redirectAngle;
             xOffset = Preferences.getInstance().getDouble("AutoPortcullis2XOffset", xOffset);
             yOffset = Preferences.getInstance().getDouble("AutoPortcullis2YOffset", yOffset);
         }
         else if(position == 3){
             redirectAngle = 30;
-            findTargetAngle = 180-redirectAngle;
+            //findTargetAngle = 180-redirectAngle;
+            findTargetAngle = 192;
+            redirectDist = 12;
             xOffset = Preferences.getInstance().getDouble("AutoPortcullis3XOffset", xOffset);
             yOffset = Preferences.getInstance().getDouble("AutoPortcullis3YOffset", yOffset);
         }
@@ -70,19 +72,21 @@ public class AutoPortcullisUniversal extends CommandGroup{
         else if(position==4){
             redirectAngle = 0;
             redirectTimeout = 0;
-            findTargetAngle = 180;
+            findTargetAngle = 192;
+            redirectDist = 0;
             xOffset = Preferences.getInstance().getDouble("AutoPortcullis4XOffset", xOffset);
             yOffset = Preferences.getInstance().getDouble("AutoPortcullis4YOffset", yOffset);
         }
         else{
             redirectAngle = -30;
-            findTargetAngle = -180-redirectAngle;  
+            findTargetAngle = -192; 
+            redirectDist = 12;
             xOffset = Preferences.getInstance().getDouble("AutoPortcullis5XOffset", xOffset);
             yOffset = Preferences.getInstance().getDouble("AutoPortcullis5YOffset", yOffset);
         }
-        aim = new AutoAim(xOffset, yOffset, 3);
+        aim = new AutoAim(xOffset, AutoAim.DEFAULT_Y_OFFSET, 3);
         
-        redirectDist = Math.sqrt(Math.pow(defenseWidth,2) + Math.pow(60, 2));
+        //redirectDist = Math.sqrt(Math.pow(defenseWidth,2) + Math.pow(60, 2));
         
         redirect = new SpinRobot(redirectAngle, redirectTimeout);
         driveDiagonal = new DriveDistanceCommand(redirectDist);

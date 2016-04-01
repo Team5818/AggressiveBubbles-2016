@@ -156,25 +156,36 @@ public class ComputerVision {
                     currcam = camShooter;
                     camShooter.startCapture();
                 }
-            } else if (i == CAMERA_DRIVER && camDriver != null) {
+            }
+        } catch (Exception e) {
+            if (e.getMessage() != null)
+                DriverStation.reportError("Could Not Switch Camera Shooter", false);
+        }
+        try {
+            if (i == CAMERA_DRIVER && camDriver != null) {
                 if (camShooter != null) {
                     camShooter.stopCapture();
                     currcam = camDriver;
                     camDriver.startCapture();
                 }
-            } else if (i == CAMERA_BACK && camBack != null) {
+            }
+        } catch (Exception e) {
+            if (e.getMessage() != null)
+                DriverStation.reportError("Could Not Switch Camera Driver", false);
+        }
+        try {
+            if (i == CAMERA_BACK && camBack != null) {
                 if (camBack != null) {
                     camBack.stopCapture();
                     currcam = camBack;
                     camBack.startCapture();
                 }
             }
-
         } catch (Exception e) {
             // DriverStation.reportError("Camera Feed Switching Error\n",
             // false);
             if (e.getMessage() != null)
-                DriverStation.reportError(e.getMessage(), false);
+                DriverStation.reportError("Could Not Switch Camera Back", false);
         }
     }
 

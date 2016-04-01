@@ -42,8 +42,8 @@ public class RobotCoDriver implements Module {
             new Joystick(RobotConstants.CODRIVER_SECOND_JOYSTICK_PORT);
 
     // Joystick One Buttons
-    private static final int BUT_TOPSPIN_SHOT = 9;
-    public static final int BUT_PERFORM_AUTO = 8;
+   // private static final int BUT_TOPSPIN_SHOT = 9;
+    //public static final int BUT_PERFORM_AUTO = 8;
     private static final int BUT_PRINT_ANGLE = 7;
     private static final int BUT_SHOOT_ANGLE_HIGH = 5;
     private static final int BUT_SHOOT_ANGLE_LOW = 4;
@@ -64,8 +64,8 @@ public class RobotCoDriver implements Module {
     private static final int BUT_COLLECT = 1;
 
     // First Joystick Buttons
-    JoystickButton butTopSpinShot =
-            new JoystickButton(firstJoystick, BUT_TOPSPIN_SHOT);
+    //JoystickButton butTopSpinShot =
+           // new JoystickButton(firstJoystick, BUT_TOPSPIN_SHOT);
     JoystickButton butSetArmPower =
             new JoystickButton(firstJoystick, BUT_SET_ARM_POWER);
     JoystickButton butShootAngleLow =
@@ -197,7 +197,7 @@ public class RobotCoDriver implements Module {
         butUncollect.whenPressed(new Collect(-Collect.COLLECT_POWER));
         butUncollect.whenReleased(new Collect(0));
         butAutoAim.whenPressed(autoAim);
-        this.butTopSpinShot.whenPressed(topSpinShot);
+        //this.butTopSpinShot.whenPressed(topSpinShot);
         butOverrideDriver.whenPressed(overrideDriver);
         // butAutoAim.whenActive(command);
         // butAutoAim.whenReleased(aimAndShoot);
@@ -335,6 +335,7 @@ public class RobotCoDriver implements Module {
      */
     public static void setOverrideDriver(boolean od) {
         overrideDriver = od;
+        RobotCommon.runningRobot.driveTrain.setPower(new Vector2d(0,0));
     }
 
 }

@@ -120,7 +120,7 @@ public class RobotCommon extends IterativeRobot {
         chooser.addObject("B-Rough Terrain 5", new AutoRoughTerrainUniversal(5));
         chooser.addObject("Spybot W/O Lowbar", new SpybotAuto(SpybotAuto.WITH_OUT_LOWBAR));
         chooser.addObject("Spybot W Lowbar", new SpybotAuto(SpybotAuto.WITH_LOWBAR));
-        chooser.addObject("!!!AUTO TEST!!!", new AutoTest());
+        //chooser.addObject("!!!AUTO TEST!!!", new AutoTest());
 
         /* NOT WORKING AUTO ROUTINES!! */
         //chooser.addObject("F-Ramparts 2", new AutoRampartsUniversal(2));
@@ -184,10 +184,12 @@ public class RobotCommon extends IterativeRobot {
     public void teleopPeriodic() {
         Scheduler.getInstance().run();
         modules.forEach(Module::teleopPeriodicModule);
+        /*
         if(RobotCoDriver.firstJoystick.getRawButton(RobotCoDriver.BUT_PERFORM_AUTO)) {
             Command autoSelected = (Command) chooser.getSelected();
             autoSelected.start();
         }
+        */
     }
 
     @Override
