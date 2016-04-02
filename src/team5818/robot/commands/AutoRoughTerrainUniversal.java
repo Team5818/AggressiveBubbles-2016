@@ -73,7 +73,7 @@ public class AutoRoughTerrainUniversal extends CommandGroup{
             xOffset = Preferences.getInstance().getDouble("AutoRough5XOffset", xOffset);
             yOffset = Preferences.getInstance().getDouble("AutoRough5YOffset", yOffset);
         }
-        aim = new AutoAim(xOffset, AutoAim.DEFAULT_Y_OFFSET, 3);
+        aim = new AutoAim(xOffset, yOffset, 3);
         
         redirect = new SpinRobot(redirectAngle, redirectTimeout);
         driveDiagonal = new DriveDistanceCommand(redirectDist);

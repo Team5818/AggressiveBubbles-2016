@@ -54,7 +54,7 @@ public class AutoPortcullisUniversal extends CommandGroup{
         double yOffset = 0;
         if(position == 2){
             redirectAngle = 45;
-            findTargetAngle = 192;
+            findTargetAngle = 180;
             redirectDist = 17;
             //findTargetAngle = -130-redirectAngle;
             xOffset = Preferences.getInstance().getDouble("AutoPortcullis2XOffset", xOffset);
@@ -63,7 +63,7 @@ public class AutoPortcullisUniversal extends CommandGroup{
         else if(position == 3){
             redirectAngle = 30;
             //findTargetAngle = 180-redirectAngle;
-            findTargetAngle = 192;
+            findTargetAngle = 180;
             redirectDist = 12;
             xOffset = Preferences.getInstance().getDouble("AutoPortcullis3XOffset", xOffset);
             yOffset = Preferences.getInstance().getDouble("AutoPortcullis3YOffset", yOffset);
@@ -72,19 +72,19 @@ public class AutoPortcullisUniversal extends CommandGroup{
         else if(position==4){
             redirectAngle = 0;
             redirectTimeout = 0;
-            findTargetAngle = 192;
+            findTargetAngle = 180;
             redirectDist = 0;
             xOffset = Preferences.getInstance().getDouble("AutoPortcullis4XOffset", xOffset);
             yOffset = Preferences.getInstance().getDouble("AutoPortcullis4YOffset", yOffset);
         }
         else{
             redirectAngle = -30;
-            findTargetAngle = -192; 
+            findTargetAngle = -180; 
             redirectDist = 12;
             xOffset = Preferences.getInstance().getDouble("AutoPortcullis5XOffset", xOffset);
             yOffset = Preferences.getInstance().getDouble("AutoPortcullis5YOffset", yOffset);
         }
-        aim = new AutoAim(xOffset, AutoAim.DEFAULT_Y_OFFSET, 3);
+        aim = new AutoAim(xOffset, yOffset, 3);
         
         //redirectDist = Math.sqrt(Math.pow(defenseWidth,2) + Math.pow(60, 2));
         

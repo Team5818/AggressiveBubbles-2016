@@ -16,7 +16,7 @@ import edu.wpi.first.wpilibj.Solenoid;
 public class ComputerVision {
 
     // TODO:switch for actual robot
-    private int BRIGHTNESS_DEFAULT = 50;
+    private int BRIGHTNESS_DEFAULT = 30;
     private int EXPOSURE_DEFAULT = 20;
 
     /**
@@ -74,6 +74,8 @@ public class ComputerVision {
             if (camShooter != null) {
                 camShooter.setSize(320, 240);
                 camShooter.setFPS(30);
+                camShooter.setBrightness(BRIGHTNESS_DEFAULT);
+                camShooter.setExposureManual(EXPOSURE_DEFAULT);
                 camShooter.updateSettings();
                 camShooter.openCamera();
             }

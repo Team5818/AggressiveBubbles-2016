@@ -20,7 +20,7 @@ public class AutoAim extends Command {
 
 
     public  static final double DEFAULT_X_OFFSET = 0;
-    public static final double DEFAULT_Y_OFFSET = -12; //calibrated for lowbar
+    public static final double DEFAULT_Y_OFFSET = -12.5; //calibrated for lowbar
     public static final double DEFAULT_TIMEOUT = 2;
     public static boolean UDP = true;
 
@@ -77,6 +77,8 @@ public class AutoAim extends Command {
      * @param offset
      */
     public AutoAim(double xOffset, double yOffset, double flyup, double flylo, double timeout) {
+        xOffset += DEFAULT_X_OFFSET;
+        yOffset += DEFAULT_Y_OFFSET;
         double[] xArr = {84};
         double[] yArr = {8};
         lookupTable = new LinearLookupTable(xArr, yArr);
@@ -99,6 +101,8 @@ public class AutoAim extends Command {
         slopX = (RobotConstants.SLOP);
         slopY = (RobotConstants.SLOP);
         requires(RobotCommon.runningRobot.driveTrain);
+        requires(RobotCommon.runningRobot.arm);
+        
     }
 
     public AutoAim(double xOffset, double yOffset, double timeout) {
@@ -110,7 +114,7 @@ public class AutoAim extends Command {
     }
 
     public AutoAim() {
-        this(DEFAULT_X_OFFSET, DEFAULT_Y_OFFSET, defaultFlyUpVel, defaultFlyLoVel, DEFAULT_TIMEOUT);
+        this(0, 0, defaultFlyUpVel, defaultFlyLoVel, DEFAULT_TIMEOUT);
     }
 
     @Override

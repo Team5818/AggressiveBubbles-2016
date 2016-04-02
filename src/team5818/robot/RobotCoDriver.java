@@ -7,8 +7,10 @@ import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.CommandGroup;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import team5818.robot.commands.ActuateServo;
 import team5818.robot.commands.AutoAim;
 import team5818.robot.commands.Collect;
+import team5818.robot.commands.DrivePower;
 import team5818.robot.commands.SetArmAngle;
 import team5818.robot.commands.SetArmPower;
 import team5818.robot.commands.SetDrivePower;
@@ -42,12 +44,12 @@ public class RobotCoDriver implements Module {
             new Joystick(RobotConstants.CODRIVER_SECOND_JOYSTICK_PORT);
 
     // Joystick One Buttons
-   // private static final int BUT_TOPSPIN_SHOT = 9;
-    //public static final int BUT_PERFORM_AUTO = 8;
+    private static final int BUT_EXTEND_SERVO = 9;
+    private static final int BUT_RETRACT_SERVO = 8;
     private static final int BUT_PRINT_ANGLE = 7;
     private static final int BUT_SHOOT_ANGLE_HIGH = 5;
     private static final int BUT_SHOOT_ANGLE_LOW = 4;
-    private static final int BUT_SHOOT_ANGLE_COLLECT = 3;
+    private static final int BUT_SWITCH_FEED_SHOOTER = 3;
     private static final int BUT_SET_ARM_POWER = 2;
     private static final int BUT_AUTO_AIM = 1;
 
@@ -64,17 +66,21 @@ public class RobotCoDriver implements Module {
     private static final int BUT_COLLECT = 1;
 
     // First Joystick Buttons
-    //JoystickButton butTopSpinShot =
-           // new JoystickButton(firstJoystick, BUT_TOPSPIN_SHOT);
+    // JoystickButton butTopSpinShot =
+    // new JoystickButton(firstJoystick, BUT_TOPSPIN_SHOT);
     JoystickButton butSetArmPower =
             new JoystickButton(firstJoystick, BUT_SET_ARM_POWER);
     JoystickButton butShootAngleLow =
             new JoystickButton(firstJoystick, BUT_SHOOT_ANGLE_LOW);
-    JoystickButton buArmAngleCollect =
-            new JoystickButton(firstJoystick, BUT_SHOOT_ANGLE_COLLECT);
+    JoystickButton butSwitchFeedShoot =
+            new JoystickButton(firstJoystick, BUT_SWITCH_FEED_SHOOTER);
     JoystickButton butShootAngleHigh =
             new JoystickButton(firstJoystick, BUT_SHOOT_ANGLE_HIGH);
     JoystickButton butAutoAim = new JoystickButton(firstJoystick, BUT_AUTO_AIM);
+    JoystickButton butExtendServo =
+            new JoystickButton(firstJoystick, BUT_EXTEND_SERVO);
+    JoystickButton butRetractServo =
+            new JoystickButton(firstJoystick, BUT_RETRACT_SERVO);
 
     // Second Joystick Buttons
     JoystickButton butSpinFlywheel =
@@ -166,10 +172,12 @@ public class RobotCoDriver implements Module {
                 new SetFlywheelVelocity(flyTopSpinVelUp, flyTopSpinVelLow));
         topSpinShot.addParallel(new SetArmAngle(armTopSpinAngle));
         CommandGroup overrideDriver = new CommandGroup();
-        overrideDriver.addParallel(new SwitchFeed(ComputerVision.CAMERA_SHOOTER));
+        overrideDriver
+                .addParallel(new SwitchFeed(ComputerVision.CAMERA_SHOOTER));
         overrideDriver.addParallel(new SetArmAngle(armAngleShooting));
-        overrideDriver.addParallel(new SetFlywheelVelocity(FlyWheel.SHOOT_VELOCITY_LOWER, FlyWheel.SHOOT_VELOCITY_UPPER));
-        
+        overrideDriver.addParallel(new SetFlywheelVelocity(
+                FlyWheel.SHOOT_VELOCITY_LOWER, FlyWheel.SHOOT_VELOCITY_UPPER));
+
         // Making command for AutoAim and Shoot
         // CommandGroup aimAndShoot = new CommandGroup();
         // aimAndShoot.addSequential(new AutoAim(false));
@@ -185,7 +193,8 @@ public class RobotCoDriver implements Module {
         butSpinFlywheel.whenPressed(startFlywheel);
         butStopFlywheel.whenPressed(stopFlywheel);
         butShootAngleHigh.whenPressed(new SetArmAngle(shootAngleHigh));
-        buArmAngleCollect.whenPressed(new SetArmAngle(armAngleCollect));
+        butSwitchFeedShoot
+                .whenPressed(new SwitchFeed(ComputerVision.CAMERA_SHOOTER));
         butShootAngleLow.whenPressed(new SetArmAngle(shootAngleLow));
         butSetArmPower.whenPressed(new SetArmPower(0));
         butLedOn.whenPressed(new LEDToggle(true));
@@ -197,17 +206,22 @@ public class RobotCoDriver implements Module {
         butUncollect.whenPressed(new Collect(-Collect.COLLECT_POWER));
         butUncollect.whenReleased(new Collect(0));
         butAutoAim.whenPressed(autoAim);
-        //this.butTopSpinShot.whenPressed(topSpinShot);
+        // this.butTopSpinShot.whenPressed(topSpinShot);
         butOverrideDriver.whenPressed(overrideDriver);
         // butAutoAim.whenActive(command);
         // butAutoAim.whenReleased(aimAndShoot);
         butSwitchShootFeed.whenPressed(switchFeedShoot);
         butSwitchDriverFeed.whenPressed(switchFeedDrive);
+        butRetractServo.whenPressed(new ActuateServo(ActuateServo.ACT_TO_0));
+        butExtendServo.whenPressed(new ActuateServo(ActuateServo.ACT_TO_90));
+        
     }
 
     @Override
     public void teleopPeriodicModule() {
-
+        SmartDashboard.putNumber("Front Servo", ActuateServo.getFrontServo().getAngle());
+        SmartDashboard.putNumber("Back Servo", ActuateServo.getBackServo().getAngle());
+        
         performButtonActions();
         if (usingSecondStick()) {
             moveArm();
@@ -265,11 +279,11 @@ public class RobotCoDriver implements Module {
     }
 
     private void stopArm() {
-        arm.setPower(0);
+        new SetArmPower(0).start();
     }
 
     private void stopDrive() {
-        RobotCommon.runningRobot.driveTrain.setPower(new Vector2d(0, 0));
+        new DrivePower(0,0).start();
     }
 
     private void performButtonActions() {
@@ -335,7 +349,7 @@ public class RobotCoDriver implements Module {
      */
     public static void setOverrideDriver(boolean od) {
         overrideDriver = od;
-        RobotCommon.runningRobot.driveTrain.setPower(new Vector2d(0,0));
+        RobotCommon.runningRobot.driveTrain.setPower(new Vector2d(0, 0));
     }
 
 }

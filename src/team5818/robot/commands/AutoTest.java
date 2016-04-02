@@ -7,10 +7,7 @@ import team5818.robot.util.Vector2d;
 public class AutoTest extends CommandGroup {
 
     public AutoTest() {
-        this.addSequential(new DriveDistanceCommand(12));
-        this.addSequential(new SpinRobot(60));
-        this.addSequential(new DriveDistanceCommand(12));
-        this.addSequential(new SpinRobot(192, 2, 0.5));
+        this.addSequential(new SpinRobot(-180, 2, 0.5));
     }
     
     @Override

@@ -9,17 +9,22 @@ public class DrivePower extends Command{
     
     private DriveTrain train = RobotCommon.runningRobot.driveTrain;
     private double drivePower;
+    private Vector2d powerVec;
 
+    public DrivePower(Vector2d powerVec) {
+        this.powerVec = powerVec;
+        setTimeout(0);
+        requires(RobotCommon.runningRobot.driveTrain);
+    }
     public DrivePower(double power, double timeout){
-        drivePower = power;
+        powerVec = new Vector2d(drivePower, drivePower);
         setTimeout(timeout);
         requires(RobotCommon.runningRobot.driveTrain);
     }
     
     @Override
     protected void initialize() {
-        Vector2d vector = new Vector2d(drivePower, drivePower);
-        train.setPower(vector);
+        train.setPower(powerVec);
         
     }
 

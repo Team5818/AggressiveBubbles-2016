@@ -29,7 +29,7 @@ public class Auto1EForward extends CommandGroup {
     private DriveVelocityCommand getCloseToGoal = new DriveVelocityCommand(DriveTrain.MAX_VELOCITY*0.48,DriveTrain.MAX_VELOCITY*0.52, 80);
     
     
-    private SpinRobot spin = new SpinRobot(-195, 2, 0.5);
+    private SpinRobot spin = new SpinRobot(-180, 2, 0.5);
     private SetArmAngle findTarget;
     private SetFlywheelVelocity setFlyVel = new SetFlywheelVelocity(FlyWheel.SHOOT_VELOCITY_UPPER, FlyWheel.SHOOT_VELOCITY_LOWER, 0);
     private LEDToggle lightUp = new LEDToggle(true);
@@ -50,7 +50,7 @@ public class Auto1EForward extends CommandGroup {
         double yOffset = Preferences.getInstance().getDouble("AutoLowbarYOffset", -8);
         double shootAngle = Preferences.getInstance().getDouble("ArmAngleShooting", 40);
         findTarget = new SetArmAngle(shootAngle, 2);
-        autoAim = new AutoAim(0,AutoAim.DEFAULT_Y_OFFSET, 15);
+        autoAim = new AutoAim(0,1, 15);
         //lowbarDist = Preferences.getInstance().getDouble("AutoLowbarDriveDist", lowbarDist);
         driveUnder.addParallel(armToGround);
         driveUnder.addParallel(goUnderLowbar);

@@ -106,6 +106,7 @@ public class RobotDriver implements Module {
             new JoystickButton(SECOND_JOYSTICK, BUT_SWITCH_FEED_DRIVE);
     private JoystickButton butSwitchFeedShoot =
             new JoystickButton(SECOND_JOYSTICK, BUT_SWITCH_FEED_SHOOT);
+    private boolean hasStartedDriving = false;
 
     @Override
     public void initModule() {
@@ -186,6 +187,7 @@ public class RobotDriver implements Module {
                 drive();
                 hasStoppedRobot = false;
             } else {
+                hasStartedDriving = false;
                 if (!hasStoppedRobot) {
                     stopMovement();
                     hasStoppedRobot = true;
@@ -198,11 +200,7 @@ public class RobotDriver implements Module {
      * Stops the robot and maintains the current driving type.
      */
     public void stopMovement() {
-        if (driveType == DriveType.ARCADE_VELOCITY) {
-            RobotCommon.runningRobot.driveTrain.setPower(new Vector2d(0, 0));
-        } else {
-            RobotCommon.runningRobot.driveTrain.setPower(new Vector2d(0, 0));
-        }
+        new DrivePower(0,0).start();
     }
 
     /**
@@ -240,6 +238,10 @@ public class RobotDriver implements Module {
      * Performs the driving calculation.
      */
     public void drive() {
+        if(!hasStartedDriving) {
+            new DrivePower(0,0);
+            hasStartedDriving  = true;
+        }
         Vector2d thePowersThatBe;
 
         // Computing Driving Code

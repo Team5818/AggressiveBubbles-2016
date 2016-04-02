@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import team5818.robot.commands.ActuateServo;
 import team5818.robot.commands.Auto1EBackward;
 import team5818.robot.commands.Auto1EForward;
 import team5818.robot.commands.AutoPortcullisInside;
@@ -105,6 +106,7 @@ public class RobotCommon extends IterativeRobot {
     public void robotInit() {
         runningRobot = this;
         modules.forEach(Module::initModule);
+        
         chooser = new SendableChooser();
         
         //Adding auto routines to SmartDashboard.
@@ -120,7 +122,7 @@ public class RobotCommon extends IterativeRobot {
         chooser.addObject("B-Rough Terrain 5", new AutoRoughTerrainUniversal(5));
         chooser.addObject("Spybot W/O Lowbar", new SpybotAuto(SpybotAuto.WITH_OUT_LOWBAR));
         chooser.addObject("Spybot W Lowbar", new SpybotAuto(SpybotAuto.WITH_LOWBAR));
-        //chooser.addObject("!!!AUTO TEST!!!", new AutoTest());
+        chooser.addObject("!!!AUTO TEST!!!", new AutoTest());
 
         /* NOT WORKING AUTO ROUTINES!! */
         //chooser.addObject("F-Ramparts 2", new AutoRampartsUniversal(2));
@@ -154,6 +156,8 @@ public class RobotCommon extends IterativeRobot {
         // autoSelected = SmartDashboard.getString("Auto Selector",
         // defaultAuto);
         // System.out.println("Auto selected: " + autoSelected);
+        if(autoSelected == null)
+            autoSelected = new Auto1EForward();
         autoSelected.start();
         // driveTrainController.rotateDegrees(90, true);
         Scheduler.getInstance().enable();
