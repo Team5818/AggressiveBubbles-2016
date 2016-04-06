@@ -302,6 +302,10 @@ public class DriveSide implements EncoderManager, PIDOutput, MovingControl {
         pidLoop.enable();
     }
 
+    public void setMaxPower(double maxPower){
+        pidLoop.setOutputRange(-maxPower, maxPower);
+    }
+    
     public void setPIDFromSmart() {
         try {
             double p = Double.parseDouble(
