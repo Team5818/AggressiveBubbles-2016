@@ -6,6 +6,7 @@ import com.ni.vision.NIVision.Image;
 import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Preferences;
+import team5818.robot.RobotCommon;
 import team5818.robot.RobotConstants;
 import team5818.robot.modules.USBCam;
 import edu.wpi.first.wpilibj.Solenoid;
@@ -132,6 +133,8 @@ public class ComputerVision {
      *            The desired camera number.
      */
     public synchronized void ChangeFeed(int i) {
+        if(!RobotCommon.runningRobot.vision.isRunning())
+            return;
         try {
             // TODO:switch for actual robot
             if (i == CAMERA_SHOOTER && camShooter != null) {
