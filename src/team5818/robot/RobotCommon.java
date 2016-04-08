@@ -17,14 +17,11 @@ import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import team5818.robot.commands.ActuateServo;
-import team5818.robot.commands.Auto1EBackward;
 import team5818.robot.commands.Auto1EForward;
-import team5818.robot.commands.AutoPortcullisInside;
-import team5818.robot.commands.AutoPortcullisOutside;
+
 import team5818.robot.commands.AutoPortcullisUniversal;
 import team5818.robot.commands.AutoRampartsUniversal;
-import team5818.robot.commands.AutoRoughRampartsInside;
-import team5818.robot.commands.AutoRoughRampartsOutside;
+
 import team5818.robot.commands.AutoRoughTerrainUniversal;
 import team5818.robot.commands.AutoTest;
 import team5818.robot.commands.DoNothing;
