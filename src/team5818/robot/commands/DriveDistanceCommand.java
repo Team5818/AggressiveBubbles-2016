@@ -52,19 +52,12 @@ public class DriveDistanceCommand extends Command {
 
     @Override
     protected boolean isFinished() {
-        DriveSide ds = RobotCommon.runningRobot.driveTrain.getLeftMotors();
-        
-        System.out.println(ds.getPIDController().getError()+ " onTarget "+ds.getPIDController().onTarget() );
-        
+        DriveSide ls = RobotCommon.runningRobot.driveTrain.getLeftMotors();
+        DriveSide rs = RobotCommon.runningRobot.driveTrain.getRightMotors();
+                
         boolean timedOut = isTimedOut(); 
-        boolean onTarget = RobotCommon.runningRobot.driveTrain.getLeftMotors().getPIDController().onTarget();
-        if(timedOut){
-            return true;
-        }
-        if(onTarget){
-            return true;
-        }
-        return false;
+        boolean onTarget = (ls.getPIDController().onTarget() || rs.getPIDController().onTarget());
+        return (timedOut || onTarget);
     }
 
     @Override

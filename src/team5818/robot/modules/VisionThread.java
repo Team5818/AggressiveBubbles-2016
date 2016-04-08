@@ -44,10 +44,6 @@ public class VisionThread implements Runnable, Module {
 
     public static void stopThread() {
     }
-
-    public boolean isRunning() {
-        return isRunning;
-    }
     @Override
     public void initModule() {
         if (captureThread != null)

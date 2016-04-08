@@ -132,9 +132,7 @@ public class ComputerVision {
      * @param i
      *            The desired camera number.
      */
-    public synchronized void ChangeFeed(int i) {
-        if(!RobotCommon.runningRobot.vision.isRunning())
-            return;
+    public synchronized void ChangeFeed(int i) throws NullPointerException{
         try {
             // TODO:switch for actual robot
             if (i == CAMERA_SHOOTER && camShooter != null) {
@@ -200,7 +198,7 @@ public class ComputerVision {
      * @param toggle
      *            Whether to run the light.
      */
-    public void LEDToggle(Boolean toggle) {
+    public void LEDToggle(Boolean toggle) throws NullPointerException {
         LEDLight.set(toggle);
     }
 

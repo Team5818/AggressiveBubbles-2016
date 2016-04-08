@@ -17,7 +17,12 @@ public class LEDToggle extends Command {
 
     @Override
     protected void initialize() {
+        try{
         CamLed.LEDToggle(LEDState);
+        }
+        catch(Exception e){
+            
+        }
     }
 
     @Override
