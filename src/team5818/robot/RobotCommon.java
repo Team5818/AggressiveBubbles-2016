@@ -17,7 +17,7 @@ import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import team5818.robot.commands.ActuateServo;
-import team5818.robot.commands.Auto1EForward;
+import team5818.robot.commands.AutoLowbarForward;
 
 import team5818.robot.commands.AutoPortcullisUniversal;
 import team5818.robot.commands.AutoRampartsUniversal;
@@ -108,7 +108,7 @@ public class RobotCommon extends IterativeRobot {
         
         //Adding auto routines to SmartDashboard.
         chooser.addObject("Do Nothing Auto", new DoNothingAuto());
-        chooser.addObject("Lowbar Forward", new Auto1EForward());
+        chooser.addObject("Lowbar Forward", new AutoLowbarForward());
         chooser.addObject("F-Portcullis 2", new AutoPortcullisUniversal(2));
         chooser.addObject("F-Portcullis 3", new AutoPortcullisUniversal(3));
         chooser.addObject("F-Portcullis 4", new AutoPortcullisUniversal(4));
@@ -154,7 +154,7 @@ public class RobotCommon extends IterativeRobot {
         // defaultAuto);
         // System.out.println("Auto selected: " + autoSelected);
         if(autoSelected == null)
-            autoSelected = new Auto1EForward();
+            autoSelected = new AutoLowbarForward();
         autoSelected.start();
         // driveTrainController.rotateDegrees(90, true);
         Scheduler.getInstance().enable();

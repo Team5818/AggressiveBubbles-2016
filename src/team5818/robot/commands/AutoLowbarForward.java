@@ -14,7 +14,7 @@ import team5818.robot.modules.drivetrain.DriveTrain;
  * basic auto routine, goes forward through lowbar and shoots 
  *
  */
-public class Auto1EForward extends CommandGroup {
+public class AutoLowbarForward extends CommandGroup {
 
     public double collectAngle =
             Preferences.getInstance().getDouble("ArmAngleCollect", 1.5);
@@ -45,7 +45,7 @@ public class Auto1EForward extends CommandGroup {
      * spin counter clockwise
      * move back under
      */
-    public Auto1EForward() {
+    public AutoLowbarForward() {
         double xOffset = Preferences.getInstance().getDouble("AutoLowbarXOffset", 0);
         double yOffset = Preferences.getInstance().getDouble("AutoLowbarYOffset", -8);
         double shootAngle = Preferences.getInstance().getDouble("ArmAngleShooting", 40);
