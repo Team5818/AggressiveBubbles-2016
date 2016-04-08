@@ -17,9 +17,9 @@ public class AutoLowbarArc extends CommandGroup{
     double yOffset = Preferences.getInstance().getDouble("AutoLowbarYOffset", -8);
     double shootAngle = Preferences.getInstance().getDouble("ArmAngleShooting", 40);
     
-    public double[] leftVels = {};
-    public double[] rightVels = {};
-    public double[] dists = {};
+    public double[] leftVels = {24,50,50,50,24};
+    public double[] rightVels = {24,50,50,30,24};
+    public double[] dists = {0,24,120,168,200};
     LinearLookupTable leftTable = new LinearLookupTable(leftVels, dists);
     LinearLookupTable rightTable = new LinearLookupTable(rightVels, dists);
     
