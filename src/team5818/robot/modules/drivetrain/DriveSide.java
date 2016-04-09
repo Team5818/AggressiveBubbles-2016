@@ -287,7 +287,7 @@ public class DriveSide implements EncoderManager, PIDOutput, MovingControl {
         // setPIDFromSmart();
         pidLoop.setOutputRange(-DEFAULT_MAX_POWER, DEFAULT_MAX_POWER);
         pidLoop.setContinuous();
-        setCoast(true);
+        //setCoast(true);
         pidLoop.setSetpoint(vel);
     }
 

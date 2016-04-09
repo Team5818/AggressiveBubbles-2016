@@ -18,19 +18,19 @@ public class AutoLowbarArc extends CommandGroup{
     double shootAngle = Preferences.getInstance().getDouble("ArmAngleShooting", 40);
     
     public double[] leftVels = {24,50,50,50,24};
-    public double[] rightVels = {24,50,50,30,24};
+    public double[] rightVels = {24,50,50,35,24};
     public double[] dists = {0,24,120,168,200};
-    LinearLookupTable leftTable = new LinearLookupTable(leftVels, dists);
-    LinearLookupTable rightTable = new LinearLookupTable(rightVels, dists);
+    LinearLookupTable leftTable = new LinearLookupTable(dists, leftVels);
+    LinearLookupTable rightTable = new LinearLookupTable(dists, rightVels);
     
     private SetArmAngle armToCollect = new SetArmAngle(collectAngle);
     private CommandGroup driveUnder = new CommandGroup();
     private ArmPower armToGround = new ArmPower(LowerArmToGround.ARM_POWER); 
     private DriveVelocityProfile arcToShot =
             new DriveVelocityProfile(leftTable, rightTable, 200);
-    private CommandGroup prepareShot;
+    private CommandGroup prepareShot = new CommandGroup();
     private SpinRobot spin = new SpinRobot(-180, 2, 0.5);
-    private SetArmAngle findTarget = new SetArmAngle(shootAngle, 2);;
+    private SetArmAngle findTarget = new SetArmAngle(shootAngle, 2);
     private SetFlywheelVelocity setFlyVel = new SetFlywheelVelocity(FlyWheel.SHOOT_VELOCITY_UPPER, FlyWheel.SHOOT_VELOCITY_LOWER, 0);
     private LEDToggle lightUp = new LEDToggle(true);
     private SwitchFeed switchCam = new SwitchFeed(ComputerVision.CAMERA_SHOOTER);

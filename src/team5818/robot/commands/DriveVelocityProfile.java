@@ -54,7 +54,7 @@ public class DriveVelocityProfile extends Command{
 
     @Override
     protected boolean isFinished() {
-        return (Math.abs(train.getAverageDistance() - initialDist) >= Math.abs(distance) || isTimedOut());
+        return (Math.abs(rightSide.getEncPosAbs() - initialRight) >= Math.abs(distance) || isTimedOut());
 
     }
 
