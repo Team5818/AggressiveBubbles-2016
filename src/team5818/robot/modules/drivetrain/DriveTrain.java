@@ -70,10 +70,10 @@ public class DriveTrain extends Subsystem implements Module {
     }
 
     private final DriveSide left =
-            new DriveSide(LEFT_FRONT, LEFT_MIDDLE, LEFT_BACK, false);
+            new DriveSide(LEFT_FRONT, LEFT_MIDDLE, LEFT_BACK, false, DriveSide.Side.LEFT);
     // Right motors are reversed.
     private final DriveSide right =
-            new DriveSide(RIGHT_FRONT, RIGHT_MIDDLE, RIGHT_BACK, true);
+            new DriveSide(RIGHT_FRONT, RIGHT_MIDDLE, RIGHT_BACK, true, DriveSide.Side.RIGHT);
 
     private DriveCalculator driveCalculator = ArcadeDriveCalculator.INSTANCE;
 

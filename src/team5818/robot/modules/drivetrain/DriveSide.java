@@ -22,6 +22,9 @@ import team5818.robot.util.PIDSourceBase;
 public class DriveSide implements EncoderManager, PIDOutput, MovingControl {
 
 
+    enum Side {
+        RIGHT, LEFT;
+    }
     /**
      * The Maximum velocity the flywheel can reach.
      */
@@ -46,6 +49,7 @@ public class DriveSide implements EncoderManager, PIDOutput, MovingControl {
     // The driving mode that the robot is in.
     public static int driveMode = MODE_POWER;
 
+    private final Side side;
     // Initialize all the pid constants.
     private static double distanceKp = 0.12;
     private static double distanceKi = 0.00000001;
@@ -77,8 +81,8 @@ public class DriveSide implements EncoderManager, PIDOutput, MovingControl {
      *            - The second talon to control
      */
     public DriveSide(CANTalon mainTalon, CANTalon secondaryTalon,
-            CANTalon thirdTalon) {
-        this(mainTalon, secondaryTalon, thirdTalon, false);
+            CANTalon thirdTalon, Side side) {
+        this(mainTalon, secondaryTalon, thirdTalon, false, side);
     }
 
     /**
@@ -96,7 +100,8 @@ public class DriveSide implements EncoderManager, PIDOutput, MovingControl {
      *            should be negated
      */
     public DriveSide(CANTalon mainTalon, CANTalon secondaryTalon,
-            CANTalon thirdTalon, boolean inverted) {
+            CANTalon thirdTalon, boolean inverted, Side side) {
+        this.side = side;
 
         distanceKp = Preferences.getInstance().getDouble("DistanceKp", 0.12);
         distanceKi =
@@ -108,10 +113,17 @@ public class DriveSide implements EncoderManager, PIDOutput, MovingControl {
                 Preferences.getInstance().getDouble("Velocity" + "Kd", 0.0);
         velocityKf = Preferences.getInstance().getDouble("VelocityKf", 0.0);
         usingStandardEncoder = Preferences.getInstance().getBoolean("UsingStandardEncoder", true);
-        if(usingStandardEncoder)
-            encoderScale = Preferences.getInstance().getDouble("EncoderScaleStandard", -.020603);
-        else
-            encoderScale = Preferences.getInstance().getDouble("EncoderScaleSim", -.020603);
+        if(side == Side.LEFT)
+            if(usingStandardEncoder)
+                encoderScale = Preferences.getInstance().getDouble("EncoderScaleStandardLeft", -.020603);
+            else
+                encoderScale = Preferences.getInstance().getDouble("EncoderScaleSimLeft", -.020603);
+        else if(side == Side.RIGHT)
+            if(usingStandardEncoder)
+                encoderScale = Preferences.getInstance().getDouble("EncoderScaleStandardRight", -.020603);
+            else
+                encoderScale = Preferences.getInstance().getDouble("EncoderScaleSimRight", -.020603);
+        
         if (mainTalon == null) {
             throw new IllegalArgumentException("mainTalon cannot be null");
         }
