@@ -44,8 +44,9 @@ public class DriveVelocityProfile extends Command{
     protected void execute() {
         double leftDist =  leftSide.getEncPosAbs()-initialLeft;
         double rightDist = rightSide.getEncPosAbs()-initialRight;
-        double velocityL = leftTable.getEstimate(leftDist);
-        double velocityR = rightTable.getEstimate(rightDist);
+        double avDist = train.getAverageDistance() - initialDist;
+        double velocityL = leftTable.getEstimate(avDist);
+        double velocityR = rightTable.getEstimate(avDist);
         
         train.setVelocity(new Vector2d(velocityL, velocityR));
         

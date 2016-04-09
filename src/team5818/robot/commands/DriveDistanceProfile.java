@@ -13,6 +13,7 @@ public class DriveDistanceProfile extends Command {
     double timeout;
     double initialLeft;
     double initialRight;
+    double initialDist;
     private LinearLookupTable leftTable;
     private LinearLookupTable rightTable;
     private DriveTrain train;
@@ -47,6 +48,7 @@ public class DriveDistanceProfile extends Command {
         this.setTimeout(timeout);
         RobotCommon.runningRobot.driveTrain
                 .setDriveDistance(dist);
+        initialDist = train.getAverageDistance();
         initialLeft = leftSide.getEncPosAbs();
         initialRight = rightSide.getEncPosAbs();
     }
@@ -55,8 +57,9 @@ public class DriveDistanceProfile extends Command {
     protected void execute() {
         double leftDist =  leftSide.getEncPosAbs()-initialLeft;
         double rightDist = rightSide.getEncPosAbs()-initialRight;
-        double leftPower = leftTable.getEstimate(leftDist);
-        double rightPower = rightTable.getEstimate(rightDist);
+        double avDist = train.getAverageDistance() - initialDist;
+        double leftPower = leftTable.getEstimate(avDist);
+        double rightPower = rightTable.getEstimate(avDist);
         leftSide.setMaxPower(leftPower);
         rightSide.setMaxPower(rightPower);
     }
