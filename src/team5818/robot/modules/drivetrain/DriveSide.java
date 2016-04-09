@@ -219,7 +219,7 @@ public class DriveSide implements EncoderManager, PIDOutput, MovingControl {
     public double getVelocity() {
         double vel = mainTalon.getEncVelocity() * 10.0
                 * encoderScale;
-        if (mainTalon.getInverted()) {
+        if (mainTalon != null && mainTalon.getInverted()) {
             vel = -vel;
         }
         return vel;
@@ -280,8 +280,11 @@ public class DriveSide implements EncoderManager, PIDOutput, MovingControl {
     }
 
     private void setCoast(boolean b) {
-        mainTalon.enableBrakeMode(!b);
-        secondaryTalon.enableBrakeMode(!b);
+        if(mainTalon != null)
+            mainTalon.enableBrakeMode(!b);
+        if(secondaryTalon != null)
+            secondaryTalon.enableBrakeMode(!b);
+        if(thirdTalon != null)
         thirdTalon.enableBrakeMode(!b);
     }
 
@@ -294,7 +297,8 @@ public class DriveSide implements EncoderManager, PIDOutput, MovingControl {
         cyclesUntilAttemptStop = 5;
         pidSource.setPIDSourceType(PIDSourceType.kDisplacement);
         pidLoop.setOutputRange(-maxPower, maxPower);
-        mainTalon.setPosition(0);
+        if(mainTalon != null)
+            mainTalon.setPosition(0);
         pidLoop.setContinuous();
         setCoast(false);
         pidLoop.setSetpoint(dist);
