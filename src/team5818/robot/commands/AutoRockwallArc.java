@@ -6,7 +6,7 @@ import team5818.robot.modules.ComputerVision;
 import team5818.robot.modules.FlyWheel;
 import team5818.robot.util.LinearLookupTable;
 
-public class AutoRoughTerrainArc extends CommandGroup{
+public class AutoRockwallArc extends CommandGroup{
 
 
     private double findTargetAngle;
@@ -40,12 +40,12 @@ public class AutoRoughTerrainArc extends CommandGroup{
      * spin counter clockwise
      * move back under
      */
-    public AutoRoughTerrainArc(int position) {
+    public AutoRockwallArc(int position) {
         double xOffset = 0;
         double yOffset = 0;
         if(position == 2){
-            double[] leftVels = {-24,-50,-50,-50,-24};
-            double[] rightVels = {-24,-50,-50,-30,-24};
+            double[] leftVels = {-24,-70,-70,-50,-24};
+            double[] rightVels = {-24,-70,-70,-30,-24};
             double[] dists = {0,-24,-120,-168,-200};
             leftTable = new LinearLookupTable(dists, leftVels);
             rightTable = new LinearLookupTable(dists, rightVels);
@@ -54,8 +54,8 @@ public class AutoRoughTerrainArc extends CommandGroup{
             yOffset = Preferences.getInstance().getDouble("AutoPortcullis2YOffset", yOffset);
         }
         else if(position == 3){
-            double[] leftVels = {-24,-50,-50,-25,24};
-            double[] rightVels = {-24,-50,-50,-50,24};
+            double[] leftVels = {-24,-70,-70,-25,24};
+            double[] rightVels = {-24,-70,-70,-50,24};
             double[] dists = {0,-24,-120,-150,-160};
             leftTable = new LinearLookupTable(dists, leftVels);
             rightTable = new LinearLookupTable(dists, rightVels);
@@ -65,8 +65,8 @@ public class AutoRoughTerrainArc extends CommandGroup{
         }
         
         else if(position==4){
-            double[] leftVels = {-24,-50,-50,-24};
-            double[] rightVels = {-24,-50,-50,-24};
+            double[] leftVels = {-24,-70,-70,-24};
+            double[] rightVels = {-24,-70,-70,-24};
             double[] dists = {0,-24,-120,-140};
             leftTable = new LinearLookupTable(dists, leftVels);
             rightTable = new LinearLookupTable(dists, rightVels);
@@ -75,8 +75,8 @@ public class AutoRoughTerrainArc extends CommandGroup{
             yOffset = Preferences.getInstance().getDouble("AutoPortcullis4YOffset", yOffset);
         }
         else{
-            double[] leftVels = {-24,-50,-50,-50,-24};
-            double[] rightVels = {-24,-50,-50,-25,-24};
+            double[] leftVels = {-24,-70,-70,-50,-24};
+            double[] rightVels = {-24,-70,-70,-25,-24};
             double[] dists = {0,-24,-120,-150,-160};
             leftTable = new LinearLookupTable(dists, leftVels);
             rightTable = new LinearLookupTable(dists, rightVels);
@@ -103,5 +103,3 @@ public class AutoRoughTerrainArc extends CommandGroup{
 
     }
 }
-
-
