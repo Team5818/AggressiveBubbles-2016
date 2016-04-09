@@ -19,7 +19,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import team5818.robot.commands.ActuateServo;
 import team5818.robot.commands.AutoLowbarArc;
 import team5818.robot.commands.AutoLowbarForward;
-
+import team5818.robot.commands.AutoPortcullisArc;
 import team5818.robot.commands.AutoPortcullisUniversal;
 import team5818.robot.commands.AutoRampartsUniversal;
 
@@ -99,7 +99,7 @@ public class RobotCommon extends IterativeRobot {
 
     enum AutoRoutine {
         DO_NOTHING, LOWBAR, PORTCULLIS, ROCKWALL, RAMPARTS, MOAT, ROUGH_TERRAIN,
-        CHEVAL, SALLY_PORT, DRAW_BRIDGE, SPYBOT, AUTO_TEST, LOWBAR_ARC;
+        CHEVAL, SALLY_PORT, DRAW_BRIDGE, SPYBOT, AUTO_TEST, LOWBAR_ARC, PORTCULLIS_ARC;
     }
 
     /**
@@ -123,6 +123,7 @@ public class RobotCommon extends IterativeRobot {
         chooserAuto.addObject("Spybot", AutoRoutine.SPYBOT);
         chooserAuto.addObject("!!!AUTO TEST!!!", AutoRoutine.AUTO_TEST);        
         chooserAuto.addObject("Arcing Lowbar", AutoRoutine.LOWBAR_ARC);
+        chooserAuto.addObject("Arcing Portcullis", AutoRoutine.PORTCULLIS_ARC);
         
         // Adding auto position to SmartDashboard.
         chooserPos = new SendableChooser();
@@ -178,6 +179,9 @@ public class RobotCommon extends IterativeRobot {
                 break;
             case PORTCULLIS:
                 auto = new AutoPortcullisUniversal(pos);
+                break;
+            case PORTCULLIS_ARC:
+                auto = new AutoPortcullisArc(pos);
                 break;
             case ROUGH_TERRAIN:
                 auto = new AutoRoughTerrainUniversal(pos);
