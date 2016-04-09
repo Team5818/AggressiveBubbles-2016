@@ -58,7 +58,7 @@ public class RobotCommon extends IterativeRobot {
                 super.forEach(action);
             } catch (Exception e) {
                 DriverStation.reportError(
-                        "Error iterating modules: " + e.getMessage() + "\n",    
+                        "Error iterating modules: " + e.getMessage() + "\n",
                         false);
             }
         };
@@ -93,7 +93,13 @@ public class RobotCommon extends IterativeRobot {
     final String defaultAuto = "Default";
     final String customAuto = "My Auto";
     private Command autoSelected;
-    private SendableChooser chooser;
+    private SendableChooser chooserAuto;
+    private SendableChooser chooserPos;
+
+    enum AutoRoutine {
+        DO_NOTHING, LOWBAR, PORTCULLIS, ROCKWALL, RAMPARTS, MOAT, ROUGH_TERRAIN,
+        CHEVAL, SALLY_PORT, DRAW_BRIDGE, SPYBOT, AUTO_TEST;
+    }
 
     /**
      * This function is run when the robot is first started up and should be
@@ -101,61 +107,105 @@ public class RobotCommon extends IterativeRobot {
      */
     @Override
     public void robotInit() {
+
         runningRobot = this;
         modules.forEach(Module::initModule);
-        
-        chooser = new SendableChooser();
-        
-        //Adding auto routines to SmartDashboard.
-        chooser.addObject("Do Nothing Auto", new DoNothingAuto());
-        chooser.addObject("Lowbar Forward", new AutoLowbarForward());
-        chooser.addObject("F-Portcullis 2", new AutoPortcullisUniversal(2));
-        chooser.addObject("F-Portcullis 3", new AutoPortcullisUniversal(3));
-        chooser.addObject("F-Portcullis 4", new AutoPortcullisUniversal(4));
-        chooser.addObject("F-Portcullis 5", new AutoPortcullisUniversal(5));
-        chooser.addObject("B-Rough Terrain 2", new AutoRoughTerrainUniversal(2));
-        chooser.addObject("B-Rough Terrain 3", new AutoRoughTerrainUniversal(3));
-        chooser.addObject("B-Rough Terrain 4", new AutoRoughTerrainUniversal(4));
-        chooser.addObject("B-Rough Terrain 5", new AutoRoughTerrainUniversal(5));
-        chooser.addObject("Spybot W/O Lowbar", new SpybotAuto(SpybotAuto.WITH_OUT_LOWBAR));
-        chooser.addObject("Spybot W Lowbar", new SpybotAuto(SpybotAuto.WITH_LOWBAR));
-        chooser.addObject("!!!AUTO TEST!!!", new AutoTest());
 
+        // Adding auto routines to SmartDashboard.
+        chooserAuto = new SendableChooser();
+        chooserAuto.addObject("Do Nothing Auto", AutoRoutine.DO_NOTHING);
+        chooserAuto.addObject("Lowbar", AutoRoutine.LOWBAR);
+        chooserAuto.addObject("Portcullis", AutoRoutine.PORTCULLIS);
+        chooserAuto.addObject("Rough Terrain", AutoRoutine.ROUGH_TERRAIN);
+        chooserAuto.addObject("Rock Wall", AutoRoutine.ROCKWALL);
+        chooserAuto.addObject("Moat", AutoRoutine.MOAT);
+        chooserAuto.addObject("Spybot", AutoRoutine.SPYBOT);
+        chooserAuto.addObject("!!!AUTO TEST!!!", AutoRoutine.AUTO_TEST);        
+        
+        // Adding auto position to SmartDashboard.
+        chooserPos = new SendableChooser();
+        chooserPos.addObject("2", 2);
+        chooserPos.addObject("3", 3);
+        chooserPos.addObject("4", 4);
+        chooserPos.addObject("5", 5);
+        
         /* NOT WORKING AUTO ROUTINES!! */
-        //chooser.addObject("F-Ramparts 2", new AutoRampartsUniversal(2));
-        //chooser.addObject("F-Ramparts 3", new AutoRampartsUniversal(2));
-        //chooser.addObject("F-Ramparts 4", new AutoRampartsUniversal(2));
-        //chooser.addObject("F-Ramparts 5", new AutoRampartsUniversal(2));
-        //chooser.addObject("Lowbar Backward", new Auto1EBackward());
-        //chooser.addObject("Portcullis Inside", new AutoPortcullisInside());
-        //chooser.addObject("Portcullis Outside", new AutoPortcullisOutside());
-        //chooser.addObject("Rough/Ramparts Inside", new AutoRoughRampartsInside());
-        //chooser.addObject("Rough/Ramparts Outside", new AutoRoughRampartsOutside());
-        SmartDashboard.putData("Auto choices", chooser);
+        // chooserAuto.addObject("F-Ramparts 2", new AutoRampartsUniversal(2));
+        // chooserAuto.addObject("F-Ramparts 3", new AutoRampartsUniversal(2));
+        // chooserAuto.addObject("F-Ramparts 4", new AutoRampartsUniversal(2));
+        // chooserAuto.addObject("F-Ramparts 5", new AutoRampartsUniversal(2));
+        // chooserAuto.addObject("Lowbar Backward", new Auto1EBackward());
+        // chooserAuto.addObject("Portcullis Inside", new AutoPortcullisInside());
+        // chooserAuto.addObject("Portcullis Outside", new AutoPortcullisOutside());
+        // chooserAuto.addObject("Rough/Ramparts Inside", new
+        // AutoRoughRampartsInside());
+        // chooserAuto.addObject("Rough/Ramparts Outside", new
+        // AutoRoughRampartsOutside());
+        SmartDashboard.putData("Auto choices", chooserAuto);
         panel = new PowerDistributionPanel();
     }
 
     /**
-     * This autonomous (along with the chooser code above) shows how to select
+     * This autonomous (along with the chooserAuto code above) shows how to select
      * between different autonomous modes using the dashboard. The sendable
-     * chooser code works with the Java SmartDashboard. If you prefer the
-     * LabVIEW Dashboard, remove all of the chooser code and uncomment the
+     * chooserAuto code works with the Java SmartDashboard. If you prefer the
+     * LabVIEW Dashboard, remove all of the chooserAuto code and uncomment the
      * getString line to get the auto name from the text box below the Gyro
      *
      * You can add additional auto modes by adding additional comparisons to the
      * switch structure below with additional strings. If using the
-     * SendableChooser make sure to add them to the chooser code above as well.
+     * SendableChooser make sure to add them to the chooserAuto code above as well.
      */
     @Override
     public void autonomousInit() {
         modules.forEach(Module::initAutonomous);
-        autoSelected = (Command) chooser.getSelected();
-        // autoSelected = SmartDashboard.getString("Auto Selector",
-        // defaultAuto);
-        // System.out.println("Auto selected: " + autoSelected);
-        if(autoSelected == null)
-            autoSelected = new AutoLowbarForward();
-        autoSelected.start();
+        Command auto;
+        AutoRoutine autoSelected = (AutoRoutine) chooserAuto.getSelected();
+        int pos = (int)chooserPos.getSelected();
+        switch(autoSelected) {
+            case DO_NOTHING:
+                auto = new DoNothingAuto();
+                break;
+            case LOWBAR:
+                auto = new AutoLowbarForward();
+                break;
+            case PORTCULLIS:
+                auto = new AutoPortcullisUniversal(pos);
+                break;
+            case ROUGH_TERRAIN:
+                auto = new AutoRoughTerrainUniversal(pos);
+                break;
+            case ROCKWALL:
+                auto = new AutoRoughTerrainUniversal(pos);
+                break;
+            case MOAT:
+                auto = new AutoRoughTerrainUniversal(pos);
+                break;
+            case RAMPARTS:
+                auto = new AutoRoughTerrainUniversal(pos);
+                break;
+            case CHEVAL:
+                auto = new DoNothingAuto();
+                break;
+            case SALLY_PORT:
+                auto = new DoNothingAuto();
+                break;
+            case DRAW_BRIDGE:
+                auto = new DoNothingAuto();
+                break;
+            case SPYBOT:
+                auto = new SpybotAuto(false);
+                break;
+            case AUTO_TEST:
+                auto = new AutoTest();
+                break;
+            default:
+                auto = new AutoLowbarForward();
+                break;
+                
+                
+        }
+        auto.start();
         // driveTrainController.rotateDegrees(90, true);
         Scheduler.getInstance().enable();
     }
@@ -186,11 +236,10 @@ public class RobotCommon extends IterativeRobot {
         Scheduler.getInstance().run();
         modules.forEach(Module::teleopPeriodicModule);
         /*
-        if(RobotCoDriver.firstJoystick.getRawButton(RobotCoDriver.BUT_PERFORM_AUTO)) {
-            Command autoSelected = (Command) chooser.getSelected();
-            autoSelected.start();
-        }
-        */
+         * if(RobotCoDriver.firstJoystick.getRawButton(RobotCoDriver.
+         * BUT_PERFORM_AUTO)) { Command autoSelected = (Command)
+         * chooserAuto.getSelected(); autoSelected.start(); }
+         */
     }
 
     @Override
