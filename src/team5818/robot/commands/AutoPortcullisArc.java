@@ -68,8 +68,8 @@ public class AutoPortcullisArc extends CommandGroup{
         }
         
         else if(position==4){
-            double[] leftVels = {24,50,50,25,24};
-            double[] rightVels = {24,50,50,50,24};
+            double[] leftVels = {24,50,50,24};
+            double[] rightVels = {24,50,50,24};
             double[] dists = {0,24,120,140};
             leftTable = new LinearLookupTable(dists, leftVels);
             rightTable = new LinearLookupTable(dists, rightVels);
@@ -78,8 +78,8 @@ public class AutoPortcullisArc extends CommandGroup{
             yOffset = Preferences.getInstance().getDouble("AutoPortcullis4YOffset", yOffset);
         }
         else{
-            double[] leftVels = {24,50,50,24};
-            double[] rightVels = {24,50,50,24};
+            double[] leftVels = {24,50,50,25,24};
+            double[] rightVels = {24,50,50,50,24};
             double[] dists = {0,24,120,150,160};
             leftTable = new LinearLookupTable(dists, leftVels);
             rightTable = new LinearLookupTable(dists, rightVels);
