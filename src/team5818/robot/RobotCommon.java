@@ -142,6 +142,8 @@ public class RobotCommon extends IterativeRobot {
         // chooserAuto.addObject("Rough/Ramparts Outside", new
         // AutoRoughRampartsOutside());
         SmartDashboard.putData("Auto choices", chooserAuto);
+        SmartDashboard.putData("Auto choices", chooserPos);
+        
         panel = new PowerDistributionPanel();
     }
 
