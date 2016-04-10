@@ -171,6 +171,10 @@ public class FlyWheel extends Subsystem implements PIDSource, Module {
         SmartDashboard.putNumber("Flywheel_Ready", status);
         SmartDashboard.putNumber("Flywheel RPS " + name, getRPS());
     }
+    
+    public void autoPeriodicModule(){
+        SmartDashboard.putNumber("Flywheel RPS " + name, getRPS());
+    }
 
     @Override
     protected void initDefaultCommand() {

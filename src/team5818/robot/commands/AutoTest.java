@@ -2,6 +2,7 @@ package team5818.robot.commands;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
 import team5818.robot.RobotCommon;
+import team5818.robot.modules.FlyWheel;
 import team5818.robot.util.LinearLookupTable;
 import team5818.robot.util.Vector2d;
 
@@ -16,12 +17,13 @@ public class AutoTest extends CommandGroup {
 
     public AutoTest() {
         //this.addSequential(drive);
-        this.addSequential(driveVel);
+        //this.addSequential(driveVel);
     }
     
     @Override
     public void initialize() {
-        
+        FlyWheel fly = RobotCommon.runningRobot.upperFlywheel;
+        fly.setPower(.2);
     }
     
     @Override

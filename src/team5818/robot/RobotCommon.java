@@ -86,7 +86,7 @@ public class RobotCommon extends IterativeRobot {
                     5.0 / 18.8, 140.0, true, true));
     public final FlyWheel upperFlywheel = addModule(
             new FlyWheel(new CANTalon(RobotConstants.TALON_FLYWHEEL_UPPER),
-                    16.0 / 40.0, 240.0, false, false));
+                    16.0 / 40.0, 240.0, false, true));
     public final VisionThread vision = addModule(new VisionThread());
     public final Track targeting = addModule(new Track());
     public final Arm arm = addModule(new Arm());
