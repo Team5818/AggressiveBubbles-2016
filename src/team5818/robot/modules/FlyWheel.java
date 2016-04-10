@@ -50,6 +50,8 @@ public class FlyWheel extends Subsystem implements PIDSource, Module {
     
     private final String name;
 
+    private int sensorSign = 1;
+
     /**
      * 
      * @param talon
@@ -81,7 +83,14 @@ public class FlyWheel extends Subsystem implements PIDSource, Module {
         pid.setAbsoluteTolerance(TOLERANCE);
         this.talon = talon;
         talon.setInverted(reversed);
-        talon.reverseSensor(reversed);
+        reverseSensor(reversed);
+    }
+
+    private void reverseSensor(boolean reversed) {
+        sensorSign  = 1;
+        if(reversed)
+            sensorSign = -1;
+        
     }
 
     public void setPID(double kp, double ki, double kd) {
@@ -131,7 +140,7 @@ public class FlyWheel extends Subsystem implements PIDSource, Module {
      */
     public double getRPS() {
         try {
-            double rps = talon.getEncVelocity() * 10.0 / 6.0 * gearBoxRatio;
+            double rps = talon.getEncVelocity() * 10.0 / 6.0 * gearBoxRatio * sensorSign;
             return rps;
         } catch (Exception e) {
 
