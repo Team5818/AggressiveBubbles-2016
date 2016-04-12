@@ -18,6 +18,7 @@ public class AutoPortcullisArc extends CommandGroup{
     double yOffset = Preferences.getInstance().getDouble("AutoLowbarYOffset", -8);
     double shootAngle = Preferences.getInstance().getDouble("ArmAngleShooting", 40);
     double spinAngle;
+    double dist;
     
     LinearLookupTable leftTable;
     LinearLookupTable rightTable;
@@ -47,9 +48,10 @@ public class AutoPortcullisArc extends CommandGroup{
         double xOffset = 0;
         double yOffset = 0;
         if(position == 2){
-            double[] leftVels = {24,50,50,10,24};
-            double[] rightVels = {24,50,50,60,24};
-            double[] dists = {0,24,120,168,210};
+            double[] leftVels = {24,50,50,60,24};
+            double[] rightVels = {24,50,50,10,24};
+            double[] dists = {0,24,120,140,200};
+            dist = 200;
             leftTable = new LinearLookupTable(dists, leftVels);
             rightTable = new LinearLookupTable(dists, rightVels);
             spinAngle = -110;
@@ -60,6 +62,7 @@ public class AutoPortcullisArc extends CommandGroup{
             double[] leftVels = {24,50,50,50,24};
             double[] rightVels = {24,50,50,25,24};
             double[] dists = {0,24,120,150,160};
+            dist = 160;
             leftTable = new LinearLookupTable(dists, leftVels);
             rightTable = new LinearLookupTable(dists, rightVels);
             spinAngle = (90);
@@ -71,6 +74,7 @@ public class AutoPortcullisArc extends CommandGroup{
             double[] leftVels = {24,50,50,24};
             double[] rightVels = {24,50,50,24};
             double[] dists = {0,24,120,140};
+            dist = 140;
             leftTable = new LinearLookupTable(dists, leftVels);
             rightTable = new LinearLookupTable(dists, rightVels);
             spinAngle = (-180);
@@ -81,6 +85,7 @@ public class AutoPortcullisArc extends CommandGroup{
             double[] leftVels = {24,50,50,25,24};
             double[] rightVels = {24,50,50,50,24};
             double[] dists = {0,24,120,150,160};
+            dist = 160;
             leftTable = new LinearLookupTable(dists, leftVels);
             rightTable = new LinearLookupTable(dists, rightVels);
             spinAngle = -90;
@@ -88,7 +93,7 @@ public class AutoPortcullisArc extends CommandGroup{
             yOffset = Preferences.getInstance().getDouble("AutoPortcullis5YOffset", yOffset);
         }
         
-        driveThroughPortcullis = new DriveVelocityProfile(leftTable, rightTable, 200);
+        driveThroughPortcullis = new DriveVelocityProfile(leftTable, rightTable, dist);
         aim = new AutoAim(xOffset, yOffset, 3);
         spin = new SpinRobot(spinAngle);
          
