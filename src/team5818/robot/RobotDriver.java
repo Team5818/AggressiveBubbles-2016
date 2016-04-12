@@ -144,7 +144,7 @@ public class RobotDriver implements Module {
                 .addParallel(new SwitchFeed(ComputerVision.CAMERA_DRIVER));
         switchFeedDrive.addParallel(new LEDToggle(false));
         CommandGroup overrideDriver = new CommandGroup();
-        overrideDriver.addParallel(new SetArmAngle(armAngleShooting));
+        //overrideDriver.addParallel(new SetArmAngle(armAngleShooting));
         overrideDriver
                 .addParallel(new SwitchFeed(ComputerVision.CAMERA_SHOOTER));
         overrideDriver.addParallel(new SetFlywheelVelocity(

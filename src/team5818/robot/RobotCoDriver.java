@@ -178,7 +178,7 @@ public class RobotCoDriver implements Module {
         CommandGroup overrideDriver = new CommandGroup();
         overrideDriver
                 .addParallel(new SwitchFeed(ComputerVision.CAMERA_SHOOTER));
-        overrideDriver.addParallel(new SetArmAngle(armAngleShooting));
+        //overrideDriver.addParallel(new SetArmAngle(armAngleShooting));
         overrideDriver.addParallel(new SetFlywheelVelocity(
                 FlyWheel.SHOOT_VELOCITY_LOWER, FlyWheel.SHOOT_VELOCITY_UPPER));
 
