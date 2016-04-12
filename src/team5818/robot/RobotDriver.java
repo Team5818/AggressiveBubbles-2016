@@ -68,6 +68,8 @@ public class RobotDriver implements Module {
     private static final int BUT_ROTATE_CCW_180 = 3;
     private static final int BUT_UNCOLLECT = 2;
     private static final int BUT_COLLECT = 1;
+    private static final int BUT_ENTER_CLIMB = 11;
+    private static final int BUT_EXIT_CLIMB = 12;
 
     private DriveType driveType = DriveType.ARCADE;
     private InputMode inputMode = InputMode.TWO_STICKS;
@@ -75,6 +77,7 @@ public class RobotDriver implements Module {
     // Weather to invert the throttle
     private static boolean invertThrottle = true;
     private boolean hasStoppedRobot = false;
+    private boolean climbMode = false;
 
     private double armAngleShooting = 40;
     private double armAngleCollect = -1;
@@ -152,8 +155,9 @@ public class RobotDriver implements Module {
         overrideCoDriver.addParallel(new SetFlywheelPower(0));
 
         // Assigning commands to their respective buttons.
-        //butInvert.whenPressed(new SwitchFeed(ComputerVision.CAMERA_BACK));
-        //butUnInvert.whenPressed(new SwitchFeed(ComputerVision.CAMERA_DRIVER));
+        // butInvert.whenPressed(new SwitchFeed(ComputerVision.CAMERA_BACK));
+        // butUnInvert.whenPressed(new
+        // SwitchFeed(ComputerVision.CAMERA_DRIVER));
         butCollect.whenPressed(new Collect(Collect.COLLECT_POWER));
         butCollect.whenReleased(new Collect(0));
         butUncollect.whenPressed(new Collect(-Collect.COLLECT_POWER));
@@ -182,7 +186,7 @@ public class RobotDriver implements Module {
     public void teleopPeriodicModule() {
         // Drives the robot if it should be done so by Driver.
         performButtonActions();
-        if (!RobotCoDriver.isOverrideDriver()) {
+        if (!RobotCoDriver.isOverrideDriver() && !climbMode) {
             if (usingJoystick()) {
                 drive();
                 hasStoppedRobot = false;
@@ -200,7 +204,7 @@ public class RobotDriver implements Module {
      * Stops the robot and maintains the current driving type.
      */
     public void stopMovement() {
-        new DrivePower(0,0).start();
+        new DrivePower(0, 0).start();
     }
 
     /**
@@ -228,6 +232,12 @@ public class RobotDriver implements Module {
         if (FIRST_JOYSTICK.getRawButton(BUT_DRIVE_VELOCITY)) {
             driveType = DriveType.ARCADE_VELOCITY;
             stopMovement();
+            if (FIRST_JOYSTICK.getRawButton(BUT_ENTER_CLIMB)) {
+                climbMode = true;
+            }
+            if (FIRST_JOYSTICK.getRawButton(BUT_EXIT_CLIMB)) {
+                climbMode = false;
+            }
         } else if (FIRST_JOYSTICK.getRawButton(BUT_DRIVE_POWER)) {
             driveType = DriveType.ARCADE;
             stopMovement();
@@ -238,9 +248,9 @@ public class RobotDriver implements Module {
      * Performs the driving calculation.
      */
     public void drive() {
-        if(!hasStartedDriving) {
-            new DrivePower(0,0);
-            hasStartedDriving  = true;
+        if (!hasStartedDriving) {
+            new DrivePower(0, 0);
+            hasStartedDriving = true;
         }
         Vector2d thePowersThatBe;
 
@@ -300,6 +310,16 @@ public class RobotDriver implements Module {
     @Override
     public void testPeriodic() {
         LiveWindow.run();
+    }
+
+    private boolean usingFirstJoy(){
+        return (Math.abs(FIRST_JOYSTICK.getX()) < RobotConstants.JOYSTICK_DEADBAND
+                && Math.abs(FIRST_JOYSTICK.getY()) < RobotConstants.JOYSTICK_DEADBAND);
+    }
+
+    private boolean usingSecondJoy() {
+        return (Math.abs(SECOND_JOYSTICK.getX()) < RobotConstants.JOYSTICK_DEADBAND
+                && Math.abs(SECOND_JOYSTICK.getY()) < RobotConstants.JOYSTICK_DEADBAND);
     }
 
     private boolean usingJoystick() {

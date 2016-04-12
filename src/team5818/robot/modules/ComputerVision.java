@@ -17,8 +17,8 @@ import edu.wpi.first.wpilibj.Solenoid;
 public class ComputerVision {
 
     // TODO:switch for actual robot
-    private int BRIGHTNESS_DEFAULT = 30;
-    private int EXPOSURE_DEFAULT = 20;
+    private int BRIGHTNESS_DEFAULT = 10;
+    private int EXPOSURE_DEFAULT = 50;
 
     /**
      * The driving camera that is directed with the direction we collect.
@@ -30,7 +30,7 @@ public class ComputerVision {
      * The shooter Camera that faces with the flywheel.
      *
      */
-    public static int CAMERA_SHOOTER = 1;
+    public static int CAMERA_SHOOTER = 0;
     public static int CAMERA_BACK = 3;
 
     private USBCam camDriver;
@@ -73,9 +73,10 @@ public class ComputerVision {
             camShooter = new USBCam("cam" + CAMERA_SHOOTER);
 
             if (camShooter != null) {
-                camShooter.setSize(320, 240);
+                camShooter.setSize(640, 360);
                 camShooter.setFPS(30);
                 camShooter.setBrightness(BRIGHTNESS_DEFAULT);
+                // \/ is the problem
                 camShooter.setExposureManual(EXPOSURE_DEFAULT);
                 camShooter.updateSettings();
                 camShooter.openCamera();

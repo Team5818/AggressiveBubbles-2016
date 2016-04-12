@@ -20,7 +20,7 @@ public class AutoAim extends Command {
 
 
     public  static final double DEFAULT_X_OFFSET = 0;
-    public static final double DEFAULT_Y_OFFSET = -12.5; //calibrated for lowbar
+    public static final double DEFAULT_Y_OFFSET = -0; //calibrated for lowbar
     public static final double DEFAULT_TIMEOUT = 2;
     public static boolean UDP = true;
 
@@ -34,7 +34,7 @@ public class AutoAim extends Command {
     private static final FlyWheel flyLo =
             RobotCommon.runningRobot.lowerFlywheel;
     
-    public static double tolerance = FlyWheel.TOLERANCE;
+    public static double toleranceFly = FlyWheel.TOLERANCE;
     
     private LinearLookupTable lookupTable;
     private Track track;
@@ -60,8 +60,9 @@ public class AutoAim extends Command {
     private double xerr = 0;
     private int xerrCount = 0;
     private double xOffset = 0;
+    public static double toleranceX = 4;
     
-    private double MAX_POWER_Y = 0.7;
+    private double MAX_POWER_Y = 1;
     private double MIN_POWER_Y = 0.15;
     private double ypower;
     private double yKp = 0.09, yKi = 0.0081, yKd = 0;
@@ -69,6 +70,7 @@ public class AutoAim extends Command {
     private double yerr = 0;
     private int yerrCount = 0;
     private double yOffset = -10;
+    public static double toleranceY = 2;
     
 
     /**
@@ -92,7 +94,7 @@ public class AutoAim extends Command {
         setTimeout(timeout);
 
         imgHeight = 480;
-        imgWidth = 320;
+        imgWidth = 640;
         this.yOffset = yOffset;
         this.xOffset = xOffset;
         locX = 0;
@@ -166,7 +168,7 @@ public class AutoAim extends Command {
     }
 
     public double calculateAngleY() {
-        double setY = ((imgHeight / 2 - (locY))) / imgHeight * camFOV / 2;
+        double setY = ((imgHeight / 2 - (locY))) / imgHeight * camFOV;
         SmartDashboard.putNumber("AutoAim Y Angle", setY);
         setY += yOffset;
 
@@ -204,7 +206,7 @@ public class AutoAim extends Command {
     }
     
     public void pidY() {
-        if(Math.abs(calculateAngleY()) <= 2) {
+        if(Math.abs(calculateAngleY()) <= toleranceY) {
             yerrSum = 0;
             yerrCount = 0;
         }
@@ -234,7 +236,7 @@ public class AutoAim extends Command {
     }
 
     public void pidX() {
-        if(Math.abs(calculateAngleX()) <= 2) {
+        if(Math.abs(calculateAngleX()) <= toleranceX) {
             xerrSum = 0;
             xerrCount = 0;
         }
@@ -283,10 +285,10 @@ public class AutoAim extends Command {
     
     @Override
     protected boolean isFinished() {
-        boolean flyToSpeed = (flyUpVel <= flyUp.getRPS() + tolerance
-                && flyUpVel >= flyUp.getRPS() - tolerance
-                && flyLoVel <= flyLo.getRPS() + tolerance
-                && flyLoVel >= flyLo.getRPS() - tolerance);
+        boolean flyToSpeed = (flyUpVel <= flyUp.getRPS() + toleranceFly
+                && flyUpVel >= flyUp.getRPS() - toleranceFly
+                && flyLoVel <= flyLo.getRPS() + toleranceFly
+                && flyLoVel >= flyLo.getRPS() - toleranceFly);
 
         boolean atTargetX = Math.abs(calculateAngleX()) <= 0.5;
         boolean atTargetY = Math.abs(calculateAngleY()) <= 0.5;

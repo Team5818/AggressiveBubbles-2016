@@ -35,6 +35,14 @@ public final class RobotConstants {
      * The talon controlling the right-back wheels.
      */
     public static final int TALON_RIGHT_BACK = 2;
+    
+    public static final int TALON_CLIMB_LEFT = 8;
+    
+    public static final int TALON_CLIMB_RIGHT = 13;
+    
+    public static final int TALON_WINCH_LEFT = 14;
+    
+    public static final int TALON_WINCH_RIGHT = 15;
 
     /**
      * The talon controlling the arm.
@@ -104,7 +112,7 @@ public final class RobotConstants {
     /**
      * The Camera feild of view for shooting
      */
-    public static final double CAMFOV = 68.5;
+    public static final double CAMFOV = 120;
     public static final int SOLENOID_LED = 0;
 
     private RobotConstants() {
