@@ -85,18 +85,22 @@ public class RobotCommon extends IterativeRobot {
 
     public final RobotDriver driver = addModule(new RobotDriver());
     public final RobotCoDriver coDriver = addModule(new RobotCoDriver());
-    public final FlyWheel lowerFlywheel = addModule(
+    public final FlyWheel lowerFlywheel =
             new FlyWheel(new CANTalon(RobotConstants.TALON_FLYWHEEL_LOWER),
-                    5.0 / 18.8, 140.0, true, true));
-    public final FlyWheel upperFlywheel = addModule(
+                    5.0 / 18.8, 140.0, true, true);
+    public final FlyWheel upperFlywheel =
             new FlyWheel(new CANTalon(RobotConstants.TALON_FLYWHEEL_UPPER),
-                    16.0 / 40.0, 240.0, false, false));
+                    16.0 / 40.0, 240.0, false, false);
     public final VisionThread vision = addModule(new VisionThread());
     public final Track targeting = addModule(new Track());
-    public final Arm arm = addModule(new Arm());
-    public final Collector collector = addModule(new Collector(false));
-    public final ClimbArms climber = addModule(new ClimbArms(RobotConstants.TALON_CLIMB_LEFT, RobotConstants.TALON_CLIMB_RIGHT, false, true));
-    public final ClimbWinchs winch = addModule(new ClimbWinchs(RobotConstants.TALON_WINCH_LEFT, RobotConstants.TALON_WINCH_RIGHT, true, false));
+    public final Arm arm = new Arm();
+    public final Collector collector = new Collector(false);
+    // public final ClimbArms climber = addModule(new
+    // ClimbArms(RobotConstants.TALON_CLIMB_LEFT,
+    // RobotConstants.TALON_CLIMB_RIGHT, false, true));
+    public final ClimbWinchs winch =
+            new ClimbWinchs(RobotConstants.TALON_WINCH_LEFT,
+                    RobotConstants.TALON_WINCH_RIGHT, true, false);
     final String defaultAuto = "Default";
     final String customAuto = "My Auto";
     private Command autoSelected;
@@ -105,7 +109,8 @@ public class RobotCommon extends IterativeRobot {
 
     enum AutoRoutine {
         DO_NOTHING, LOWBAR, PORTCULLIS, ROCKWALL, RAMPARTS, MOAT, ROUGH_TERRAIN,
-        CHEVAL, SALLY_PORT, DRAW_BRIDGE, SPYBOT, AUTO_TEST, LOWBAR_ARC, PORTCULLIS_ARC;
+        CHEVAL, SALLY_PORT, DRAW_BRIDGE, SPYBOT, AUTO_TEST, LOWBAR_ARC,
+        PORTCULLIS_ARC;
     }
 
     /**
@@ -127,53 +132,57 @@ public class RobotCommon extends IterativeRobot {
         chooserAuto.addObject("Rock Wall", AutoRoutine.ROCKWALL);
         chooserAuto.addObject("Moat", AutoRoutine.MOAT);
         chooserAuto.addObject("Spybot", AutoRoutine.SPYBOT);
-        chooserAuto.addObject("!!!AUTO TEST!!!", AutoRoutine.AUTO_TEST);        
+        chooserAuto.addObject("!!!AUTO TEST!!!", AutoRoutine.AUTO_TEST);
         chooserAuto.addObject("Arcing Lowbar", AutoRoutine.LOWBAR_ARC);
         chooserAuto.addObject("Arcing Portcullis", AutoRoutine.PORTCULLIS_ARC);
-        
+
         // Adding auto position to SmartDashboard.
         chooserPos = new SendableChooser();
         chooserPos.addObject("2", 2);
         chooserPos.addObject("3", 3);
         chooserPos.addObject("4", 4);
         chooserPos.addObject("5", 5);
-        
+
         /* NOT WORKING AUTO ROUTINES!! */
         // chooserAuto.addObject("F-Ramparts 2", new AutoRampartsUniversal(2));
         // chooserAuto.addObject("F-Ramparts 3", new AutoRampartsUniversal(2));
         // chooserAuto.addObject("F-Ramparts 4", new AutoRampartsUniversal(2));
         // chooserAuto.addObject("F-Ramparts 5", new AutoRampartsUniversal(2));
         // chooserAuto.addObject("Lowbar Backward", new Auto1EBackward());
-        // chooserAuto.addObject("Portcullis Inside", new AutoPortcullisInside());
-        // chooserAuto.addObject("Portcullis Outside", new AutoPortcullisOutside());
+        // chooserAuto.addObject("Portcullis Inside", new
+        // AutoPortcullisInside());
+        // chooserAuto.addObject("Portcullis Outside", new
+        // AutoPortcullisOutside());
         // chooserAuto.addObject("Rough/Ramparts Inside", new
         // AutoRoughRampartsInside());
         // chooserAuto.addObject("Rough/Ramparts Outside", new
         // AutoRoughRampartsOutside());
         SmartDashboard.putData("Auto choices", chooserAuto);
         SmartDashboard.putData("Pos choices", chooserPos);
-        
+
         panel = new PowerDistributionPanel();
     }
 
     /**
-     * This autonomous (along with the chooserAuto code above) shows how to select
-     * between different autonomous modes using the dashboard. The sendable
-     * chooserAuto code works with the Java SmartDashboard. If you prefer the
-     * LabVIEW Dashboard, remove all of the chooserAuto code and uncomment the
-     * getString line to get the auto name from the text box below the Gyro
+     * This autonomous (along with the chooserAuto code above) shows how to
+     * select between different autonomous modes using the dashboard. The
+     * sendable chooserAuto code works with the Java SmartDashboard. If you
+     * prefer the LabVIEW Dashboard, remove all of the chooserAuto code and
+     * uncomment the getString line to get the auto name from the text box below
+     * the Gyro
      *
      * You can add additional auto modes by adding additional comparisons to the
      * switch structure below with additional strings. If using the
-     * SendableChooser make sure to add them to the chooserAuto code above as well.
+     * SendableChooser make sure to add them to the chooserAuto code above as
+     * well.
      */
     @Override
     public void autonomousInit() {
         modules.forEach(Module::initAutonomous);
         Command auto;
         AutoRoutine autoSelected = (AutoRoutine) chooserAuto.getSelected();
-        int pos = (int)chooserPos.getSelected();
-        switch(autoSelected) {
+        int pos = (int) chooserPos.getSelected();
+        switch (autoSelected) {
             case DO_NOTHING:
                 auto = new DoNothingAuto();
                 break;
@@ -219,8 +228,7 @@ public class RobotCommon extends IterativeRobot {
             default:
                 auto = new AutoLowbarForward();
                 break;
-                
-                
+
         }
         auto.start();
         // driveTrainController.rotateDegrees(90, true);
@@ -252,6 +260,7 @@ public class RobotCommon extends IterativeRobot {
     public void teleopPeriodic() {
         Scheduler.getInstance().run();
         modules.forEach(Module::teleopPeriodicModule);
+        targeting.GetData();
         /*
          * if(RobotCoDriver.firstJoystick.getRawButton(RobotCoDriver.
          * BUT_PERFORM_AUTO)) { Command autoSelected = (Command)

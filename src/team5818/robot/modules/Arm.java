@@ -20,7 +20,7 @@ import team5818.robot.commands.SetArmPower;
 /**
  * Class to control 5818's robot arm
  */
-public class Arm extends Subsystem implements Module, PIDSource, PIDOutput {
+public class Arm extends Subsystem implements PIDSource, PIDOutput {
     
     public double teamNum =  Preferences.getInstance().getDouble("TeamNumber", 1717);
     protected static final double DEFAULT_SCALE = 0.047;
@@ -53,10 +53,6 @@ public class Arm extends Subsystem implements Module, PIDSource, PIDOutput {
     public Arm() {
         if (secondArmMotor != null)
             secondArmMotor.setInverted(true);
-    }
-
-    @Override
-    public void initModule() {
         double kp, ki, kd;
         try {
             scale = Preferences.getInstance().getDouble("ArmPotScale",
@@ -87,17 +83,6 @@ public class Arm extends Subsystem implements Module, PIDSource, PIDOutput {
         armPID.setOutputRange(-maxPower, maxPower);
         armPID.setAbsoluteTolerance(10);
         LiveWindow.addActuator("Arm", "PID Controller", armPID);
-    }
-    
-    @Override
-    public void teleopPeriodicModule() {
-        SmartDashboard.putNumber("Potentiometer Angle", getAngle());
-        SmartDashboard.putNumber("Potentiometer Raw", getRawPot());
-        if(getAngle() <= armAngleGround) {
-            SmartDashboard.putNumber("Arm Lowest", 100);
-        } else {
-            SmartDashboard.putNumber("Arm Lowest", 0);
-        }
     }
 
     /**

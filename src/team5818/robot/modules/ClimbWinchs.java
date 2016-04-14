@@ -7,7 +7,7 @@ import edu.wpi.first.wpilibj.PIDSourceType;
 import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-public class ClimbWinchs implements Module {
+public class ClimbWinchs{
     
     private double scale = 1;
     
@@ -58,19 +58,6 @@ public class ClimbWinchs implements Module {
     public void setRPS(double rps) {
         left.setRPS(rps);
         right.setRPS(rps);
-    }
-    
-    @Override
-    public void teleopPeriodicModule() {
-        SmartDashboard.putNumber("Left Winch RPS", left.getRPS());
-        SmartDashboard.putNumber("Right Winch RPS", right.getRPS());
-        
-    }
-
-    @Override
-    public void initModule() {
-        // TODO Auto-generated method stub
-        
     }
 
 }

@@ -19,7 +19,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  * should go through this class.
  *
  */
-public class FlyWheel extends Subsystem implements PIDSource, Module {
+public class FlyWheel extends Subsystem implements PIDSource {
 
     public static double TOLERANCE = 10;
 
@@ -167,27 +167,9 @@ public class FlyWheel extends Subsystem implements PIDSource, Module {
     }
 
     @Override
-    public void initModule() {
-
-    }
-
-    @Override
-    public void teleopPeriodicModule() {
-        int status = 0;
-        if (pid.isEnabled() && pid.onTarget()) {
-            status = 100;
-        }
-        SmartDashboard.putNumber("Flywheel_Ready", status);
-        SmartDashboard.putNumber("Flywheel RPS " + name, getRPS());
-    }
-    
-    public void autoPeriodicModule(){
-        SmartDashboard.putNumber("Flywheel RPS " + name, getRPS());
-    }
-
-    @Override
     protected void initDefaultCommand() {
-
+        // TODO Auto-generated method stub
+        
     }
 
 }

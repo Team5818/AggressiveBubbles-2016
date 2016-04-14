@@ -10,7 +10,7 @@ import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import team5818.robot.RobotConstants;
 
-public class Collector extends Subsystem implements Module {
+public class Collector extends Subsystem {
     
     private static final CANTalon collectorMotor = new CANTalon(RobotConstants.TALON_COLLECTOR_MOTOR);
     private static final double STALL_CURRENT = 41;
@@ -32,19 +32,6 @@ public class Collector extends Subsystem implements Module {
             }
         }
         return stalled;
-    }
-    
-    @Override
-    public void initModule() {
-    }
-
-    @Override
-    public void teleopPeriodicModule() {
-        int status = 0;
-        if (isStalled()) {
-            status = 100;
-        }
-        SmartDashboard.putNumber("Stall_Indicator", status);
     }
 
     @Override

@@ -286,6 +286,15 @@ public class RobotCoDriver implements Module {
             RobotCommon.runningRobot.winch.setPower(0);
             hasStoppedClimbWinch = true;
         }
+        if (usingSecondStick()) {
+            moveArm();
+            hasStoppedArm = false;
+        } else {
+            if (!hasStoppedArm) {
+                hasStoppedArm = true;
+                stopArm();
+            }
+        }
     }
 
     private boolean usingFirstStick() {
@@ -349,6 +358,7 @@ public class RobotCoDriver implements Module {
             hasStoppedPidX = false;
         } else if(!hasStoppedPidX){
             hasStoppedPidX = true;
+            new SetDrivePower(0,0);
         }
 
         if (secondJoystick.getRawButton(BUT_ZERO_POT)) {
