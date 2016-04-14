@@ -73,7 +73,7 @@ public class ComputerVision {
             camShooter = new USBCam("cam" + CAMERA_SHOOTER);
 
             if (camShooter != null) {
-                camShooter.setSize(640, 360);
+                camShooter.setSize(320, 240);
                 camShooter.setFPS(30);
                 camShooter.setBrightness(BRIGHTNESS_DEFAULT);
                 // \/ is the problem

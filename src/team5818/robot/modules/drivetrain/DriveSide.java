@@ -157,6 +157,10 @@ public class DriveSide implements EncoderManager, PIDOutput, MovingControl {
         resetPIDLoop();
         pidLoop.disable();
         configureEncoderTalon();
+        mainTalon.enableBrakeMode(true);
+        secondaryTalon.enableBrakeMode(true);
+        thirdTalon.enableBrakeMode(true);
+        
     }
 
     private void resetPIDLoop() {
@@ -259,7 +263,7 @@ public class DriveSide implements EncoderManager, PIDOutput, MovingControl {
         if (pidLoop.isEnabled() || DriveTrain.getDriveMode() != DriveTrain.MODE_POWER) {
             pidLoop.disable();
         }
-        setCoast(false);
+        //setCoast(false);
         setDriveMode(MODE_POWER);
         pidWrite(power);
     }
@@ -312,7 +316,7 @@ public class DriveSide implements EncoderManager, PIDOutput, MovingControl {
         if(mainTalon != null)
             mainTalon.setPosition(0);
         pidLoop.setContinuous();
-        setCoast(false);
+        //setCoast(false);
         pidLoop.setSetpoint(dist);
         SmartDashboard.putNumber("distance", dist);
         pidLoop.enable();

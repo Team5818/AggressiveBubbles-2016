@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.CommandGroup;
+import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import team5818.robot.commands.ActuateServo;
@@ -44,13 +45,13 @@ public class RobotCoDriver implements Module {
             new Joystick(RobotConstants.CODRIVER_SECOND_JOYSTICK_PORT);
 
     // Joystick One Buttons
+    private static final int BUT_MODE_CLIMB = 11;
     private static final int BUT_EXTEND_SERVO = 9;
     private static final int BUT_RETRACT_SERVO = 8;
     private static final int BUT_PRINT_ANGLE = 7;
-    private static final int BUT_MODE_CLIMB = 5;
-    private static final int BUT_NOT_MODE_CLIMB = 4;
+    private static final int BUT_NOT_MODE_CLIMB = 6;
     private static final int BUT_SWITCH_FEED_SHOOTER = 3;
-    private static final int BUT_SET_ARM_POWER = 2;
+    //private static final int BUT_SET_ARM_POWER = 2;
     private static final int BUT_AUTO_AIM = 1;
 
     // Joystick Two Buttons
@@ -68,14 +69,14 @@ public class RobotCoDriver implements Module {
     // First Joystick Buttons
     // JoystickButton butTopSpinShot =
     // new JoystickButton(firstJoystick, BUT_TOPSPIN_SHOT);
-    JoystickButton butSetArmPower =
-            new JoystickButton(firstJoystick, BUT_SET_ARM_POWER);
-    JoystickButton butModeClimb =
-            new JoystickButton(firstJoystick, BUT_MODE_CLIMB);
+    //JoystickButton butSetArmPower =
+    //        new JoystickButton(firstJoystick, BUT_SET_ARM_POWER);
+    //JoystickButton butModeClimb =
+    //        new JoystickButton(firstJoystick, BUT_MODE_CLIMB);
     JoystickButton butSwitchFeedShoot =
             new JoystickButton(firstJoystick, BUT_SWITCH_FEED_SHOOTER);
-    JoystickButton butNotModeClimb =
-            new JoystickButton(firstJoystick, BUT_NOT_MODE_CLIMB);
+    //JoystickButton butNotModeClimb =
+    //        new JoystickButton(firstJoystick, BUT_NOT_MODE_CLIMB);
     JoystickButton butAutoAim = new JoystickButton(firstJoystick, BUT_AUTO_AIM);
     JoystickButton butExtendServo =
             new JoystickButton(firstJoystick, BUT_EXTEND_SERVO);
@@ -136,6 +137,10 @@ public class RobotCoDriver implements Module {
         LiveWindow.addActuator("Flywheel", "Upper PID",
                 upperFlywheel.getPIDController());
 
+        initTeleopButtons();
+    }
+    
+    public void initTeleopButtons() {
         // Settings the preferences
         shootAngleHigh = Preferences.getInstance().getDouble("ShootAngleHigh",
                 shootAngleHigh);
@@ -198,7 +203,7 @@ public class RobotCoDriver implements Module {
         butStopFlywheel.whenPressed(stopFlywheel);
         butSwitchFeedShoot
                 .whenPressed(new SwitchFeed(ComputerVision.CAMERA_SHOOTER));
-        butSetArmPower.whenPressed(new SetArmPower(0));
+        //butSetArmPower.whenPressed(new SetArmPower(0));
         butLedOn.whenPressed(new LEDToggle(true));
         butLedOff.whenPressed(new LEDToggle(false));
         butLedOn.whenPressed(new LEDToggle(true));
@@ -216,18 +221,42 @@ public class RobotCoDriver implements Module {
         butSwitchDriverFeed.whenPressed(switchFeedDrive);
         butRetractServo.whenPressed(new ActuateServo(ActuateServo.ACT_TO_0));
         butExtendServo.whenPressed(new ActuateServo(ActuateServo.ACT_TO_90));
+    }
 
+    public void initClimbButtons() {
+        Scheduler.getInstance().removeAll();
+    }
+    
+    public void initClimb() {
+        modeClimb = true;
+        RobotCommon.runningRobot.driver.initClimb();
+        this.stopArm();
+        this.stopDrive();
+        this.stopWinch();
+        initClimbButtons();
+    }
+    
+    public void unInitClimb() {
+        RobotCommon.runningRobot.driver.unInitClimb();
+        modeClimb = false;
+        this.stopArm();
+        this.stopDrive();
+        this.stopWinch();
+        initTeleopButtons();
     }
 
     @Override
     public void teleopPeriodicModule() {
-        SmartDashboard.putNumber("Front Servo",
-                ActuateServo.getFrontServo().getAngle());
-        SmartDashboard.putNumber("Back Servo",
-                ActuateServo.getBackServo().getAngle());
-
         performButtonActions();
-        if (usingSecondStick() && !modeClimb) {
+        
+        if(modeClimb)
+            climbPeriodic();
+        else
+            normalPeriodic();
+    }
+    
+    private void normalPeriodic() {
+        if (usingSecondStick()) {
             moveArm();
             hasStoppedArm = false;
         } else {
@@ -236,7 +265,7 @@ public class RobotCoDriver implements Module {
                 stopArm();
             }
         }
-        if (usingFirstStick() && !modeClimb) {
+        if (usingFirstStick()) {
             drive();
             if (autoAim.isRunning())
                 autoAim.cancel();
@@ -247,26 +276,16 @@ public class RobotCoDriver implements Module {
                 stopDrive();
             }
         }
-
-        if (modeClimb) {
-            if (usingFirstStick()) {
-                RobotCommon.runningRobot.winch.setPower(firstJoystick.getY() + firstJoystick.getX() / 6, firstJoystick.getY() - firstJoystick.getX() / 6);
-                hasStoppedClimbWinch = false;
-            } else if (!hasStoppedClimbWinch) {
-                RobotCommon.runningRobot.winch.setPower(0);
-                hasStoppedClimbWinch = true;
-            }
-
-            if (usingSecondStick()) {
-                RobotCommon.runningRobot.climber
-                        .setPower(secondJoystick.getY() + secondJoystick.getX() / 6, secondJoystick.getY() - secondJoystick.getX() / 6);
-                hasStoppedClimbArm = false;
-            } else if (!hasStoppedClimbArm) {
-                RobotCommon.runningRobot.climber.setPower(0);
-                hasStoppedClimbArm = true;
-            }
+    }
+    
+    private void climbPeriodic() {
+        if (usingFirstStick()) {
+            RobotCommon.runningRobot.winch.setPower(firstJoystick.getY() - firstJoystick.getX() / 30, firstJoystick.getY() - firstJoystick.getX() / 6);
+            hasStoppedClimbWinch = false;
+        } else if (!hasStoppedClimbWinch) {
+            RobotCommon.runningRobot.winch.setPower(0);
+            hasStoppedClimbWinch = true;
         }
-
     }
 
     private boolean usingFirstStick() {
@@ -304,6 +323,9 @@ public class RobotCoDriver implements Module {
         }
     }
 
+    private void stopWinch() {
+        RobotCommon.runningRobot.winch.setPower(0);
+    }
     private void stopArm() {
         new SetArmPower(0).start();
     }
@@ -314,6 +336,14 @@ public class RobotCoDriver implements Module {
 
     private void performButtonActions() {
 
+        if (firstJoystick.getRawButton(BUT_MODE_CLIMB))
+            initClimb();
+        if (firstJoystick.getRawButton(BUT_NOT_MODE_CLIMB))
+            unInitClimb();
+        
+        if(modeClimb) /* Do not do non climb buttons. */
+            return;
+        
         if (firstJoystick.getRawButton(BUT_AUTO_AIM) && !autoAim.isRunning()) {
             autoAim.pidX();
             hasStoppedPidX = false;
@@ -336,11 +366,6 @@ public class RobotCoDriver implements Module {
             setOverrideDriver(true);
             stopDrive();
         }
-
-        if (firstJoystick.getRawButton(BUT_MODE_CLIMB))
-            modeClimb = true;
-        if (firstJoystick.getRawButton(BUT_NOT_MODE_CLIMB))
-            modeClimb = false;
     }
 
     @Override

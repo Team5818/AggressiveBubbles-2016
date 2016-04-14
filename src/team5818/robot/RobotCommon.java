@@ -83,8 +83,8 @@ public class RobotCommon extends IterativeRobot {
      * A helper for the {@link #driveTrain}.
      */
 
-    private final RobotDriver driver = addModule(new RobotDriver());
-    private final RobotCoDriver coDriver = addModule(new RobotCoDriver());
+    public final RobotDriver driver = addModule(new RobotDriver());
+    public final RobotCoDriver coDriver = addModule(new RobotCoDriver());
     public final FlyWheel lowerFlywheel = addModule(
             new FlyWheel(new CANTalon(RobotConstants.TALON_FLYWHEEL_LOWER),
                     5.0 / 18.8, 140.0, true, true));

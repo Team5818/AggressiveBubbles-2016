@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
 import edu.wpi.first.wpilibj.command.CommandGroup;
+import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import team5818.robot.commands.ArmPower;
@@ -113,12 +114,6 @@ public class RobotDriver implements Module {
 
     @Override
     public void initModule() {
-        // Setting Preference values.
-        armAngleShooting = Preferences.getInstance()
-                .getDouble("ArmAngleShooting", armAngleShooting);
-        armAngleCollect = Preferences.getInstance().getDouble("ArmAngleCollect",
-                armAngleCollect);
-
         // Setting local objects of singletons for easy access.
         DriveSide leftDriveSide =
                 RobotCommon.runningRobot.driveTrain.getLeftMotors();
@@ -130,6 +125,16 @@ public class RobotDriver implements Module {
                 leftDriveSide.getPIDController());
         LiveWindow.addActuator("DriveSide", "Right",
                 rightDriveSide.getPIDController());
+        initTeleopButtons();
+        stopMovement();
+    }
+
+    private void initTeleopButtons() {
+        // Setting Preference values.
+        armAngleShooting = Preferences.getInstance()
+                .getDouble("ArmAngleShooting", armAngleShooting);
+        armAngleCollect = Preferences.getInstance().getDouble("ArmAngleCollect",
+                armAngleCollect);
 
         // Command Groups
         CommandGroup armToGround = new CommandGroup();
@@ -144,7 +149,7 @@ public class RobotDriver implements Module {
                 .addParallel(new SwitchFeed(ComputerVision.CAMERA_DRIVER));
         switchFeedDrive.addParallel(new LEDToggle(false));
         CommandGroup overrideDriver = new CommandGroup();
-        //overrideDriver.addParallel(new SetArmAngle(armAngleShooting));
+        // overrideDriver.addParallel(new SetArmAngle(armAngleShooting));
         overrideDriver
                 .addParallel(new SwitchFeed(ComputerVision.CAMERA_SHOOTER));
         overrideDriver.addParallel(new SetFlywheelVelocity(
@@ -177,16 +182,36 @@ public class RobotDriver implements Module {
                 new SpinRobot(-175, SpinRobot.DEFAULT_TIMEOUT, 0.6));
         butSwitchFeedShoot.whenPressed(switchFeedShoot);
         butSwitchFeedDrive.whenPressed(switchFeedDrive);
+    }
 
-        // Setting driving mode to power.
-        stopMovement();
+    private void initClimbButtons() {
+        Scheduler.getInstance().removeAll();
+    }
+    
+    public void initClimb() {
+        climbMode = true;
+        initClimbButtons();
+        this.stopMovement();
+    }
+    
+    public void unInitClimb() {
+        climbMode = false;
+        initTeleopButtons();
+        this.stopMovement();
     }
 
     @Override
     public void teleopPeriodicModule() {
         // Drives the robot if it should be done so by Driver.
         performButtonActions();
-        if (!RobotCoDriver.isOverrideDriver() && !climbMode) {
+        if(!climbMode)
+            normalPeriodic();
+        else
+            climbPeriodic();
+    }
+
+    public void normalPeriodic() {
+        if (!RobotCoDriver.isOverrideDriver()) {
             if (usingJoystick()) {
                 drive();
                 hasStoppedRobot = false;
@@ -199,7 +224,10 @@ public class RobotDriver implements Module {
             }
         }
     }
-
+    
+    private void climbPeriodic() {
+        
+    }
     /**
      * Stops the robot and maintains the current driving type.
      */
@@ -212,7 +240,10 @@ public class RobotDriver implements Module {
      * operation.
      */
     public void performButtonActions() {
-
+        
+        if(climbMode) /* Do not do non climb buttons. */
+            return;
+        
         // Inverting buttons
         if (FIRST_JOYSTICK.getRawButton(BUT_INVERT)) {
             invertThrottle = true;
@@ -228,17 +259,12 @@ public class RobotDriver implements Module {
         if (FIRST_JOYSTICK.getRawButton(BUT_OVERRIDE_DRIVER)) {
             RobotCoDriver.setOverrideDriver(true);
         }
-
+        
         if (FIRST_JOYSTICK.getRawButton(BUT_DRIVE_VELOCITY)) {
             driveType = DriveType.ARCADE_VELOCITY;
             stopMovement();
-            if (FIRST_JOYSTICK.getRawButton(BUT_ENTER_CLIMB)) {
-                climbMode = true;
-            }
-            if (FIRST_JOYSTICK.getRawButton(BUT_EXIT_CLIMB)) {
-                climbMode = false;
-            }
-        } else if (FIRST_JOYSTICK.getRawButton(BUT_DRIVE_POWER)) {
+        }
+        if (FIRST_JOYSTICK.getRawButton(BUT_DRIVE_POWER)) {
             driveType = DriveType.ARCADE;
             stopMovement();
         }
@@ -312,14 +338,18 @@ public class RobotDriver implements Module {
         LiveWindow.run();
     }
 
-    private boolean usingFirstJoy(){
-        return (Math.abs(FIRST_JOYSTICK.getX()) < RobotConstants.JOYSTICK_DEADBAND
-                && Math.abs(FIRST_JOYSTICK.getY()) < RobotConstants.JOYSTICK_DEADBAND);
+    private boolean usingFirstJoy() {
+        return (Math
+                .abs(FIRST_JOYSTICK.getX()) < RobotConstants.JOYSTICK_DEADBAND
+                && Math.abs(FIRST_JOYSTICK
+                        .getY()) < RobotConstants.JOYSTICK_DEADBAND);
     }
 
     private boolean usingSecondJoy() {
-        return (Math.abs(SECOND_JOYSTICK.getX()) < RobotConstants.JOYSTICK_DEADBAND
-                && Math.abs(SECOND_JOYSTICK.getY()) < RobotConstants.JOYSTICK_DEADBAND);
+        return (Math
+                .abs(SECOND_JOYSTICK.getX()) < RobotConstants.JOYSTICK_DEADBAND
+                && Math.abs(SECOND_JOYSTICK
+                        .getY()) < RobotConstants.JOYSTICK_DEADBAND);
     }
 
     private boolean usingJoystick() {

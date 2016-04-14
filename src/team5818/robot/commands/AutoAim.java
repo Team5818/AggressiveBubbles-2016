@@ -52,7 +52,7 @@ public class AutoAim extends Command {
     private double slopX;
     private double slopY;
 
-    private double MAX_POWER_X = 0.2;
+    private double MAX_POWER_X = 0.4;
     private double MIN_POWER_X = 0.08;
     private double xpower;
     private double xKp = 0.04, xKi = 0.0041, xKd = 0;
@@ -60,7 +60,7 @@ public class AutoAim extends Command {
     private double xerr = 0;
     private int xerrCount = 0;
     private double xOffset = 0;
-    public static double toleranceX = 4;
+    public static double toleranceX = 0.5;
     
     private double MAX_POWER_Y = 1;
     private double MIN_POWER_Y = 0.15;
@@ -93,8 +93,8 @@ public class AutoAim extends Command {
 
         setTimeout(timeout);
 
-        imgHeight = 480;
-        imgWidth = 640;
+        imgHeight = 240;
+        imgWidth = 320;
         this.yOffset = yOffset;
         this.xOffset = xOffset;
         locX = 0;
@@ -236,7 +236,8 @@ public class AutoAim extends Command {
     }
 
     public void pidX() {
-        if(Math.abs(calculateAngleX()) <= toleranceX) {
+        xerr = Math.sqrt(xerr);
+        if(Math.abs(calculateAngleX()) <= 2) {
             xerrSum = 0;
             xerrCount = 0;
         }
