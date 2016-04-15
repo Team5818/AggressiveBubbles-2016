@@ -140,12 +140,7 @@ public class ComputerVision {
                 if (camShooter != null) {
 
                     camDriver.stopCapture();
-                    // Set Brightness according to preferences
-                    int Brightness = Preferences.getInstance()
-                            .getInt("ShooterCamBrightness", BRIGHTNESS_DEFAULT);
-                    // Set Brightness according to preferences
-                    int Exposure = Preferences.getInstance()
-                            .getInt("ShooterCamExposure", EXPOSURE_DEFAULT);
+                    
                     // Toggle Auto Exposure and brightness according to
                     // preferences
                     boolean AutoPref = Preferences.getInstance()
@@ -153,7 +148,7 @@ public class ComputerVision {
 
                     if (AutoPref == false) {
                         // Set Camera Settings
-                        camShooter.setBrightness(Brightness);
+                        camShooter.setBrightness(BRIGHTNESS_DEFAULT);
                         camShooter.setExposureManual(EXPOSURE_DEFAULT);
                         camShooter.updateSettings();
                     }

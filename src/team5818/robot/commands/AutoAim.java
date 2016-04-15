@@ -121,7 +121,6 @@ public class AutoAim extends Command {
 
     @Override
     protected void initialize() {
-        SmartDashboard.putNumber("Is tracked", 0);
         track.GetData();
         xKp = Preferences.getInstance().getDouble("AutoAimKpX", xKp);
         xKi = Preferences.getInstance().getDouble("AutoAimKiX", xKi);
@@ -160,7 +159,7 @@ public class AutoAim extends Command {
     }
 
     public double calculateAngleX() {
-        double setX = (((imgWidth / 2 - (locX))) / imgWidth * camFOV);
+        double setX = (((imgWidth / 2 - (locX))) / imgWidth * camFOV/2);
         setX += xOffset;
         SmartDashboard.putNumber("AutoAim X Error", setX);
         return setX;
@@ -168,7 +167,7 @@ public class AutoAim extends Command {
     }
 
     public double calculateAngleY() {
-        double setY = ((imgHeight / 2 - (locY))) / imgHeight * camFOV;
+        double setY = ((imgHeight / 2 - (locY))) / imgHeight * camFOV/2;
         SmartDashboard.putNumber("AutoAim Y Angle", setY);
         setY += yOffset;
 
@@ -201,26 +200,28 @@ public class AutoAim extends Command {
 
     @Override
     protected void execute() {
+        SmartDashboard.putNumber("BlobCount", track.blobCount);
         pidX();
         pidY();
     }
     
     public void pidY() {
-        if(Math.abs(calculateAngleY()) <= toleranceY) {
-            yerrSum = 0;
-            yerrCount = 0;
-        }
-        if(Math.signum(yerr) > Math.signum(calculateAngleY()) || Math.signum(yerr) < Math.signum(calculateAngleY()))
-        {
-            yerrSum = 0;
-            yerrCount = 0;
-        }
-        track.GetData();
-
         if (track.blobCount > 0) {
             locX = track.blobLocX;
             locY = track.blobLocY;
             SmartDashboard.putNumber("locY", locY);
+            
+            SmartDashboard.putNumber("AA - Err Y", yerr);
+            //track.GetData();
+            if(Math.abs(calculateAngleY()) <= toleranceY) {
+                yerrSum = 0;
+                yerrCount = 0;
+            }
+            if(Math.signum(yerr) > Math.signum(calculateAngleY()) || Math.signum(yerr) < Math.signum(calculateAngleY()))
+            {
+                yerrSum = 0;
+                yerrCount = 0;
+            }
             
             double D = (-yerr + (yerr = calculateAngleY())) * yKd;
             double P = yerr * yKp;
@@ -236,22 +237,28 @@ public class AutoAim extends Command {
     }
 
     public void pidX() {
-        xerr = Math.sqrt(xerr);
-        if(Math.abs(calculateAngleX()) <= 2) {
-            xerrSum = 0;
-            xerrCount = 0;
-        }
-        if(Math.signum(xerr) > Math.signum(calculateAngleX()) || Math.signum(xerr) < Math.signum(calculateAngleX()))
-        {
-            xerrSum = 0;
-            xerrCount = 0;
-        }
-        track.GetData();
+        //track.GetData();
+        
+        
 
         if (track.blobCount > 0) {
             locX = track.blobLocX;
             locY = track.blobLocY;
             SmartDashboard.putNumber("locX", locX);
+            
+            SmartDashboard.putNumber("AA - Err X", xerr);
+            double something = calculateAngleX();
+            if(Math.abs(something) <= 1) {
+                xerrSum = 0;
+                xerrCount = 0;
+                DriverStation.reportError("Dropping I Epsilon", false);
+            }
+            if(Math.signum(xerr) > Math.signum(something) || Math.signum(xerr) < Math.signum(something))
+            {
+                xerrSum = 0;
+                xerrCount = 0;
+                DriverStation.reportError("Dropping I Sign", false);
+            }
             
             double D = (-xerr + (xerr = calculateAngleX())) * xKd;
             double P = xerr * xKp;

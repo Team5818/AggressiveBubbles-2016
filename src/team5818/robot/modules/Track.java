@@ -35,7 +35,7 @@ public class Track {
             socket = new DatagramSocket(portNum);
             InetSocketAddress address =
                     new InetSocketAddress("10.58.18.191", portNum);
-            socket.setSoTimeout(5);
+            socket.setSoTimeout(100);
             socket.bind(address);
         } catch (SocketException e) {
             // TODO Auto-generated catch block
@@ -60,7 +60,7 @@ public class Track {
                 socket.receive(packet);
 
                 String s = new String(buff);
-
+                //DriverStation.reportError("Tracking Data:" + s, false);
                 //DriverStation.reportError(s, false);
 
                 String[] string_array = s.split(",");
@@ -72,8 +72,8 @@ public class Track {
 
                 blobCount = Integer.parseInt(string_array[0]);
                 if(blobCount>0){
-                blobLocX = Integer.parseInt(string_array[1]);
-                blobLocY = Integer.parseInt(string_array[2]);
+                    blobLocX = Integer.parseInt(string_array[1]);
+                    blobLocY = Integer.parseInt(string_array[2]);
                 }
                 else{
                     blobLocX = -2;
@@ -92,7 +92,6 @@ public class Track {
             }
 
         } else {
-
             blobCount = RoboData.getNumber("BLOB_COUNT", -1.0);
             // imageWidth = RoboData.getNumber("IMAGE_WIDTH", 0.0);
             // imageHeight = RoboData.getNumber("IMAGE_HEIGHT", 0.0);
