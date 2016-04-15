@@ -14,7 +14,7 @@ import edu.wpi.first.wpilibj.networktables.*;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import team5818.robot.commands.AutoAim;
 
-public class Track implements Module {
+public class Track {
 
     public double blobCount = 0;
     public double blobWidth = 0;
@@ -35,7 +35,7 @@ public class Track implements Module {
             socket = new DatagramSocket(portNum);
             InetSocketAddress address =
                     new InetSocketAddress("10.58.18.191", portNum);
-            socket.setSoTimeout(100);
+            socket.setSoTimeout(5);
             socket.bind(address);
         } catch (SocketException e) {
             // TODO Auto-generated catch block
@@ -101,24 +101,6 @@ public class Track implements Module {
             blobLocX = RoboData.getNumber("COG_X", 0.0);
             blobLocY = RoboData.getNumber("COG_Y", 0.0);
         }
-
-    }
-
-    @Override
-    public void teleopPeriodicModule() {
-        GetData();
-        SmartDashboard.putNumber("Blob Count", blobCount);
-        // SmartDashboard.putNumber("Image Width", imageWidth);
-        // SmartDashboard.putNumber("Image Height", imageHeight);
-        // SmartDashboard.putNumber("Blob Width", blobWidth);
-        // SmartDashboard.putNumber("Blob Height", blobHeight);
-        SmartDashboard.putNumber("blobLocX", blobLocX);
-        SmartDashboard.putNumber("blobLocY", blobLocY);
-
-    }
-
-    @Override
-    public void initModule() {
 
     }
 }

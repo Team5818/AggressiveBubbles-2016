@@ -92,7 +92,7 @@ public class RobotCommon extends IterativeRobot {
             new FlyWheel(new CANTalon(RobotConstants.TALON_FLYWHEEL_UPPER),
                     16.0 / 40.0, 240.0, false, false);
     public final VisionThread vision = addModule(new VisionThread());
-    public final Track targeting = addModule(new Track());
+    public final Track targeting = new Track();
     public final Arm arm = new Arm();
     public final Collector collector = new Collector(false);
     // public final ClimbArms climber = addModule(new
@@ -260,7 +260,7 @@ public class RobotCommon extends IterativeRobot {
     public void teleopPeriodic() {
         Scheduler.getInstance().run();
         modules.forEach(Module::teleopPeriodicModule);
-        targeting.GetData();
+        //targeting.GetData();
         /*
          * if(RobotCoDriver.firstJoystick.getRawButton(RobotCoDriver.
          * BUT_PERFORM_AUTO)) { Command autoSelected = (Command)
