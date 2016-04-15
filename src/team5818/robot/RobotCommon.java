@@ -266,6 +266,9 @@ public class RobotCommon extends IterativeRobot {
          * BUT_PERFORM_AUTO)) { Command autoSelected = (Command)
          * chooserAuto.getSelected(); autoSelected.start(); }
          */
+        SmartDashboard.putNumber("Arm Angle", arm.getAngle());
+        SmartDashboard.putNumber("Arm Angle Raw", arm.getRawPot());
+        
     }
 
     @Override
