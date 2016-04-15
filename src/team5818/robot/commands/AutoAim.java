@@ -52,7 +52,7 @@ public class AutoAim extends Command {
     private double slopX;
     private double slopY;
 
-    private double MAX_POWER_X = 0.4;
+    private double MAX_POWER_X = 0.2;
     private double MIN_POWER_X = 0.08;
     private double xpower;
     private double xKp = 0.04, xKi = 0.0041, xKd = 0;
@@ -228,7 +228,7 @@ public class AutoAim extends Command {
             yerrSum += yerr;
             yerrCount += 1;
             double I = yerrSum / yerrCount * yKi;
-            DriverStation.reportError("Kp = " + yKp, false);
+            //DriverStation.reportError("Kp = " + yKp, false);
             
             ypower = P + I + D;
             ypower = keepInBounds(ypower, MIN_POWER_Y, MAX_POWER_Y);
@@ -253,7 +253,7 @@ public class AutoAim extends Command {
                 xerrCount = 0;
                 DriverStation.reportError("Dropping I Epsilon", false);
             }
-            if(Math.signum(xerr) > Math.signum(something) || Math.signum(xerr) < Math.signum(something))
+            if((Math.signum(xerr) > Math.signum(something) || Math.signum(xerr) < Math.signum(something)) && (Math.signum(something) != 0 || Math.signum(xerr) != 0))
             {
                 xerrSum = 0;
                 xerrCount = 0;
@@ -303,9 +303,9 @@ public class AutoAim extends Command {
         
 
         if (isTimedOut()) {
-            DriverStation.reportError("Timedout AutoAim", false);
-            DriverStation.reportError("Flywheel to speed: " + flyToSpeed
-                    + "At angle: " + atTargetX, false);
+            //DriverStation.reportError("Timedout AutoAim", false);
+            //DriverStation.reportError("Flywheel to speed: " + flyToSpeed
+                  //  + "At angle: " + atTargetX, false);
             return true;
         }
 
