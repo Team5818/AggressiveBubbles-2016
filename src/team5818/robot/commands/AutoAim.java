@@ -297,9 +297,20 @@ public class AutoAim extends Command {
                 && flyUpVel >= flyUp.getRPS() - toleranceFly
                 && flyLoVel <= flyLo.getRPS() + toleranceFly
                 && flyLoVel >= flyLo.getRPS() - toleranceFly);
+       if(flyToSpeed){
+           DriverStation.reportError("Aiming ready", false);
+
+       }
 
         boolean atTargetX = Math.abs(calculateAngleX()) <= 0.5;
+        if(atTargetX){
+            DriverStation.reportError("Aiming ready", false);
+
+        }
         boolean atTargetY = Math.abs(calculateAngleY()) <= 0.5;
+        if(atTargetY){
+            DriverStation.reportError("Aiming ready", false);
+        }
         
 
         if (isTimedOut()) {

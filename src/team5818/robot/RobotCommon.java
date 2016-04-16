@@ -22,7 +22,7 @@ import team5818.robot.commands.AutoLowbarForward;
 import team5818.robot.commands.AutoPortcullisArc;
 import team5818.robot.commands.AutoPortcullisUniversal;
 import team5818.robot.commands.AutoRampartsUniversal;
-
+import team5818.robot.commands.AutoRoughTerrainArc;
 import team5818.robot.commands.AutoRoughTerrainUniversal;
 import team5818.robot.commands.AutoTest;
 import team5818.robot.commands.DoNothing;
@@ -110,7 +110,7 @@ public class RobotCommon extends IterativeRobot {
     enum AutoRoutine {
         DO_NOTHING, LOWBAR, PORTCULLIS, ROCKWALL, RAMPARTS, MOAT, ROUGH_TERRAIN,
         CHEVAL, SALLY_PORT, DRAW_BRIDGE, SPYBOT, AUTO_TEST, LOWBAR_ARC,
-        PORTCULLIS_ARC;
+        PORTCULLIS_ARC, ROUGH_TERRAIN_ARC;
     }
 
     /**
@@ -135,6 +135,7 @@ public class RobotCommon extends IterativeRobot {
         chooserAuto.addObject("!!!AUTO TEST!!!", AutoRoutine.AUTO_TEST);
         chooserAuto.addObject("Arcing Lowbar", AutoRoutine.LOWBAR_ARC);
         chooserAuto.addObject("Arcing Portcullis", AutoRoutine.PORTCULLIS_ARC);
+        chooserAuto.addObject("Arcing Rough Terrain", AutoRoutine.ROUGH_TERRAIN_ARC);
 
         // Adding auto position to SmartDashboard.
         chooserPos = new SendableChooser();
@@ -201,6 +202,9 @@ public class RobotCommon extends IterativeRobot {
             case ROUGH_TERRAIN:
                 auto = new AutoRoughTerrainUniversal(pos);
                 break;
+            case ROUGH_TERRAIN_ARC:
+                auto = new AutoRoughTerrainArc(pos);
+                break;     
             case ROCKWALL:
                 auto = new AutoRoughTerrainUniversal(pos);
                 break;
@@ -248,6 +252,7 @@ public class RobotCommon extends IterativeRobot {
     public void autonomousPeriodic() {
         Scheduler.getInstance().run();
         modules.forEach(Module::autoPeriodicModule);
+        targeting.GetData();
 
     }
 

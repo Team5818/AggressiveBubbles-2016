@@ -35,16 +35,16 @@ public class DriveVelocityProfile extends Command{
 
     @Override
     protected void initialize() {
-        initialDist = train.getAverageDistance();
-        initialLeft = leftSide.getEncPosAbs();
-        initialRight = rightSide.getEncPosAbs();
+        initialDist = Math.abs(train.getAverageDistance());
+        initialLeft = Math.abs(leftSide.getEncPosAbs());
+        initialRight = Math.abs(rightSide.getEncPosAbs());
     }
 
     @Override
     protected void execute() {
-        double leftDist =  leftSide.getEncPosAbs()-initialLeft;
-        double rightDist = rightSide.getEncPosAbs()-initialRight;
-        double avDist = train.getAverageDistance() - initialDist;
+        double leftDist =  Math.abs(leftSide.getEncPosAbs())-initialLeft;
+        double rightDist = Math.abs(rightSide.getEncPosAbs())-initialRight;
+        double avDist = Math.abs(train.getAverageDistance()) - initialDist;
         double velocityL = leftTable.getEstimate(avDist);
         double velocityR = rightTable.getEstimate(avDist);
         
