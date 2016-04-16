@@ -56,10 +56,10 @@ public class AutoRockwallArc extends CommandGroup{
             yOffset = Preferences.getInstance().getDouble("AutoPortcullis2YOffset", yOffset);
         }
         else if(position == 3){
-            double[] leftVels = {-24,-70,-70,-25,24};
-            double[] rightVels = {-24,-70,-70,-50,24};
-            double[] dists = {0,-24,-120,-150,-160};
-            dist = -160;
+            double[] leftVels = {-24,-70,-70,-24};
+            double[] rightVels = {-24,-70,-70,-24};
+            double[] dists = {0,24,90,140};
+            dist = -140;
             leftTable = new LinearLookupTable(dists, leftVels);
             rightTable = new LinearLookupTable(dists, rightVels);
             spinAngle = (-90);
@@ -70,7 +70,7 @@ public class AutoRockwallArc extends CommandGroup{
         else if(position==4){
             double[] leftVels = {-24,-70,-70,-24};
             double[] rightVels = {-24,-70,-70,-24};
-            double[] dists = {0,-24,-120,-140};
+            double[] dists = {0,24,90,140};
             dist = -140;
             leftTable = new LinearLookupTable(dists, leftVels);
             rightTable = new LinearLookupTable(dists, rightVels);
@@ -79,10 +79,10 @@ public class AutoRockwallArc extends CommandGroup{
             yOffset = Preferences.getInstance().getDouble("AutoPortcullis4YOffset", yOffset);
         }
         else{
-            double[] leftVels = {-24,-70,-70,-50,-24};
-            double[] rightVels = {-24,-70,-70,-25,-24};
-            double[] dists = {0,-24,-120,-150,-160};
-            dist = -160;
+            double[] leftVels = {-24,-70,-70,-24};
+            double[] rightVels = {-24,-70,-70,-24};
+            double[] dists = {0,24,90,140};
+            dist = -140;
             leftTable = new LinearLookupTable(dists, leftVels);
             rightTable = new LinearLookupTable(dists, rightVels);
             spinAngle = 90;
@@ -96,7 +96,7 @@ public class AutoRockwallArc extends CommandGroup{
          
         
         prepareShot.addParallel(setFlyVel);
-        prepareShot.addParallel(spin);
+        //prepareShot.addParallel(spin);
         
         this.addSequential(lightUp);
         this.addSequential(switchCam); 
