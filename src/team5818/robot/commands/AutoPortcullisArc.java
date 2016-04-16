@@ -59,13 +59,13 @@ public class AutoPortcullisArc extends CommandGroup{
             yOffset = Preferences.getInstance().getDouble("AutoPortcullis2YOffset", yOffset);
         }
         else if(position == 3){
-            double[] leftVels = {24,50,50,50,24};
-            double[] rightVels = {24,50,50,25,24};
-            double[] dists = {0,24,120,150,160};
-            dist = 160;
+            double[] leftVels = {24,50,50,24};
+            double[] rightVels = {24,50,50,24};
+            double[] dists = {0,24,90,140};
+            dist = 140;
             leftTable = new LinearLookupTable(dists, leftVels);
             rightTable = new LinearLookupTable(dists, rightVels);
-            spinAngle = (90);
+            spinAngle = 180;
             xOffset = Preferences.getInstance().getDouble("AutoPortcullis3XOffset", xOffset);
             yOffset = Preferences.getInstance().getDouble("AutoPortcullis3YOffset", yOffset);
         }
@@ -73,22 +73,22 @@ public class AutoPortcullisArc extends CommandGroup{
         else if(position==4){
             double[] leftVels = {24,50,50,24};
             double[] rightVels = {24,50,50,24};
-            double[] dists = {0,24,120,140};
+            double[] dists = {0,24,90,140};
             dist = 140;
             leftTable = new LinearLookupTable(dists, leftVels);
             rightTable = new LinearLookupTable(dists, rightVels);
-            spinAngle = (-180);
+            spinAngle = -180;
             xOffset = Preferences.getInstance().getDouble("AutoPortcullis4XOffset", xOffset);
             yOffset = Preferences.getInstance().getDouble("AutoPortcullis4YOffset", yOffset);
         }
         else{
-            double[] leftVels = {24,50,50,25,24};
-            double[] rightVels = {24,50,50,50,24};
-            double[] dists = {0,24,120,150,160};
-            dist = 160;
+            double[] leftVels = {24,50,50,24};
+            double[] rightVels = {24,50,50,24};
+            double[] dists = {0,24,90,140};
+            dist = 140;
             leftTable = new LinearLookupTable(dists, leftVels);
             rightTable = new LinearLookupTable(dists, rightVels);
-            spinAngle = -90;
+            spinAngle = 180;
             xOffset = Preferences.getInstance().getDouble("AutoPortcullis5XOffset", xOffset);
             yOffset = Preferences.getInstance().getDouble("AutoPortcullis5YOffset", yOffset);
         }
