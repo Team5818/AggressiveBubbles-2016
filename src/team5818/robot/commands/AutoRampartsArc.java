@@ -6,9 +6,7 @@ import team5818.robot.modules.ComputerVision;
 import team5818.robot.modules.FlyWheel;
 import team5818.robot.util.LinearLookupTable;
 
-public class AutoRoughTerrainArc extends CommandGroup{
-
-
+public class AutoRampartsArc extends CommandGroup{
     private double findTargetAngle;
     public double crossingAngle =
             Preferences.getInstance().getDouble("ArmAngleMid", 30);
@@ -30,6 +28,7 @@ public class AutoRoughTerrainArc extends CommandGroup{
     private CommandGroup prepareShot = new CommandGroup();
     private SetFlywheelVelocity setFlyVel = new SetFlywheelVelocity(flyUpVel, flyLoVel);
     private SpinRobot spin;
+    private AutoAim aim;
     private Shoot dontMiss = new Shoot();
 
     /**
@@ -40,12 +39,12 @@ public class AutoRoughTerrainArc extends CommandGroup{
      * spin counter clockwise
      * move back under
      */
-    public AutoRoughTerrainArc(int position) {
+    public AutoRampartsArc(int position) {
         double xOffset = 0;
         double yOffset = 0;
         if(position == 2){
-            double[] leftVels = {-24,-50,-50,-10,-24};
-            double[] rightVels = {-24,-50,-50,-60,-24};
+            double[] leftVels = {-24,-70,-70,-10,-24};
+            double[] rightVels = {-24,-70,-70,-60,-24};
             double[] dists = {0,-24,-120,-140,-200};
             dist = -200;
             leftTable = new LinearLookupTable(dists, leftVels);
@@ -55,55 +54,55 @@ public class AutoRoughTerrainArc extends CommandGroup{
             yOffset = Preferences.getInstance().getDouble("AutoPortcullis2YOffset", yOffset);
         }
         else if(position == 3){
-            double[] leftVels = {-24,-50,-50,-24};
-            double[] rightVels = {-24,-50,-50,-24};
+            double[] leftVels = {-24,-85,-85,-24};
+            double[] rightVels = {-24,-70,-70,-24};
             double[] dists = {0,24,90,140};
             dist = -140;
             leftTable = new LinearLookupTable(dists, leftVels);
             rightTable = new LinearLookupTable(dists, rightVels);
-            spinAngle = 60;
+            spinAngle = (40);
             xOffset = Preferences.getInstance().getDouble("AutoPortcullis3XOffset", xOffset);
             yOffset = Preferences.getInstance().getDouble("AutoPortcullis3YOffset", yOffset);
         }
         
         else if(position==4){
-            double[] leftVels = {-24,-50,-50,-24};
-            double[] rightVels = {-24,-50,-50,-24};
+            double[] leftVels = {-24,-70,-70,-24};
+            double[] rightVels = {-24,-70,-70,-24};
             double[] dists = {0,24,90,140};
             dist = -140;
             leftTable = new LinearLookupTable(dists, leftVels);
             rightTable = new LinearLookupTable(dists, rightVels);
-            spinAngle = 60;
+            spinAngle = (20);
             xOffset = Preferences.getInstance().getDouble("AutoPortcullis4XOffset", xOffset);
             yOffset = Preferences.getInstance().getDouble("AutoPortcullis4YOffset", yOffset);
         }
         else{
-            double[] leftVels = {-24,-50,-50,-24};
-            double[] rightVels = {-24,-50,-50,-24};
+            double[] leftVels = {-24,-70,-70,-24};
+            double[] rightVels = {-24,-70,-70,-24};
             double[] dists = {0,24,90,140};
             dist = -140;
             leftTable = new LinearLookupTable(dists, leftVels);
             rightTable = new LinearLookupTable(dists, rightVels);
-            spinAngle = 60;
+            spinAngle = 0;
             xOffset = Preferences.getInstance().getDouble("AutoPortcullis5XOffset", xOffset);
-            yOffset = Preferences.getInstance().getDouble("AutoPortcullis5YOffsets", yOffset);
+            yOffset = Preferences.getInstance().getDouble("AutoPortcullis5YOffset", yOffset);
         }
         
         driveOver = new DriveVelocityProfile(leftTable, rightTable, dist);
+        aim = new AutoAim(xOffset, yOffset, 3);
         spin = new SpinRobot(spinAngle);
-        AutoAim autoAim = new AutoAim(xOffset,yOffset, 15);
+         
         
         prepareShot.addParallel(setFlyVel);
+        prepareShot.addParallel(spin);
         
         this.addSequential(lightUp);
         this.addSequential(switchCam); 
         this.addSequential(armToPosition);
         this.addSequential(driveOver);
         this.addSequential(prepareShot);
-        this.addSequential(autoAim);
+        this.addSequential(aim);
         this.addSequential(dontMiss);
 
     }
 }
-
-
