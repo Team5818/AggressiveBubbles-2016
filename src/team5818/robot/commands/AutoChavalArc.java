@@ -32,7 +32,7 @@ public class AutoChavalArc extends CommandGroup{
     private SetArmAngle armToCrossAngle = new SetArmAngle(driveOverAngle);
     private DriveVelocityProfile driveToDefense = new DriveVelocityProfile(driveStraightTable, 72);
     
-    private LowerArmToGround lowerChaval = new LowerArmToGround(); 
+    private LowerArmToGround lowerChaval = new LowerArmToGround(1.5); 
 
     private CommandGroup driveOverChaval = new CommandGroup();
     private CommandGroup raiseArm = new CommandGroup();

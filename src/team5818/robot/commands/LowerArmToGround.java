@@ -18,5 +18,10 @@ public class LowerArmToGround extends CommandGroup{
         this.addSequential(armToGround);
     }
     
+    public LowerArmToGround(double pidTimeout){
+        this.addSequential(goToCollect, pidTimeout);
+        this.addSequential(armToGround);
+    }
+    
 
 }
