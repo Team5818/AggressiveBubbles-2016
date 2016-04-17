@@ -35,6 +35,8 @@ public class AutoChavalArc extends CommandGroup{
     private LowerArmToGround lowerChaval = new LowerArmToGround(); 
 
     private CommandGroup driveOverChaval = new CommandGroup();
+    private CommandGroup raiseArm = new CommandGroup();
+    private DoNothing wait = new DoNothing(.5);
     private SetArmAngle armBackUp = new SetArmAngle(driveOverAngle);
     private DriveVelocityProfile driveOver;  
     
@@ -106,7 +108,10 @@ public class AutoChavalArc extends CommandGroup{
         aim = new AutoAim(xOffset, yOffset, 3);
         spin = new SpinRobot(spinAngle);
         
-        driveOverChaval.addParallel(armBackUp);
+        raiseArm.addSequential(wait);
+        raiseArm.addSequential(armBackUp);
+        
+        driveOverChaval.addParallel(raiseArm);
         driveOverChaval.addParallel(driveOver);
         
         prepareShot.addParallel(setFlyVel);
