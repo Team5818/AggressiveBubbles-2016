@@ -8,8 +8,7 @@ import team5818.robot.util.LinearLookupTable;
 
 public class AutoChavalArc extends CommandGroup{
     private double findTargetAngle;
-    public double driveOverAngle =
-            Preferences.getInstance().getDouble("ArmAngleMid", 20);
+    public double driveOverAngle = 15;
     public double collectAngle =
             Preferences.getInstance().getDouble("ArmAngleCollect", 1.5);
     public double flyUpVel = FlyWheel.SHOOT_VELOCITY_UPPER;
@@ -29,10 +28,11 @@ public class AutoChavalArc extends CommandGroup{
     private SwitchFeed switchCam = new SwitchFeed(ComputerVision.CAMERA_SHOOTER);
     private LEDToggle lightUp = new LEDToggle(true);
     
+    private CommandGroup driveToChaval = new CommandGroup();
     private SetArmAngle armToCrossAngle = new SetArmAngle(driveOverAngle);
     private DriveVelocityProfile driveToDefense = new DriveVelocityProfile(driveStraightTable, 72);
     
-    private LowerArmToGround lowerChaval = new LowerArmToGround(1.5); 
+    private ArmPower lowerChaval = new ArmPower(LowerArmToGround.ARM_POWER); 
 
     private CommandGroup driveOverChaval = new CommandGroup();
     private CommandGroup raiseArm = new CommandGroup();
@@ -108,6 +108,9 @@ public class AutoChavalArc extends CommandGroup{
         aim = new AutoAim(xOffset, yOffset, 3);
         spin = new SpinRobot(spinAngle);
         
+        driveToChaval.addParallel(armToCrossAngle);
+        driveToChaval.addParallel(driveToDefense);
+        
         raiseArm.addSequential(wait);
         raiseArm.addSequential(armBackUp);
         
@@ -120,8 +123,7 @@ public class AutoChavalArc extends CommandGroup{
         
         this.addSequential(lightUp);
         this.addSequential(switchCam); 
-        this.addSequential(armToCrossAngle);
-        this.addSequential(driveToDefense);
+        this.addSequential(driveToChaval);
         this.addSequential(lowerChaval);
         this.addSequential(driveOverChaval);
         this.addSequential(prepareShot);
