@@ -19,9 +19,9 @@ public class AutoChavalArc extends CommandGroup{
     double shootAngle = Preferences.getInstance().getDouble("ArmAngleShooting", 40);
     double spinAngle;
     double dist;
-    double[] powers = {18,32,32,18};
-    double[] distances = {0,24,48,72};
-    LinearLookupTable driveStraightTable = new LinearLookupTable(distances, powers);
+    double[] firstVels = {12,30,30,12};
+    double[] distances = {0,10,30,40};
+    LinearLookupTable driveStraightTable = new LinearLookupTable(distances, firstVels);
     
     LinearLookupTable leftTable;
     LinearLookupTable rightTable;
@@ -68,8 +68,8 @@ public class AutoChavalArc extends CommandGroup{
             yOffset = Preferences.getInstance().getDouble("AutoPortcullis2YOffset", yOffset);
         }
         else if(position == 3){
-            double[] leftVels = {24,70,70,24};
-            double[] rightVels = {24,70,70,24};
+            double[] leftVels = {24,50,50,24};
+            double[] rightVels = {24,50,50,24};
             double[] dists = {0,24,65,100};
             dist = 100;
             leftTable = new LinearLookupTable(dists, leftVels);
@@ -80,8 +80,8 @@ public class AutoChavalArc extends CommandGroup{
         }
         
         else if(position==4){
-            double[] leftVels = {24,70,70,24};
-            double[] rightVels = {24,70,70,24};
+            double[] leftVels = {24,50,50,24};
+            double[] rightVels = {24,50,50,24};
             double[] dists = {0,24,65,100};
             dist = 100;
             leftTable = new LinearLookupTable(dists, leftVels);
@@ -91,8 +91,8 @@ public class AutoChavalArc extends CommandGroup{
             yOffset = Preferences.getInstance().getDouble("AutoPortcullis4YOffset", yOffset);
         }
         else{
-            double[] leftVels = {24,70,70,24};
-            double[] rightVels = {24,70,70,24};
+            double[] leftVels = {24,50,50,24};
+            double[] rightVels = {24,50,50,24};
             double[] dists = {0,24,65,100};
             dist = 100;
             leftTable = new LinearLookupTable(dists, leftVels);
