@@ -106,7 +106,8 @@ public class AutoChavalArc extends CommandGroup{
         
         driveOver = new DriveVelocityProfile(leftTable, rightTable, dist);
         aim = new AutoAim(xOffset, yOffset, 3);
-        spin = new SpinRobot(spinAngle);
+        spin = new SpinRobot(spinAngle, 2, 0.5);
+
         
         driveToChaval.addParallel(armToCrossAngle);
         driveToChaval.addParallel(driveToDefense);

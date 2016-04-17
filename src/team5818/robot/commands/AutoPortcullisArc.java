@@ -95,7 +95,7 @@ public class AutoPortcullisArc extends CommandGroup{
         
         driveThroughPortcullis = new DriveVelocityProfile(leftTable, rightTable, dist);
         aim = new AutoAim(xOffset, yOffset, 3);
-        spin = new SpinRobot(spinAngle);
+        spin = new SpinRobot(spinAngle, 2, .5);
          
         driveUnder.addParallel(armToGround);
         driveUnder.addParallel(driveThroughPortcullis);
