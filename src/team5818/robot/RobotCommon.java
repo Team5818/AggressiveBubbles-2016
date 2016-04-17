@@ -17,8 +17,10 @@ import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import team5818.robot.commands.ActuateServo;
+import team5818.robot.commands.AutoChavalArc;
 import team5818.robot.commands.AutoLowbarArc;
 import team5818.robot.commands.AutoLowbarForward;
+import team5818.robot.commands.AutoMoatArc;
 import team5818.robot.commands.AutoPortcullisArc;
 import team5818.robot.commands.AutoPortcullisUniversal;
 import team5818.robot.commands.AutoRampartsArc;
@@ -111,7 +113,7 @@ public class RobotCommon extends IterativeRobot {
 
     enum AutoRoutine {
         DO_NOTHING, LOWBAR, PORTCULLIS, ROCKWALL, RAMPARTS, MOAT, ROUGH_TERRAIN,
-        CHEVAL, SALLY_PORT, DRAW_BRIDGE, SPYBOT, AUTO_TEST, LOWBAR_ARC,
+        CHAVAL, SALLY_PORT, DRAW_BRIDGE, SPYBOT, AUTO_TEST, LOWBAR_ARC,
         PORTCULLIS_ARC, ROUGH_TERRAIN_ARC, ROCKWALL_ARC, RAMPARTS_ARC;
     }
 
@@ -140,6 +142,7 @@ public class RobotCommon extends IterativeRobot {
         chooserAuto.addObject("Arcing Rough Terrain", AutoRoutine.ROUGH_TERRAIN_ARC);
         chooserAuto.addObject("RockwallArc", AutoRoutine.ROCKWALL_ARC);
         chooserAuto.addObject("Arcing Ramparts", AutoRoutine.RAMPARTS_ARC);
+        chooserAuto.addObject("Chaval de Grease", AutoRoutine.CHAVAL);
 
         // Adding auto position to SmartDashboard.
         chooserPos = new SendableChooser();
@@ -219,14 +222,14 @@ public class RobotCommon extends IterativeRobot {
                 auto = new AutoRampartsArc(pos);
                 break;
             case MOAT:
-                auto = new AutoRoughTerrainUniversal(pos);
+                auto = new AutoMoatArc(pos);
                 break;
             case RAMPARTS:
                 auto = new AutoRoughTerrainUniversal(pos);
                 break;
-            case CHEVAL:
-                auto = new DoNothingAuto();
-                break;
+            case CHAVAL:
+                auto = new AutoChavalArc(pos);
+                break;    
             case SALLY_PORT:
                 auto = new DoNothingAuto();
                 break;
