@@ -19,10 +19,11 @@ import team5818.robot.util.Vector2d;
 public class AutoAim extends Command {
 
 
-    public  static final double DEFAULT_X_OFFSET = 0;
-    public static final double DEFAULT_Y_OFFSET = -0; //calibrated for lowbar
+    public  static final double DEFAULT_X_OFFSET = 3;
+    public static final double DEFAULT_Y_OFFSET = 1; //calibrated for lowbar
     public static final double DEFAULT_TIMEOUT = 2;
     public static boolean UDP = true;
+    private boolean hasFoundTarget = false;
 
     private static double defaultFlyUpVel = Preferences.getInstance()
             .getDouble("UpperFlyVel", FlyWheel.SHOOT_VELOCITY_UPPER);
@@ -69,7 +70,7 @@ public class AutoAim extends Command {
     private double yerrSum = 0;
     private double yerr = 0;
     private int yerrCount = 0;
-    private double yOffset = -10;
+    private double yOffset = 0;
     public static double toleranceY = 2;
     
 
@@ -125,7 +126,7 @@ public class AutoAim extends Command {
         xKp = Preferences.getInstance().getDouble("AutoAimKpX", xKp);
         xKi = Preferences.getInstance().getDouble("AutoAimKiX", xKi);
         xKd = Preferences.getInstance().getDouble("AutoAimKdX", xKd);
-        xOffset = Preferences.getInstance().getDouble("AutoAimXOffset", xOffset);
+        //xOffset = Preferences.getInstance().getDouble("AutoAimXOffset", xOffset);
         
         xerrSum = 0;
         xerrCount = 0;
@@ -135,7 +136,7 @@ public class AutoAim extends Command {
         yKp = Preferences.getInstance().getDouble("AutoAimKpY", yKp);
         yKi = Preferences.getInstance().getDouble("AutoAimKiY", yKi);
         yKd = Preferences.getInstance().getDouble("AutoAimKdY", yKd);
-        yOffset = Preferences.getInstance().getDouble("AutoAimYOffset", yOffset);
+        //yOffset = Preferences.getInstance().getDouble("AutoAimYOffset", yOffset);
         
         
         yerrSum = 0;
@@ -319,8 +320,12 @@ public class AutoAim extends Command {
                   //  + "At angle: " + atTargetX, false);
             return true;
         }
-
+        hasFoundTarget = true;
         return ((atTargetX && atTargetY) || this.isTimedOut());
+    }
+    
+    public boolean foundTarget() {
+        return hasFoundTarget;
     }
 
     @Override

@@ -17,8 +17,8 @@ import edu.wpi.first.wpilibj.Solenoid;
 public class ComputerVision {
 
     // TODO:switch for actual robot
-    private int BRIGHTNESS_DEFAULT = 10;
-    private int EXPOSURE_DEFAULT = 50;
+    private final int BRIGHTNESS_DEFAULT = 10;
+    private final int EXPOSURE_DEFAULT = 50;
 
     /**
      * The driving camera that is directed with the direction we collect.
