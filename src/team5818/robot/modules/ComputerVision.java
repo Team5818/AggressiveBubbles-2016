@@ -87,7 +87,7 @@ public class ComputerVision {
         }
 
         try {
-            camShooter = new USBCam("cam" + CAMERA_BACK);
+            camBack = new USBCam("cam" + CAMERA_BACK);
 
             if (camBack != null) {
                 camBack.setSize(640, 360);
