@@ -17,6 +17,7 @@ import team5818.robot.commands.SetArmPower;
 import team5818.robot.commands.SetDrivePower;
 import team5818.robot.commands.SetFlywheelPower;
 import team5818.robot.commands.SetFlywheelVelocity;
+import team5818.robot.commands.ShootIfReady;
 import team5818.robot.commands.SwitchFeed;
 import team5818.robot.commands.LEDToggle;
 import team5818.robot.modules.Arm;

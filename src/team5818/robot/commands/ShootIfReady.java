@@ -19,7 +19,7 @@ public class ShootIfReady extends Command {
             time0 = System.nanoTime();
         }
         
-        if(Math.abs(System.nanoTime() - time0) < (long)(0.5*1000000000)) {
+        if(Math.abs(System.nanoTime() - time0) > (long)(0.5*1000000000)) {
             finished = true;
         }
         
@@ -37,14 +37,11 @@ public class ShootIfReady extends Command {
 
     @Override
     protected void end() {
-        // TODO Auto-generated method stub
-        
     }
 
     @Override
     protected void interrupted() {
-        // TODO Auto-generated method stub
-        
+        end();
     }
 
 }
