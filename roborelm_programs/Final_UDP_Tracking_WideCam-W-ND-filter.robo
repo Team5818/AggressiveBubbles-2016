@@ -176,7 +176,7 @@ IMAGE_WIDTH
 </northwest>
 </Display_Variables>
 <Socket_Client>
-  <pipe_color>0</pipe_color>
+  <pipe_color>16777215</pipe_color>
   <comm_method_index>1</comm_method_index>
   <enable_send_sequence>TRUE</enable_send_sequence>
   <hostname>roboRIO-5818-frc.local</hostname>
