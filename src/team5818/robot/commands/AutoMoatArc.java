@@ -42,10 +42,10 @@ public class AutoMoatArc extends CommandGroup{
         double xOffset = 0;
         double yOffset = 0;
         if(position == 2){
-            double[] leftVels = {-24,-50,-50,-10,-24};
-            double[] rightVels = {-24,-50,-50,-60,-24};
-            double[] dists = {0,-24,-120,-140,-200};
-            dist = -200;
+            double[] leftVels = {-24,-50,-50,-24};
+            double[] rightVels = {-24,-50,-50,-24};
+            double[] dists = {0,24,120,180};
+            dist = -180;
             leftTable = new LinearLookupTable(dists, leftVels);
             rightTable = new LinearLookupTable(dists, rightVels);
             spinAngle = 90;
