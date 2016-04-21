@@ -26,6 +26,7 @@ public class AutoMoatArc extends CommandGroup{
     private CommandGroup driveOverMoat = new CommandGroup();
     private SetArmAngle armToPosition = new SetArmAngle(crossingAngle);
     private DriveVelocityProfile driveOver;  
+    private DoNothing pause = new DoNothing(1);
     private CommandGroup prepareShot = new CommandGroup();
     private SetFlywheelVelocity setFlyVel = new SetFlywheelVelocity(flyUpVel, flyLoVel);
     private ScanForTarget scan = new ScanForTarget(true);
@@ -101,6 +102,7 @@ public class AutoMoatArc extends CommandGroup{
         this.addSequential(lightUp);
         this.addSequential(switchCam); 
         this.addSequential(driveOverMoat);
+        this.addSequential(pause);
         this.addSequential(prepareShot);
         this.addSequential(autoAim);
         this.addSequential(dontMiss);
