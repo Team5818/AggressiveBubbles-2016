@@ -115,8 +115,8 @@ public class AutoChavalArc extends CommandGroup{
         raiseArm.addSequential(wait);
         raiseArm.addSequential(armBackUp);
         
-        driveOverChaval.addParallel(raiseArm);
-        driveOverChaval.addParallel(driveOver);
+        driveOverChaval.addParallel(raiseArm, 3);
+        driveOverChaval.addParallel(driveOver, 3.5);
         
         prepareShot.addParallel(setFlyVel);
         prepareShot.addParallel(spin);
