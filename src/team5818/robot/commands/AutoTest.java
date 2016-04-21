@@ -14,16 +14,17 @@ public class AutoTest extends CommandGroup {
     LinearLookupTable velTable = new LinearLookupTable(dists,vels);
     DriveDistanceProfile drivePower = new DriveDistanceProfile(powerTable, 108, 10);
     DriveVelocityProfile driveVel = new DriveVelocityProfile(velTable,72);
+    ScanForTarget scan = new ScanForTarget(true);
 
     public AutoTest() {
         //this.addSequential(drive);
         //this.addSequential(driveVel);
+        this.addSequential(scan);
     }
     
     @Override
     public void initialize() {
-        FlyWheel fly = RobotCommon.runningRobot.upperFlywheel;
-        fly.setPower(.2);
+
     }
     
     @Override
