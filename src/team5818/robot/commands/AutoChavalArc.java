@@ -110,7 +110,7 @@ public class AutoChavalArc extends CommandGroup{
 
         
         driveToChaval.addParallel(armToCrossAngle,1.5);
-        driveToChaval.addParallel(driveToDefense);
+        driveToChaval.addParallel(driveToDefense, 2);
         
         raiseArm.addSequential(wait);
         raiseArm.addSequential(armBackUp);
