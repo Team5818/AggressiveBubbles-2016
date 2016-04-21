@@ -19,7 +19,7 @@ public class AutoChavalArc extends CommandGroup{
     double spinAngle;
     double dist;
     double[] firstVels = {12,30,30,12};
-    double[] distances = {0,10,30,40};
+    double[] distances = {0,9,27,36};
     LinearLookupTable driveStraightTable = new LinearLookupTable(distances, firstVels);
     
     LinearLookupTable leftTable;
@@ -32,11 +32,11 @@ public class AutoChavalArc extends CommandGroup{
     private SetArmAngle armToCrossAngle = new SetArmAngle(driveOverAngle);
     private DriveVelocityProfile driveToDefense = new DriveVelocityProfile(driveStraightTable, 72);
     
-    private ArmPower lowerChaval = new ArmPower(LowerArmToGround.ARM_POWER); 
+    private ArmPower lowerChaval = new ArmPower(LowerArmToGround.ARM_POWER,.75); 
 
     private CommandGroup driveOverChaval = new CommandGroup();
     private CommandGroup raiseArm = new CommandGroup();
-    private DoNothing wait = new DoNothing(.5);
+    private DoNothing wait = new DoNothing(1);
     private SetArmAngle armBackUp = new SetArmAngle(driveOverAngle);
     private DriveVelocityProfile driveOver;  
     
@@ -109,7 +109,7 @@ public class AutoChavalArc extends CommandGroup{
         spin = new SpinRobot(spinAngle, 2, 0.5);
 
         
-        driveToChaval.addParallel(armToCrossAngle);
+        driveToChaval.addParallel(armToCrossAngle,1.5);
         driveToChaval.addParallel(driveToDefense);
         
         raiseArm.addSequential(wait);
