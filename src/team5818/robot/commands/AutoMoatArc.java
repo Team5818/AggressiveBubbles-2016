@@ -28,7 +28,7 @@ public class AutoMoatArc extends CommandGroup{
     private DriveVelocityProfile driveOver;  
     private CommandGroup prepareShot = new CommandGroup();
     private SetFlywheelVelocity setFlyVel = new SetFlywheelVelocity(flyUpVel, flyLoVel);
-    private SpinRobot spin;
+    private ScanForTarget scan = new ScanForTarget(true);
     private Shoot dontMiss = new Shoot();
 
     /**
@@ -89,12 +89,12 @@ public class AutoMoatArc extends CommandGroup{
         }
         
         driveOver = new DriveVelocityProfile(leftTable, rightTable, dist);
-        spin = new SpinRobot(spinAngle);
-        AutoAim autoAim = new AutoAim(xOffset,yOffset, 15);
+        AutoAim autoAim = new AutoAim(xOffset,yOffset, 3);
         
         driveOverMoat.addParallel(armToPosition);
         driveOverMoat.addParallel(driveOver);
         
+        prepareShot.addParallel(scan);
         prepareShot.addParallel(setFlyVel);
         
         

@@ -2,6 +2,7 @@ package team5818.robot.commands;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
 import team5818.robot.RobotCommon;
+import team5818.robot.modules.ComputerVision;
 import team5818.robot.modules.FlyWheel;
 import team5818.robot.util.LinearLookupTable;
 import team5818.robot.util.Vector2d;
@@ -15,10 +16,13 @@ public class AutoTest extends CommandGroup {
     DriveDistanceProfile drivePower = new DriveDistanceProfile(powerTable, 108, 10);
     DriveVelocityProfile driveVel = new DriveVelocityProfile(velTable,72);
     ScanForTarget scan = new ScanForTarget(true);
+    private LEDToggle lightUp = new LEDToggle(true);
+
 
     public AutoTest() {
         //this.addSequential(drive);
         //this.addSequential(driveVel);
+        this.addSequential(lightUp);
         this.addSequential(scan);
     }
     

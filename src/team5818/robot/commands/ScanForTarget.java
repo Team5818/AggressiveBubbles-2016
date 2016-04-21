@@ -2,6 +2,7 @@ package team5818.robot.commands;
 
 import edu.wpi.first.wpilibj.command.Command;
 import team5818.robot.RobotCommon;
+import team5818.robot.modules.ComputerVision;
 import team5818.robot.modules.Track;
 import team5818.robot.modules.drivetrain.DriveTrain;
 import team5818.robot.util.Vector2d;
@@ -12,7 +13,7 @@ public class ScanForTarget extends Command{
     private Track targeting = RobotCommon.runningRobot.targeting;
     private double power;
     private DriveTrain train = RobotCommon.runningRobot.driveTrain;
-    
+
     public ScanForTarget(boolean cw, double pow, double timeout){
         clockwise = cw;
         power = pow;
@@ -20,12 +21,12 @@ public class ScanForTarget extends Command{
     }
     
     public ScanForTarget(boolean cw){
-        this(cw, .5, 5);
+        this(cw, .3, 3);
     }
     
     @Override
     protected void initialize() {
-        if(clockwise){
+        if(!clockwise){
             power *= -1;
         }
         Vector2d powers = new Vector2d(power, -power);
