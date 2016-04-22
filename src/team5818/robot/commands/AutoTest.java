@@ -22,7 +22,7 @@ public class AutoTest extends CommandGroup {
     
     @Override
     public void initialize() {
-        FlyWheel fly = RobotCommon.runningRobot.upperFlywheel;
+        FlyWheel fly = RobotCommon.runningRobot.lowerFlywheel;
         fly.setPower(.2);
     }
     

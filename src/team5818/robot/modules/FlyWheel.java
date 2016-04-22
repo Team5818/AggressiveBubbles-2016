@@ -1,6 +1,7 @@
 package team5818.robot.modules;
 
 import edu.wpi.first.wpilibj.CANTalon;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.PIDOutput;
 import edu.wpi.first.wpilibj.PIDSource;
@@ -83,7 +84,7 @@ public class FlyWheel extends Subsystem implements PIDSource {
         pid.setAbsoluteTolerance(TOLERANCE);
         this.talon = talon;
         talon.setInverted(reversed);
-        reverseSensor(reversed);
+        //reverseSensor(reversed);
     }
 
     private void reverseSensor(boolean reversed) {
@@ -103,7 +104,9 @@ public class FlyWheel extends Subsystem implements PIDSource {
      * @param setVelocity
      *            the desired velocity
      */
-    public void setVelocity(double vel) {
+    public void setVelocity(double 
+            vel) {
+        DriverStation.reportError("" + vel, false);
         pid.reset();
         pid.setSetpoint(vel);
         pid.enable();

@@ -168,7 +168,7 @@ public class RobotCoDriver implements Module {
         startFlywheel
                 .addParallel(new SwitchFeed(ComputerVision.CAMERA_SHOOTER));
         CommandGroup stopFlywheel = new CommandGroup();
-        stopFlywheel.addParallel(new SetFlywheelPower(0));
+        stopFlywheel.addParallel(new SetFlywheelVelocity(0,0));
         CommandGroup switchFeedShoot = new CommandGroup();
         switchFeedShoot
                 .addParallel(new SwitchFeed(ComputerVision.CAMERA_SHOOTER));

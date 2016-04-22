@@ -286,6 +286,8 @@ public class RobotCommon extends IterativeRobot {
          */
         SmartDashboard.putNumber("Arm Angle", arm.getAngle());
         SmartDashboard.putNumber("Arm Angle Raw", arm.getRawPot());
+        SmartDashboard.putNumber("Lower Flywheel RPS", lowerFlywheel.getRPS());
+
         
     }
 
