@@ -12,6 +12,7 @@ import team5818.robot.commands.ActuateServo;
 import team5818.robot.commands.AutoAim;
 import team5818.robot.commands.Collect;
 import team5818.robot.commands.DrivePower;
+import team5818.robot.commands.FlywheelVelocityProfile;
 import team5818.robot.commands.SetArmAngle;
 import team5818.robot.commands.SetArmPower;
 import team5818.robot.commands.SetDrivePower;
@@ -26,6 +27,7 @@ import team5818.robot.modules.ComputerVision;
 import team5818.robot.modules.FlyWheel;
 import team5818.robot.modules.Module;
 import team5818.robot.modules.drivetrain.ArcadeDriveCalculator;
+import team5818.robot.util.LinearLookupTable;
 import team5818.robot.util.Vector2d;
 import team5818.robot.util.Vectors;
 
@@ -117,6 +119,11 @@ public class RobotCoDriver implements Module {
     private double shootAngleHigh = 60;
     private double shootAngleMed = 40;
     private double shootAngleLow = 30;
+    private double[] lowerFlyVels = {0, 0, 0, 0};
+    private double[] upperFlyVels = {0,-10,-10,0};
+    private double[] flyTimes = {0, 1000, 2000, 3000};
+    private LinearLookupTable lowerTable = new LinearLookupTable(flyTimes, lowerFlyVels);
+    private LinearLookupTable upperTable = new LinearLookupTable(flyTimes, upperFlyVels);
 
     private double coDriveDamp = 0.25;
     private AutoAim autoAim;
@@ -168,7 +175,8 @@ public class RobotCoDriver implements Module {
         startFlywheel
                 .addParallel(new SwitchFeed(ComputerVision.CAMERA_SHOOTER));
         CommandGroup stopFlywheel = new CommandGroup();
-        stopFlywheel.addParallel(new SetFlywheelPower(0));
+        //stopFlywheel.addParallel(new SetFlywheelPower(0));
+        stopFlywheel.addParallel(new FlywheelVelocityProfile(lowerTable, upperTable, 3));
         CommandGroup switchFeedShoot = new CommandGroup();
         switchFeedShoot
                 .addParallel(new SwitchFeed(ComputerVision.CAMERA_SHOOTER));

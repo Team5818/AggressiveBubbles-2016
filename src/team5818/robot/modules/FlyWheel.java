@@ -83,7 +83,7 @@ public class FlyWheel extends Subsystem implements PIDSource {
         pid.setAbsoluteTolerance(TOLERANCE);
         this.talon = talon;
         talon.setInverted(reversed);
-        reverseSensor(reversed);
+        //reverseSensor(reversed);
     }
 
     private void reverseSensor(boolean reversed) {
