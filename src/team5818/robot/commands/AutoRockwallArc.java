@@ -67,7 +67,7 @@ public class AutoRockwallArc extends CommandGroup{
             leftTable = new LinearLookupTable(dists, leftVels);
             rightTable = new LinearLookupTable(dists, rightVels);
             spinAngle = (-90);
-            xOffset = -.5;
+            xOffset = 0;
             yOffset = Preferences.getInstance().getDouble("AutoPortcullis3YOffset", yOffset);
             cw = true;
         }

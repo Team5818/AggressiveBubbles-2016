@@ -26,6 +26,7 @@ public class AutoRoughTerrainArc extends CommandGroup{
     
     private SwitchFeed switchCam = new SwitchFeed(ComputerVision.CAMERA_SHOOTER);
     private LEDToggle lightUp = new LEDToggle(true);
+    private CommandGroup driveOverRoughTerrain = new CommandGroup();
     private SetArmAngle armToPosition = new SetArmAngle(crossingAngle);
     private DriveVelocityProfile driveOver;  
     private CommandGroup prepareShot = new CommandGroup();
@@ -97,16 +98,18 @@ public class AutoRoughTerrainArc extends CommandGroup{
         
         driveOver = new DriveVelocityProfile(leftTable, rightTable, dist);
         spin = new SpinRobot(spinAngle);
-        AutoAim autoAim = new AutoAim(xOffset,yOffset, 15);
+        AutoAim autoAim = new AutoAim(xOffset,yOffset, 5);
         scan = new ScanForTarget(cw);
+        
+        driveOverRoughTerrain.addParallel(armToPosition);
+        driveOverRoughTerrain.addParallel(driveOver);
         
         prepareShot.addParallel(setFlyVel);
         prepareShot.addParallel(scan);
         
         this.addSequential(lightUp);
         this.addSequential(switchCam); 
-        this.addSequential(armToPosition);
-        this.addSequential(driveOver);
+        this.addSequential(driveOverRoughTerrain);
         this.addSequential(prepareShot);
         this.addSequential(autoAim);
         this.addSequential(dontMiss);
