@@ -124,8 +124,8 @@ public class RobotCoDriver implements Module {
     private double shootAngleHigh = 60;
     private double shootAngleMed = 40;
     private double shootAngleLow = 30;
-    private double[] lowerFlyVels = {0, 0, 0, 0};
-    private double[] upperFlyVels = {0,-10,-10,0};
+    private double[] lowerFlyVels = {0, -4, -4, 0};
+    private double[] upperFlyVels = {0,0,0,0};
     private double[] flyTimes = {0, 1000, 2000, 3000};
     private LinearLookupTable lowerTable = new LinearLookupTable(flyTimes, lowerFlyVels);
     private LinearLookupTable upperTable = new LinearLookupTable(flyTimes, upperFlyVels);
