@@ -24,6 +24,7 @@ public class AutoRampartsArc extends CommandGroup{
     
     private SwitchFeed switchCam = new SwitchFeed(ComputerVision.CAMERA_SHOOTER);
     private LEDToggle lightUp = new LEDToggle(true);
+    private CommandGroup driveOverRamparts = new CommandGroup();
     private SetArmAngle armToPosition = new SetArmAngle(crossingAngle);
     private DriveVelocityProfile driveOver;  
     private CommandGroup prepareShot = new CommandGroup();
@@ -59,8 +60,8 @@ public class AutoRampartsArc extends CommandGroup{
         else if(position == 3){
             double[] leftVels = {-24,-85,-85,-24};
             double[] rightVels = {-24,-70,-70,-24};
-            double[] dists = {0,24,90,140};
-            dist = -140;
+            double[] dists = {0,24,90,152};
+            dist = -152;
             leftTable = new LinearLookupTable(dists, leftVels);
             rightTable = new LinearLookupTable(dists, rightVels);
             spinAngle = (40);
@@ -72,8 +73,8 @@ public class AutoRampartsArc extends CommandGroup{
         else if(position==4){
             double[] leftVels = {-24,-70,-70,-24};
             double[] rightVels = {-24,-70,-70,-24};
-            double[] dists = {0,24,90,140};
-            dist = -140;
+            double[] dists = {0,24,90,152};
+            dist = -152;
             leftTable = new LinearLookupTable(dists, leftVels);
             rightTable = new LinearLookupTable(dists, rightVels);
             spinAngle = (20);
@@ -84,8 +85,8 @@ public class AutoRampartsArc extends CommandGroup{
         else{
             double[] leftVels = {-24,-70,-70,-24};
             double[] rightVels = {-24,-70,-70,-24};
-            double[] dists = {0,24,90,140};
-            dist = -140;
+            double[] dists = {0,24,90,152};
+            dist = -152;
             leftTable = new LinearLookupTable(dists, leftVels);
             rightTable = new LinearLookupTable(dists, rightVels);
             spinAngle = 0;
@@ -98,15 +99,16 @@ public class AutoRampartsArc extends CommandGroup{
         aim = new AutoAim(xOffset, yOffset, 3);
         spin = new SpinRobot(spinAngle);
         scan = new ScanForTarget(cw);
-         
+        
+        driveOverRamparts.addParallel(armToPosition);
+        driveOverRamparts.addParallel(driveOver);
         
         prepareShot.addParallel(setFlyVel);
         prepareShot.addParallel(scan);
         
         this.addSequential(lightUp);
         this.addSequential(switchCam); 
-        this.addSequential(armToPosition);
-        this.addSequential(driveOver);
+        this.addSequential(driveOverRamparts);
         this.addSequential(prepareShot);
         this.addSequential(aim);
         this.addSequential(dontMiss);
