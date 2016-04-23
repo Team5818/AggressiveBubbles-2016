@@ -59,8 +59,8 @@ public class AutoChavalArc extends CommandGroup{
         double xOffset = 0;
         double yOffset = 0;
         if(position == 2){
-            double[] leftVels = {24,50,50,24};
-            double[] rightVels = {24,50,50,24};
+            double[] leftVels = {60,50,50,24};
+            double[] rightVels = {60,50,50,24};
             double[] dists = {0,24,85,120};
             dist = 120;
             leftTable = new LinearLookupTable(dists, leftVels);
@@ -70,8 +70,8 @@ public class AutoChavalArc extends CommandGroup{
             yOffset = Preferences.getInstance().getDouble("AutoPortcullis2YOffset", yOffset);
         }
         else if(position == 3){
-            double[] leftVels = {24,50,50,24};
-            double[] rightVels = {24,50,50,24};
+            double[] leftVels = {60,50,50,24};
+            double[] rightVels = {60,50,50,24};
             double[] dists = {0,24,65,100};
             dist = 100;
             leftTable = new LinearLookupTable(dists, leftVels);
@@ -82,8 +82,8 @@ public class AutoChavalArc extends CommandGroup{
         }
         
         else if(position==4){
-            double[] leftVels = {24,50,50,24};
-            double[] rightVels = {24,50,50,24};
+            double[] leftVels = {60,50,50,24};
+            double[] rightVels = {60,50,50,24};
             double[] dists = {0,24,65,100};
             dist = 100;
             leftTable = new LinearLookupTable(dists, leftVels);
@@ -93,8 +93,8 @@ public class AutoChavalArc extends CommandGroup{
             yOffset = Preferences.getInstance().getDouble("AutoPortcullis4YOffset", yOffset);
         }
         else{
-            double[] leftVels = {24,50,50,24};
-            double[] rightVels = {24,50,50,24};
+            double[] leftVels = {60,50,50,24};
+            double[] rightVels = {60,50,50,24};
             double[] dists = {0,24,65,100};
             dist = 100;
             leftTable = new LinearLookupTable(dists, leftVels);
