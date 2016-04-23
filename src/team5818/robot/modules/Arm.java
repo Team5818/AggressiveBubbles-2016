@@ -206,9 +206,15 @@ public class Arm extends Subsystem implements PIDSource, PIDOutput {
     public void pidWrite(double power) {
         
         //power += armPowerIdle * Math.abs(Math.cos(getAngle()/180*Math.PI));
-        firstArmMotor.set(power * armMotorRatio);
-        if (secondArmMotor != null) {
-            secondArmMotor.set(power);
+        if(this.getAngle() >= 100 && power >= 0){
+           firstArmMotor.set(0);
+           secondArmMotor.set(0);
+        }
+        else{
+            firstArmMotor.set(power * armMotorRatio);
+            if (secondArmMotor != null) {
+                secondArmMotor.set(power);
+        }
         }
 
     }
