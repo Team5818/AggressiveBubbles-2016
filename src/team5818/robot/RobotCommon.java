@@ -104,7 +104,7 @@ public class RobotCommon extends IterativeRobot {
     // RobotConstants.TALON_CLIMB_RIGHT, false, true));
     public final ClimbWinchs winch =
             new ClimbWinchs(RobotConstants.TALON_WINCH_LEFT,
-                    RobotConstants.TALON_WINCH_RIGHT, true, false);
+                    RobotConstants.TALON_WINCH_RIGHT, false, true);
     final String defaultAuto = "Default";
     final String customAuto = "My Auto";
     private Command autoSelected;
@@ -266,6 +266,7 @@ public class RobotCommon extends IterativeRobot {
         Scheduler.getInstance().run();
         modules.forEach(Module::autoPeriodicModule);
         targeting.GetData();
+        displayNumbers();
 
     }
 
@@ -284,11 +285,7 @@ public class RobotCommon extends IterativeRobot {
          * BUT_PERFORM_AUTO)) { Command autoSelected = (Command)
          * chooserAuto.getSelected(); autoSelected.start(); }
          */
-        SmartDashboard.putNumber("Arm Angle", arm.getAngle());
-        SmartDashboard.putNumber("Arm Angle Raw", arm.getRawPot());
-        SmartDashboard.putNumber("Lower Flywheel RPS", lowerFlywheel.getRPS());
-
-        
+        displayNumbers();
     }
 
     @Override
@@ -315,6 +312,17 @@ public class RobotCommon extends IterativeRobot {
         upperFlywheel.setPower(0);
         arm.getFirstMotor().enableBrakeMode(true);
         arm.getSecondMotor().enableBrakeMode(true);
+    }
+    
+    private void displayNumbers() {
+        SmartDashboard.putNumber("Arm Angle", arm.getAngle());
+        SmartDashboard.putNumber("Arm Angle Raw", arm.getRawPot());
+        SmartDashboard.putNumber("Lower Flywheel RPS", lowerFlywheel.getRPS());
+        SmartDashboard.putNumber("Upper Flywheel RPS", upperFlywheel.getRPS());
+        SmartDashboard.putNumber("Left Winch RPS", winch.getLeft().getRPS());
+        SmartDashboard.putNumber("Right Winch RPS", winch.getRight().getRPS());
+        SmartDashboard.putNumber("Left Winch Counts", winch.getLeft().getTalon().getEncPosition());
+        SmartDashboard.putNumber("Right Winch Counts", winch.getRight().getTalon().getEncPosition());
     }
 
 }

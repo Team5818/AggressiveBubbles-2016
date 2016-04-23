@@ -6,30 +6,43 @@ import edu.wpi.first.wpilibj.PIDOutput;
 import edu.wpi.first.wpilibj.PIDSource;
 import edu.wpi.first.wpilibj.PIDSourceType;
 import edu.wpi.first.wpilibj.Preferences;
+import team5818.robot.util.BetterPIDController;
 
 public class ClimbWinch implements PIDSource, PIDOutput {
 
+    public static double MAX_VELOCITY = 300;
     private final CANTalon talon;
     private final double scale;
-    private PIDController pid;
+    private BetterPIDController pid;
 
     public ClimbWinch(int tal, boolean rev) {
         this.talon = new CANTalon(tal);
         talon.setInverted(rev);
-        scale  = Preferences.getInstance().getDouble("ClimbEncScale", 1);
+        //scale  = Preferences.getInstance().getDouble("ClimbEncScale", 1);
+        scale = 1;
+        pid = new BetterPIDController(0.0001, 0, 0, 1/MAX_VELOCITY, this, this);
+        updatePIDConstants();
+        talon.setPosition(0);
+    }
+    
+    public void updatePIDConstants() {
         double kp = Preferences.getInstance().getDouble("WinchKp", 0.000001);
         double ki = Preferences.getInstance().getDouble("WinchKi", 0);
         double kd = Preferences.getInstance().getDouble("WinchKd", 0);
-        double kf = Preferences.getInstance().getDouble("WInchKf", 0);
-        pid = new PIDController(kp, ki, kd, kf, this, this, 50);
+        pid.setPID(kp, ki, kd, 1.0/MAX_VELOCITY);
     }
     
     public void setPower(double output) {
+        if(pid.isEnabled()) {
+            pid.disable();
+            pid.reset();
+        }
         pidWrite(output);
     }
     
     public void setRPS(double rps) {
-        //talon.set(output);
+        pid.setSetpoint(rps);
+        pid.enable();
     }
     
 
@@ -48,6 +61,10 @@ public class ClimbWinch implements PIDSource, PIDOutput {
         double rps = talon.getEncVelocity() * scale;
         return rps;
     }
+    
+    public CANTalon getTalon() {
+        return talon;
+    }
 
     @Override
     public double pidGet() {
@@ -57,8 +74,7 @@ public class ClimbWinch implements PIDSource, PIDOutput {
     
     @Override
     public PIDSourceType getPIDSourceType() {
-        // TODO Auto-generated method stub
-        return null;
+        return PIDSourceType.kRate;
     }
 
 }

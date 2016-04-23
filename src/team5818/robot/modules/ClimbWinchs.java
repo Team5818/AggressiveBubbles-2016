@@ -20,6 +20,12 @@ public class ClimbWinchs{
         
     }
     
+    public void updatePIDConstants() {
+        left.updatePIDConstants();
+        right.updatePIDConstants();
+        
+    }
+    
     /**
      * 
      * @param pow power for both winches
@@ -56,8 +62,20 @@ public class ClimbWinchs{
     }
     
     public void setRPS(double rps) {
-        left.setRPS(rps);
-        right.setRPS(rps);
+        setRPS(rps,rps);
+    }
+    
+    public void setRPS(double l, double r) {
+        left.setRPS(l);
+        right.setRPS(r);
+    }
+    
+    
+    public ClimbWinch getLeft() {
+        return left;
+    }
+    public ClimbWinch getRight() {
+        return right;
     }
 
 }

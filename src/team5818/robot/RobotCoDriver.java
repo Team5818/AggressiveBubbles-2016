@@ -22,6 +22,8 @@ import team5818.robot.commands.ShootIfReady;
 import team5818.robot.commands.SwitchFeed;
 import team5818.robot.commands.LEDToggle;
 import team5818.robot.modules.Arm;
+import team5818.robot.modules.ClimbWinch;
+import team5818.robot.modules.ClimbWinchs;
 import team5818.robot.modules.ComputerVision;
 import team5818.robot.modules.ComputerVision;
 import team5818.robot.modules.FlyWheel;
@@ -50,7 +52,9 @@ public class RobotCoDriver implements Module {
     // Joystick One Buttons
     private static final int BUT_MODE_CLIMB = 11;
     private static final int BUT_EXTEND_SERVO = 9;
+    private static final int BUT_WINCH_MODE_VELOCITY = 9; // Climb Mode
     private static final int BUT_RETRACT_SERVO = 8;
+    private static final int BUT_WINCH_MODE_POWER = 8; // Climb Mode
     private static final int BUT_PRINT_ANGLE = 7;
     private static final int BUT_NOT_MODE_CLIMB = 6;
     private static final int BUT_SWITCH_FEED_SHOOTER = 3;
@@ -112,6 +116,7 @@ public class RobotCoDriver implements Module {
     private boolean hasStoppedArm = false;
     private boolean hasStoppedDrive = false;
     private boolean modeClimb = false;
+    private boolean modeWinchVelocity = false;
     private boolean hasStoppedClimbArm = false;
     private boolean hasStoppedClimbWinch = false;
 
@@ -290,7 +295,10 @@ public class RobotCoDriver implements Module {
     
     private void climbPeriodic() {
         if (usingFirstStick()) {
-            RobotCommon.runningRobot.winch.setPower(firstJoystick.getY() - firstJoystick.getX() / 30, firstJoystick.getY() - firstJoystick.getX() / 6);
+            if(!modeWinchVelocity)
+                RobotCommon.runningRobot.winch.setPower(-firstJoystick.getY() - firstJoystick.getX() / 6, - firstJoystick.getY() + firstJoystick.getX() / 6);
+            else
+                RobotCommon.runningRobot.winch.setRPS(-firstJoystick.getY() * ClimbWinch.MAX_VELOCITY);
             hasStoppedClimbWinch = false;
         } else if (!hasStoppedClimbWinch) {
             RobotCommon.runningRobot.winch.setPower(0);
@@ -360,8 +368,14 @@ public class RobotCoDriver implements Module {
         if (firstJoystick.getRawButton(BUT_NOT_MODE_CLIMB))
             unInitClimb();
         
-        if(modeClimb) /* Do not do non climb buttons. */
+        if(modeClimb) { /* Do not do non climb buttons. */
+            if(firstJoystick.getRawButton(BUT_WINCH_MODE_VELOCITY))
+                modeWinchVelocity = true;
+            if(firstJoystick.getRawButton(BUT_WINCH_MODE_POWER))
+                modeWinchVelocity = false;
+            
             return;
+        }
         
         if (firstJoystick.getRawButton(BUT_AUTO_AIM) && !autoAim.isRunning()) {
             autoAim.pidX();
