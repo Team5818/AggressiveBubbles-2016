@@ -13,11 +13,16 @@ public class ClimbWinch implements PIDSource, PIDOutput {
     public static double MAX_VELOCITY = 375;
     private final CANTalon talon;
     private final double scale;
+    private final double sign;
     private BetterPIDController pid;
 
     public ClimbWinch(int tal, boolean rev) {
         this.talon = new CANTalon(tal);
         talon.setInverted(rev);
+        if(rev)
+            sign = -1;
+        else
+            sign = 1;
         //scale  = Preferences.getInstance().getDouble("ClimbEncScale", 1);
         scale = 1;
         pid = new BetterPIDController(0.0001, 0, 0, 1/MAX_VELOCITY, this, this);
@@ -58,7 +63,7 @@ public class ClimbWinch implements PIDSource, PIDOutput {
     }
     
     public double getRPS() {
-        double rps = talon.getEncVelocity() * scale;
+        double rps = talon.getEncVelocity() * scale * sign;
         return rps;
     }
     
