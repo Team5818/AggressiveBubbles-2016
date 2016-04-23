@@ -23,11 +23,13 @@ public class AutoMoatArc extends CommandGroup{
     
     private SwitchFeed switchCam = new SwitchFeed(ComputerVision.CAMERA_SHOOTER);
     private LEDToggle lightUp = new LEDToggle(true);
+    private CommandGroup driveOverMoat = new CommandGroup();
     private SetArmAngle armToPosition = new SetArmAngle(crossingAngle);
     private DriveVelocityProfile driveOver;  
+    private DoNothing pause = new DoNothing(1);
     private CommandGroup prepareShot = new CommandGroup();
     private SetFlywheelVelocity setFlyVel = new SetFlywheelVelocity(flyUpVel, flyLoVel);
-    private SpinRobot spin;
+    private ScanForTarget scan = new ScanForTarget(true);
     private Shoot dontMiss = new Shoot();
 
     /**
@@ -42,10 +44,10 @@ public class AutoMoatArc extends CommandGroup{
         double xOffset = 0;
         double yOffset = 0;
         if(position == 2){
-            double[] leftVels = {-24,-50,-50,-10,-24};
-            double[] rightVels = {-24,-50,-50,-60,-24};
-            double[] dists = {0,-24,-120,-140,-200};
-            dist = -200;
+            double[] leftVels = {-24,-50,-50,-24};
+            double[] rightVels = {-24,-50,-50,-24};
+            double[] dists = {0,24,120,180};
+            dist = -180;
             leftTable = new LinearLookupTable(dists, leftVels);
             rightTable = new LinearLookupTable(dists, rightVels);
             spinAngle = 90;
@@ -53,8 +55,8 @@ public class AutoMoatArc extends CommandGroup{
             yOffset = Preferences.getInstance().getDouble("AutoPortcullis2YOffset", yOffset);
         }
         else if(position == 3){
-            double[] leftVels = {-24,-50,-50,-24};
-            double[] rightVels = {-24,-50,-50,-24};
+            double[] leftVels = {-45,-50,-50,-24};
+            double[] rightVels = {-45,-50,-50,-24};
             double[] dists = {0,24,100,160};
             dist = -160;
             leftTable = new LinearLookupTable(dists, leftVels);
@@ -88,15 +90,19 @@ public class AutoMoatArc extends CommandGroup{
         }
         
         driveOver = new DriveVelocityProfile(leftTable, rightTable, dist);
-        spin = new SpinRobot(spinAngle);
-        AutoAim autoAim = new AutoAim(xOffset,yOffset, 15);
+        AutoAim autoAim = new AutoAim(xOffset,yOffset, 3);
         
+        driveOverMoat.addParallel(armToPosition);
+        driveOverMoat.addParallel(driveOver);
+        
+        prepareShot.addParallel(scan);
         prepareShot.addParallel(setFlyVel);
+        
         
         this.addSequential(lightUp);
         this.addSequential(switchCam); 
-        this.addSequential(armToPosition);
-        this.addSequential(driveOver);
+        this.addSequential(driveOverMoat);
+        this.addSequential(pause);
         this.addSequential(prepareShot);
         this.addSequential(autoAim);
         this.addSequential(dontMiss);

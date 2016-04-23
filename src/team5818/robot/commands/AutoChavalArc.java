@@ -19,7 +19,7 @@ public class AutoChavalArc extends CommandGroup{
     double spinAngle;
     double dist;
     double[] firstVels = {12,30,30,12};
-    double[] distances = {0,10,30,40};
+    double[] distances = {0,9,27,36};
     LinearLookupTable driveStraightTable = new LinearLookupTable(distances, firstVels);
     
     LinearLookupTable leftTable;
@@ -32,11 +32,11 @@ public class AutoChavalArc extends CommandGroup{
     private SetArmAngle armToCrossAngle = new SetArmAngle(driveOverAngle);
     private DriveVelocityProfile driveToDefense = new DriveVelocityProfile(driveStraightTable, 72);
     
-    private ArmPower lowerChaval = new ArmPower(LowerArmToGround.ARM_POWER); 
+    private ArmPower lowerChaval = new ArmPower(LowerArmToGround.ARM_POWER,.75); 
 
     private CommandGroup driveOverChaval = new CommandGroup();
     private CommandGroup raiseArm = new CommandGroup();
-    private DoNothing wait = new DoNothing(.5);
+    private DoNothing wait = new DoNothing(1);
     private SetArmAngle armBackUp = new SetArmAngle(driveOverAngle);
     private DriveVelocityProfile driveOver;  
     
@@ -59,10 +59,10 @@ public class AutoChavalArc extends CommandGroup{
         double xOffset = 0;
         double yOffset = 0;
         if(position == 2){
-            double[] leftVels = {24,50,50,60,24};
-            double[] rightVels = {24,50,50,10,24};
-            double[] dists = {0,24,120,140,200};
-            dist = 200;
+            double[] leftVels = {24,50,50,24};
+            double[] rightVels = {24,50,50,24};
+            double[] dists = {0,24,85,120};
+            dist = 120;
             leftTable = new LinearLookupTable(dists, leftVels);
             rightTable = new LinearLookupTable(dists, rightVels);
             spinAngle = -110;
@@ -109,14 +109,14 @@ public class AutoChavalArc extends CommandGroup{
         spin = new SpinRobot(spinAngle, 2, 0.5);
 
         
-        driveToChaval.addParallel(armToCrossAngle);
-        driveToChaval.addParallel(driveToDefense);
+        driveToChaval.addParallel(armToCrossAngle,1.5);
+        driveToChaval.addParallel(driveToDefense, 2);
         
         raiseArm.addSequential(wait);
         raiseArm.addSequential(armBackUp);
         
-        driveOverChaval.addParallel(raiseArm);
-        driveOverChaval.addParallel(driveOver);
+        driveOverChaval.addParallel(raiseArm, 3);
+        driveOverChaval.addParallel(driveOver, 3.5);
         
         prepareShot.addParallel(setFlyVel);
         prepareShot.addParallel(spin);
