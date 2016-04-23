@@ -113,8 +113,7 @@ public class RobotCommon extends IterativeRobot {
 
     enum AutoRoutine {
         DO_NOTHING, LOWBAR, PORTCULLIS, ROCKWALL, RAMPARTS, MOAT, ROUGH_TERRAIN,
-        CHAVAL, SALLY_PORT, DRAW_BRIDGE, SPYBOT, AUTO_TEST, LOWBAR_ARC,
-        PORTCULLIS_ARC, ROUGH_TERRAIN_ARC, ROCKWALL_ARC, RAMPARTS_ARC;
+        CHEVAL, SALLY_PORT, DRAW_BRIDGE, SPYBOT, AUTO_TEST;
     }
 
     /**
@@ -137,12 +136,7 @@ public class RobotCommon extends IterativeRobot {
         chooserAuto.addObject("Moat", AutoRoutine.MOAT);
         chooserAuto.addObject("Spybot", AutoRoutine.SPYBOT);
         chooserAuto.addObject("!!!AUTO TEST!!!", AutoRoutine.AUTO_TEST);
-        chooserAuto.addObject("Arcing Lowbar", AutoRoutine.LOWBAR_ARC);
-        chooserAuto.addObject("Arcing Portcullis", AutoRoutine.PORTCULLIS_ARC);
-        chooserAuto.addObject("Arcing Rough Terrain", AutoRoutine.ROUGH_TERRAIN_ARC);
-        chooserAuto.addObject("RockwallArc", AutoRoutine.ROCKWALL_ARC);
-        chooserAuto.addObject("Arcing Ramparts", AutoRoutine.RAMPARTS_ARC);
-        chooserAuto.addObject("Chaval de Grease", AutoRoutine.CHAVAL);
+        chooserAuto.addObject("Chaval de Grease", AutoRoutine.CHEVAL);
 
         // Adding auto position to SmartDashboard.
         chooserPos = new SendableChooser();
@@ -195,39 +189,24 @@ public class RobotCommon extends IterativeRobot {
                 auto = new DoNothingAuto();
                 break;
             case LOWBAR:
-                auto = new AutoLowbarForward();
-                break;
-            case LOWBAR_ARC:
                 auto = new AutoLowbarArc();
                 break;
             case PORTCULLIS:
-                auto = new AutoPortcullisUniversal(pos);
-                break;
-            case PORTCULLIS_ARC:
                 auto = new AutoPortcullisArc(pos);
                 break;
             case ROUGH_TERRAIN:
-                auto = new AutoRoughTerrainUniversal(pos);
-                break;
-            case ROUGH_TERRAIN_ARC:
                 auto = new AutoRoughTerrainArc(pos);
-                break;     
-            case ROCKWALL:
-                auto = new AutoRoughTerrainUniversal(pos);
                 break;
-            case ROCKWALL_ARC:
+            case ROCKWALL:
                 auto = new AutoRockwallArc(pos);
                 break;
-            case RAMPARTS_ARC:
+            case RAMPARTS:
                 auto = new AutoRampartsArc(pos);
                 break;
             case MOAT:
                 auto = new AutoMoatArc(pos);
                 break;
-            case RAMPARTS:
-                auto = new AutoRoughTerrainUniversal(pos);
-                break;
-            case CHAVAL:
+            case CHEVAL:
                 auto = new AutoChavalArc(pos);
                 break;    
             case SALLY_PORT:
@@ -243,7 +222,7 @@ public class RobotCommon extends IterativeRobot {
                 auto = new AutoTest();
                 break;
             default:
-                auto = new AutoLowbarForward();
+                auto = new DoNothingAuto();
                 break;
 
         }
