@@ -26,6 +26,7 @@ public class AutoRockwallArc extends CommandGroup{
     
     private SwitchFeed switchCam = new SwitchFeed(ComputerVision.CAMERA_SHOOTER);
     private LEDToggle lightUp = new LEDToggle(true);
+    private CommandGroup driveOverRockwall = new CommandGroup();
     private SetArmAngle armToPosition = new SetArmAngle(crossingAngle);
     private DriveVelocityProfile driveOver;  
     private CommandGroup prepareShot = new CommandGroup();
@@ -61,12 +62,12 @@ public class AutoRockwallArc extends CommandGroup{
         else if(position == 3){
             double[] leftVels = {-24,-70,-70,-24};
             double[] rightVels = {-24,-70,-70,-24};
-            double[] dists = {0,24,90,140};
-            dist = -140;
+            double[] dists = {0,24,90,158};
+            dist = -158;
             leftTable = new LinearLookupTable(dists, leftVels);
             rightTable = new LinearLookupTable(dists, rightVels);
             spinAngle = (-90);
-            xOffset = Preferences.getInstance().getDouble("AutoPortcullis3XOffset", xOffset);
+            xOffset = -.5;
             yOffset = Preferences.getInstance().getDouble("AutoPortcullis3YOffset", yOffset);
             cw = true;
         }
@@ -74,8 +75,8 @@ public class AutoRockwallArc extends CommandGroup{
         else if(position==4){
             double[] leftVels = {-24,-70,-70,-24};
             double[] rightVels = {-24,-70,-70,-24};
-            double[] dists = {0,24,90,140};
-            dist = -140;
+            double[] dists = {0,24,90,158};
+            dist = -158;
             leftTable = new LinearLookupTable(dists, leftVels);
             rightTable = new LinearLookupTable(dists, rightVels);
             spinAngle = (0);
@@ -86,8 +87,8 @@ public class AutoRockwallArc extends CommandGroup{
         else{
             double[] leftVels = {-24,-70,-70,-24};
             double[] rightVels = {-24,-70,-70,-24};
-            double[] dists = {0,24,90,140};
-            dist = -140;
+            double[] dists = {0,24,90,158};
+            dist = -158;
             leftTable = new LinearLookupTable(dists, leftVels);
             rightTable = new LinearLookupTable(dists, rightVels);
             spinAngle = 90;
@@ -101,14 +102,15 @@ public class AutoRockwallArc extends CommandGroup{
         spin = new SpinRobot(spinAngle);
         scan = new ScanForTarget(cw);
          
+        driveOverRockwall.addParallel(armToPosition);
+        driveOverRockwall.addParallel(driveOver);
         
         prepareShot.addParallel(setFlyVel);
         prepareShot.addParallel(scan);
         
         this.addSequential(lightUp);
         this.addSequential(switchCam); 
-        this.addSequential(armToPosition);
-        this.addSequential(driveOver);
+        this.addSequential(driveOverRockwall);
         this.addSequential(prepareShot);
         this.addSequential(aim);
         this.addSequential(dontMiss);
