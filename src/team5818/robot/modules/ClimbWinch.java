@@ -10,7 +10,7 @@ import team5818.robot.util.BetterPIDController;
 
 public class ClimbWinch implements PIDSource, PIDOutput {
 
-    public static double MAX_VELOCITY = 300;
+    public static double MAX_VELOCITY = 375;
     private final CANTalon talon;
     private final double scale;
     private BetterPIDController pid;

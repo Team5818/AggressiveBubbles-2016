@@ -104,7 +104,7 @@ public class RobotCommon extends IterativeRobot {
     // RobotConstants.TALON_CLIMB_RIGHT, false, true));
     public final ClimbWinchs winch =
             new ClimbWinchs(RobotConstants.TALON_WINCH_LEFT,
-                    RobotConstants.TALON_WINCH_RIGHT, false, true);
+                    RobotConstants.TALON_WINCH_RIGHT, true, true);
     final String defaultAuto = "Default";
     final String customAuto = "My Auto";
     private Command autoSelected;

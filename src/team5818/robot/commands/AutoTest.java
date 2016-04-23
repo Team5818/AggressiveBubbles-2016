@@ -20,7 +20,7 @@ public class AutoTest extends CommandGroup {
 
 
     public AutoTest() {
-        setTimeout(2);
+        setTimeout(4);
         //this.addSequential(drive);
         //this.addSequential(driveVel);
         //this.addSequential(lightUp);
@@ -37,7 +37,7 @@ public class AutoTest extends CommandGroup {
     
     @Override
     public void execute() {
-        RobotCommon.runningRobot.winch.setRPS(-50);
+        RobotCommon.runningRobot.winch.setRPS(100);
     }
     public boolean isFinished() {
         return this.isTimedOut();
