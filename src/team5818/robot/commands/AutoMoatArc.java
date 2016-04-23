@@ -17,6 +17,7 @@ public class AutoMoatArc extends CommandGroup{
     double shootAngle = Preferences.getInstance().getDouble("ArmAngleShooting", 40);
     double spinAngle;
     double dist;
+    boolean cw;
     
     LinearLookupTable leftTable;
     LinearLookupTable rightTable;
@@ -29,7 +30,7 @@ public class AutoMoatArc extends CommandGroup{
     private DoNothing pause = new DoNothing(1);
     private CommandGroup prepareShot = new CommandGroup();
     private SetFlywheelVelocity setFlyVel = new SetFlywheelVelocity(flyUpVel, flyLoVel);
-    private ScanForTarget scan = new ScanForTarget(true);
+    private ScanForTarget scan;
     private Shoot dontMiss = new Shoot();
 
     /**
@@ -53,6 +54,7 @@ public class AutoMoatArc extends CommandGroup{
             spinAngle = 90;
             xOffset = Preferences.getInstance().getDouble("AutoPortcullis2XOffset", xOffset);
             yOffset = Preferences.getInstance().getDouble("AutoPortcullis2YOffset", yOffset);
+            cw = true;
         }
         else if(position == 3){
             double[] leftVels = {-45,-50,-50,-24};
@@ -64,6 +66,7 @@ public class AutoMoatArc extends CommandGroup{
             spinAngle = 60;
             xOffset = Preferences.getInstance().getDouble("AutoPortcullis3XOffset", xOffset);
             yOffset = Preferences.getInstance().getDouble("AutoPortcullis3YOffset", yOffset);
+            cw = true;
         }
         
         else if(position==4){
@@ -76,6 +79,7 @@ public class AutoMoatArc extends CommandGroup{
             spinAngle = 60;
             xOffset = Preferences.getInstance().getDouble("AutoPortcullis4XOffset", xOffset);
             yOffset = Preferences.getInstance().getDouble("AutoPortcullis4YOffset", yOffset);
+            cw = false;
         }
         else{
             double[] leftVels = {-24,-50,-50,-24};
@@ -87,10 +91,12 @@ public class AutoMoatArc extends CommandGroup{
             spinAngle = 60;
             xOffset = Preferences.getInstance().getDouble("AutoPortcullis5XOffset", xOffset);
             yOffset = Preferences.getInstance().getDouble("AutoPortcullis5YOffsets", yOffset);
+            cw = false;
         }
         
         driveOver = new DriveVelocityProfile(leftTable, rightTable, dist);
         AutoAim autoAim = new AutoAim(xOffset,yOffset, 3);
+        scan = new ScanForTarget(cw);
         
         driveOverMoat.addParallel(armToPosition);
         driveOverMoat.addParallel(driveOver);

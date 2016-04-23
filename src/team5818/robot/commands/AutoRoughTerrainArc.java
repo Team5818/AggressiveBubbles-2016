@@ -19,6 +19,7 @@ public class AutoRoughTerrainArc extends CommandGroup{
     double shootAngle = Preferences.getInstance().getDouble("ArmAngleShooting", 40);
     double spinAngle;
     double dist;
+    boolean cw;
     
     LinearLookupTable leftTable;
     LinearLookupTable rightTable;
@@ -30,6 +31,7 @@ public class AutoRoughTerrainArc extends CommandGroup{
     private CommandGroup prepareShot = new CommandGroup();
     private SetFlywheelVelocity setFlyVel = new SetFlywheelVelocity(flyUpVel, flyLoVel);
     private SpinRobot spin;
+    private ScanForTarget scan;
     private Shoot dontMiss = new Shoot();
 
     /**
@@ -53,6 +55,7 @@ public class AutoRoughTerrainArc extends CommandGroup{
             spinAngle = 90;
             xOffset = Preferences.getInstance().getDouble("AutoPortcullis2XOffset", xOffset);
             yOffset = Preferences.getInstance().getDouble("AutoPortcullis2YOffset", yOffset);
+            cw = true;
         }
         else if(position == 3){
             double[] leftVels = {-24,-50,-50,-24};
@@ -64,6 +67,7 @@ public class AutoRoughTerrainArc extends CommandGroup{
             spinAngle = 60;
             xOffset = Preferences.getInstance().getDouble("AutoPortcullis3XOffset", xOffset);
             yOffset = Preferences.getInstance().getDouble("AutoPortcullis3YOffset", yOffset);
+            cw = true;
         }
         
         else if(position==4){
@@ -76,6 +80,7 @@ public class AutoRoughTerrainArc extends CommandGroup{
             spinAngle = 60;
             xOffset = Preferences.getInstance().getDouble("AutoPortcullis4XOffset", xOffset);
             yOffset = Preferences.getInstance().getDouble("AutoPortcullis4YOffset", yOffset);
+            cw = false;
         }
         else{
             double[] leftVels = {-24,-50,-50,-24};
@@ -87,13 +92,16 @@ public class AutoRoughTerrainArc extends CommandGroup{
             spinAngle = 60;
             xOffset = Preferences.getInstance().getDouble("AutoPortcullis5XOffset", xOffset);
             yOffset = Preferences.getInstance().getDouble("AutoPortcullis5YOffsets", yOffset);
+            cw = false;
         }
         
         driveOver = new DriveVelocityProfile(leftTable, rightTable, dist);
         spin = new SpinRobot(spinAngle);
         AutoAim autoAim = new AutoAim(xOffset,yOffset, 15);
+        scan = new ScanForTarget(cw);
         
         prepareShot.addParallel(setFlyVel);
+        prepareShot.addParallel(scan);
         
         this.addSequential(lightUp);
         this.addSequential(switchCam); 
