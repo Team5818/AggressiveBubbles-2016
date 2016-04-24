@@ -80,8 +80,6 @@ public class AutoAim extends Command {
      * @param offset
      */
     public AutoAim(double xOffset, double yOffset, double flyup, double flylo, double timeout) {
-        xOffset += DEFAULT_X_OFFSET;
-        yOffset += DEFAULT_Y_OFFSET;
         double[] xArr = {84};
         double[] yArr = {8};
         lookupTable = new LinearLookupTable(xArr, yArr);
@@ -118,6 +116,14 @@ public class AutoAim extends Command {
 
     public AutoAim() {
         this(0, 0, defaultFlyUpVel, defaultFlyLoVel, DEFAULT_TIMEOUT);
+    }
+    
+    public void setXOffset(double x) {
+        this.xOffset = x;
+    }
+    
+    public void setYOffset(double y) {
+        this.yOffset = y;
     }
 
     @Override
@@ -161,7 +167,7 @@ public class AutoAim extends Command {
 
     public double calculateAngleX() {
         double setX = (((imgWidth / 2 - (locX))) / imgWidth * camFOV/2);
-        setX += xOffset;
+        setX += xOffset + DEFAULT_X_OFFSET;
         SmartDashboard.putNumber("AutoAim X Error", setX);
         return setX;
 
@@ -170,7 +176,7 @@ public class AutoAim extends Command {
     public double calculateAngleY() {
         double setY = ((imgHeight / 2 - (locY))) / imgHeight * camFOV/2;
         SmartDashboard.putNumber("AutoAim Y Angle", setY);
-        setY += yOffset;
+        setY += yOffset + DEFAULT_Y_OFFSET;
 
 //      double setY = RobotCommon.runningRobot.arm.getAngle()
 //              + ((imgHeight / 2 - (locY))) / imgHeight * camFOV / 2;
