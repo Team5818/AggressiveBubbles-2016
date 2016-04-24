@@ -8,7 +8,7 @@ import team5818.robot.util.LinearLookupTable;
 
 public class AutoChavalArc extends CommandGroup{
     private double findTargetAngle;
-    public double driveOverAngle = 15;
+    public double driveOverAngle = 18;
     public double collectAngle =
             Preferences.getInstance().getDouble("ArmAngleCollect", 1.5);
     public double flyUpVel = FlyWheel.SHOOT_VELOCITY_UPPER;
@@ -32,7 +32,7 @@ public class AutoChavalArc extends CommandGroup{
     private SetArmAngle armToCrossAngle = new SetArmAngle(driveOverAngle);
     private DriveVelocityProfile driveToDefense = new DriveVelocityProfile(driveStraightTable, 72);
     
-    private ArmPower lowerChaval = new ArmPower(LowerArmToGround.ARM_POWER,.75); 
+    private ArmPower lowerChaval = new ArmPower(LowerArmToGround.ARM_POWER,1.3); 
 
     private CommandGroup driveOverChaval = new CommandGroup();
     private CommandGroup raiseArm = new CommandGroup();
