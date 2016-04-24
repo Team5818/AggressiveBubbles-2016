@@ -20,7 +20,7 @@ public class AutoTest extends CommandGroup {
 
 
     public AutoTest() {
-        setTimeout(4);
+        setTimeout(14);
         //this.addSequential(drive);
         //this.addSequential(driveVel);
         //this.addSequential(lightUp);
@@ -31,20 +31,26 @@ public class AutoTest extends CommandGroup {
     public void initialize() {
         //FlyWheel fly = RobotCommon.runningRobot.lowerFlywheel;
         //fly.setPower(.2);
-        RobotCommon.runningRobot.winch.updatePIDConstants();
-        RobotCommon.runningRobot.winch.setPower(0);
+        //RobotCommon.runningRobot.winch.updatePIDConstants();
+        //RobotCommon.runningRobot.winch.setPower(0);
+        
+        RobotCommon.runningRobot.lowerFlywheel.updatePIDConstants();
+        RobotCommon.runningRobot.lowerFlywheel.setVelocity(140);
+        RobotCommon.runningRobot.upperFlywheel.setVelocity(100);
+        
     }
     
     @Override
     public void execute() {
-        RobotCommon.runningRobot.winch.setRPS(100);
+        //RobotCommon.runningRobot.winch.setRPS(50);
     }
     public boolean isFinished() {
         return this.isTimedOut();
     }
     @Override
     public void end() {
-        RobotCommon.runningRobot.winch.setPower(0);
+        RobotCommon.runningRobot.lowerFlywheel.setPower(0);
+        RobotCommon.runningRobot.upperFlywheel.setPower(0);
         //RobotCommon.runningRobot.driveTrain.setPower(new Vector2d(0,0));
     }
     

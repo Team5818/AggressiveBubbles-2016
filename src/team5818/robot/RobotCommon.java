@@ -104,7 +104,7 @@ public class RobotCommon extends IterativeRobot {
     // RobotConstants.TALON_CLIMB_RIGHT, false, true));
     public final ClimbWinchs winch =
             new ClimbWinchs(RobotConstants.TALON_WINCH_LEFT,
-                    RobotConstants.TALON_WINCH_RIGHT, true, false);
+                    RobotConstants.TALON_WINCH_RIGHT, false, true);
     final String defaultAuto = "Default";
     final String customAuto = "My Auto";
     private Command autoSelected;
@@ -296,8 +296,8 @@ public class RobotCommon extends IterativeRobot {
     private void displayNumbers() {
         SmartDashboard.putNumber("Arm Angle", arm.getAngle());
         SmartDashboard.putNumber("Arm Angle Raw", arm.getRawPot());
-        SmartDashboard.putNumber("Lower Flywheel RPS", lowerFlywheel.getRPS());
-        SmartDashboard.putNumber("Upper Flywheel RPS", upperFlywheel.getRPS());
+        SmartDashboard.putNumber("Upper Fly RPS", upperFlywheel.getRPS());
+        SmartDashboard.putNumber("Lower Fly RPS", lowerFlywheel.getRPS());
         SmartDashboard.putNumber("Left Winch RPS", winch.getLeft().getRPS());
         SmartDashboard.putNumber("Right Winch RPS", winch.getRight().getRPS());
         SmartDashboard.putNumber("Left Winch Counts", winch.getLeft().getTalon().getEncPosition());

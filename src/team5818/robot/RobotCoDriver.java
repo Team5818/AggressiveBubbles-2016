@@ -29,6 +29,7 @@ import team5818.robot.modules.ComputerVision;
 import team5818.robot.modules.FlyWheel;
 import team5818.robot.modules.Module;
 import team5818.robot.modules.drivetrain.ArcadeDriveCalculator;
+import team5818.robot.modules.drivetrain.DriveTrain;
 import team5818.robot.util.LinearLookupTable;
 import team5818.robot.util.Vector2d;
 import team5818.robot.util.Vectors;
@@ -118,15 +119,18 @@ public class RobotCoDriver implements Module {
     private boolean modeClimb = false;
     private boolean modeWinchVelocity = false;
     private boolean hasStoppedClimbArm = false;
-    private boolean hasStoppedClimbWinch = false;
+    private boolean hasStoppedLeftClimbWinch = false;
+    private boolean hasStoppedRightClimbWinch = false;
 
     // Different arm angles
     private double shootAngleHigh = 60;
     private double shootAngleMed = 40;
     private double shootAngleLow = 30;
-    private double[] lowerFlyVels = {0, -4, -4, 0};
-    private double[] upperFlyVels = {0,0,0,0};
-    private double[] flyTimes = {0, 1000, 2000, 3000};
+    private double[] lowerFlyVels = {-17, -2, -1, -1, -1};
+    //private double[] lowerFlyVels = {0, 0, 0, 0, 0};
+    //private double[] upperFlyVels = {0,0,0,0, 0};
+    private double[] upperFlyVels = {-3.5,-3.6,-3.7,-6, -7};
+    private double[] flyTimes = {0, 800, 1600, 2400, 3000};
     private LinearLookupTable lowerTable = new LinearLookupTable(flyTimes, lowerFlyVels);
     private LinearLookupTable upperTable = new LinearLookupTable(flyTimes, upperFlyVels);
 
@@ -182,7 +186,8 @@ public class RobotCoDriver implements Module {
         CommandGroup stopFlywheel = new CommandGroup();
         //stopFlywheel.addParallel(new SetFlywheelVelocity(0,0));
         //stopFlywheel.addParallel(new SetFlywheelPower(0));
-        stopFlywheel.addParallel(new FlywheelVelocityProfile(lowerTable, upperTable, 3));
+        stopFlywheel.addSequential(new SetFlywheelPower(0));
+        stopFlywheel.addSequential(new FlywheelVelocityProfile(lowerTable, upperTable, 3));
         CommandGroup switchFeedShoot = new CommandGroup();
         switchFeedShoot
                 .addParallel(new SwitchFeed(ComputerVision.CAMERA_SHOOTER));
@@ -200,7 +205,7 @@ public class RobotCoDriver implements Module {
                 .addParallel(new SwitchFeed(ComputerVision.CAMERA_SHOOTER));
         //overrideDriver.addParallel(new SetArmAngle(armAngleShooting));
         overrideDriver.addParallel(new SetFlywheelVelocity(
-                FlyWheel.SHOOT_VELOCITY_LOWER, FlyWheel.SHOOT_VELOCITY_UPPER));
+                FlyWheel.SHOOT_VELOCITY_UPPER, FlyWheel.SHOOT_VELOCITY_LOWER));
 
         // Making command for AutoAim and Shoot
         // CommandGroup aimAndShoot = new CommandGroup();
@@ -294,23 +299,27 @@ public class RobotCoDriver implements Module {
     }
     
     private void climbPeriodic() {
-        if (usingFirstStick()) {
-            if(!modeWinchVelocity)
-                RobotCommon.runningRobot.winch.setPower(-firstJoystick.getY() - firstJoystick.getX() / 6, - firstJoystick.getY() + firstJoystick.getX() / 6);
-            else
-                RobotCommon.runningRobot.winch.setRPS(-firstJoystick.getY() * ClimbWinch.MAX_VELOCITY);
-            hasStoppedClimbWinch = false;
-        } else if (!hasStoppedClimbWinch) {
-            RobotCommon.runningRobot.winch.setPower(0);
-            hasStoppedClimbWinch = true;
-        }
         if (usingSecondStick()) {
-            moveArm();
+            RobotCommon.runningRobot.arm
+                    .setPower(RobotCommon.runningRobot.arm.getMaxPower()
+                            * secondJoystick.getY());
             hasStoppedArm = false;
         } else {
             if (!hasStoppedArm) {
                 hasStoppedArm = true;
-                stopArm();
+                new SetArmPower(0).start();
+            }
+        }
+        if (usingFirstStick()) {
+            RobotCommon.runningRobot.driveTrain
+            .setPower(ArcadeDriveCalculator.INSTANCE.computeDefault(
+                    new Vector2d(firstJoystick.getX() * 0.5,
+                            firstJoystick.getY())));
+            hasStoppedDrive = false;
+        } else {
+            if (!hasStoppedDrive) {
+                hasStoppedDrive = true;
+                stopDrive();
             }
         }
     }

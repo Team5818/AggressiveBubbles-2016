@@ -36,9 +36,9 @@ public class FlyWheel extends Subsystem implements PIDSource {
     private final double maxVelocity;
 
     public static final double MAX_VELOCITY_UPPER = 240;
-    public static final double MAX_VELOCITY_LOWER = 140;
+    public static final double MAX_VELOCITY_LOWER = 167.5;
     public static final double SHOOT_VELOCITY_UPPER = 100;
-    public static final double SHOOT_VELOCITY_LOWER = 88;
+    public static final double SHOOT_VELOCITY_LOWER = 140;
     
     /**
      * The constants for the PID loop. kp = P constant ki = I constant kd = D
@@ -49,9 +49,9 @@ public class FlyWheel extends Subsystem implements PIDSource {
     
     private PIDController pid;
     
-    private final String name;
-
     private int sensorSign = 1;
+
+    private boolean lowerFly;
 
     /**
      * 
@@ -67,24 +67,28 @@ public class FlyWheel extends Subsystem implements PIDSource {
             boolean reversed) {
         gearBoxRatio = gearRatio;
         maxVelocity = maxVel;
-        if(lowerFly) {
-            Kp = Preferences.getInstance().getDouble("FlyLowerKp", 0.01);
-            Ki = Preferences.getInstance().getDouble("FlyLowerKi", 0.0001);
-            Kd = Preferences.getInstance().getDouble("FlyLowerKd", 0.001);
-            Kf = Preferences.getInstance().getDouble("FlyLowerKf", 1/MAX_VELOCITY_LOWER);
-            name = "Lower";
-        } else {
-            Kp = Preferences.getInstance().getDouble("FlyUpperKp", 0.01);
-            Ki = Preferences.getInstance().getDouble("FlyUpperKi", 0.0001);
-            Kd = Preferences.getInstance().getDouble("FlyUpperKd", 0.001);
-            Kf = Preferences.getInstance().getDouble("FlyUpperKf", 1/MAX_VELOCITY_UPPER);
-            name  = "Upper";
-        }
-        pid = new PIDController(Kp, Ki, Kd, Kf, this, talon);
+        this.lowerFly = lowerFly;
+        pid = new PIDController(0, 0, 0, 0, this, talon);
+        updatePIDConstants();
         pid.setAbsoluteTolerance(TOLERANCE);
         this.talon = talon;
         talon.setInverted(reversed);
         //reverseSensor(reversed);
+    }
+    
+    public void updatePIDConstants() {
+        if(lowerFly) {
+            Kp = Preferences.getInstance().getDouble("FlyLowerKp", 0.01);
+            Ki = Preferences.getInstance().getDouble("FlyLowerKi", 0.0001);
+            Kd = Preferences.getInstance().getDouble("FlyLowerKd", 0.001);
+            Kf = 1.0/MAX_VELOCITY_LOWER;
+        } else {
+            Kp = Preferences.getInstance().getDouble("FlyUpperKp", 0.01);
+            Ki = Preferences.getInstance().getDouble("FlyUpperKi", 0.0001);
+            Kd = Preferences.getInstance().getDouble("FlyUpperKd", 0.001);
+            Kf = 1.0/MAX_VELOCITY_UPPER;
+        }
+        pid.setPID(Kp, Ki, Kd, Kf);
     }
 
     private void reverseSensor(boolean reversed) {
@@ -106,8 +110,9 @@ public class FlyWheel extends Subsystem implements PIDSource {
      */
     public void setVelocity(double 
             vel) {
-        DriverStation.reportError("" + vel, false);
-        pid.reset();
+        //DriverStation.reportError("" + vel, false);
+        if(!pid.isEnabled() && pid.getSetpoint() != 0)
+            pid.reset();
         pid.setSetpoint(vel);
         pid.enable();
     }
@@ -146,11 +151,14 @@ public class FlyWheel extends Subsystem implements PIDSource {
             double rps = talon.getEncVelocity() * 10.0 / 6.0 * gearBoxRatio * sensorSign;
             return rps;
         } catch (Exception e) {
-
+                DriverStation.reportError("Couldn't print flywheel velocity", false);
         }
         return 0;
     }
 
+    public CANTalon getTalon() {
+        return talon;
+    }
     public PIDController getPIDController() {
         return pid;
     }
