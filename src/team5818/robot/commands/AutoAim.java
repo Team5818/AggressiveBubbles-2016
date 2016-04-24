@@ -336,5 +336,6 @@ public class AutoAim extends Command {
     @Override
     protected void interrupted() {
         RobotCommon.runningRobot.driveTrain.setPower(new Vector2d(0, 0));
+        RobotCommon.runningRobot.arm.setPower(0);
     }
 }
