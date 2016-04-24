@@ -38,7 +38,7 @@ public class Arm extends Subsystem implements PIDSource, PIDOutput {
     private double armMotorRatio = 1;
     private double armPowerIdle = 0.1;
     private boolean pidMode = false;
-    private boolean angleCapping;
+    private boolean angleCapping = true;
 
     private static final AnalogInput armPotentiometer =
             new AnalogInput(RobotConstants.ARM_POTENTIOMETER_CHANNEL);
@@ -206,7 +206,7 @@ public class Arm extends Subsystem implements PIDSource, PIDOutput {
     @Override
     public void pidWrite(double power) {
         
-        if(this.getAngle() >= 100 && power >= 0 && angleCapping){
+        if(this.getAngle() >= 95 && power >= 0 && angleCapping){
            firstArmMotor.set(0);
            secondArmMotor.set(0);
         }

@@ -56,9 +56,10 @@ public class RobotCoDriver implements Module {
     private static final int BUT_WINCH_MODE_VELOCITY = 9; // Climb Mode
     private static final int BUT_RETRACT_SERVO = 8;
     private static final int BUT_WINCH_MODE_POWER = 8; // Climb Mode
-    private static final int BUT_PRINT_ANGLE = 7;
     private static final int BUT_NOT_MODE_CLIMB = 6;
     private static final int BUT_SWITCH_FEED_SHOOTER = 3;
+    private static final int BUT_REMOVE_ANGLE_CAP = 7;
+    private static final int BUT_ADD_ANGLE_CAP = 10;
     //private static final int BUT_SET_ARM_POWER = 2;
     private static final int BUT_AUTO_AIM = 1;
 
@@ -397,15 +398,17 @@ public class RobotCoDriver implements Module {
         if (secondJoystick.getRawButton(BUT_ZERO_POT)) {
             arm.zeroPot();
         }
-        // Printing the Arm Angle on the SmartDashboard.
-        if (firstJoystick.getRawButton(BUT_PRINT_ANGLE)) {
-            SmartDashboard.putNumber("Arm Angle = ", arm.getAngle());
-            SmartDashboard.putNumber("Upper flywheel", upperFlywheel.getRPS());
-            SmartDashboard.putNumber("Lower flywheel", lowerFlywheel.getRPS());
+        
+        if (secondJoystick.getRawButton(BUT_REMOVE_ANGLE_CAP)){
+            arm.uncapAngle();
+        }
+        
+        if (firstJoystick.getRawButton(BUT_ADD_ANGLE_CAP)){
+            arm.capAngle();
         }
 
         // Overrides Driver Control.
-        if (secondJoystick.getRawButton(BUT_OVERRIDE_DRIVER)) {
+        if (firstJoystick.getRawButton(BUT_OVERRIDE_DRIVER)) {
             setOverrideDriver(true);
             stopDrive();
         }
