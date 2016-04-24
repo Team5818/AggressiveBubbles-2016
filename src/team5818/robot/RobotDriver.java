@@ -15,6 +15,7 @@ import team5818.robot.commands.FlywheelVelocityProfile;
 import team5818.robot.commands.LEDToggle;
 import team5818.robot.commands.LowerArmToGround;
 import team5818.robot.commands.SetArmAngle;
+import team5818.robot.commands.SetArmPower;
 import team5818.robot.commands.SetDrivePower;
 import team5818.robot.commands.SetFlywheelPower;
 import team5818.robot.commands.SetFlywheelVelocity;
@@ -113,16 +114,20 @@ public class RobotDriver implements Module {
     private JoystickButton butSwitchFeedShoot =
             new JoystickButton(SECOND_JOYSTICK, BUT_SWITCH_FEED_SHOOT);
     private boolean hasStartedDriving = false;
+    private boolean hasStoppedLeftClimbWinch = false;
+    private boolean hasStoppedRightClimbWinch = false;
 
-    private double[] lowerFlyVels = {-17, -2, -1, -1, -1};
-    //private double[] lowerFlyVels = {0, 0, 0, 0, 0};
-    //private double[] upperFlyVels = {0,0,0,0, 0};
-    private double[] upperFlyVels = {-3.5,-3.6,-3.7,-6, -7};
-    private double[] flyTimes = {0, 800, 1600, 2400, 3000};
-    private LinearLookupTable lowerTable = new LinearLookupTable(flyTimes, lowerFlyVels);
-    private LinearLookupTable upperTable = new LinearLookupTable(flyTimes, upperFlyVels);
+    private double[] lowerFlyVels = { -17, -2, -1, -1, -1 };
+    // private double[] lowerFlyVels = {0, 0, 0, 0, 0};
+    // private double[] upperFlyVels = {0,0,0,0, 0};
+    private double[] upperFlyVels = { -3.5, -3.6, -3.7, -6, -7 };
+    private double[] flyTimes = { 0, 800, 1600, 2400, 3000 };
+    private LinearLookupTable lowerTable =
+            new LinearLookupTable(flyTimes, lowerFlyVels);
+    private LinearLookupTable upperTable =
+            new LinearLookupTable(flyTimes, upperFlyVels);
+    private boolean hasStoppedArm;
 
-    
     @Override
     public void initModule() {
         // Setting local objects of singletons for easy access.
@@ -169,8 +174,8 @@ public class RobotDriver implements Module {
         overrideCoDriver
                 .addSequential(new SwitchFeed(ComputerVision.CAMERA_DRIVER));
         overrideCoDriver.addSequential(new SetFlywheelPower(0));
-        overrideCoDriver.addSequential(new FlywheelVelocityProfile(lowerTable, upperTable, 3));
-        
+        overrideCoDriver.addSequential(
+                new FlywheelVelocityProfile(lowerTable, upperTable, 3));
 
         // Assigning commands to their respective buttons.
         // butInvert.whenPressed(new SwitchFeed(ComputerVision.CAMERA_BACK));
@@ -200,13 +205,13 @@ public class RobotDriver implements Module {
     private void initClimbButtons() {
         Scheduler.getInstance().removeAll();
     }
-    
+
     public void initClimb() {
         climbMode = true;
         initClimbButtons();
         this.stopMovement();
     }
-    
+
     public void unInitClimb() {
         climbMode = false;
         initTeleopButtons();
@@ -217,7 +222,7 @@ public class RobotDriver implements Module {
     public void teleopPeriodicModule() {
         // Drives the robot if it should be done so by Driver.
         performButtonActions();
-        if(!climbMode)
+        if (!climbMode)
             normalPeriodic();
         else
             climbPeriodic();
@@ -225,7 +230,7 @@ public class RobotDriver implements Module {
 
     public void normalPeriodic() {
         if (!RobotCoDriver.isOverrideDriver()) {
-            if (usingJoystick()) {
+            if (usingFirstStick() || usingSecondStick()) {
                 drive();
                 hasStoppedRobot = false;
             } else {
@@ -237,10 +242,25 @@ public class RobotDriver implements Module {
             }
         }
     }
-    
+
     private void climbPeriodic() {
+        if (usingFirstStick()) {
+            RobotCommon.runningRobot.winch.getRight().setPower(-FIRST_JOYSTICK.getY());
+            hasStoppedRightClimbWinch = false;
+        } else if (!hasStoppedRightClimbWinch) {
+            RobotCommon.runningRobot.winch.getRight().setPower(0);
+            hasStoppedRightClimbWinch = true;
+        }
+        if (usingSecondStick()) {
+            RobotCommon.runningRobot.winch.getLeft().setPower(-SECOND_JOYSTICK.getY());
+            hasStoppedLeftClimbWinch = false;
+        } else if (!hasStoppedLeftClimbWinch) {
+            RobotCommon.runningRobot.winch.getLeft().setPower(0);
+            hasStoppedLeftClimbWinch = true;
+        }
         
     }
+
     /**
      * Stops the robot and maintains the current driving type.
      */
@@ -253,10 +273,10 @@ public class RobotDriver implements Module {
      * operation.
      */
     public void performButtonActions() {
-        
-        if(climbMode) /* Do not do non climb buttons. */
+
+        if (climbMode) /* Do not do non climb buttons. */
             return;
-        
+
         // Inverting buttons
         if (FIRST_JOYSTICK.getRawButton(BUT_INVERT)) {
             invertThrottle = true;
@@ -272,7 +292,7 @@ public class RobotDriver implements Module {
         if (FIRST_JOYSTICK.getRawButton(BUT_OVERRIDE_DRIVER)) {
             RobotCoDriver.setOverrideDriver(true);
         }
-        
+
         if (FIRST_JOYSTICK.getRawButton(BUT_DRIVE_VELOCITY)) {
             driveType = DriveType.ARCADE_VELOCITY;
             stopMovement();
@@ -351,31 +371,18 @@ public class RobotDriver implements Module {
         LiveWindow.run();
     }
 
-    private boolean usingFirstJoy() {
+    private boolean usingFirstStick() {
         return (Math
-                .abs(FIRST_JOYSTICK.getX()) < RobotConstants.JOYSTICK_DEADBAND
-                && Math.abs(FIRST_JOYSTICK
-                        .getY()) < RobotConstants.JOYSTICK_DEADBAND);
+                .abs(FIRST_JOYSTICK.getX()) > RobotConstants.JOYSTICK_DEADBAND
+                || Math.abs(FIRST_JOYSTICK
+                        .getY()) > RobotConstants.JOYSTICK_DEADBAND);
     }
 
-    private boolean usingSecondJoy() {
+    private boolean usingSecondStick() {
         return (Math
-                .abs(SECOND_JOYSTICK.getX()) < RobotConstants.JOYSTICK_DEADBAND
-                && Math.abs(SECOND_JOYSTICK
-                        .getY()) < RobotConstants.JOYSTICK_DEADBAND);
-    }
-
-    private boolean usingJoystick() {
-        if (Math.abs(FIRST_JOYSTICK.getX()) < RobotConstants.JOYSTICK_DEADBAND
-                && Math.abs(FIRST_JOYSTICK
-                        .getY()) < RobotConstants.JOYSTICK_DEADBAND
-                && Math.abs(SECOND_JOYSTICK
-                        .getX()) < RobotConstants.JOYSTICK_DEADBAND
-                && Math.abs(SECOND_JOYSTICK
-                        .getY()) < RobotConstants.JOYSTICK_DEADBAND) {
-            return false;
-        }
-        return true;
+                .abs(SECOND_JOYSTICK.getX()) > RobotConstants.JOYSTICK_DEADBAND
+                || Math.abs(SECOND_JOYSTICK
+                        .getY()) > RobotConstants.JOYSTICK_DEADBAND);
     }
 
 }

@@ -29,6 +29,7 @@ import team5818.robot.modules.ComputerVision;
 import team5818.robot.modules.FlyWheel;
 import team5818.robot.modules.Module;
 import team5818.robot.modules.drivetrain.ArcadeDriveCalculator;
+import team5818.robot.modules.drivetrain.DriveTrain;
 import team5818.robot.util.LinearLookupTable;
 import team5818.robot.util.Vector2d;
 import team5818.robot.util.Vectors;
@@ -118,7 +119,8 @@ public class RobotCoDriver implements Module {
     private boolean modeClimb = false;
     private boolean modeWinchVelocity = false;
     private boolean hasStoppedClimbArm = false;
-    private boolean hasStoppedClimbWinch = false;
+    private boolean hasStoppedLeftClimbWinch = false;
+    private boolean hasStoppedRightClimbWinch = false;
 
     // Different arm angles
     private double shootAngleHigh = 60;
@@ -297,23 +299,27 @@ public class RobotCoDriver implements Module {
     }
     
     private void climbPeriodic() {
-        if (usingFirstStick()) {
-            if(!modeWinchVelocity)
-                RobotCommon.runningRobot.winch.setPower(-firstJoystick.getY() - firstJoystick.getX() / 6, - firstJoystick.getY() + firstJoystick.getX() / 6);
-            else
-                RobotCommon.runningRobot.winch.setRPS(-firstJoystick.getY() * ClimbWinch.MAX_VELOCITY, -firstJoystick.getY() * ClimbWinch.MAX_VELOCITY);
-            hasStoppedClimbWinch = false;
-        } else if (!hasStoppedClimbWinch) {
-            RobotCommon.runningRobot.winch.setPower(0);
-            hasStoppedClimbWinch = true;
-        }
         if (usingSecondStick()) {
-            moveArm();
+            RobotCommon.runningRobot.arm
+                    .setPower(RobotCommon.runningRobot.arm.getMaxPower()
+                            * secondJoystick.getY());
             hasStoppedArm = false;
         } else {
             if (!hasStoppedArm) {
                 hasStoppedArm = true;
-                stopArm();
+                new SetArmPower(0).start();
+            }
+        }
+        if (usingFirstStick()) {
+            RobotCommon.runningRobot.driveTrain
+            .setPower(ArcadeDriveCalculator.INSTANCE.computeDefault(
+                    new Vector2d(firstJoystick.getX() * 0.5,
+                            firstJoystick.getY())));
+            hasStoppedDrive = false;
+        } else {
+            if (!hasStoppedDrive) {
+                hasStoppedDrive = true;
+                stopDrive();
             }
         }
     }
