@@ -11,7 +11,7 @@
 <RGB_Filter>
   <channel>33</channel>
   <hue_value>0</hue_value>
-  <hysteresis>43</hysteresis>
+  <hysteresis>80</hysteresis>
   <min_value>0</min_value>
   <result_type>6</result_type>
 </RGB_Filter>
@@ -19,7 +19,7 @@
   <channel>2</channel>
   <hue_value>0</hue_value>
   <hysteresis>0</hysteresis>
-  <min_value>80</min_value>
+  <min_value>160</min_value>
   <result_type>1</result_type>
 </RGB_Filter>
 <Marker>

@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import team5818.robot.commands.ActuateServo;
+import team5818.robot.commands.AutoAim;
 import team5818.robot.commands.AutoChavalArc;
 import team5818.robot.commands.AutoLowbarArc;
 import team5818.robot.commands.AutoLowbarForward;
@@ -302,6 +303,11 @@ public class RobotCommon extends IterativeRobot {
         SmartDashboard.putNumber("Right Winch RPS", winch.getRight().getRPS());
         SmartDashboard.putNumber("Left Winch Counts", winch.getLeft().getTalon().getEncPosition());
         SmartDashboard.putNumber("Right Winch Counts", winch.getRight().getTalon().getEncPosition());
+        SmartDashboard.putNumber("AA - Err Y", AutoAim.calculateAngleY());
+        SmartDashboard.putNumber("AA - Err X", AutoAim.calculateAngleX());
+        SmartDashboard.putNumber("locX", targeting.blobLocX);
+        SmartDashboard.putNumber("locY", targeting.blobLocY);
+        
     }
 
 }

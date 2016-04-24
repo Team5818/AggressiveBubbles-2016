@@ -38,29 +38,29 @@ public class AutoAim extends Command {
     public static double toleranceFly = FlyWheel.TOLERANCE;
     
     private LinearLookupTable lookupTable;
-    private Track track;
+    private static Track track;
     private DriveTrain drive;
     
     // in inches.
-    private double towerHeight = 205;
+    private static double towerHeight = 205;
     private double flyUpVel;
     private double flyLoVel;
-    private double camFOV;
-    private double imgHeight;
-    private double imgWidth;
-    private double locX;
-    private double locY;
-    private double slopX;
-    private double slopY;
+    private static double camFOV;
+    private static double imgHeight;
+    private static double imgWidth;
+    //private static double locX;
+    //private static double locY;
+    private static double slopX;
+    private static double slopY;
 
-    private double MAX_POWER_X = 0.2;
+    private double MAX_POWER_X = 0.22;
     private double MIN_POWER_X = 0.08;
     private double xpower;
     private double xKp = 0.04, xKi = 0.0041, xKd = 0;
     private double xerrSum = 0;
     private double xerr = 0;
     private int xerrCount = 0;
-    private double xOffset = 0;
+    private static double xOffset = 0;
     public static double toleranceX = 0.5;
     
     private double MAX_POWER_Y = 1;
@@ -70,7 +70,7 @@ public class AutoAim extends Command {
     private double yerrSum = 0;
     private double yerr = 0;
     private int yerrCount = 0;
-    private double yOffset = 0;
+    private static double yOffset = 0;
     public static double toleranceY = 2;
     
 
@@ -96,8 +96,6 @@ public class AutoAim extends Command {
         imgWidth = 320;
         this.yOffset = yOffset;
         this.xOffset = xOffset;
-        locX = 0;
-        locY = 0;
         
         slopX = (RobotConstants.SLOP);
         slopY = (RobotConstants.SLOP);
@@ -154,8 +152,6 @@ public class AutoAim extends Command {
             // imgWidth = track.imageWidth;
             // blobWidth = track.blobWidth;
             // blobHeight = track.blobHeight;
-            locX = track.blobLocX;
-            locY = track.blobLocY + yOffset;
             aimY();
             aim();
         }
@@ -165,16 +161,16 @@ public class AutoAim extends Command {
         }
     }
 
-    public double calculateAngleX() {
-        double setX = (((imgWidth / 2 - (locX))) / imgWidth * camFOV/2);
+    public static double calculateAngleX() {
+        double setX = (((imgWidth / 2 - (track.blobLocX))) / imgWidth * camFOV/2);
         setX += xOffset + DEFAULT_X_OFFSET;
         SmartDashboard.putNumber("AutoAim X Error", setX);
         return setX;
 
     }
 
-    public double calculateAngleY() {
-        double setY = ((imgHeight / 2 - (locY))) / imgHeight * camFOV/2;
+    public static double calculateAngleY() {
+        double setY = ((imgHeight / 2 - (track.blobLocY))) / imgHeight * camFOV/2;
         SmartDashboard.putNumber("AutoAim Y Angle", setY);
         setY += yOffset + DEFAULT_Y_OFFSET;
 
@@ -186,9 +182,9 @@ public class AutoAim extends Command {
     }
 
     public void aim() {
-        if ((locX < (imgWidth / 2) + (slopX * (imgWidth))
-                || (locX > (imgWidth / 2) + (slopX * imgWidth)))) {
-        } else if (locX == (imgWidth / 2) + (slopX * imgWidth)) {
+        if ((track.blobLocX < (imgWidth / 2) + (slopX * (imgWidth))
+                || (track.blobLocX > (imgWidth / 2) + (slopX * imgWidth)))) {
+        } else if (track.blobLocX == (imgWidth / 2) + (slopX * imgWidth)) {
         } else {
             DriverStation.reportError("did not align", false);
         }
@@ -196,10 +192,10 @@ public class AutoAim extends Command {
     }
 
     public void aimY() {
-        if ((locY < (imgHeight / 2) + (slopY * imgHeight) + yOffset)
-                || (locY > (imgHeight / 2) + (slopY * imgHeight)
+        if ((track.blobLocY < (imgHeight / 2) + (slopY * imgHeight) + yOffset)
+                || (track.blobLocY > (imgHeight / 2) + (slopY * imgHeight)
                         + yOffset)) {
-        } else if (locY == (imgHeight / 2) + (slopY * imgHeight) + yOffset) {
+        } else if (track.blobLocY == (imgHeight / 2) + (slopY * imgHeight) + yOffset) {
         } else {
             DriverStation.reportError("did not align", false);
         }
@@ -214,20 +210,17 @@ public class AutoAim extends Command {
     
     public void pidY() {
         if (track.blobCount > 0) {
-            locX = track.blobLocX;
-            locY = track.blobLocY;
-            SmartDashboard.putNumber("locY", locY);
-            
-            SmartDashboard.putNumber("AA - Err Y", yerr);
             //track.GetData();
-            if(Math.abs(calculateAngleY()) <= toleranceY) {
+            if(Math.abs(calculateAngleY()) <= 2) {
                 yerrSum = 0;
                 yerrCount = 0;
+                //DriverStation.reportError("Dropping Y I Epsilon", true);
             }
-            if(Math.signum(yerr) > Math.signum(calculateAngleY()) || Math.signum(yerr) < Math.signum(calculateAngleY()))
+            if(Math.signum(yerr) != Math.signum(calculateAngleY()))
             {
                 yerrSum = 0;
                 yerrCount = 0;
+                //DriverStation.reportError("Dropping Y I Sign", true);
             }
             
             double D = (-yerr + (yerr = calculateAngleY())) * yKd;
@@ -240,31 +233,24 @@ public class AutoAim extends Command {
             ypower = P + I + D;
             ypower = keepInBounds(ypower, MIN_POWER_Y, MAX_POWER_Y);
             RobotCommon.runningRobot.arm.setPower(ypower);
+        } else {
+            RobotCommon.runningRobot.arm.setPower(0);
         }
     }
 
-    public void pidX() {
-        //track.GetData();
-        
-        
-
+    public void pidX() { 
         if (track.blobCount > 0) {
-            locX = track.blobLocX;
-            locY = track.blobLocY;
-            SmartDashboard.putNumber("locX", locX);
-            
-            SmartDashboard.putNumber("AA - Err X", xerr);
             double something = calculateAngleX();
             if(Math.abs(something) <= 1) {
                 xerrSum = 0;
                 xerrCount = 0;
-                DriverStation.reportError("Dropping I Epsilon", false);
+                //DriverStation.reportError("Dropping X I Epsilon", false);
             }
-            if((Math.signum(xerr) > Math.signum(something) || Math.signum(xerr) < Math.signum(something)) && (Math.signum(something) != 0 || Math.signum(xerr) != 0))
+            if((Math.signum(xerr) != Math.signum(something)))
             {
                 xerrSum = 0;
                 xerrCount = 0;
-                DriverStation.reportError("Dropping I Sign", false);
+                //DriverStation.reportError("Dropping X I Sign", false);
             }
             
             double D = (-xerr + (xerr = calculateAngleX())) * xKd;
@@ -277,6 +263,9 @@ public class AutoAim extends Command {
             xpower = keepInBounds(xpower, MIN_POWER_X, MAX_POWER_X);
             RobotCommon.runningRobot.driveTrain
                     .setPower(new Vector2d(-xpower, xpower));
+        } else {
+            RobotCommon.runningRobot.driveTrain
+            .setPower(new Vector2d(-0, 0));
         }
     }
 
@@ -305,18 +294,18 @@ public class AutoAim extends Command {
                 && flyLoVel <= flyLo.getRPS() + toleranceFly
                 && flyLoVel >= flyLo.getRPS() - toleranceFly);
        if(flyToSpeed){
-           DriverStation.reportError("Aiming ready", false);
+           //DriverStation.reportError("Aiming ready", false);
 
        }
 
-        boolean atTargetX = Math.abs(calculateAngleX()) <= 0.5;
+        boolean atTargetX = Math.abs(calculateAngleX()) <= 0.12;
         if(atTargetX){
-            DriverStation.reportError("Aiming ready", false);
+            //DriverStation.reportError("Aiming ready", false);
 
         }
-        boolean atTargetY = Math.abs(calculateAngleY()) <= 0.5;
+        boolean atTargetY = Math.abs(calculateAngleY()) <= 0.1;
         if(atTargetY){
-            DriverStation.reportError("Aiming ready", false);
+            //DriverStation.reportError("Aiming ready", false);
         }
         
 
@@ -325,6 +314,9 @@ public class AutoAim extends Command {
             //DriverStation.reportError("Flywheel to speed: " + flyToSpeed
                   //  + "At angle: " + atTargetX, false);
             return true;
+        }
+        if(((atTargetX && atTargetY))) {
+            DriverStation.reportError("Aiming ready", false);
         }
         hasFoundTarget = true;
         return ((atTargetX && atTargetY) || this.isTimedOut());

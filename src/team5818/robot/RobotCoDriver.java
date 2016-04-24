@@ -385,13 +385,13 @@ public class RobotCoDriver implements Module {
 
         if (firstJoystick.getRawButton(BUT_INC_AUTO_X_OFFSET)) {
             if(!hasSetAutoXOffset)
-                autoAimXOffset -= 1;
+                autoAimXOffset -= 0.5;
             updateAutoAim();
             putAutoAimOffset();
             hasSetAutoXOffset = true;
         } else if (firstJoystick.getRawButton(BUT_DEC_AUTO_X_OFFSET)) {
             if(!hasSetAutoXOffset)
-                autoAimXOffset += 1;
+                autoAimXOffset += 0.5;
             updateAutoAim();
             putAutoAimOffset();
             hasSetAutoXOffset = true;
@@ -401,13 +401,13 @@ public class RobotCoDriver implements Module {
         
         if (firstJoystick.getRawButton(BUT_INC_AUTO_Y_OFFSET)) {
             if(!hasSetAutoYOffset)
-                autoAimYOffset -= 1;
+                autoAimYOffset -= 0.5;
             hasSetAutoYOffset = true;
             updateAutoAim();
             putAutoAimOffset();
         } else if (firstJoystick.getRawButton(BUT_DEC_AUTO_Y_OFFSET)) {
             if(!hasSetAutoYOffset)
-                autoAimYOffset += 1;
+                autoAimYOffset += 0.5;
             hasSetAutoYOffset = true;
             updateAutoAim();
             putAutoAimOffset();
@@ -431,6 +431,7 @@ public class RobotCoDriver implements Module {
 
         if (firstJoystick.getRawButton(BUT_AUTO_AIM) && !autoAim.isRunning()) {
             autoAim.pidX();
+            autoAim.pidY();
             hasStoppedPidX = false;
         } else if (!hasStoppedPidX) {
             hasStoppedPidX = true;
