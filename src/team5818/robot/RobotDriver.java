@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import team5818.robot.commands.ArmPower;
 import team5818.robot.commands.Collect;
 import team5818.robot.commands.DrivePower;
+import team5818.robot.commands.FlywheelVelocityProfile;
 import team5818.robot.commands.LEDToggle;
 import team5818.robot.commands.LowerArmToGround;
 import team5818.robot.commands.SetArmAngle;
@@ -26,6 +27,7 @@ import team5818.robot.modules.drivetrain.ArcadeDriveCalculator;
 import team5818.robot.modules.drivetrain.ArcadeVelocityCalculator;
 import team5818.robot.modules.drivetrain.DriveSide;
 import team5818.robot.modules.drivetrain.TankDriveCalculator;
+import team5818.robot.util.LinearLookupTable;
 import team5818.robot.util.Vector2d;
 import team5818.robot.util.Vectors;
 
@@ -112,6 +114,15 @@ public class RobotDriver implements Module {
             new JoystickButton(SECOND_JOYSTICK, BUT_SWITCH_FEED_SHOOT);
     private boolean hasStartedDriving = false;
 
+    private double[] lowerFlyVels = {-17, -2, -1, -1, -1};
+    //private double[] lowerFlyVels = {0, 0, 0, 0, 0};
+    //private double[] upperFlyVels = {0,0,0,0, 0};
+    private double[] upperFlyVels = {-3.5,-3.6,-3.7,-6, -7};
+    private double[] flyTimes = {0, 800, 1600, 2400, 3000};
+    private LinearLookupTable lowerTable = new LinearLookupTable(flyTimes, lowerFlyVels);
+    private LinearLookupTable upperTable = new LinearLookupTable(flyTimes, upperFlyVels);
+
+    
     @Override
     public void initModule() {
         // Setting local objects of singletons for easy access.
@@ -153,11 +164,13 @@ public class RobotDriver implements Module {
         overrideDriver
                 .addParallel(new SwitchFeed(ComputerVision.CAMERA_SHOOTER));
         overrideDriver.addParallel(new SetFlywheelVelocity(
-                FlyWheel.SHOOT_VELOCITY_LOWER, FlyWheel.SHOOT_VELOCITY_LOWER));
+                FlyWheel.SHOOT_VELOCITY_UPPER, FlyWheel.SHOOT_VELOCITY_LOWER));
         CommandGroup overrideCoDriver = new CommandGroup();
         overrideCoDriver
-                .addParallel(new SwitchFeed(ComputerVision.CAMERA_DRIVER));
-        overrideCoDriver.addParallel(new SetFlywheelPower(0));
+                .addSequential(new SwitchFeed(ComputerVision.CAMERA_DRIVER));
+        overrideCoDriver.addSequential(new SetFlywheelPower(0));
+        overrideCoDriver.addSequential(new FlywheelVelocityProfile(lowerTable, upperTable, 3));
+        
 
         // Assigning commands to their respective buttons.
         // butInvert.whenPressed(new SwitchFeed(ComputerVision.CAMERA_BACK));

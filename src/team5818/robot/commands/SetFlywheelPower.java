@@ -37,7 +37,6 @@ public class SetFlywheelPower extends Command {
         requires(flyLo);
         this.uPow = up;
         this.lPow = lo;
-        
     }
 
     @Override

@@ -124,9 +124,11 @@ public class RobotCoDriver implements Module {
     private double shootAngleHigh = 60;
     private double shootAngleMed = 40;
     private double shootAngleLow = 30;
-    private double[] lowerFlyVels = {0, -4, -4, 0};
-    private double[] upperFlyVels = {0,0,0,0};
-    private double[] flyTimes = {0, 1000, 2000, 3000};
+    private double[] lowerFlyVels = {-17, -2, -1, -1, -1};
+    //private double[] lowerFlyVels = {0, 0, 0, 0, 0};
+    //private double[] upperFlyVels = {0,0,0,0, 0};
+    private double[] upperFlyVels = {-3.5,-3.6,-3.7,-6, -7};
+    private double[] flyTimes = {0, 800, 1600, 2400, 3000};
     private LinearLookupTable lowerTable = new LinearLookupTable(flyTimes, lowerFlyVels);
     private LinearLookupTable upperTable = new LinearLookupTable(flyTimes, upperFlyVels);
 
@@ -182,7 +184,8 @@ public class RobotCoDriver implements Module {
         CommandGroup stopFlywheel = new CommandGroup();
         //stopFlywheel.addParallel(new SetFlywheelVelocity(0,0));
         //stopFlywheel.addParallel(new SetFlywheelPower(0));
-        stopFlywheel.addParallel(new FlywheelVelocityProfile(lowerTable, upperTable, 3));
+        stopFlywheel.addSequential(new SetFlywheelPower(0));
+        stopFlywheel.addSequential(new FlywheelVelocityProfile(lowerTable, upperTable, 3));
         CommandGroup switchFeedShoot = new CommandGroup();
         switchFeedShoot
                 .addParallel(new SwitchFeed(ComputerVision.CAMERA_SHOOTER));
@@ -200,7 +203,7 @@ public class RobotCoDriver implements Module {
                 .addParallel(new SwitchFeed(ComputerVision.CAMERA_SHOOTER));
         //overrideDriver.addParallel(new SetArmAngle(armAngleShooting));
         overrideDriver.addParallel(new SetFlywheelVelocity(
-                FlyWheel.SHOOT_VELOCITY_LOWER, FlyWheel.SHOOT_VELOCITY_UPPER));
+                FlyWheel.SHOOT_VELOCITY_UPPER, FlyWheel.SHOOT_VELOCITY_LOWER));
 
         // Making command for AutoAim and Shoot
         // CommandGroup aimAndShoot = new CommandGroup();
@@ -298,7 +301,7 @@ public class RobotCoDriver implements Module {
             if(!modeWinchVelocity)
                 RobotCommon.runningRobot.winch.setPower(-firstJoystick.getY() - firstJoystick.getX() / 6, - firstJoystick.getY() + firstJoystick.getX() / 6);
             else
-                RobotCommon.runningRobot.winch.setRPS(-firstJoystick.getY() * ClimbWinch.MAX_VELOCITY);
+                RobotCommon.runningRobot.winch.setRPS(-firstJoystick.getY() * ClimbWinch.MAX_VELOCITY, -firstJoystick.getY() * ClimbWinch.MAX_VELOCITY);
             hasStoppedClimbWinch = false;
         } else if (!hasStoppedClimbWinch) {
             RobotCommon.runningRobot.winch.setPower(0);

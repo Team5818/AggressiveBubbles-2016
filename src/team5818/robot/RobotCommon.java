@@ -296,8 +296,8 @@ public class RobotCommon extends IterativeRobot {
     private void displayNumbers() {
         SmartDashboard.putNumber("Arm Angle", arm.getAngle());
         SmartDashboard.putNumber("Arm Angle Raw", arm.getRawPot());
-        SmartDashboard.putNumber("Lower Flywheel RPS", lowerFlywheel.getRPS());
-        SmartDashboard.putNumber("Upper Flywheel RPS", upperFlywheel.getRPS());
+        SmartDashboard.putNumber("Upper Fly RPS", upperFlywheel.getRPS());
+        SmartDashboard.putNumber("Lower Fly RPS", lowerFlywheel.getRPS());
         SmartDashboard.putNumber("Left Winch RPS", winch.getLeft().getRPS());
         SmartDashboard.putNumber("Right Winch RPS", winch.getRight().getRPS());
         SmartDashboard.putNumber("Left Winch Counts", winch.getLeft().getTalon().getEncPosition());

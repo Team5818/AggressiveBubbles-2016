@@ -23,7 +23,7 @@ public class SetFlywheelVelocity extends Command {
             RobotCommon.runningRobot.upperFlywheel;
     private static final FlyWheel flyLo =
             RobotCommon.runningRobot.lowerFlywheel;
-    private static double defaultTimeout = 2;
+    private static double defaultTimeout = 0;
 
     /**
      * @param vel
@@ -66,8 +66,8 @@ public class SetFlywheelVelocity extends Command {
 
     @Override
     protected void interrupted() {
-        flyUp.setPower(0);
-        flyLo.setPower(0);
+        //flyUp.setPower(0);
+        //flyLo.setPower(0);
 
     }
 

@@ -64,7 +64,7 @@ public class ComputerVision {
                 camDriver.openCamera();
             }
         } catch (Exception e) {
-
+            camDriver = null;
             DriverStation.reportError("camDriver is not attached.\n", false);
         }
 
@@ -82,7 +82,7 @@ public class ComputerVision {
                 camShooter.openCamera();
             }
         } catch (Exception e) {
-
+            camShooter = null;
             DriverStation.reportError("camShooter is not attached.\n", false);
         }
 
@@ -96,7 +96,7 @@ public class ComputerVision {
                 camBack.openCamera();
             }
         } catch (Exception e) {
-
+            camBack = null;
             DriverStation.reportError("camBack is not attached.\n", false);
         }
 

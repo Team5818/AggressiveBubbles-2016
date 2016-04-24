@@ -25,7 +25,7 @@ public class Arm extends Subsystem implements PIDSource, PIDOutput {
     public double teamNum =  Preferences.getInstance().getDouble("TeamNumber", 1717);
     protected static final double DEFAULT_SCALE = 0.047;
     protected static final double DEFAULT_OFFSET = -9.587;
-    protected static final double DEFAULT_MAXPOWER = 0.8;
+    protected static final double DEFAULT_MAXPOWER = 1;
     protected static final double DEFAULT_MINPOWER = -.4;
     protected static final double DEFAULT_KP = 0.01;
     protected static final double DEFAULT_KI = 0.0;
@@ -205,7 +205,7 @@ public class Arm extends Subsystem implements PIDSource, PIDOutput {
     @Override
     public void pidWrite(double power) {
         
-        //power += armPowerIdle * Math.abs(Math.cos(getAngle()/180*Math.PI));
+        power += armPowerIdle * Math.abs(Math.cos(getAngle()/180*Math.PI));
         firstArmMotor.set(power * armMotorRatio);
         if (secondArmMotor != null) {
             secondArmMotor.set(power);
