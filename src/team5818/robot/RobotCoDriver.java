@@ -131,7 +131,7 @@ public class RobotCoDriver implements Module {
     private double shootAngleMed = 40;
     private double shootAngleLow = 30;
     private double[] lowerFlyVels = { -17, -2, -1, -1, -1 };
-    // private double[] lowerFlyVels = {0, 0, 0, 0, 0};
+    //private double[] lowerFlyVels = {0, 0, 0, 0, 0};
     // private double[] upperFlyVels = {0,0,0,0, 0};
     private double[] upperFlyVels = { -3.5, -3.6, -3.7, -6, -7 };
     private double[] flyTimes = { 0, 800, 1600, 2400, 3000 };
@@ -198,8 +198,8 @@ public class RobotCoDriver implements Module {
         // stopFlywheel.addParallel(new SetFlywheelVelocity(0,0));
         // stopFlywheel.addParallel(new SetFlywheelPower(0));
         stopFlywheel.addSequential(new SetFlywheelPower(0));
-        stopFlywheel.addSequential(
-                new FlywheelVelocityProfile(lowerTable, upperTable, 3));
+        //stopFlywheel.addSequential(
+        //        new FlywheelVelocityProfile(lowerTable, upperTable, 3));
         CommandGroup switchFeedShoot = new CommandGroup();
         switchFeedShoot
                 .addParallel(new SwitchFeed(ComputerVision.CAMERA_SHOOTER));

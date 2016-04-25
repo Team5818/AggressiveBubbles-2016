@@ -118,7 +118,7 @@ public class RobotDriver implements Module {
     private boolean hasStoppedRightClimbWinch = false;
 
     private double[] lowerFlyVels = { -17, -2, -1, -1, -1 };
-    // private double[] lowerFlyVels = {0, 0, 0, 0, 0};
+    //private double[] lowerFlyVels = {0, 0, 0, 0, 0};
     // private double[] upperFlyVels = {0,0,0,0, 0};
     private double[] upperFlyVels = { -3.5, -3.6, -3.7, -6, -7 };
     private double[] flyTimes = { 0, 800, 1600, 2400, 3000 };
@@ -174,8 +174,8 @@ public class RobotDriver implements Module {
         overrideCoDriver
                 .addSequential(new SwitchFeed(ComputerVision.CAMERA_DRIVER));
         overrideCoDriver.addSequential(new SetFlywheelPower(0));
-        overrideCoDriver.addSequential(
-                new FlywheelVelocityProfile(lowerTable, upperTable, 3));
+        //overrideCoDriver.addSequential(
+        //        new FlywheelVelocityProfile(lowerTable, upperTable, 3));
 
         // Assigning commands to their respective buttons.
         // butInvert.whenPressed(new SwitchFeed(ComputerVision.CAMERA_BACK));

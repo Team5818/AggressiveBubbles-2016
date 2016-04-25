@@ -58,8 +58,8 @@ public class ComputerVision {
             camDriver = new USBCam("cam" + CAMERA_DRIVER);
 
             if (camDriver != null) {
-                camDriver.setSize(640, 360);
-                camDriver.setFPS(30);
+                camDriver.setSize(320, 240);
+                camDriver.setFPS(20);
                 camDriver.updateSettings();
                 camDriver.openCamera();
             }

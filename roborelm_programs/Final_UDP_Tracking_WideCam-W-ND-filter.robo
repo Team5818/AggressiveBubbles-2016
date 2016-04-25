@@ -5,7 +5,7 @@
   <enable_logging>0</enable_logging>
   <fps>30</fps>
   <port>1180</port>
-  <resolution>0</resolution>
+  <resolution>1</resolution>
   <running>1</running>
 </FRC_CameraClient>
 <RGB_Filter>
@@ -17,9 +17,9 @@
 </RGB_Filter>
 <RGB_Filter>
   <channel>2</channel>
-  <hue_value>0</hue_value>
+  <hue_value>20</hue_value>
   <hysteresis>0</hysteresis>
-  <min_value>160</min_value>
+  <min_value>100</min_value>
   <result_type>1</result_type>
 </RGB_Filter>
 <Marker>
@@ -169,7 +169,7 @@
   <y>0</y>
   <y_map>COG_Y+HEIGHT*0</y_map>
 </Display_Circle>
-<Display_Variables>
+<Display_Variables disabled>
   <border_color>red</border_color>
   <dim_background>TRUE</dim_background>
   <display_as_annotation>FALSE</display_as_annotation>
