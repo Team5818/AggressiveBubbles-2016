@@ -443,7 +443,7 @@ public class RobotCoDriver implements Module {
             arm.zeroPot();
         }
         
-        if (secondJoystick.getRawButton(BUT_REMOVE_ANGLE_CAP)){
+        if (firstJoystick.getRawButton(BUT_REMOVE_ANGLE_CAP)){
             arm.uncapAngle();
         }
         
