@@ -24,7 +24,7 @@ public class ComputerVision {
      * The driving camera that is directed with the direction we collect.
      * 
      */
-    public static int CAMERA_DRIVER = 2;
+    public static int CAMERA_DRIVER = 4;
 
     /**
      * The shooter Camera that faces with the flywheel.
