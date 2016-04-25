@@ -280,7 +280,6 @@ public class RobotCoDriver implements Module {
     @Override
     public void teleopPeriodicModule() {
         performButtonActions();
-
         if (modeClimb)
             climbPeriodic();
         else
@@ -452,9 +451,9 @@ public class RobotCoDriver implements Module {
         }
 
         // Overrides Driver Control.
-        if (firstJoystick.getRawButton(BUT_OVERRIDE_DRIVER)) {
-            setOverrideDriver(true);
+        if (secondJoystick.getRawButton(BUT_OVERRIDE_DRIVER)) {
             stopDrive();
+            setOverrideDriver(true);
         }
     }
 
