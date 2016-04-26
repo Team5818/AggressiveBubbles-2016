@@ -47,8 +47,8 @@ public class AutoMoatArc extends CommandGroup{
         if(position == 2){
             double[] leftVels = {-24,-50,-50,-24};
             double[] rightVels = {-24,-50,-50,-24};
-            double[] dists = {0,24,120,180};
-            dist = -180;
+            double[] dists = {0,24,120,220};
+            dist = -220;
             leftTable = new LinearLookupTable(dists, leftVels);
             rightTable = new LinearLookupTable(dists, rightVels);
             spinAngle = 90;

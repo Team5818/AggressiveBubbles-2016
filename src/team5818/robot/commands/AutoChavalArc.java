@@ -61,8 +61,8 @@ public class AutoChavalArc extends CommandGroup{
         if(position == 2){
             double[] leftVels = {60,50,50,24};
             double[] rightVels = {60,50,50,24};
-            double[] dists = {0,24,85,120};
-            dist = 120;
+            double[] dists = {0,24,85,160};
+            dist = 160;
             leftTable = new LinearLookupTable(dists, leftVels);
             rightTable = new LinearLookupTable(dists, rightVels);
             spinAngle = -110;

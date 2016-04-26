@@ -48,8 +48,8 @@ public class AutoRampartsArc extends CommandGroup{
         if(position == 2){
             double[] leftVels = {-24,-85,-85,-24};
             double[] rightVels = {-24,-70,-70,-24};
-            double[] dists = {0,24,110,160};
-            dist = -160;
+            double[] dists = {0,24,110,210};
+            dist = -210;
             leftTable = new LinearLookupTable(dists, leftVels);
             rightTable = new LinearLookupTable(dists, rightVels);
             spinAngle = 90;
