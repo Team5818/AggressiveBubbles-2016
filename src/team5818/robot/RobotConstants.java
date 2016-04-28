@@ -36,13 +36,13 @@ public final class RobotConstants {
      */
     public static final int TALON_RIGHT_BACK = 2;
     
-    public static final int TALON_CLIMB_LEFT = 8;
+    //public static final int TALON_CLIMB_LEFT = 8;
     
-    public static final int TALON_CLIMB_RIGHT = 13;
+    //public static final int TALON_CLIMB_RIGHT = 13;
     
-    public static final int TALON_WINCH_LEFT = 14;
+    public static final int TALON_WINCH_LEFT = 8;
     
-    public static final int TALON_WINCH_RIGHT = 15;
+    public static final int TALON_WINCH_RIGHT = 13;
 
     /**
      * The talon controlling the arm.

@@ -318,7 +318,6 @@ public class DriveSide implements EncoderManager, PIDOutput, MovingControl {
         pidLoop.setContinuous();
         //setCoast(false);
         pidLoop.setSetpoint(dist);
-        SmartDashboard.putNumber("distance", dist);
         pidLoop.enable();
     }
 

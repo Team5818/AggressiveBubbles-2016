@@ -62,9 +62,10 @@ public class ClimbWinch implements PIDSource, PIDOutput {
         
     }
     
+    @Deprecated
     public double getRPS() {
-        double rps = talon.getEncVelocity() * scale * sign;
-        return rps;
+        //double rps = talon.getEncVelocity() * scale * sign;
+        return 0;
     }
     
     public CANTalon getTalon() {
