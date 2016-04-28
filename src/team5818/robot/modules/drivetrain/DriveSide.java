@@ -115,14 +115,14 @@ public class DriveSide implements EncoderManager, PIDOutput, MovingControl {
         usingStandardEncoder = Preferences.getInstance().getBoolean("UsingStandardEncoder", true);
         if(side == Side.LEFT)
             if(usingStandardEncoder)
-                encoderScale = Preferences.getInstance().getDouble("EncoderScaleStandardLeft", -.020603);
+                encoderScale = Preferences.getInstance().getDouble("EncoderScaleStandardLeft", .020603);
             else
-                encoderScale = Preferences.getInstance().getDouble("EncoderScaleSimLeft", -.020603);
+                encoderScale = Preferences.getInstance().getDouble("EncoderScaleSimLeft", 0.01875);
         else if(side == Side.RIGHT)
             if(usingStandardEncoder)
-                encoderScale = Preferences.getInstance().getDouble("EncoderScaleStandardRight", -.020603);
+                encoderScale = Preferences.getInstance().getDouble("EncoderScaleStandardRight", .020603);
             else
-                encoderScale = Preferences.getInstance().getDouble("EncoderScaleSimRight", -.020603);
+                encoderScale = Preferences.getInstance().getDouble("EncoderScaleSimRight", .020603);
         
         if (mainTalon == null) {
             throw new IllegalArgumentException("mainTalon cannot be null");
