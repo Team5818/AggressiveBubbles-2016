@@ -24,14 +24,14 @@ public class ComputerVision {
      * The driving camera that is directed with the direction we collect.
      * 
      */
-    public static int CAMERA_DRIVER = 2;
+    public static int CAMERA_DRIVER = 4;
 
     /**
      * The shooter Camera that faces with the flywheel.
      *
      */
     public static int CAMERA_SHOOTER = 3;
-    public static int CAMERA_BACK = 3;
+    public static int CAMERA_BACK = 5;
 
     private USBCam camDriver;
     private USBCam camShooter;
@@ -58,8 +58,15 @@ public class ComputerVision {
             camDriver = new USBCam("cam" + CAMERA_DRIVER);
 
             if (camDriver != null) {
-                camDriver.setSize(320, 240);
-                camDriver.setFPS(20);
+                //camDriver.setSize(320, 240);
+                //camDriver.setFPS(20);
+                //camDriver.updateSettings();
+                //camDriver.openCamera();
+                camDriver.setSize(160, 120);
+                camDriver.setFPS(30);
+                camDriver.setBrightness(BRIGHTNESS_DEFAULT);
+                // \/ is the problem
+                camDriver.setExposureManual(EXPOSURE_DEFAULT * 2);
                 camDriver.updateSettings();
                 camDriver.openCamera();
             }

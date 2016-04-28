@@ -47,8 +47,8 @@ public class AutoMoatArc extends CommandGroup{
         if(position == 2){
             double[] leftVels = {-24,-50,-50,-24};
             double[] rightVels = {-24,-50,-50,-24};
-            double[] dists = {0,24,120,220};
-            dist = -220;
+            double[] dists = {0,24,120,250};
+            dist = -250;
             leftTable = new LinearLookupTable(dists, leftVels);
             rightTable = new LinearLookupTable(dists, rightVels);
             spinAngle = 90;
@@ -59,8 +59,8 @@ public class AutoMoatArc extends CommandGroup{
         else if(position == 3){
             double[] leftVels = {-45,-50,-50,-24};
             double[] rightVels = {-45,-50,-50,-24};
-            double[] dists = {0,24,100,160};
-            dist = -160;
+            double[] dists = {0,24,100,190};
+            dist = -190;
             leftTable = new LinearLookupTable(dists, leftVels);
             rightTable = new LinearLookupTable(dists, rightVels);
             spinAngle = 60;
@@ -72,8 +72,8 @@ public class AutoMoatArc extends CommandGroup{
         else if(position==4){
             double[] leftVels = {-24,-50,-50,-24};
             double[] rightVels = {-24,-50,-50,-24};
-            double[] dists = {0,24,100,160};
-            dist = -160;
+            double[] dists = {0,24,100,190};
+            dist = -190;
             leftTable = new LinearLookupTable(dists, leftVels);
             rightTable = new LinearLookupTable(dists, rightVels);
             spinAngle = 60;
@@ -84,8 +84,8 @@ public class AutoMoatArc extends CommandGroup{
         else{
             double[] leftVels = {-24,-50,-50,-24};
             double[] rightVels = {-24,-50,-50,-24};
-            double[] dists = {0,24,100,160};
-            dist = -160;
+            double[] dists = {0,24,100,190};
+            dist = -190;
             leftTable = new LinearLookupTable(dists, leftVels);
             rightTable = new LinearLookupTable(dists, rightVels);
             spinAngle = 60;

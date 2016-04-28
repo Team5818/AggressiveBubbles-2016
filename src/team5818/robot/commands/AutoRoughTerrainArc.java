@@ -49,8 +49,8 @@ public class AutoRoughTerrainArc extends CommandGroup{
         if(position == 2){
             double[] leftVels = {-24,-50,-50,-24};
             double[] rightVels = {-24,-50,-50,-24};
-            double[] dists = {0,24,110,200};
-            dist = -200;
+            double[] dists = {0,24,110,230};
+            dist = -230;
             leftTable = new LinearLookupTable(dists, leftVels);
             rightTable = new LinearLookupTable(dists, rightVels);
             spinAngle = 90;
@@ -61,8 +61,8 @@ public class AutoRoughTerrainArc extends CommandGroup{
         else if(position == 3){
             double[] leftVels = {-24,-50,-50,-24};
             double[] rightVels = {-24,-50,-50,-24};
-            double[] dists = {0,24,90,140};
-            dist = -140;
+            double[] dists = {0,24,90,170};
+            dist = -170;
             leftTable = new LinearLookupTable(dists, leftVels);
             rightTable = new LinearLookupTable(dists, rightVels);
             spinAngle = 60;
@@ -74,8 +74,8 @@ public class AutoRoughTerrainArc extends CommandGroup{
         else if(position==4){
             double[] leftVels = {-24,-50,-50,-24};
             double[] rightVels = {-24,-50,-50,-24};
-            double[] dists = {0,24,90,140};
-            dist = -140;
+            double[] dists = {0,24,90,170};
+            dist = -170;
             leftTable = new LinearLookupTable(dists, leftVels);
             rightTable = new LinearLookupTable(dists, rightVels);
             spinAngle = 60;
@@ -86,8 +86,8 @@ public class AutoRoughTerrainArc extends CommandGroup{
         else{
             double[] leftVels = {-24,-50,-50,-24};
             double[] rightVels = {-24,-50,-50,-24};
-            double[] dists = {0,24,90,140};
-            dist = -140;
+            double[] dists = {0,24,90,170};
+            dist = -170;
             leftTable = new LinearLookupTable(dists, leftVels);
             rightTable = new LinearLookupTable(dists, rightVels);
             spinAngle = 60;

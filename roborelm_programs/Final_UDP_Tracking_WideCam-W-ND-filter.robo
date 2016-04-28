@@ -11,15 +11,15 @@
 <RGB_Filter>
   <channel>33</channel>
   <hue_value>0</hue_value>
-  <hysteresis>110</hysteresis>
+  <hysteresis>164</hysteresis>
   <min_value>0</min_value>
   <result_type>6</result_type>
 </RGB_Filter>
 <RGB_Filter>
   <channel>2</channel>
-  <hue_value>45</hue_value>
+  <hue_value>51</hue_value>
   <hysteresis>0</hysteresis>
-  <min_value>107</min_value>
+  <min_value>122</min_value>
   <result_type>1</result_type>
 </RGB_Filter>
 <Marker>

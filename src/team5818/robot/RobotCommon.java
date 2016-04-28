@@ -134,10 +134,11 @@ public class RobotCommon extends IterativeRobot {
         chooserAuto.addObject("Portcullis", AutoRoutine.PORTCULLIS);
         chooserAuto.addObject("Rough Terrain", AutoRoutine.ROUGH_TERRAIN);
         chooserAuto.addObject("Rock Wall", AutoRoutine.ROCKWALL);
+        chooserAuto.addObject("Ramparts", AutoRoutine.RAMPARTS);
         chooserAuto.addObject("Moat", AutoRoutine.MOAT);
+        chooserAuto.addObject("Chaval de Grease", AutoRoutine.CHEVAL);
         chooserAuto.addObject("Spybot", AutoRoutine.SPYBOT);
         chooserAuto.addObject("!!!AUTO TEST!!!", AutoRoutine.AUTO_TEST);
-        chooserAuto.addObject("Chaval de Grease", AutoRoutine.CHEVAL);
 
         // Adding auto position to SmartDashboard.
         chooserPos = new SendableChooser();

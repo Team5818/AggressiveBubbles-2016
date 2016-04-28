@@ -50,8 +50,6 @@ public class AutoRockwallArc extends CommandGroup{
         if(position == 2){
             double[] leftVels = {-24,-70,-70,-24};
             double[] rightVels = {-24,-70,-70,-24};
-            double[] dists = {0,24,110,220};
-            dist = -220;
             leftTable = new LinearLookupTable(dists, leftVels);
             rightTable = new LinearLookupTable(dists, rightVels);
             spinAngle = 90;
@@ -62,8 +60,6 @@ public class AutoRockwallArc extends CommandGroup{
         else if(position == 3){
             double[] leftVels = {-24,-70,-70,-24};
             double[] rightVels = {-24,-70,-70,-24};
-            double[] dists = {0,24,90,158};
-            dist = -158;
             leftTable = new LinearLookupTable(dists, leftVels);
             rightTable = new LinearLookupTable(dists, rightVels);
             spinAngle = (-90);
@@ -75,8 +71,6 @@ public class AutoRockwallArc extends CommandGroup{
         else if(position==4){
             double[] leftVels = {-24,-70,-70,-24};
             double[] rightVels = {-24,-70,-70,-24};
-            double[] dists = {0,24,90,158};
-            dist = -158;
             leftTable = new LinearLookupTable(dists, leftVels);
             rightTable = new LinearLookupTable(dists, rightVels);
             spinAngle = (0);
@@ -87,8 +81,6 @@ public class AutoRockwallArc extends CommandGroup{
         else{
             double[] leftVels = {-24,-70,-70,-24};
             double[] rightVels = {-24,-70,-70,-24};
-            double[] dists = {0,24,90,158};
-            dist = -158;
             leftTable = new LinearLookupTable(dists, leftVels);
             rightTable = new LinearLookupTable(dists, rightVels);
             spinAngle = 90;

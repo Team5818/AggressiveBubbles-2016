@@ -48,8 +48,8 @@ public class AutoRampartsArc extends CommandGroup{
         if(position == 2){
             double[] leftVels = {-24,-85,-85,-24};
             double[] rightVels = {-24,-70,-70,-24};
-            double[] dists = {0,24,110,210};
-            dist = -210;
+            double[] dists = {0,24,110,240};
+            dist = -240;
             leftTable = new LinearLookupTable(dists, leftVels);
             rightTable = new LinearLookupTable(dists, rightVels);
             spinAngle = 90;
@@ -60,8 +60,8 @@ public class AutoRampartsArc extends CommandGroup{
         else if(position == 3){
             double[] leftVels = {-24,-85,-85,-24};
             double[] rightVels = {-24,-70,-70,-24};
-            double[] dists = {0,24,90,152};
-            dist = -152;
+            double[] dists = {0,24,90,185};
+            dist = -185;
             leftTable = new LinearLookupTable(dists, leftVels);
             rightTable = new LinearLookupTable(dists, rightVels);
             spinAngle = (40);
@@ -73,8 +73,8 @@ public class AutoRampartsArc extends CommandGroup{
         else if(position==4){
             double[] leftVels = {-24,-70,-70,-24};
             double[] rightVels = {-24,-70,-70,-24};
-            double[] dists = {0,24,90,152};
-            dist = -152;
+            double[] dists = {0,24,90,185};
+            dist = -185;
             leftTable = new LinearLookupTable(dists, leftVels);
             rightTable = new LinearLookupTable(dists, rightVels);
             spinAngle = (20);
@@ -85,8 +85,8 @@ public class AutoRampartsArc extends CommandGroup{
         else{
             double[] leftVels = {-24,-70,-70,-24};
             double[] rightVels = {-24,-70,-70,-24};
-            double[] dists = {0,24,90,152};
-            dist = -152;
+            double[] dists = {0,24,90,185};
+            dist = -185;
             leftTable = new LinearLookupTable(dists, leftVels);
             rightTable = new LinearLookupTable(dists, rightVels);
             spinAngle = 0;
