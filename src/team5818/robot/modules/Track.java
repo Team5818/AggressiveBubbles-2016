@@ -28,6 +28,9 @@ public class Track {
     public NetworkTable RoboData;
     public DatagramSocket socket;
     private int portNum = 5808;
+    private boolean hasReportedError;
+    private boolean stopedGetData;
+    private boolean startedGetData = false;
 
     public Track() {
 
@@ -53,6 +56,19 @@ public class Track {
 
     public void GetData() {
         if (AutoAim.UDP) {
+            if(!startedGetData) {
+                try {
+                    socket = new DatagramSocket(portNum);
+                    InetSocketAddress address =
+                            new InetSocketAddress("10.58.18.191", portNum);
+                    socket.setSoTimeout(100);
+                    socket.bind(address);
+                } catch (SocketException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+            }
+            startedGetData = true;
             try {
                 byte[] buff = new byte[16];
                 DatagramPacket packet = new DatagramPacket(buff, 16);
@@ -79,12 +95,17 @@ public class Track {
                     blobLocX = -2;
                     blobLocY = -2;
                 }
-
+                if(hasReportedError) {
+                    DriverStation.reportError("Recieving Socket Data", false);
+                }
+                hasReportedError = false;
 
             } catch (IOException e) {
-                e.printStackTrace();
-                DriverStation.reportError("NOPE" + " " + socket.getPort() + " "
-                        + socket.getInetAddress(), false);
+                //e.printStackTrace();
+                if(!hasReportedError) {
+                    DriverStation.reportError("Not Recieving Data", false);
+                }
+                hasReportedError = true;
                 blobCount = -2;
                 blobLocX = -2;
                 blobLocY = -2;
@@ -102,4 +123,12 @@ public class Track {
         }
 
     }
+    
+    public void stopGetData() {
+        startedGetData  = false;
+        blobCount = -2;
+        blobLocX = -2;
+        blobLocY = -2;
+    }
+    
 }

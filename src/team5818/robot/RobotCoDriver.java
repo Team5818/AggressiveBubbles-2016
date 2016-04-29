@@ -435,7 +435,9 @@ public class RobotCoDriver implements Module {
             hasStoppedPidX = false;
         } else if (!hasStoppedPidX) {
             hasStoppedPidX = true;
-            new SetDrivePower(0, 0);
+            new SetDrivePower(0, 0).start();
+            new SetArmPower(0).start();
+            autoAim.cancel();
         }
 
         if (secondJoystick.getRawButton(BUT_ZERO_POT)) {
@@ -454,6 +456,7 @@ public class RobotCoDriver implements Module {
         if (secondJoystick.getRawButton(BUT_OVERRIDE_DRIVER)) {
             stopDrive();
             setOverrideDriver(true);
+            RobotCommon.runningRobot.enableGetData();
         }
     }
 

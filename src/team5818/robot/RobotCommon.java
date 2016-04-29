@@ -111,6 +111,8 @@ public class RobotCommon extends IterativeRobot {
     private Command autoSelected;
     private SendableChooser chooserAuto;
     private SendableChooser chooserPos;
+    
+    private boolean gettingData = false;
 
     enum AutoRoutine {
         DO_NOTHING, LOWBAR, PORTCULLIS, ROCKWALL, RAMPARTS, MOAT, ROUGH_TERRAIN,
@@ -237,6 +239,7 @@ public class RobotCommon extends IterativeRobot {
     public void teleopInit() {
         Scheduler.getInstance().enable();
         modules.forEach(Module::initTeleop);
+        disableGetData();
     }
 
     /**
@@ -260,7 +263,8 @@ public class RobotCommon extends IterativeRobot {
     public void teleopPeriodic() {
         Scheduler.getInstance().run();
         modules.forEach(Module::teleopPeriodicModule);
-        targeting.GetData();
+        if(gettingData)
+            targeting.GetData();
         /*
          * if(RobotCoDriver.firstJoystick.getRawButton(RobotCoDriver.
          * BUT_PERFORM_AUTO)) { Command autoSelected = (Command)
@@ -308,7 +312,19 @@ public class RobotCommon extends IterativeRobot {
         SmartDashboard.putNumber("AA - Err X", AutoAim.calculateAngleX());
         SmartDashboard.putNumber("locX", targeting.blobLocX);
         SmartDashboard.putNumber("locY", targeting.blobLocY);
-        
+    }
+    
+    public boolean isTracking() {
+        return gettingData;
+    }
+    
+    public void enableGetData() {
+        gettingData = true;
+    }
+    
+    public void disableGetData() {
+        gettingData = false;
+        targeting.stopGetData();
     }
 
 }
