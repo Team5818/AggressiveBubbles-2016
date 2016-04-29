@@ -34,7 +34,7 @@ public class AutoLowbarArc extends CommandGroup{
     private SetFlywheelVelocity setFlyVel = new SetFlywheelVelocity(FlyWheel.SHOOT_VELOCITY_UPPER, FlyWheel.SHOOT_VELOCITY_LOWER, 0);
     private LEDToggle lightUp = new LEDToggle(true);
     private SwitchFeed switchCam = new SwitchFeed(ComputerVision.CAMERA_SHOOTER);
-    private AutoAim autoAim = new AutoAim(0,1, 15);;
+    private AutoAim autoAim = new AutoAim(0,0, 15);;
     private Shoot dontMiss = new Shoot();
 
     /**

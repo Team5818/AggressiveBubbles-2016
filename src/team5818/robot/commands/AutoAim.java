@@ -20,7 +20,7 @@ public class AutoAim extends Command {
 
 
     public  static final double DEFAULT_X_OFFSET = 1 + 0.4 + 0.75;
-    public static final double DEFAULT_Y_OFFSET = -1.8; //calibrated for lowbar
+    public static final double DEFAULT_Y_OFFSET = -0.8; //calibrated for lowbar
     public static final double DEFAULT_TIMEOUT = 3;
     public static boolean UDP = true;
     private boolean hasFoundTarget = false;
