@@ -19,7 +19,7 @@ public class AutoChavalArc extends CommandGroup{
     double spinAngle;
     double dist;
     double[] firstVels = {12,30,30,12};
-    double[] distances = {0,9,27,36};
+    double[] distances = {0,9,27,39};
     LinearLookupTable driveStraightTable = new LinearLookupTable(distances, firstVels);
     
     LinearLookupTable leftTable;
@@ -32,7 +32,7 @@ public class AutoChavalArc extends CommandGroup{
     private SetArmAngle armToCrossAngle = new SetArmAngle(driveOverAngle);
     private DriveVelocityProfile driveToDefense = new DriveVelocityProfile(driveStraightTable, 72);
     
-    private ArmPower lowerChaval = new ArmPower(LowerArmToGround.ARM_POWER,1.3); 
+    private ArmPower lowerChaval = new ArmPower(LowerArmToGround.ARM_POWER,1.6); 
 
     private CommandGroup driveOverChaval = new CommandGroup();
     private CommandGroup raiseArm = new CommandGroup();

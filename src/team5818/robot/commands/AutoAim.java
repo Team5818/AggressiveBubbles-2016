@@ -19,7 +19,7 @@ import team5818.robot.util.Vector2d;
 public class AutoAim extends Command {
 
 
-    public  static final double DEFAULT_X_OFFSET = 1 + 0.5 + 0.75;
+    public  static final double DEFAULT_X_OFFSET = 1 + 0.4 + 0.75;
     public static final double DEFAULT_Y_OFFSET = -1.8; //calibrated for lowbar
     public static final double DEFAULT_TIMEOUT = 3;
     public static boolean UDP = true;
@@ -298,7 +298,7 @@ public class AutoAim extends Command {
 
        }
 
-        boolean atTargetX = Math.abs(calculateAngleX()) <= 0.39;
+        boolean atTargetX = Math.abs(calculateAngleX()) <= 0.3;
         if(atTargetX){
             //DriverStation.reportError("Aiming ready", false);
 
