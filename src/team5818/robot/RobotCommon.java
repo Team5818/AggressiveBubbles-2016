@@ -112,7 +112,7 @@ public class RobotCommon extends IterativeRobot {
     private SendableChooser chooserAuto;
     private SendableChooser chooserPos;
     
-    private boolean gettingData = false;
+    //private boolean gettingData = false;
 
     enum AutoRoutine {
         DO_NOTHING, LOWBAR, PORTCULLIS, ROCKWALL, RAMPARTS, MOAT, ROUGH_TERRAIN,
@@ -233,14 +233,14 @@ public class RobotCommon extends IterativeRobot {
         auto.start();
         // driveTrainController.rotateDegrees(90, true);
         Scheduler.getInstance().enable();
-        enableGetData();
+        //enableGetData();
     }
 
     @Override
     public void teleopInit() {
         Scheduler.getInstance().enable();
         modules.forEach(Module::initTeleop);
-        disableGetData();
+        //disableGetData();
     }
 
     /**
@@ -264,8 +264,8 @@ public class RobotCommon extends IterativeRobot {
     public void teleopPeriodic() {
         Scheduler.getInstance().run();
         modules.forEach(Module::teleopPeriodicModule);
-        if(gettingData)
-            targeting.GetData();
+        //if(gettingData)
+            //targeting.GetData();
         /*
          * if(RobotCoDriver.firstJoystick.getRawButton(RobotCoDriver.
          * BUT_PERFORM_AUTO)) { Command autoSelected = (Command)
@@ -317,17 +317,17 @@ public class RobotCommon extends IterativeRobot {
         SmartDashboard.putNumber("Right WInch Height", winch.getRight().getTalon().getEncPosition() / 10967.0 * 100);
     }
     
-    public boolean isTracking() {
-        return gettingData;
-    }
+    //public boolean isTracking() {
+    //    return gettingData;
+    //}
     
-    public void enableGetData() {
-        gettingData = true;
-    }
+    //public void enableGetData() {
+    //    gettingData = true;
+    //}
     
-    public void disableGetData() {
-        gettingData = false;
-        targeting.stopGetData();
-    }
+   // public void disableGetData() {
+   //     gettingData = false;
+   //     targeting.stopGetData();
+   //}
 
 }

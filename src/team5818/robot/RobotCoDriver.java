@@ -10,7 +10,6 @@ import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import team5818.robot.commands.ActuateServo;
 import team5818.robot.commands.AutoAim;
-import team5818.robot.commands.AutoAimTeleopFix;
 import team5818.robot.commands.Collect;
 import team5818.robot.commands.DrivePower;
 import team5818.robot.commands.FlywheelVelocityProfile;
@@ -41,7 +40,6 @@ import team5818.robot.util.Vectors;
 public class RobotCoDriver implements Module {
 
     /**
-     * The object for the first CoDriver Joystick.
      */
     public static final Joystick firstJoystick =
             new Joystick(RobotConstants.CODRIVER_FIRST_JOYSTICK_PORT);
@@ -142,7 +140,7 @@ public class RobotCoDriver implements Module {
             new LinearLookupTable(flyTimes, upperFlyVels);
 
     private double coDriveDamp = 0.25;
-    private AutoAimTeleopFix autoAim;
+    private AutoAim autoAim;
     private double armAngleShooting = 35;
     private double armAngleCollect = 2.5;
     private boolean hasStoppedPidX = false;
@@ -154,7 +152,7 @@ public class RobotCoDriver implements Module {
     @Override
     public void initModule() {
         getAutoAimOffset();
-        autoAim = new AutoAimTeleopFix(autoAimXOffset, autoAimYOffset);
+        autoAim = new AutoAim(autoAimXOffset, autoAimYOffset);
         // Setting the singletons to local fields for easy access.
         arm = RobotCommon.runningRobot.arm;
         lowerFlywheel = RobotCommon.runningRobot.lowerFlywheel;
@@ -457,7 +455,7 @@ public class RobotCoDriver implements Module {
         if (secondJoystick.getRawButton(BUT_OVERRIDE_DRIVER)) {
             stopDrive();
             setOverrideDriver(true);
-            RobotCommon.runningRobot.enableGetData();
+            //RobotCommon.runningRobot.enableGetData();
         }
     }
 

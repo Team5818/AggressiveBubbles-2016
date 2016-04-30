@@ -33,24 +33,26 @@ public class Track {
     private boolean startedGetData = false;
 
     public Track() {
-
-        try {
-            socket = new DatagramSocket(portNum);
-            InetSocketAddress address =
+        if (AutoAim.UDP){ 
+            try {
+                socket = new DatagramSocket(portNum);
+                InetSocketAddress address =
                     new InetSocketAddress("10.58.18.191", portNum);
-            socket.setSoTimeout(100);
-            socket.bind(address);
-        } catch (SocketException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+                socket.setSoTimeout(100);
+                socket.bind(address);
+            } catch (SocketException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
 
+            }
         }
-
-        try {
-            RoboData = NetworkTable.getTable("Targeting");
-            NetworkTable.setUpdateRate(.2);
-        } catch (Exception e) {
-            DriverStation.reportError("no data table", false);
+        else{
+            try {
+                RoboData = NetworkTable.getTable("Targeting");
+                NetworkTable.setUpdateRate(.2);
+            } catch (Exception e) {
+                DriverStation.reportError("no data table", false);
+            }
         }
     }
 
@@ -112,7 +114,8 @@ public class Track {
 
             }
 
-        } else {
+        } 
+        else {
             blobCount = RoboData.getNumber("BLOB_COUNT", -1.0);
             // imageWidth = RoboData.getNumber("IMAGE_WIDTH", 0.0);
             // imageHeight = RoboData.getNumber("IMAGE_HEIGHT", 0.0);
