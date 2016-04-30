@@ -203,6 +203,7 @@ public class AutoAim extends Command {
 
     @Override
     protected void execute() {
+        track.GetData();
         SmartDashboard.putNumber("BlobCount", track.blobCount);
         pidX();
         pidY();
