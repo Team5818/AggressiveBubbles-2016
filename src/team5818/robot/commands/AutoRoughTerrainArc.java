@@ -98,7 +98,7 @@ public class AutoRoughTerrainArc extends CommandGroup{
         
         driveOver = new DriveVelocityProfile(leftTable, rightTable, dist);
         spin = new SpinRobot(spinAngle);
-        AutoAim autoAim = new AutoAim(xOffset,yOffset, 3);
+        AutoAim autoAim = new AutoAim(xOffset,yOffset, 7);
         scan = new ScanForTarget(cw);
         
         driveOverRoughTerrain.addParallel(armToPosition);

@@ -7,8 +7,6 @@ import team5818.robot.modules.FlyWheel;
 import team5818.robot.util.LinearLookupTable;
 
 public class AutoRockwallArc extends CommandGroup{
-
-
     private double findTargetAngle;
     public double crossingAngle =
             Preferences.getInstance().getDouble("ArmAngleMid", 30);
@@ -26,14 +24,13 @@ public class AutoRockwallArc extends CommandGroup{
     
     private SwitchFeed switchCam = new SwitchFeed(ComputerVision.CAMERA_SHOOTER);
     private LEDToggle lightUp = new LEDToggle(true);
-    private CommandGroup driveOverRockwall = new CommandGroup();
+    private CommandGroup driveOverMoat = new CommandGroup();
     private SetArmAngle armToPosition = new SetArmAngle(crossingAngle);
     private DriveVelocityProfile driveOver;  
+    private DoNothing pause = new DoNothing(1);
     private CommandGroup prepareShot = new CommandGroup();
-    private ScanForTarget scan;
     private SetFlywheelVelocity setFlyVel = new SetFlywheelVelocity(flyUpVel, flyLoVel);
-    private SpinRobot spin;
-    private AutoAim aim;
+    private ScanForTarget scan;
     private Shoot dontMiss = new Shoot();
 
     /**
@@ -44,13 +41,13 @@ public class AutoRockwallArc extends CommandGroup{
      * spin counter clockwise
      * move back under
      */
-    public AutoRockwallArc(int position) {
+    public AutoRockwallArc(int position){
         double xOffset = 0;
         double yOffset = 0;
         if(position == 2){
             double[] leftVels = {-24,-70,-70,-24};
             double[] rightVels = {-24,-70,-70,-24};
-            double[] dists = {0,24,110,250};
+            double[] dists = {0,24,120,250};
             dist = -250;
             leftTable = new LinearLookupTable(dists, leftVels);
             rightTable = new LinearLookupTable(dists, rightVels);
@@ -60,14 +57,14 @@ public class AutoRockwallArc extends CommandGroup{
             cw = true;
         }
         else if(position == 3){
-            double[] leftVels = {-24,-70,-70,-24};
-            double[] rightVels = {-24,-70,-70,-24};
-            double[] dists = {0,24,90,190};
+            double[] leftVels = {-45,-70,-70,-24};
+            double[] rightVels = {-45,-70,-70,-24};
+            double[] dists = {0,24,100,190};
             dist = -190;
             leftTable = new LinearLookupTable(dists, leftVels);
             rightTable = new LinearLookupTable(dists, rightVels);
-            spinAngle = (-90);
-            xOffset = 0;
+            spinAngle = 60;
+            xOffset = Preferences.getInstance().getDouble("AutoPortcullis3XOffset", xOffset);
             yOffset = Preferences.getInstance().getDouble("AutoPortcullis3YOffset", yOffset);
             cw = true;
         }
@@ -75,11 +72,11 @@ public class AutoRockwallArc extends CommandGroup{
         else if(position==4){
             double[] leftVels = {-24,-70,-70,-24};
             double[] rightVels = {-24,-70,-70,-24};
-            double[] dists = {0,24,90,190};
+            double[] dists = {0,24,100,190};
             dist = -190;
             leftTable = new LinearLookupTable(dists, leftVels);
             rightTable = new LinearLookupTable(dists, rightVels);
-            spinAngle = (0);
+            spinAngle = 60;
             xOffset = Preferences.getInstance().getDouble("AutoPortcullis4XOffset", xOffset);
             yOffset = Preferences.getInstance().getDouble("AutoPortcullis4YOffset", yOffset);
             cw = false;
@@ -87,33 +84,35 @@ public class AutoRockwallArc extends CommandGroup{
         else{
             double[] leftVels = {-24,-70,-70,-24};
             double[] rightVels = {-24,-70,-70,-24};
-            double[] dists = {0,24,90,190};
+            double[] dists = {0,24,100,190};
             dist = -190;
             leftTable = new LinearLookupTable(dists, leftVels);
             rightTable = new LinearLookupTable(dists, rightVels);
-            spinAngle = 90;
+            spinAngle = 60;
             xOffset = Preferences.getInstance().getDouble("AutoPortcullis5XOffset", xOffset);
-            yOffset = Preferences.getInstance().getDouble("AutoPortcullis5YOffset", yOffset);
+            yOffset = Preferences.getInstance().getDouble("AutoPortcullis5YOffsets", yOffset);
             cw = false;
         }
         
         driveOver = new DriveVelocityProfile(leftTable, rightTable, dist);
-        aim = new AutoAim(xOffset, yOffset, 3);
-        spin = new SpinRobot(spinAngle);
+        AutoAim autoAim = new AutoAim(xOffset,yOffset, 5);
         scan = new ScanForTarget(cw);
-         
-        driveOverRockwall.addParallel(armToPosition);
-        driveOverRockwall.addParallel(driveOver);
         
-        prepareShot.addParallel(setFlyVel);
+        driveOverMoat.addParallel(armToPosition);
+        driveOverMoat.addParallel(driveOver);
+        
         prepareShot.addParallel(scan);
+        prepareShot.addParallel(setFlyVel);
+        
         
         this.addSequential(lightUp);
         this.addSequential(switchCam); 
-        this.addSequential(driveOverRockwall);
+        this.addSequential(driveOverMoat);
+        this.addSequential(pause);
         this.addSequential(prepareShot);
-        this.addSequential(aim);
+        this.addSequential(autoAim);
         this.addSequential(dontMiss);
 
     }
+
 }

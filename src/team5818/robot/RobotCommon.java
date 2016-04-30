@@ -134,10 +134,10 @@ public class RobotCommon extends IterativeRobot {
         chooserAuto.addObject("Do Nothing Auto", AutoRoutine.DO_NOTHING);
         chooserAuto.addObject("Lowbar", AutoRoutine.LOWBAR);
         chooserAuto.addObject("Portcullis", AutoRoutine.PORTCULLIS);
-        chooserAuto.addObject("Rough Terrain", AutoRoutine.ROUGH_TERRAIN);
+        //chooserAuto.addObject("Rough Terrain", AutoRoutine.ROUGH_TERRAIN);
         chooserAuto.addObject("Rock Wall", AutoRoutine.ROCKWALL);
         chooserAuto.addObject("Ramparts", AutoRoutine.RAMPARTS);
-        chooserAuto.addObject("Moat", AutoRoutine.MOAT);
+        chooserAuto.addObject("Moat/Rough Terrain", AutoRoutine.MOAT);
         chooserAuto.addObject("Chaval de Grease", AutoRoutine.CHEVAL);
         chooserAuto.addObject("Spybot", AutoRoutine.SPYBOT);
         chooserAuto.addObject("!!!AUTO TEST!!!", AutoRoutine.AUTO_TEST);
@@ -163,7 +163,7 @@ public class RobotCommon extends IterativeRobot {
         // AutoRoughRampartsInside());
         // chooserAuto.addObject("Rough/Ramparts Outside", new
         // AutoRoughRampartsOutside());
-        SmartDashboard.putData("Auto choices", chooserAuto);
+        SmartDashboard.putData("Auto choicess", chooserAuto);
         SmartDashboard.putData("Pos choices", chooserPos);
 
         panel = new PowerDistributionPanel();
@@ -187,7 +187,7 @@ public class RobotCommon extends IterativeRobot {
         modules.forEach(Module::initAutonomous);
         Command auto;
         AutoRoutine autoSelected = (AutoRoutine) chooserAuto.getSelected();
-        int pos = (int) chooserPos.getSelected();
+        int pos = (int)chooserPos.getSelected();
         switch (autoSelected) {
             case DO_NOTHING:
                 auto = new DoNothingAuto();

@@ -95,7 +95,7 @@ public class AutoMoatArc extends CommandGroup{
         }
         
         driveOver = new DriveVelocityProfile(leftTable, rightTable, dist);
-        AutoAim autoAim = new AutoAim(xOffset,yOffset, 3);
+        AutoAim autoAim = new AutoAim(xOffset,yOffset, 5);
         scan = new ScanForTarget(cw);
         
         driveOverMoat.addParallel(armToPosition);
