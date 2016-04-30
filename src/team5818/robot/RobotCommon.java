@@ -265,7 +265,7 @@ public class RobotCommon extends IterativeRobot {
         Scheduler.getInstance().run();
         modules.forEach(Module::teleopPeriodicModule);
         //if(gettingData)
-            //targeting.GetData();
+            targeting.GetData();
         /*
          * if(RobotCoDriver.firstJoystick.getRawButton(RobotCoDriver.
          * BUT_PERFORM_AUTO)) { Command autoSelected = (Command)
@@ -313,8 +313,10 @@ public class RobotCommon extends IterativeRobot {
         SmartDashboard.putNumber("AA - Err X", AutoAim.calculateAngleX());
         SmartDashboard.putNumber("locX", targeting.blobLocX);
         SmartDashboard.putNumber("locY", targeting.blobLocY);
+        SmartDashboard.putNumber("Blob Count", targeting.blobCount);
         SmartDashboard.putNumber("Left Winch Height", winch.getLeft().getTalon().getEncPosition() / 11339.0 * 100);
         SmartDashboard.putNumber("Right WInch Height", winch.getRight().getTalon().getEncPosition() / 10967.0 * 100);
+        
     }
     
     //public boolean isTracking() {
