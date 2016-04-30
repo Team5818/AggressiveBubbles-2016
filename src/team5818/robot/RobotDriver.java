@@ -21,6 +21,7 @@ import team5818.robot.commands.SetFlywheelPower;
 import team5818.robot.commands.SetFlywheelVelocity;
 import team5818.robot.commands.SpinRobot;
 import team5818.robot.commands.SwitchFeed;
+import team5818.robot.modules.ClimbWinchs;
 import team5818.robot.modules.ComputerVision;
 import team5818.robot.modules.FlyWheel;
 import team5818.robot.modules.Module;
@@ -127,6 +128,8 @@ public class RobotDriver implements Module {
     private LinearLookupTable upperTable =
             new LinearLookupTable(flyTimes, upperFlyVels);
     private boolean hasStoppedArm;
+    private boolean climbAnywaysRight = false;
+    private boolean climbAnywaysLeft = false;
 
     @Override
     public void initModule() {
@@ -208,8 +211,13 @@ public class RobotDriver implements Module {
 
     public void initClimb() {
         climbMode = true;
+        climbAnywaysLeft = false;
+        climbAnywaysRight = false;
         initClimbButtons();
         this.stopMovement();
+        RobotCommon.runningRobot.winch.getLeft().getTalon().setEncPosition(0);
+        RobotCommon.runningRobot.winch.getRight().getTalon().setEncPosition(0);
+        
     }
 
     public void unInitClimb() {
@@ -245,16 +253,26 @@ public class RobotDriver implements Module {
 
     private void climbPeriodic() {
         if (usingFirstStick()) {
-            RobotCommon.runningRobot.winch.getRight().setPower(-FIRST_JOYSTICK.getY());
+            if(Math.abs(RobotCommon.runningRobot.winch.getRight().getTalon().getEncPosition()) <= ClimbWinchs.WINCH_MAX_COUNT_RIGHT || climbAnywaysRight)
+                RobotCommon.runningRobot.winch.getRight().setPower(-FIRST_JOYSTICK.getY());
+            else
+                RobotCommon.runningRobot.winch.getRight().setPower(0);
             hasStoppedRightClimbWinch = false;
         } else if (!hasStoppedRightClimbWinch) {
+            if(RobotCommon.runningRobot.winch.getRight().getTalon().getEncPosition() >= ClimbWinchs.WINCH_MAX_COUNT_RIGHT)
+                climbAnywaysRight = true;
             RobotCommon.runningRobot.winch.getRight().setPower(0);
             hasStoppedRightClimbWinch = true;
         }
         if (usingSecondStick()) {
-            RobotCommon.runningRobot.winch.getLeft().setPower(-SECOND_JOYSTICK.getY());
+            if(Math.abs(RobotCommon.runningRobot.winch.getLeft().getTalon().getEncPosition()) <= ClimbWinchs.WINCH_MAX_COUNT_LEFT || climbAnywaysLeft)
+                RobotCommon.runningRobot.winch.getLeft().setPower(-SECOND_JOYSTICK.getY());
+            else
+                RobotCommon.runningRobot.winch.getLeft().setPower(0);
             hasStoppedLeftClimbWinch = false;
         } else if (!hasStoppedLeftClimbWinch) {
+            if(Math.abs(RobotCommon.runningRobot.winch.getLeft().getTalon().getEncPosition()) >= ClimbWinchs.WINCH_MAX_COUNT_LEFT)
+                climbAnywaysLeft = true;
             RobotCommon.runningRobot.winch.getLeft().setPower(0);
             hasStoppedLeftClimbWinch = true;
         }
@@ -386,5 +404,4 @@ public class RobotDriver implements Module {
                 || Math.abs(SECOND_JOYSTICK
                         .getY()) > RobotConstants.JOYSTICK_DEADBAND);
     }
-
 }

@@ -9,6 +9,10 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class ClimbWinchs{
     
+    public static int WINCH_MAX_COUNT_LEFT = 11044;
+    public static int WINCH_MAX_COUNT_RIGHT = 10467;
+    
+    
     private double scale = 1;
     
     private ClimbWinch left;

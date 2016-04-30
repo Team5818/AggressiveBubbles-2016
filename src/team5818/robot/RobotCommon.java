@@ -233,6 +233,7 @@ public class RobotCommon extends IterativeRobot {
         auto.start();
         // driveTrainController.rotateDegrees(90, true);
         Scheduler.getInstance().enable();
+        enableGetData();
     }
 
     @Override
@@ -312,6 +313,8 @@ public class RobotCommon extends IterativeRobot {
         SmartDashboard.putNumber("AA - Err X", AutoAim.calculateAngleX());
         SmartDashboard.putNumber("locX", targeting.blobLocX);
         SmartDashboard.putNumber("locY", targeting.blobLocY);
+        SmartDashboard.putNumber("Left Winch Height", winch.getLeft().getTalon().getEncPosition() / 11339.0 * 100);
+        SmartDashboard.putNumber("Right WInch Height", winch.getRight().getTalon().getEncPosition() / 10967.0 * 100);
     }
     
     public boolean isTracking() {

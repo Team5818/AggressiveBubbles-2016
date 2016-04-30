@@ -11,15 +11,15 @@
 <RGB_Filter>
   <channel>33</channel>
   <hue_value>0</hue_value>
-  <hysteresis>151</hysteresis>
+  <hysteresis>164</hysteresis>
   <min_value>0</min_value>
   <result_type>6</result_type>
 </RGB_Filter>
 <RGB_Filter>
   <channel>2</channel>
-  <hue_value>43</hue_value>
+  <hue_value>51</hue_value>
   <hysteresis>0</hysteresis>
-  <min_value>112</min_value>
+  <min_value>122</min_value>
   <result_type>1</result_type>
 </RGB_Filter>
 <Marker>
@@ -37,7 +37,7 @@
         <filter_id>8</filter_id>
         <invert_count>0</invert_count>
         <invert_threshold>0</invert_threshold>
-        <minimum_size>35</minimum_size>
+        <minimum_size>30</minimum_size>
         <weight_threshold>0.5</weight_threshold>
       </filter>
       <filter:2>

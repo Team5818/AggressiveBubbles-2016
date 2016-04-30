@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import team5818.robot.commands.ActuateServo;
 import team5818.robot.commands.AutoAim;
+import team5818.robot.commands.AutoAimTeleopFix;
 import team5818.robot.commands.Collect;
 import team5818.robot.commands.DrivePower;
 import team5818.robot.commands.FlywheelVelocityProfile;
@@ -141,7 +142,7 @@ public class RobotCoDriver implements Module {
             new LinearLookupTable(flyTimes, upperFlyVels);
 
     private double coDriveDamp = 0.25;
-    private AutoAim autoAim;
+    private AutoAimTeleopFix autoAim;
     private double armAngleShooting = 35;
     private double armAngleCollect = 2.5;
     private boolean hasStoppedPidX = false;
@@ -153,7 +154,7 @@ public class RobotCoDriver implements Module {
     @Override
     public void initModule() {
         getAutoAimOffset();
-        autoAim = new AutoAim(autoAimXOffset, autoAimYOffset);
+        autoAim = new AutoAimTeleopFix(autoAimXOffset, autoAimYOffset);
         // Setting the singletons to local fields for easy access.
         arm = RobotCommon.runningRobot.arm;
         lowerFlywheel = RobotCommon.runningRobot.lowerFlywheel;
@@ -477,7 +478,7 @@ public class RobotCoDriver implements Module {
 
     @Override
     public void initAutonomous() {
-
+        
     }
 
     @Override

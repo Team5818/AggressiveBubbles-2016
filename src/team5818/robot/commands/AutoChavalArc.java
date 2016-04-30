@@ -32,7 +32,7 @@ public class AutoChavalArc extends CommandGroup{
     private SetArmAngle armToCrossAngle = new SetArmAngle(driveOverAngle);
     private DriveVelocityProfile driveToDefense = new DriveVelocityProfile(driveStraightTable, 72);
     
-    private ArmPower lowerChaval = new ArmPower(LowerArmToGround.ARM_POWER,1.6); 
+    private ArmPower lowerChaval = new ArmPower(LowerArmToGround.ARM_POWER,0.8); 
 
     private CommandGroup driveOverChaval = new CommandGroup();
     private CommandGroup raiseArm = new CommandGroup();
@@ -61,8 +61,8 @@ public class AutoChavalArc extends CommandGroup{
         if(position == 2){
             double[] leftVels = {60,50,50,24};
             double[] rightVels = {60,50,50,24};
-            double[] dists = {0,24,85,160};
-            dist = 160;
+            double[] dists = {0,24,85,180};
+            dist = 180;
             leftTable = new LinearLookupTable(dists, leftVels);
             rightTable = new LinearLookupTable(dists, rightVels);
             spinAngle = -110;
@@ -72,8 +72,8 @@ public class AutoChavalArc extends CommandGroup{
         else if(position == 3){
             double[] leftVels = {60,50,50,24};
             double[] rightVels = {60,50,50,24};
-            double[] dists = {0,24,65,100};
-            dist = 100;
+            double[] dists = {0,24,65,120};
+            dist = 120;
             leftTable = new LinearLookupTable(dists, leftVels);
             rightTable = new LinearLookupTable(dists, rightVels);
             spinAngle = 180;
@@ -84,8 +84,8 @@ public class AutoChavalArc extends CommandGroup{
         else if(position==4){
             double[] leftVels = {60,50,50,24};
             double[] rightVels = {60,50,50,24};
-            double[] dists = {0,24,65,100};
-            dist = 100;
+            double[] dists = {0,24,65,120};
+            dist = 120;
             leftTable = new LinearLookupTable(dists, leftVels);
             rightTable = new LinearLookupTable(dists, rightVels);
             spinAngle = 180;
@@ -95,8 +95,8 @@ public class AutoChavalArc extends CommandGroup{
         else{
             double[] leftVels = {60,50,50,24};
             double[] rightVels = {60,50,50,24};
-            double[] dists = {0,24,65,100};
-            dist = 100;
+            double[] dists = {0,24,65,120};
+            dist = 120;
             leftTable = new LinearLookupTable(dists, leftVels);
             rightTable = new LinearLookupTable(dists, rightVels);
             spinAngle = 1800;
