@@ -27,11 +27,11 @@ public class ActuateServo extends CommandGroup {
     public void initialize() {
         if(angle == ACT_TO_90) {
             frontServo.setAngle(90);
-            backServo.setAngle(100); 
+            backServo.setAngle(117); 
         }
         else {
             frontServo.setAngle(200);
-            backServo.setAngle(0); 
+            backServo.setAngle(25); 
         }
     }
     
