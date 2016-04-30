@@ -305,12 +305,12 @@ public class RobotDriver implements Module {
 
         if (FIRST_JOYSTICK.getRawButton(BUT_OVERRIDE_CODRIVER)) {
             RobotCoDriver.setOverrideDriver(false);
-        //    RobotCommon.runningRobot.disableGetData();
+            RobotCommon.runningRobot.disableGetData();
         }
 
         if (FIRST_JOYSTICK.getRawButton(BUT_OVERRIDE_DRIVER)) {
             RobotCoDriver.setOverrideDriver(true);
-        //    RobotCommon.runningRobot.enableGetData();
+            RobotCommon.runningRobot.enableGetData();
         }
 
         if (FIRST_JOYSTICK.getRawButton(BUT_DRIVE_VELOCITY)) {

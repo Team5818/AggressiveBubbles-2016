@@ -22,7 +22,7 @@ public class AutoAim extends Command {
     public  static final double DEFAULT_X_OFFSET = 1 + 0.4 + 0.75;
     public static final double DEFAULT_Y_OFFSET = -1.8; //calibrated for lowbar
     public static final double DEFAULT_TIMEOUT = 3;
-    public static boolean UDP = false;
+    public static boolean UDP = true;
     private boolean hasFoundTarget = false;
 
     private static double defaultFlyUpVel = Preferences.getInstance()
@@ -203,15 +203,14 @@ public class AutoAim extends Command {
 
     @Override
     protected void execute() {
-        track.GetData();
         SmartDashboard.putNumber("BlobCount", track.blobCount);
         pidX();
         pidY();
     }
     
     public void pidY() {
-        //if(!RobotCommon.runningRobot.isTracking())
-        //    return;
+        if(!RobotCommon.runningRobot.isTracking())
+            return;
         if (track.blobCount > 0) {
             //track.GetData();
             if(Math.abs(calculateAngleY()) <= 2) {
@@ -242,8 +241,8 @@ public class AutoAim extends Command {
     }
 
     public void pidX() { 
-        //if(!RobotCommon.runningRobot.isTracking())
-        //    return;
+        if(!RobotCommon.runningRobot.isTracking())
+            return;
         if (track.blobCount > 0) {
             double something = calculateAngleX();
             if(Math.abs(something) <= 1) {
