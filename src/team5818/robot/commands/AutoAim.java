@@ -209,8 +209,8 @@ public class AutoAim extends Command {
     }
     
     public void pidY() {
-        if(!RobotCommon.runningRobot.isTracking())
-            return;
+        //if(!RobotCommon.runningRobot.isTracking())
+            //return;
         if (track.blobCount > 0) {
             //track.GetData();
             if(Math.abs(calculateAngleY()) <= 2) {
@@ -241,8 +241,8 @@ public class AutoAim extends Command {
     }
 
     public void pidX() { 
-        if(!RobotCommon.runningRobot.isTracking())
-            return;
+        //if(!RobotCommon.runningRobot.isTracking())
+         //   return;
         if (track.blobCount > 0) {
             double something = calculateAngleX();
             if(Math.abs(something) <= 1) {

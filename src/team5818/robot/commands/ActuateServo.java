@@ -4,34 +4,35 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PWM;
 import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.Servo;
+import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.CommandGroup;
 
-public class ActuateServo extends CommandGroup {
+public class ActuateServo extends Command {
     
-    public static final double ACT_TO_90 = 90;
-    public static final double ACT_TO_0 = 0;
+    public static final boolean EXTENDED = true;
+    public static final boolean RETRACTED = false;
     private double frontOffset = 0;
     private double backOffset = 0;
     
-    private double angle = 0;
+    private boolean state = RETRACTED;
     
     private static Servo frontServo = new Servo(2);
     private static Servo backServo = new Servo(3);
     
     
-    public ActuateServo(double angle) {
-        this.angle = angle;
+    public ActuateServo(boolean state) {
+        this.state = state;
     }
     
     @Override
     public void initialize() {
-        if(angle == ACT_TO_90) {
+        if(state == EXTENDED) {
             frontServo.setAngle(90);
-            backServo.setAngle(117); 
+            backServo.setAngle(110); 
         }
         else {
-            frontServo.setAngle(200);
-            backServo.setAngle(25); 
+            frontServo.setAngle(157);
+            backServo.setAngle(40); 
         }
     }
     
@@ -41,6 +42,30 @@ public class ActuateServo extends CommandGroup {
     
     public static Servo getBackServo() {
         return backServo;
+    }
+
+    @Override
+    protected void execute() {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    protected boolean isFinished() {
+        // TODO Auto-generated method stub
+        return true;
+    }
+
+    @Override
+    protected void end() {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    protected void interrupted() {
+        // TODO Auto-generated method stub
+        
     }
     
     

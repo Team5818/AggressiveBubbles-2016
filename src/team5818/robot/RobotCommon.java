@@ -184,6 +184,7 @@ public class RobotCommon extends IterativeRobot {
      */
     @Override
     public void autonomousInit() {
+        (new ActuateServo(ActuateServo.RETRACTED)).start();
         modules.forEach(Module::initAutonomous);
         Command auto;
         AutoRoutine autoSelected = (AutoRoutine) chooserAuto.getSelected();
@@ -241,6 +242,7 @@ public class RobotCommon extends IterativeRobot {
         Scheduler.getInstance().enable();
         modules.forEach(Module::initTeleop);
         disableGetData();
+        (new ActuateServo(ActuateServo.EXTENDED)).start();
     }
 
     /**
@@ -264,7 +266,7 @@ public class RobotCommon extends IterativeRobot {
     public void teleopPeriodic() {
         Scheduler.getInstance().run();
         modules.forEach(Module::teleopPeriodicModule);
-        if(gettingData)
+        //if(gettingData)
             targeting.GetData();
         /*
          * if(RobotCoDriver.firstJoystick.getRawButton(RobotCoDriver.
@@ -278,6 +280,7 @@ public class RobotCommon extends IterativeRobot {
     public void testInit() {
         modules.forEach(Module::initTest);
         LiveWindow.setEnabled(true);
+        (new ActuateServo(ActuateServo.RETRACTED)).start();
     }
 
     /**
@@ -298,6 +301,11 @@ public class RobotCommon extends IterativeRobot {
         upperFlywheel.setPower(0);
         arm.getFirstMotor().enableBrakeMode(true);
         arm.getSecondMotor().enableBrakeMode(true);
+    }
+    
+    @Override
+    public void disabledPeriodic() {
+        
     }
     
     private void displayNumbers() {

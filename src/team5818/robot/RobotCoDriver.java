@@ -142,7 +142,7 @@ public class RobotCoDriver implements Module {
             new LinearLookupTable(flyTimes, upperFlyVels);
 
     private double coDriveDamp = 0.25;
-    private AutoAimTeleopFix autoAim;
+    private AutoAim autoAim;
     private double armAngleShooting = 35;
     private double armAngleCollect = 2.5;
     private boolean hasStoppedPidX = false;
@@ -154,7 +154,7 @@ public class RobotCoDriver implements Module {
     @Override
     public void initModule() {
         getAutoAimOffset();
-        autoAim = new AutoAimTeleopFix(autoAimXOffset, autoAimYOffset);
+        autoAim = new AutoAim(autoAimXOffset, autoAimYOffset);
         // Setting the singletons to local fields for easy access.
         arm = RobotCommon.runningRobot.arm;
         lowerFlywheel = RobotCommon.runningRobot.lowerFlywheel;
@@ -252,8 +252,8 @@ public class RobotCoDriver implements Module {
         // butAutoAim.whenReleased(aimAndShoot);
         butSwitchShootFeed.whenPressed(switchFeedShoot);
         butSwitchDriverFeed.whenPressed(switchFeedDrive);
-        butRetractServo.whenPressed(new ActuateServo(ActuateServo.ACT_TO_0));
-        butExtendServo.whenPressed(new ActuateServo(ActuateServo.ACT_TO_90));
+        butRetractServo.whenPressed(new ActuateServo(ActuateServo.RETRACTED));
+        butExtendServo.whenPressed(new ActuateServo(ActuateServo.EXTENDED));
     }
 
     public void initClimbButtons() {

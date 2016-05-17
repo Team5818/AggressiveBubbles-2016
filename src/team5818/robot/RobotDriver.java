@@ -264,6 +264,7 @@ public class RobotDriver implements Module {
             RobotCommon.runningRobot.winch.getRight().setPower(0);
             hasStoppedRightClimbWinch = true;
         }
+        
         if (usingSecondStick()) {
             if(Math.abs(RobotCommon.runningRobot.winch.getLeft().getTalon().getEncPosition()) <= ClimbWinchs.WINCH_MAX_COUNT_LEFT || climbAnywaysLeft)
                 RobotCommon.runningRobot.winch.getLeft().setPower(-SECOND_JOYSTICK.getY());

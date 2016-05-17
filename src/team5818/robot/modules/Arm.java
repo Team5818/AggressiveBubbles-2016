@@ -206,7 +206,7 @@ public class Arm extends Subsystem implements PIDSource, PIDOutput {
     @Override
     public void pidWrite(double power) {
         
-        if(this.getAngle() >= 90 && power >= 0 && angleCapping){
+        if(this.getAngle() >= 95 && power >= 0 && angleCapping){
            firstArmMotor.set(0);
            secondArmMotor.set(0);
         }
