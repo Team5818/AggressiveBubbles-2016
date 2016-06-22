@@ -1,7 +1,8 @@
 package team5818.robot.commands;
 
+import org.usfirst.frc.team5818.robot.Robot;
+
 import edu.wpi.first.wpilibj.command.Command;
-import team5818.robot.RobotCommon;
 
 public class ResetEncoderCommand extends Command {
 
@@ -11,8 +12,8 @@ public class ResetEncoderCommand extends Command {
 
     @Override
     protected void execute() {
-        RobotCommon.runningRobot.driveTrain.getLeftMotors().setDriveDistance(0);
-        RobotCommon.runningRobot.driveTrain.getRightMotors()
+        Robot.runningRobot.driveTrain.getLeftMotors().setDriveDistance(0);
+        Robot.runningRobot.driveTrain.getRightMotors()
                 .setDriveDistance(0);
     }
 

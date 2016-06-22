@@ -26,7 +26,6 @@ public class AutoChavalArc extends CommandGroup{
     LinearLookupTable rightTable;
     
     private SwitchFeed switchCam = new SwitchFeed(ComputerVision.CAMERA_SHOOTER);
-    private LEDToggle lightUp = new LEDToggle(true);
     
     private CommandGroup driveToChaval = new CommandGroup();
     private SetArmAngle armToCrossAngle = new SetArmAngle(driveOverAngle);
@@ -122,7 +121,6 @@ public class AutoChavalArc extends CommandGroup{
         prepareShot.addParallel(spin);
         prepareShot.addParallel(findTarget); 
         
-        this.addSequential(lightUp);
         this.addSequential(switchCam); 
         this.addSequential(driveToChaval);
         this.addSequential(lowerChaval);

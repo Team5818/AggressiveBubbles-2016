@@ -35,13 +35,14 @@ public final class RobotConstants {
      * The talon controlling the right-back wheels.
      */
     public static final int TALON_RIGHT_BACK = 2;
-    
-    //public static final int TALON_CLIMB_LEFT = 8;
-    
-    //public static final int TALON_CLIMB_RIGHT = 13;
-    
+    /**
+     * Talon for left climbing winch
+     */
     public static final int TALON_WINCH_LEFT = 8;
-    
+
+    /**
+     * Talon for right climbing winch
+     */
     public static final int TALON_WINCH_RIGHT = 13;
 
     /**
@@ -93,11 +94,6 @@ public final class RobotConstants {
      */
     public static final int CODRIVER_SECOND_JOYSTICK_PORT = 3;
 
-    /**
-     * The port number for the Hat axis
-     */
-    public static final int HAT_Y_PORT = 2;
-    public static final int HAT_X_PORT = 3;
 
     /**
      * The deadband on the joysticks. It ranges from 0 with no deadband, and 1
@@ -113,8 +109,7 @@ public final class RobotConstants {
      * The Camera feild of view for shooting
      */
     public static final double CAMFOV = 120;
-    public static final int SOLENOID_LED = 3;
-
+    
     private RobotConstants() {
     }
 

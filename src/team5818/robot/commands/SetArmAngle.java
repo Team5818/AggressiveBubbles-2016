@@ -1,8 +1,9 @@
 package team5818.robot.commands;
 
+import org.usfirst.frc.team5818.robot.Robot;
+
 import edu.wpi.first.wpilibj.command.Command;
 import team5818.robot.RobotCoDriver;
-import team5818.robot.RobotCommon;
 import team5818.robot.modules.Arm;
 
 /**
@@ -30,7 +31,7 @@ public class SetArmAngle extends Command {
      */
     public SetArmAngle(double angle, double timeout) {
         targetAngle = angle;
-        arm = RobotCommon.runningRobot.arm;
+        arm = Robot.runningRobot.arm;
         requires(arm);
         setTimeout(timeout);
     }

@@ -1,9 +1,10 @@
 package team5818.robot.commands;
 
+import org.usfirst.frc.team5818.robot.Robot;
+
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import team5818.robot.RobotCommon;
 import team5818.robot.modules.FlyWheel;
 
 public class SetFlywheelVelocity extends Command {
@@ -20,9 +21,9 @@ public class SetFlywheelVelocity extends Command {
     private double lowVel = velocity + velocity * backSpin;
 
     private static final FlyWheel flyUp =
-            RobotCommon.runningRobot.upperFlywheel;
+            Robot.runningRobot.upperFlywheel;
     private static final FlyWheel flyLo =
-            RobotCommon.runningRobot.lowerFlywheel;
+            Robot.runningRobot.lowerFlywheel;
     private static double defaultTimeout = 0;
 
     /**

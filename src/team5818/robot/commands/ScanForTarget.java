@@ -1,7 +1,8 @@
 package team5818.robot.commands;
 
+import org.usfirst.frc.team5818.robot.Robot;
+
 import edu.wpi.first.wpilibj.command.Command;
-import team5818.robot.RobotCommon;
 import team5818.robot.modules.ComputerVision;
 import team5818.robot.modules.Track;
 import team5818.robot.modules.drivetrain.DriveTrain;
@@ -10,9 +11,9 @@ import team5818.robot.util.Vector2d;
 public class ScanForTarget extends Command{
 
     private boolean clockwise;
-    private Track targeting = RobotCommon.runningRobot.targeting;
+    private Track targeting = Robot.runningRobot.targeting;
     private double power;
-    private DriveTrain train = RobotCommon.runningRobot.driveTrain;
+    private DriveTrain train = Robot.runningRobot.driveTrain;
 
     public ScanForTarget(boolean cw, double pow, double timeout){
         clockwise = cw;

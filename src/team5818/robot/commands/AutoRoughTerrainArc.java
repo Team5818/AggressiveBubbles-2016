@@ -25,7 +25,6 @@ public class AutoRoughTerrainArc extends CommandGroup{
     LinearLookupTable rightTable;
     
     private SwitchFeed switchCam = new SwitchFeed(ComputerVision.CAMERA_SHOOTER);
-    private LEDToggle lightUp = new LEDToggle(true);
     private CommandGroup driveOverRoughTerrain = new CommandGroup();
     private SetArmAngle armToPosition = new SetArmAngle(crossingAngle);
     private DriveVelocityProfile driveOver;  
@@ -107,7 +106,6 @@ public class AutoRoughTerrainArc extends CommandGroup{
         prepareShot.addParallel(setFlyVel);
         prepareShot.addParallel(scan);
         
-        this.addSequential(lightUp);
         this.addSequential(switchCam); 
         this.addSequential(driveOverRoughTerrain);
         this.addSequential(prepareShot);

@@ -2,11 +2,12 @@ package team5818.robot.commands;
 
 import java.io.IOException;
 
+import org.usfirst.frc.team5818.robot.Robot;
+
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import team5818.robot.RobotCommon;
 import team5818.robot.RobotConstants;
 import team5818.robot.RobotDriver;
 import team5818.robot.modules.Arm;
@@ -21,6 +22,7 @@ public class AutoAim extends Command {
 
     public  static final double DEFAULT_X_OFFSET = 1 + 0.4 + 0.75;
     public static final double DEFAULT_Y_OFFSET = -1.8; //calibrated for lowbar
+    
     public static final double DEFAULT_TIMEOUT = 3;
     public static boolean UDP = true;
     private boolean hasFoundTarget = false;
@@ -31,9 +33,9 @@ public class AutoAim extends Command {
             .getDouble("LowerFlyVel", FlyWheel.SHOOT_VELOCITY_LOWER);
     
     private static final FlyWheel flyUp =
-            RobotCommon.runningRobot.upperFlywheel;
+            Robot.runningRobot.upperFlywheel;
     private static final FlyWheel flyLo =
-            RobotCommon.runningRobot.lowerFlywheel;
+            Robot.runningRobot.lowerFlywheel;
     
     public static double toleranceFly = FlyWheel.TOLERANCE;
     
@@ -84,7 +86,7 @@ public class AutoAim extends Command {
         double[] yArr = {8};
         lookupTable = new LinearLookupTable(xArr, yArr);
         
-        track = RobotCommon.runningRobot.targeting;
+        track = Robot.runningRobot.targeting;
         camFOV = RobotConstants.CAMFOV;
 
         this.flyUpVel = flyup;
@@ -99,8 +101,8 @@ public class AutoAim extends Command {
         
         slopX = (RobotConstants.SLOP);
         slopY = (RobotConstants.SLOP);
-        requires(RobotCommon.runningRobot.driveTrain);
-        requires(RobotCommon.runningRobot.arm);
+        requires(Robot.runningRobot.driveTrain);
+        requires(Robot.runningRobot.arm);
         
     }
 
@@ -111,7 +113,7 @@ public class AutoAim extends Command {
     public AutoAim(double xOffset, double yOffset) {
         this(xOffset, yOffset, defaultFlyUpVel, defaultFlyLoVel, DEFAULT_TIMEOUT);
     }
-
+    
     public AutoAim() {
         this(0, 0, defaultFlyUpVel, defaultFlyLoVel, DEFAULT_TIMEOUT);
     }
@@ -148,10 +150,6 @@ public class AutoAim extends Command {
         yerr = 0;
 
         if (track.blobCount > 0) {
-            // imgHeight = track.imageHeight;
-            // imgWidth = track.imageWidth;
-            // blobWidth = track.blobWidth;
-            // blobHeight = track.blobHeight;
             aimY();
             aim();
         }
@@ -234,9 +232,9 @@ public class AutoAim extends Command {
             
             ypower = P + I + D;
             ypower = keepInBounds(ypower, MIN_POWER_Y, MAX_POWER_Y);
-            RobotCommon.runningRobot.arm.setPower(ypower);
+            Robot.runningRobot.arm.setPower(ypower);
         } else {
-            RobotCommon.runningRobot.arm.setPower(0);
+            Robot.runningRobot.arm.setPower(0);
         }
     }
 
@@ -265,10 +263,10 @@ public class AutoAim extends Command {
             
             xpower = P + I + D;
             xpower = keepInBounds(xpower, MIN_POWER_X, MAX_POWER_X);
-            RobotCommon.runningRobot.driveTrain
+            Robot.runningRobot.driveTrain
                     .setPower(new Vector2d(-xpower, xpower));
         } else {
-            RobotCommon.runningRobot.driveTrain
+            Robot.runningRobot.driveTrain
             .setPower(new Vector2d(-0, 0));
         }
     }
@@ -333,13 +331,13 @@ public class AutoAim extends Command {
     @Override
     protected void end() {
         SmartDashboard.putNumber("Is aimed", 100);
-        RobotCommon.runningRobot.driveTrain.setPower(new Vector2d(0, 0));
-        RobotCommon.runningRobot.arm.setPower(0);
+        Robot.runningRobot.driveTrain.setPower(new Vector2d(0, 0));
+        Robot.runningRobot.arm.setPower(0);
     }
 
     @Override
     protected void interrupted() {
-        RobotCommon.runningRobot.driveTrain.setPower(new Vector2d(0, 0));
-        RobotCommon.runningRobot.arm.setPower(0);
+        Robot.runningRobot.driveTrain.setPower(new Vector2d(0, 0));
+        Robot.runningRobot.arm.setPower(0);
     }
 }

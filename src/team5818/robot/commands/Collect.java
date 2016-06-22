@@ -1,8 +1,10 @@
 package team5818.robot.commands;
 
 import team5818.robot.modules.Collector;
+
+import org.usfirst.frc.team5818.robot.Robot;
+
 import edu.wpi.first.wpilibj.command.Command;
-import team5818.robot.RobotCommon;
 
 /**
  * Runs the collector in a specified speed for a specified time.
@@ -31,7 +33,7 @@ public class Collect extends Command {
      */
     public Collect(double power) {
         collectPower = power;
-        collector = RobotCommon.runningRobot.collector;
+        collector = Robot.runningRobot.collector;
         requires(collector);
     }
 

@@ -1,7 +1,8 @@
 package team5818.robot.commands;
 
+import org.usfirst.frc.team5818.robot.Robot;
+
 import edu.wpi.first.wpilibj.command.Command;
-import team5818.robot.RobotCommon;
 import team5818.robot.modules.Arm;
 
 /**
@@ -18,7 +19,7 @@ public class SetArmPower extends Command {
      * @param power the desired power to set to the arm.
      */
     public SetArmPower(double power) {
-        arm = RobotCommon.runningRobot.arm;
+        arm = Robot.runningRobot.arm;
         requires(arm);
     }
 

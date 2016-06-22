@@ -1,9 +1,10 @@
 package team5818.robot.commands;
 
+import org.usfirst.frc.team5818.robot.Robot;
+
 import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.CommandGroup;
-import team5818.robot.RobotCommon;
 import team5818.robot.modules.Collector;
 import team5818.robot.modules.ComputerVision;
 
@@ -11,8 +12,7 @@ public class Shoot extends CommandGroup {
 
     private SetFlywheelPower flyToZero = new SetFlywheelPower(0);
     private Collect collectIn = new Collect(Collect.COLLECT_POWER, 2);
-    private LEDToggle lightUp = new LEDToggle(true);
-    private LEDToggle lightsOff = new LEDToggle(false);
+
     private SwitchFeed switchCam = new SwitchFeed(ComputerVision.CAMERA_SHOOTER);
     private SwitchFeed switchBack = new SwitchFeed(ComputerVision.CAMERA_DRIVER);
 
@@ -31,10 +31,8 @@ public class Shoot extends CommandGroup {
      *            velocity to spin lower fly to
      */
     public Shoot() {
-        this.addSequential(lightUp);
         this.addSequential(switchCam);
         this.addSequential(collectIn);
-        this.addSequential(lightsOff);
         this.addSequential(flyToZero);
         this.addSequential(switchBack);
     }

@@ -17,21 +17,18 @@ import team5818.robot.commands.AutoAim;
 public class Track {
 
     public double blobCount = 0;
-    public double blobWidth = 0;
-    public double blobHeight = 0;
-    public double blobOffsetFar = 0;
-    public double blobOffsetClose = 0;
-    public double imageWidth = 0;
-    public double imageHeight = 0;
     public double blobLocX = 0;
     public double blobLocY = 0;
     public NetworkTable RoboData;
     public DatagramSocket socket;
     private int portNum = 5808;
     private boolean hasReportedError;
-    private boolean stopedGetData;
-    private boolean startedGetData = false;
 
+
+    /**
+     * This class retrieves data from our off-board vision processing. Data can be retrieved using a UDP socket (more reliable)
+     * or over a network table (less reliable).
+     */
     public Track() {
 
         try {
@@ -54,21 +51,21 @@ public class Track {
         }
     }
 
+    /**
+     * Receive Information from RoboRealm
+     */
     public void GetData() {
-        if (AutoAim.UDP) {
-            if(!startedGetData) {
-                try {
-                    socket = new DatagramSocket(portNum);
-                    InetSocketAddress address =
-                            new InetSocketAddress("10.58.18.191", portNum);
-                    socket.setSoTimeout(100);
-                    socket.bind(address);
-                } catch (SocketException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
-                }
+        if (AutoAim.UDP) { //Receive a packet from the Datagram Socket if in UDP mode
+            try {
+                socket = new DatagramSocket(portNum);
+                InetSocketAddress address =
+                        new InetSocketAddress("10.58.18.191", portNum);
+                socket.setSoTimeout(100);
+                socket.bind(address);
+            } catch (SocketException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
             }
-            startedGetData = true;
             try {
                 byte[] buff = new byte[16];
                 DatagramPacket packet = new DatagramPacket(buff, 16);
@@ -76,14 +73,9 @@ public class Track {
                 socket.receive(packet);
 
                 String s = new String(buff);
-                //DriverStation.reportError("Tracking Data:" + s, false);
-                //DriverStation.reportError(s, false);
+
 
                 String[] string_array = s.split(",");
-               
-                //for(int i = 0; i<= 2; i++){
-                //DriverStation.reportError(string_array[i], false);
-                //}
 
 
                 blobCount = Integer.parseInt(string_array[0]);
@@ -112,23 +104,14 @@ public class Track {
 
             }
 
-        } else {
+        } else {//Fetch data from network tables if not using UDP
             blobCount = RoboData.getNumber("BLOB_COUNT", -1.0);
-            // imageWidth = RoboData.getNumber("IMAGE_WIDTH", 0.0);
-            // imageHeight = RoboData.getNumber("IMAGE_HEIGHT", 0.0);
-            // blobWidth = RoboData.getNumber("WIDTH", 320.0);
-            // blobHeight = RoboData.getNumber("HEIGHT", 240.0);
+
             blobLocX = RoboData.getNumber("COG_X", 0.0);
             blobLocY = RoboData.getNumber("COG_Y", 0.0);
         }
 
     }
     
-    public void stopGetData() {
-        startedGetData  = false;
-        blobCount = -2;
-        blobLocX = -2;
-        blobLocY = -2;
-    }
     
 }

@@ -23,7 +23,6 @@ public class AutoRockwallArc extends CommandGroup{
     LinearLookupTable rightTable;
     
     private SwitchFeed switchCam = new SwitchFeed(ComputerVision.CAMERA_SHOOTER);
-    private LEDToggle lightUp = new LEDToggle(true);
     private CommandGroup driveOverMoat = new CommandGroup();
     private SetArmAngle armToPosition = new SetArmAngle(crossingAngle);
     private DriveVelocityProfile driveOver;  
@@ -105,7 +104,6 @@ public class AutoRockwallArc extends CommandGroup{
         prepareShot.addParallel(setFlyVel);
         
         
-        this.addSequential(lightUp);
         this.addSequential(switchCam); 
         this.addSequential(driveOverMoat);
         this.addSequential(pause);

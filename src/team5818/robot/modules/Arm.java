@@ -1,9 +1,8 @@
 package team5818.robot.modules;
 
+
 import edu.wpi.first.wpilibj.AnalogInput;
-import edu.wpi.first.wpilibj.CANSpeedController.ControlMode;
 import edu.wpi.first.wpilibj.CANTalon;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.PIDOutput;
 import edu.wpi.first.wpilibj.PIDSource;
@@ -12,17 +11,14 @@ import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import team5818.robot.RobotCommon;
 import team5818.robot.RobotConstants;
-import team5818.robot.commands.SetArmAngle;
-import team5818.robot.commands.SetArmPower;
+
 
 /**
  * Class to control 5818's robot arm
  */
 public class Arm extends Subsystem implements PIDSource, PIDOutput {
     
-    public double teamNum =  Preferences.getInstance().getDouble("TeamNumber", 1717);
     protected static final double DEFAULT_SCALE = 0.047;
     protected static final double DEFAULT_OFFSET = -9.587;
     protected static final double DEFAULT_MAXPOWER = 1;
@@ -34,11 +30,11 @@ public class Arm extends Subsystem implements PIDSource, PIDOutput {
     private double scale;
     private double offset;
     private double maxPower;
-    private double minPower;
     private double armMotorRatio = 1;
     private double armPowerIdle = 0.1;
     private boolean pidMode = false;
     private boolean angleCapping = true;
+    private double armPowerIdleRatio = 1;
 
     private static final AnalogInput armPotentiometer =
             new AnalogInput(RobotConstants.ARM_POTENTIOMETER_CHANNEL);
@@ -48,38 +44,27 @@ public class Arm extends Subsystem implements PIDSource, PIDOutput {
             new CANTalon(RobotConstants.TALON_SECOND_ARM_MOTOR);
 
     private PIDController armPID;
-    private double armPowerIdleRatio = 1;
-    private double armAngleGround = -7;
 
+
+    /**
+     * The arm of the robot. Used for crossing defenses, collecting, and shooting.
+     */
     public Arm() {
         if (secondArmMotor != null)
             secondArmMotor.setInverted(true);
         double kp, ki, kd;
-        try {
-            scale = Preferences.getInstance().getDouble("ArmPotScale",
+        scale = Preferences.getInstance().getDouble("ArmPotScale",
                     DEFAULT_SCALE);
-            offset = Preferences.getInstance().getDouble("ArmPotOffset",
+        offset = Preferences.getInstance().getDouble("ArmPotOffset",
                     DEFAULT_OFFSET);
-            armAngleGround  = Preferences.getInstance().getDouble("ArmAngleGround", -7);
-            maxPower = Preferences.getInstance().getDouble("ArmMaxPower", DEFAULT_MAXPOWER);
-            minPower = Preferences.getInstance().getDouble("ArmMinPower", DEFAULT_MINPOWER);
-            armMotorRatio = Preferences.getInstance().getDouble("ArmMotorRatio", armMotorRatio);
-            armPowerIdle = Preferences.getInstance().getDouble("ArmPowerIdle", armPowerIdle);
-            armPowerIdleRatio  = Preferences.getInstance().getDouble("ArmPowerIdleRatio", armPowerIdleRatio);
-            kp = Preferences.getInstance().getDouble("ArmKp", DEFAULT_KP);//remove .'s
-            ki = Preferences.getInstance().getDouble("ArmKi", DEFAULT_KI);
-            kd = Preferences.getInstance().getDouble("ArmKd", DEFAULT_KD);
+        maxPower = Preferences.getInstance().getDouble("ArmMaxPower", DEFAULT_MAXPOWER);
+        armMotorRatio = Preferences.getInstance().getDouble("ArmMotorRatio", armMotorRatio);
+        armPowerIdle = Preferences.getInstance().getDouble("ArmPowerIdle", armPowerIdle);
+        armPowerIdleRatio  = Preferences.getInstance().getDouble("ArmPowerIdleRatio", armPowerIdleRatio);
+        kp = Preferences.getInstance().getDouble("ArmKp", DEFAULT_KP);//remove .'s
+        ki = Preferences.getInstance().getDouble("ArmKi", DEFAULT_KI);
+        kd = Preferences.getInstance().getDouble("ArmKd", DEFAULT_KD);
 
-        } catch (Exception e) {
-            DriverStation.reportError(
-                    "Could not get preferences from SmartDashboard.\n", false);
-            scale = DEFAULT_SCALE;
-            offset = DEFAULT_OFFSET;
-            maxPower = DEFAULT_MAXPOWER;
-            kp = DEFAULT_KP;
-            ki = DEFAULT_KI;
-            kd = DEFAULT_KD;
-        }
         armPID = new PIDController(kp, ki, kd, this, this);
         armPID.setOutputRange(-maxPower, maxPower);
         armPID.setAbsoluteTolerance(10);
@@ -94,8 +79,7 @@ public class Arm extends Subsystem implements PIDSource, PIDOutput {
      */
     public synchronized void setPower(double power) {
         firstArmMotor.enableBrakeMode(true);
-        if(secondArmMotor != null);
-            secondArmMotor.enableBrakeMode(true);
+        secondArmMotor.enableBrakeMode(true);
         pidMode = false;
         armPID.disable();
         pidWrite(power);
@@ -103,6 +87,7 @@ public class Arm extends Subsystem implements PIDSource, PIDOutput {
 
     /**
      * gives max power
+     * @return the max power of the arm
      */
     public double getMaxPower() {
         return maxPower;
@@ -118,10 +103,16 @@ public class Arm extends Subsystem implements PIDSource, PIDOutput {
         return aFinal;
     }
     
+    /**
+     * @return Unadjusted reading from potentiometer
+     */
     public double getRawPot() {
         return armPotentiometer.getValue();
     }
 
+    /**
+     * @return Whether or not the arm's PID loop is running
+     */
     public synchronized boolean getPIDMode() {
         return pidMode;
     }
@@ -220,27 +211,29 @@ public class Arm extends Subsystem implements PIDSource, PIDOutput {
 
     }
     
+    /**
+     * make the current arm angle 0 degrees
+     */
     public void zeroPot(){
         Preferences.getInstance().putDouble("ArmPotOffset", -getRawPot());
         offset = -getRawPot();
         
     }
     
+    /**
+     * Turn on the max angle of the arm
+     */
     public void capAngle(){
         angleCapping = true;
     }
     
+    /**
+     * Turn off angle capping
+     */
     public void uncapAngle(){
         angleCapping = false;
     }
     
-    public CANTalon getFirstMotor(){
-        return this.firstArmMotor;
-    }
-    
-    public CANTalon getSecondMotor(){
-        return this.secondArmMotor;
-    }
 
     @Override
     protected void initDefaultCommand() {
@@ -248,6 +241,9 @@ public class Arm extends Subsystem implements PIDSource, PIDOutput {
 
     }
     
+    /**
+     * Print pot angle to SmartDash
+     */
     public void autoPeriodicModule(){
         SmartDashboard.putNumber("Potentiometer Angle", getAngle());
 

@@ -1,8 +1,9 @@
 package team5818.robot.commands;
 
+import org.usfirst.frc.team5818.robot.Robot;
+
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.command.Command;
-import team5818.robot.RobotCommon;
 import team5818.robot.RobotConstants;
 import team5818.robot.modules.drivetrain.DriveSide;
 import team5818.robot.modules.drivetrain.DriveTrain;
@@ -14,7 +15,7 @@ import team5818.robot.util.MathUtil;
  */
 public class SpinRobot extends Command {
 
-    private DriveTrain train = RobotCommon.runningRobot.driveTrain;
+    private DriveTrain train = Robot.runningRobot.driveTrain;
     private double spinAngle;
     private double arcLength;
     private double drivePower;
@@ -33,7 +34,7 @@ public class SpinRobot extends Command {
         arcLength = MathUtil.distanceOfArc(RobotConstants.ROBOT_WIDTH_IN_INCHES/2,
                 spinAngle);
         setTimeout(timeout);
-        requires(RobotCommon.runningRobot.driveTrain);
+        requires(Robot.runningRobot.driveTrain);
         maxP = maxPower;
     }
 
@@ -62,7 +63,7 @@ public class SpinRobot extends Command {
 
     @Override
     protected boolean isFinished() {
-        DriveSide ds = RobotCommon.runningRobot.driveTrain.getLeftMotors();
+        DriveSide ds = Robot.runningRobot.driveTrain.getLeftMotors();
         return (ds.getPIDController().onTarget() || isTimedOut());
 
     }

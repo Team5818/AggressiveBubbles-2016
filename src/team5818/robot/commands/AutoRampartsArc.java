@@ -23,7 +23,6 @@ public class AutoRampartsArc extends CommandGroup{
     LinearLookupTable rightTable;
     
     private SwitchFeed switchCam = new SwitchFeed(ComputerVision.CAMERA_SHOOTER);
-    private LEDToggle lightUp = new LEDToggle(true);
     private CommandGroup driveOverRamparts = new CommandGroup();
     private SetArmAngle armToPosition = new SetArmAngle(crossingAngle);
     private DriveVelocityProfile driveOver;  
@@ -106,7 +105,6 @@ public class AutoRampartsArc extends CommandGroup{
         prepareShot.addParallel(setFlyVel);
         prepareShot.addParallel(scan);
         
-        this.addSequential(lightUp);
         this.addSequential(switchCam); 
         this.addSequential(driveOverRamparts);
         this.addSequential(prepareShot);

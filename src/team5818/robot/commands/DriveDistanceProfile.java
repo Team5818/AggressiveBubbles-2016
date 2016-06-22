@@ -1,7 +1,8 @@
 package team5818.robot.commands;
 
+import org.usfirst.frc.team5818.robot.Robot;
+
 import edu.wpi.first.wpilibj.command.Command;
-import team5818.robot.RobotCommon;
 import team5818.robot.modules.drivetrain.DriveSide;
 import team5818.robot.modules.drivetrain.DriveTrain;
 import team5818.robot.util.LinearLookupTable;
@@ -21,10 +22,10 @@ public class DriveDistanceProfile extends Command {
     private DriveSide rightSide;
     
     public DriveDistanceProfile(LinearLookupTable left, LinearLookupTable right, double distanceInches, double timeoutSeconds) {
-        requires(RobotCommon.runningRobot.driveTrain);
-        train = RobotCommon.runningRobot.driveTrain;
-        leftSide = RobotCommon.runningRobot.driveTrain.getLeftMotors();
-        rightSide = RobotCommon.runningRobot.driveTrain.getRightMotors();
+        requires(Robot.runningRobot.driveTrain);
+        train = Robot.runningRobot.driveTrain;
+        leftSide = Robot.runningRobot.driveTrain.getLeftMotors();
+        rightSide = Robot.runningRobot.driveTrain.getRightMotors();
         dist = distanceInches;
         timeout = timeoutSeconds;
         leftTable = left;
@@ -46,7 +47,7 @@ public class DriveDistanceProfile extends Command {
     @Override
     protected void initialize() {
         this.setTimeout(timeout);
-        RobotCommon.runningRobot.driveTrain
+        Robot.runningRobot.driveTrain
                 .setDriveDistance(dist);
         initialDist = train.getAverageDistance();
         initialLeft = leftSide.getEncPosAbs();
@@ -66,12 +67,12 @@ public class DriveDistanceProfile extends Command {
 
     @Override
     protected boolean isFinished() {
-        DriveSide ds = RobotCommon.runningRobot.driveTrain.getLeftMotors();
+        DriveSide ds = Robot.runningRobot.driveTrain.getLeftMotors();
         
         System.out.println(ds.getPIDController().getError()+ " onTarget "+ds.getPIDController().onTarget() );
         
         boolean timedOut = isTimedOut(); 
-        boolean onTarget = RobotCommon.runningRobot.driveTrain.getLeftMotors().getPIDController().onTarget();
+        boolean onTarget = Robot.runningRobot.driveTrain.getLeftMotors().getPIDController().onTarget();
         if(timedOut){
             return true;
         }

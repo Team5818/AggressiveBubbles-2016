@@ -1,35 +1,27 @@
 package team5818.robot;
 
-import edu.wpi.first.wpilibj.DriverStation;
+import org.usfirst.frc.team5818.robot.Robot;
+
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
 import edu.wpi.first.wpilibj.command.CommandGroup;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import team5818.robot.commands.ArmPower;
 import team5818.robot.commands.Collect;
 import team5818.robot.commands.DrivePower;
-import team5818.robot.commands.FlywheelVelocityProfile;
-import team5818.robot.commands.LEDToggle;
 import team5818.robot.commands.LowerArmToGround;
 import team5818.robot.commands.SetArmAngle;
-import team5818.robot.commands.SetArmPower;
-import team5818.robot.commands.SetDrivePower;
 import team5818.robot.commands.SetFlywheelPower;
-import team5818.robot.commands.SetFlywheelVelocity;
 import team5818.robot.commands.SpinRobot;
 import team5818.robot.commands.SwitchFeed;
 import team5818.robot.modules.ClimbWinchs;
 import team5818.robot.modules.ComputerVision;
-import team5818.robot.modules.FlyWheel;
 import team5818.robot.modules.Module;
 import team5818.robot.modules.drivetrain.ArcadeDriveCalculator;
 import team5818.robot.modules.drivetrain.ArcadeVelocityCalculator;
-import team5818.robot.modules.drivetrain.DriveSide;
 import team5818.robot.modules.drivetrain.TankDriveCalculator;
-import team5818.robot.util.LinearLookupTable;
 import team5818.robot.util.Vector2d;
 import team5818.robot.util.Vectors;
 
@@ -53,18 +45,21 @@ public class RobotDriver implements Module {
     private static final Joystick SECOND_JOYSTICK =
             new Joystick(RobotConstants.DRIVER_SECOND_JOYSTICK_PORT);
 
-    // First Joystick Buttons
+    /**
+     * button indices for first joystick
+     */
     private static final int BUT_DRIVE_VELOCITY = 11;
     private static final int BUT_DRIVE_POWER = 10;
     private static final int BUT_INVERT = 9;
     private static final int BUT_UNINVERT = 8;
-    private static final int BUT_OVERRIDE_DRIVER = 5;
     private static final int BUT_ARM_ANGLE_SHOOTING = 4;
     private static final int BUT_ARM_ANGLE_COLLECT = 3;
     private static final int BUT_ARM_ANGLE_GROUND = 2;
     private static final int BUT_OVERRIDE_CODRIVER = 1;
 
-    // Second Joystick Buttons
+    /**
+     * button indices for second joystick
+     */
     private static final int BUT_SWITCH_FEED_SHOOT = 12;
     private static final int BUT_SWITCH_FEED_DRIVE = 11;
     private static final int BUT_ROTATE_CW_90 = 6;
@@ -73,17 +68,26 @@ public class RobotDriver implements Module {
     private static final int BUT_ROTATE_CCW_180 = 3;
     private static final int BUT_UNCOLLECT = 2;
     private static final int BUT_COLLECT = 1;
-    private static final int BUT_ENTER_CLIMB = 11;
-    private static final int BUT_EXIT_CLIMB = 12;
+
 
     private DriveType driveType = DriveType.ARCADE;
     private InputMode inputMode = InputMode.TWO_STICKS;
 
-    // Weather to invert the throttle
+    /**
+     * booleans that reflect the state of the robot and controls
+     */
     private static boolean invertThrottle = true;
     private boolean hasStoppedRobot = false;
     private boolean climbMode = false;
+    private boolean hasStartedDriving = false;
+    private boolean hasStoppedLeftClimbWinch = false;
+    private boolean hasStoppedRightClimbWinch = false;
+    private boolean climbAnywaysRight = false;
+    private boolean climbAnywaysLeft = false;
 
+    /**
+     *various arm angles 
+     */
     private double armAngleShooting = 40;
     private double armAngleCollect = -1;
 
@@ -92,8 +96,6 @@ public class RobotDriver implements Module {
             new JoystickButton(SECOND_JOYSTICK, BUT_COLLECT);
     private JoystickButton butUncollect =
             new JoystickButton(SECOND_JOYSTICK, BUT_UNCOLLECT);
-    private JoystickButton butOverrideDriver =
-            new JoystickButton(FIRST_JOYSTICK, BUT_OVERRIDE_DRIVER);
     private JoystickButton butOverrideCoDriver =
             new JoystickButton(FIRST_JOYSTICK, BUT_OVERRIDE_CODRIVER);
     private JoystickButton butArmAngleShooting =
@@ -114,36 +116,10 @@ public class RobotDriver implements Module {
             new JoystickButton(SECOND_JOYSTICK, BUT_SWITCH_FEED_DRIVE);
     private JoystickButton butSwitchFeedShoot =
             new JoystickButton(SECOND_JOYSTICK, BUT_SWITCH_FEED_SHOOT);
-    private boolean hasStartedDriving = false;
-    private boolean hasStoppedLeftClimbWinch = false;
-    private boolean hasStoppedRightClimbWinch = false;
-
-    private double[] lowerFlyVels = { -17, -2, -1, -1, -1 };
-    //private double[] lowerFlyVels = {0, 0, 0, 0, 0};
-    // private double[] upperFlyVels = {0,0,0,0, 0};
-    private double[] upperFlyVels = { -3.5, -3.6, -3.7, -6, -7 };
-    private double[] flyTimes = { 0, 800, 1600, 2400, 3000 };
-    private LinearLookupTable lowerTable =
-            new LinearLookupTable(flyTimes, lowerFlyVels);
-    private LinearLookupTable upperTable =
-            new LinearLookupTable(flyTimes, upperFlyVels);
-    private boolean hasStoppedArm;
-    private boolean climbAnywaysRight = false;
-    private boolean climbAnywaysLeft = false;
+    
 
     @Override
     public void initModule() {
-        // Setting local objects of singletons for easy access.
-        DriveSide leftDriveSide =
-                RobotCommon.runningRobot.driveTrain.getLeftMotors();
-        DriveSide rightDriveSide =
-                RobotCommon.runningRobot.driveTrain.getRightMotors();
-
-        // Adding the DriveSide PID Controllers to the smart Smart Dashboard.
-        LiveWindow.addActuator("DriveSide", "Left",
-                leftDriveSide.getPIDController());
-        LiveWindow.addActuator("DriveSide", "Right",
-                rightDriveSide.getPIDController());
         initTeleopButtons();
         stopMovement();
     }
@@ -159,36 +135,16 @@ public class RobotDriver implements Module {
         CommandGroup armToGround = new CommandGroup();
         armToGround.addSequential(new SetArmAngle(armAngleCollect));
         armToGround.addSequential(new ArmPower(LowerArmToGround.ARM_POWER));
-        CommandGroup switchFeedShoot = new CommandGroup();
-        switchFeedShoot
-                .addParallel(new SwitchFeed(ComputerVision.CAMERA_SHOOTER));
-        switchFeedShoot.addParallel(new LEDToggle(true));
-        CommandGroup switchFeedDrive = new CommandGroup();
-        switchFeedDrive
-                .addParallel(new SwitchFeed(ComputerVision.CAMERA_DRIVER));
-        switchFeedDrive.addParallel(new LEDToggle(false));
-        CommandGroup overrideDriver = new CommandGroup();
-        // overrideDriver.addParallel(new SetArmAngle(armAngleShooting));
-        overrideDriver
-                .addParallel(new SwitchFeed(ComputerVision.CAMERA_SHOOTER));
-        overrideDriver.addParallel(new SetFlywheelVelocity(
-                FlyWheel.SHOOT_VELOCITY_UPPER, FlyWheel.SHOOT_VELOCITY_LOWER));
+        
         CommandGroup overrideCoDriver = new CommandGroup();
         overrideCoDriver
                 .addSequential(new SwitchFeed(ComputerVision.CAMERA_DRIVER));
         overrideCoDriver.addSequential(new SetFlywheelPower(0));
-        //overrideCoDriver.addSequential(
-        //        new FlywheelVelocityProfile(lowerTable, upperTable, 3));
 
-        // Assigning commands to their respective buttons.
-        // butInvert.whenPressed(new SwitchFeed(ComputerVision.CAMERA_BACK));
-        // butUnInvert.whenPressed(new
-        // SwitchFeed(ComputerVision.CAMERA_DRIVER));
         butCollect.whenPressed(new Collect(Collect.COLLECT_POWER));
         butCollect.whenReleased(new Collect(0));
         butUncollect.whenPressed(new Collect(-Collect.COLLECT_POWER));
         butUncollect.whenReleased(new Collect(0));
-        butOverrideDriver.whenPressed(overrideDriver);
         butOverrideCoDriver.whenPressed(overrideCoDriver);
         butArmAngleShooting.whenPressed(new SetArmAngle(armAngleShooting));
         butArmAngleCollect.whenPressed(new SetArmAngle(armAngleCollect));
@@ -201,26 +157,29 @@ public class RobotDriver implements Module {
                 new SpinRobot(175, SpinRobot.DEFAULT_TIMEOUT, 0.6));
         rotateCCW180.whenPressed(
                 new SpinRobot(-175, SpinRobot.DEFAULT_TIMEOUT, 0.6));
-        butSwitchFeedShoot.whenPressed(switchFeedShoot);
-        butSwitchFeedDrive.whenPressed(switchFeedDrive);
+        butSwitchFeedShoot.whenPressed(new SwitchFeed(ComputerVision.CAMERA_SHOOTER));
+        butSwitchFeedDrive.whenPressed(new SwitchFeed(ComputerVision.CAMERA_DRIVER));
     }
 
-    private void initClimbButtons() {
-        Scheduler.getInstance().removeAll();
-    }
-
+    
+    /**
+     * Stop all motion and initialize controls for endgame
+     */
     public void initClimb() {
         climbMode = true;
         climbAnywaysLeft = false;
         climbAnywaysRight = false;
-        initClimbButtons();
+        Scheduler.getInstance().removeAll();
         this.stopMovement();
-        RobotCommon.runningRobot.winch.getLeft().getTalon().setEncPosition(0);
-        RobotCommon.runningRobot.winch.getRight().getTalon().setEncPosition(0);
+        Robot.runningRobot.winch.getLeft().getTalon().setEncPosition(0);
+        Robot.runningRobot.winch.getRight().getTalon().setEncPosition(0);
         
     }
 
-    public void unInitClimb() {
+    /**
+     * Return from endgame controls to normal teleop
+     */
+    public void exitClimb() {
         climbMode = false;
         initTeleopButtons();
         this.stopMovement();
@@ -235,7 +194,9 @@ public class RobotDriver implements Module {
         else
             climbPeriodic();
     }
-
+    /**
+     * The normal periodic actions of the robot during teleop
+     */
     public void normalPeriodic() {
         if (!RobotCoDriver.isOverrideDriver()) {
             if (usingFirstStick() || usingSecondStick()) {
@@ -251,30 +212,33 @@ public class RobotDriver implements Module {
         }
     }
 
+    /**
+     * Controls for endagame
+     */
     private void climbPeriodic() {
         if (usingFirstStick()) {
-            if(Math.abs(RobotCommon.runningRobot.winch.getRight().getTalon().getEncPosition()) <= ClimbWinchs.WINCH_MAX_COUNT_RIGHT || climbAnywaysRight)
-                RobotCommon.runningRobot.winch.getRight().setPower(-FIRST_JOYSTICK.getY());
+            if(Math.abs(Robot.runningRobot.winch.getRight().getTalon().getEncPosition()) <= ClimbWinchs.WINCH_MAX_COUNT_RIGHT || climbAnywaysRight)
+                Robot.runningRobot.winch.getRight().setPower(-FIRST_JOYSTICK.getY());
             else
-                RobotCommon.runningRobot.winch.getRight().setPower(0);
+                Robot.runningRobot.winch.getRight().setPower(0);
             hasStoppedRightClimbWinch = false;
         } else if (!hasStoppedRightClimbWinch) {
-            if(RobotCommon.runningRobot.winch.getRight().getTalon().getEncPosition() >= ClimbWinchs.WINCH_MAX_COUNT_RIGHT)
+            if(Robot.runningRobot.winch.getRight().getTalon().getEncPosition() >= ClimbWinchs.WINCH_MAX_COUNT_RIGHT)
                 climbAnywaysRight = true;
-            RobotCommon.runningRobot.winch.getRight().setPower(0);
+            Robot.runningRobot.winch.getRight().setPower(0);
             hasStoppedRightClimbWinch = true;
         }
         
         if (usingSecondStick()) {
-            if(Math.abs(RobotCommon.runningRobot.winch.getLeft().getTalon().getEncPosition()) <= ClimbWinchs.WINCH_MAX_COUNT_LEFT || climbAnywaysLeft)
-                RobotCommon.runningRobot.winch.getLeft().setPower(-SECOND_JOYSTICK.getY());
+            if(Math.abs(Robot.runningRobot.winch.getLeft().getTalon().getEncPosition()) <= ClimbWinchs.WINCH_MAX_COUNT_LEFT || climbAnywaysLeft)
+                Robot.runningRobot.winch.getLeft().setPower(-SECOND_JOYSTICK.getY());
             else
-                RobotCommon.runningRobot.winch.getLeft().setPower(0);
+                Robot.runningRobot.winch.getLeft().setPower(0);
             hasStoppedLeftClimbWinch = false;
         } else if (!hasStoppedLeftClimbWinch) {
-            if(Math.abs(RobotCommon.runningRobot.winch.getLeft().getTalon().getEncPosition()) >= ClimbWinchs.WINCH_MAX_COUNT_LEFT)
+            if(Math.abs(Robot.runningRobot.winch.getLeft().getTalon().getEncPosition()) >= ClimbWinchs.WINCH_MAX_COUNT_LEFT)
                 climbAnywaysLeft = true;
-            RobotCommon.runningRobot.winch.getLeft().setPower(0);
+            Robot.runningRobot.winch.getLeft().setPower(0);
             hasStoppedLeftClimbWinch = true;
         }
         
@@ -306,12 +270,6 @@ public class RobotDriver implements Module {
 
         if (FIRST_JOYSTICK.getRawButton(BUT_OVERRIDE_CODRIVER)) {
             RobotCoDriver.setOverrideDriver(false);
-            RobotCommon.runningRobot.disableGetData();
-        }
-
-        if (FIRST_JOYSTICK.getRawButton(BUT_OVERRIDE_DRIVER)) {
-            RobotCoDriver.setOverrideDriver(true);
-            RobotCommon.runningRobot.enableGetData();
         }
 
         if (FIRST_JOYSTICK.getRawButton(BUT_DRIVE_VELOCITY)) {
@@ -325,7 +283,8 @@ public class RobotDriver implements Module {
     }
 
     /**
-     * Performs the driving calculation.
+     * Performs the driving calculation. Driving can be in one of three modes:
+     * Two-stick tank drive, two-stick arcade drive using power, and two-stick arcade drive using velocity control
      */
     public void drive() {
         if (!hasStartedDriving) {
@@ -362,9 +321,9 @@ public class RobotDriver implements Module {
                         "Don't know what mode " + inputMode + " does");
         }
         if (driveType == DriveType.ARCADE_VELOCITY) {
-            RobotCommon.runningRobot.driveTrain.setVelocity(thePowersThatBe);
+            Robot.runningRobot.driveTrain.setVelocity(thePowersThatBe);
         } else {
-            RobotCommon.runningRobot.driveTrain.setPower(thePowersThatBe);
+            Robot.runningRobot.driveTrain.setPower(thePowersThatBe);
         }
 
     }
@@ -392,13 +351,21 @@ public class RobotDriver implements Module {
         LiveWindow.run();
     }
 
+    /**
+     * Deadband for first joystick
+     * @return whether the joystick is in use
+     */
     private boolean usingFirstStick() {
         return (Math
                 .abs(FIRST_JOYSTICK.getX()) > RobotConstants.JOYSTICK_DEADBAND
                 || Math.abs(FIRST_JOYSTICK
                         .getY()) > RobotConstants.JOYSTICK_DEADBAND);
     }
-
+    
+    /**
+     * Deadband for second joystick
+     * @return whether the joystick is in use
+     */
     private boolean usingSecondStick() {
         return (Math
                 .abs(SECOND_JOYSTICK.getX()) > RobotConstants.JOYSTICK_DEADBAND

@@ -1,7 +1,8 @@
 package team5818.robot.commands;
 
+import org.usfirst.frc.team5818.robot.Robot;
+
 import edu.wpi.first.wpilibj.command.CommandGroup;
-import team5818.robot.RobotCommon;
 import team5818.robot.modules.ComputerVision;
 import team5818.robot.modules.FlyWheel;
 import team5818.robot.util.LinearLookupTable;
@@ -34,9 +35,9 @@ public class AutoTest extends CommandGroup {
         //RobotCommon.runningRobot.winch.updatePIDConstants();
         //RobotCommon.runningRobot.winch.setPower(0);
         
-        RobotCommon.runningRobot.lowerFlywheel.updatePIDConstants();
-        RobotCommon.runningRobot.lowerFlywheel.setVelocity(140);
-        RobotCommon.runningRobot.upperFlywheel.setVelocity(100);
+        Robot.runningRobot.lowerFlywheel.updatePIDConstants();
+        Robot.runningRobot.lowerFlywheel.setVelocity(140);
+        Robot.runningRobot.upperFlywheel.setVelocity(100);
         
     }
     
@@ -49,8 +50,8 @@ public class AutoTest extends CommandGroup {
     }
     @Override
     public void end() {
-        RobotCommon.runningRobot.lowerFlywheel.setPower(0);
-        RobotCommon.runningRobot.upperFlywheel.setPower(0);
+        Robot.runningRobot.lowerFlywheel.setPower(0);
+        Robot.runningRobot.upperFlywheel.setPower(0);
         //RobotCommon.runningRobot.driveTrain.setPower(new Vector2d(0,0));
     }
     

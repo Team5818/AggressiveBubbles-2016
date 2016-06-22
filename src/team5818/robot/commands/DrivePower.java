@@ -1,25 +1,26 @@
 package team5818.robot.commands;
 
+import org.usfirst.frc.team5818.robot.Robot;
+
 import edu.wpi.first.wpilibj.command.Command;
-import team5818.robot.RobotCommon;
 import team5818.robot.modules.drivetrain.DriveTrain;
 import team5818.robot.util.Vector2d;
 
 public class DrivePower extends Command{
     
-    private DriveTrain train = RobotCommon.runningRobot.driveTrain;
+    private DriveTrain train = Robot.runningRobot.driveTrain;
     private double drivePower;
     private Vector2d powerVec;
 
     public DrivePower(Vector2d powerVec) {
         this.powerVec = powerVec;
         setTimeout(0);
-        requires(RobotCommon.runningRobot.driveTrain);
+        requires(Robot.runningRobot.driveTrain);
     }
     public DrivePower(double power, double timeout){
         powerVec = new Vector2d(drivePower, drivePower);
         setTimeout(timeout);
-        requires(RobotCommon.runningRobot.driveTrain);
+        requires(Robot.runningRobot.driveTrain);
     }
     
     @Override

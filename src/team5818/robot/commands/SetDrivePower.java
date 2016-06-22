@@ -1,7 +1,8 @@
 package team5818.robot.commands;
 
+import org.usfirst.frc.team5818.robot.Robot;
+
 import edu.wpi.first.wpilibj.command.Command;
-import team5818.robot.RobotCommon;
 import team5818.robot.util.Vector2d;
 
 /**
@@ -16,12 +17,12 @@ public class SetDrivePower extends Command {
     public SetDrivePower(int pl, int pr) {
         pLeft = pl;
         pRight = pr;
-        requires(RobotCommon.runningRobot.driveTrain);
+        requires(Robot.runningRobot.driveTrain);
     }
 
     @Override
     protected void initialize() {
-        RobotCommon.runningRobot.driveTrain
+        Robot.runningRobot.driveTrain
                 .setPower(new Vector2d(pLeft, pRight));
     }
 

@@ -1,8 +1,9 @@
 package team5818.robot.commands;
 
 
+import org.usfirst.frc.team5818.robot.Robot;
+
 import edu.wpi.first.wpilibj.command.Command;
-import team5818.robot.RobotCommon;
 import team5818.robot.modules.drivetrain.DriveSide;
 import team5818.robot.modules.drivetrain.DriveTrain;
 import team5818.robot.util.LinearLookupTable;
@@ -16,16 +17,16 @@ public class DriveVelocityProfile extends Command{
     private double initialRight;
     private LinearLookupTable leftTable;
     private LinearLookupTable rightTable;
-    private DriveTrain train = RobotCommon.runningRobot.driveTrain;
-    private DriveSide leftSide = RobotCommon.runningRobot.driveTrain.getLeftMotors();;
-    private DriveSide rightSide = RobotCommon.runningRobot.driveTrain.getRightMotors();
+    private DriveTrain train = Robot.runningRobot.driveTrain;
+    private DriveSide leftSide = Robot.runningRobot.driveTrain.getLeftMotors();;
+    private DriveSide rightSide = Robot.runningRobot.driveTrain.getRightMotors();
 
     
     public DriveVelocityProfile(LinearLookupTable left, LinearLookupTable right, double dist){
         leftTable = left;
         rightTable = right;
         distance = dist;
-        requires(RobotCommon.runningRobot.driveTrain);
+        requires(Robot.runningRobot.driveTrain);
         setTimeout(5);        
     }
     

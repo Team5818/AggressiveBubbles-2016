@@ -1,9 +1,10 @@
 package team5818.robot.commands;
 
+import org.usfirst.frc.team5818.robot.Robot;
+
 import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.CommandGroup;
-import team5818.robot.RobotCommon;
 import team5818.robot.modules.Arm;
 
 public class LowerArmToGround extends CommandGroup{

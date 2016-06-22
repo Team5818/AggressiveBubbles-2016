@@ -32,7 +32,6 @@ public class AutoLowbarArc extends CommandGroup{
     private SpinRobot spin = new SpinRobot(-180, 2, 0.5);
     private SetArmAngle findTarget = new SetArmAngle(shootAngle, 2);
     private SetFlywheelVelocity setFlyVel = new SetFlywheelVelocity(FlyWheel.SHOOT_VELOCITY_UPPER, FlyWheel.SHOOT_VELOCITY_LOWER, 0);
-    private LEDToggle lightUp = new LEDToggle(true);
     private SwitchFeed switchCam = new SwitchFeed(ComputerVision.CAMERA_SHOOTER);
     private AutoAim autoAim = new AutoAim(0,0, 15);;
     private Shoot dontMiss = new Shoot();
@@ -55,7 +54,6 @@ public class AutoLowbarArc extends CommandGroup{
         prepareShot.addParallel(spin);
         prepareShot.addParallel(findTarget);        
         
-        this.addSequential(lightUp);
         this.addSequential(switchCam);
         this.addSequential(armToCollect);
         this.addSequential(driveUnder);

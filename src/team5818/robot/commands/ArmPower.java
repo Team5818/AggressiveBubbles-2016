@@ -1,11 +1,12 @@
 package team5818.robot.commands;
 
+import org.usfirst.frc.team5818.robot.Robot;
+
 import edu.wpi.first.wpilibj.command.Command;
-import team5818.robot.RobotCommon;
 import team5818.robot.modules.Arm;
 
 public class ArmPower extends Command{
-    Arm arm = RobotCommon.runningRobot.arm;
+    Arm arm = Robot.runningRobot.arm;
     double armPower;
     double maxTime;
 

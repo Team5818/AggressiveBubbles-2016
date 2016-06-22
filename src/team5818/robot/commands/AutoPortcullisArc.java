@@ -24,7 +24,6 @@ public class AutoPortcullisArc extends CommandGroup{
     LinearLookupTable rightTable;
     
     private SwitchFeed switchCam = new SwitchFeed(ComputerVision.CAMERA_SHOOTER);
-    private LEDToggle lightUp = new LEDToggle(true);
     private SetArmAngle armToCollect = new SetArmAngle(collectAngle);
     private CommandGroup driveUnder = new CommandGroup();
     private ArmPower armToGround = new ArmPower(LowerArmToGround.ARM_POWER); 
@@ -104,7 +103,6 @@ public class AutoPortcullisArc extends CommandGroup{
         prepareShot.addParallel(spin);
         prepareShot.addParallel(findTarget); 
         
-        this.addSequential(lightUp);
         this.addSequential(switchCam); 
         this.addSequential(armToCollect);
         this.addSequential(driveUnder);

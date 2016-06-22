@@ -1,7 +1,8 @@
 package team5818.robot.commands;
 
+import org.usfirst.frc.team5818.robot.Robot;
+
 import edu.wpi.first.wpilibj.command.Command;
-import team5818.robot.RobotCommon;
 import team5818.robot.modules.drivetrain.DriveTrain;
 import team5818.robot.util.Vector2d;
 
@@ -11,14 +12,14 @@ public class DriveVelocityCommand extends Command{
     private double velocityR;
     private double distance;
     private double initialDist;
-    DriveTrain train = RobotCommon.runningRobot.driveTrain;
+    DriveTrain train = Robot.runningRobot.driveTrain;
 
     
     public DriveVelocityCommand(double velL, double velR, double dist){
         velocityL = velL;
         velocityR = velR;
         distance = dist;
-        requires(RobotCommon.runningRobot.driveTrain);
+        requires(Robot.runningRobot.driveTrain);
         setTimeout(5);        
     }
     
