@@ -27,7 +27,7 @@ import team5818.robot.commands.AutoRoughTerrainArc;
 import team5818.robot.commands.AutoTest;
 import team5818.robot.commands.DoNothing;
 import team5818.robot.modules.Arm;
-import team5818.robot.modules.ClimbWinchs;
+import team5818.robot.modules.ClimbWinches;
 import team5818.robot.modules.Collector;
 import team5818.robot.modules.FlyWheel;
 import team5818.robot.modules.Module;
@@ -113,8 +113,8 @@ public class Robot extends IterativeRobot {
     /**
      * The winch for climbing during endgame
      */
-    public final ClimbWinchs winch =
-            new ClimbWinchs(RobotConstants.TALON_WINCH_LEFT,
+    public final ClimbWinches winch =
+            new ClimbWinches(RobotConstants.TALON_WINCH_LEFT,
                     RobotConstants.TALON_WINCH_RIGHT, false, true);
     /**
      * The thread for retrieving frames from the camera

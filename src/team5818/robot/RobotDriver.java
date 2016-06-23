@@ -16,7 +16,7 @@ import team5818.robot.commands.SetArmAngle;
 import team5818.robot.commands.SetFlywheelPower;
 import team5818.robot.commands.SpinRobot;
 import team5818.robot.commands.SwitchFeed;
-import team5818.robot.modules.ClimbWinchs;
+import team5818.robot.modules.ClimbWinches;
 import team5818.robot.modules.ComputerVision;
 import team5818.robot.modules.Module;
 import team5818.robot.modules.drivetrain.ArcadeDriveCalculator;
@@ -217,26 +217,26 @@ public class RobotDriver implements Module {
      */
     private void climbPeriodic() {
         if (usingFirstStick()) {
-            if(Math.abs(Robot.runningRobot.winch.getRight().getTalon().getEncPosition()) <= ClimbWinchs.WINCH_MAX_COUNT_RIGHT || climbAnywaysRight)
+            if(Math.abs(Robot.runningRobot.winch.getRight().getTalon().getEncPosition()) <= ClimbWinches.WINCH_MAX_COUNT_RIGHT || climbAnywaysRight)
                 Robot.runningRobot.winch.getRight().setPower(-FIRST_JOYSTICK.getY());
             else
                 Robot.runningRobot.winch.getRight().setPower(0);
             hasStoppedRightClimbWinch = false;
         } else if (!hasStoppedRightClimbWinch) {
-            if(Robot.runningRobot.winch.getRight().getTalon().getEncPosition() >= ClimbWinchs.WINCH_MAX_COUNT_RIGHT)
+            if(Robot.runningRobot.winch.getRight().getTalon().getEncPosition() >= ClimbWinches.WINCH_MAX_COUNT_RIGHT)
                 climbAnywaysRight = true;
             Robot.runningRobot.winch.getRight().setPower(0);
             hasStoppedRightClimbWinch = true;
         }
         
         if (usingSecondStick()) {
-            if(Math.abs(Robot.runningRobot.winch.getLeft().getTalon().getEncPosition()) <= ClimbWinchs.WINCH_MAX_COUNT_LEFT || climbAnywaysLeft)
+            if(Math.abs(Robot.runningRobot.winch.getLeft().getTalon().getEncPosition()) <= ClimbWinches.WINCH_MAX_COUNT_LEFT || climbAnywaysLeft)
                 Robot.runningRobot.winch.getLeft().setPower(-SECOND_JOYSTICK.getY());
             else
                 Robot.runningRobot.winch.getLeft().setPower(0);
             hasStoppedLeftClimbWinch = false;
         } else if (!hasStoppedLeftClimbWinch) {
-            if(Math.abs(Robot.runningRobot.winch.getLeft().getTalon().getEncPosition()) >= ClimbWinchs.WINCH_MAX_COUNT_LEFT)
+            if(Math.abs(Robot.runningRobot.winch.getLeft().getTalon().getEncPosition()) >= ClimbWinches.WINCH_MAX_COUNT_LEFT)
                 climbAnywaysLeft = true;
             Robot.runningRobot.winch.getLeft().setPower(0);
             hasStoppedLeftClimbWinch = true;

@@ -7,7 +7,7 @@ import edu.wpi.first.wpilibj.PIDSourceType;
 import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-public class ClimbWinchs{
+public class ClimbWinches{
     
     public static int WINCH_MAX_COUNT_LEFT = 11110;
     public static int WINCH_MAX_COUNT_RIGHT = 11110;
@@ -18,7 +18,7 @@ public class ClimbWinchs{
     private ClimbWinch left;
     private ClimbWinch right;
 
-    public ClimbWinchs(int rightTalon, int leftTalon, boolean leftRev, boolean rightRev) {
+    public ClimbWinches(int rightTalon, int leftTalon, boolean leftRev, boolean rightRev) {
         left = new ClimbWinch(leftTalon, leftRev);
         right = new ClimbWinch(rightTalon, rightRev);
         

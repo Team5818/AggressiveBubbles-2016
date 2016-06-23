@@ -1,5 +1,6 @@
 # RobotCode
-Our robot's code! Yay!
+Our robot's final code. This code is functionally identical to the code we used
+at Worlds, but it has been reformatted for increased organization and clarity.
 
 Setting Up
 ====
