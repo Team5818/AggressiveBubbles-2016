@@ -18,6 +18,15 @@ public class MathUtil {
     public static double distanceOfArc(double radius, double degrees) {
         return radius * degrees / 180 * Math.PI;
     }
+    
+    public static double cap(double original, double lowerBound, double upperBound) {
+        if (original < lowerBound) {
+            return lowerBound;
+        } else if (original > upperBound) {
+            return upperBound;
+        }
+        return original;
+    }
 
     private MathUtil() {
     }

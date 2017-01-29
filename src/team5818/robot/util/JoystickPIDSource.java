@@ -7,7 +7,7 @@ import edu.wpi.first.wpilibj.Joystick;
 public class JoystickPIDSource extends PIDSourceBase {
 
     public enum Axis {
-        X, Y;
+        X, Y, Z;
     }
 
     private final Joystick joystick;
@@ -17,7 +17,20 @@ public class JoystickPIDSource extends PIDSourceBase {
     public JoystickPIDSource(Joystick joystick, Axis pullFromAxis) {
         this.joystick = joystick;
         this.pullFromAxis = pullFromAxis;
-        this.pidGet = pullFromAxis == Axis.X ? joystick::getX : joystick::getY;
+        switch (pullFromAxis) {
+            case X:
+                this.pidGet = joystick::getX;
+                break;
+            case Y:
+                this.pidGet = joystick::getY;
+                break;
+            case Z:
+                this.pidGet = joystick::getZ;
+                break;
+            default:
+                throw new IllegalArgumentException(
+                        "Illegal Axis " + pullFromAxis);
+        }
     }
 
     @Override

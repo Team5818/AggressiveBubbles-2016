@@ -21,7 +21,10 @@ import team5818.robot.modules.ComputerVision;
 import team5818.robot.modules.Module;
 import team5818.robot.modules.drivetrain.ArcadeDriveCalculator;
 import team5818.robot.modules.drivetrain.ArcadeVelocityCalculator;
+import team5818.robot.modules.drivetrain.DriveCalculator;
 import team5818.robot.modules.drivetrain.TankDriveCalculator;
+import team5818.robot.modules.drivetrain.WheelDriveCalculator;
+import team5818.robot.util.SteeringWheelCalc;
 import team5818.robot.util.Vector2d;
 import team5818.robot.util.Vectors;
 
@@ -69,7 +72,6 @@ public class RobotDriver implements Module {
     private static final int BUT_UNCOLLECT = 2;
     private static final int BUT_COLLECT = 1;
 
-
     private DriveType driveType = DriveType.ARCADE;
     private InputMode inputMode = InputMode.TWO_STICKS;
 
@@ -86,7 +88,7 @@ public class RobotDriver implements Module {
     private boolean climbAnywaysLeft = false;
 
     /**
-     *various arm angles 
+     * various arm angles
      */
     private double armAngleShooting = 40;
     private double armAngleCollect = -1;
@@ -116,7 +118,6 @@ public class RobotDriver implements Module {
             new JoystickButton(SECOND_JOYSTICK, BUT_SWITCH_FEED_DRIVE);
     private JoystickButton butSwitchFeedShoot =
             new JoystickButton(SECOND_JOYSTICK, BUT_SWITCH_FEED_SHOOT);
-    
 
     @Override
     public void initModule() {
@@ -135,7 +136,7 @@ public class RobotDriver implements Module {
         CommandGroup armToGround = new CommandGroup();
         armToGround.addSequential(new SetArmAngle(armAngleCollect));
         armToGround.addSequential(new ArmPower(LowerArmToGround.ARM_POWER));
-        
+
         CommandGroup overrideCoDriver = new CommandGroup();
         overrideCoDriver
                 .addSequential(new SwitchFeed(ComputerVision.CAMERA_DRIVER));
@@ -157,11 +158,12 @@ public class RobotDriver implements Module {
                 new SpinRobot(175, SpinRobot.DEFAULT_TIMEOUT, 0.6));
         rotateCCW180.whenPressed(
                 new SpinRobot(-175, SpinRobot.DEFAULT_TIMEOUT, 0.6));
-        butSwitchFeedShoot.whenPressed(new SwitchFeed(ComputerVision.CAMERA_SHOOTER));
-        butSwitchFeedDrive.whenPressed(new SwitchFeed(ComputerVision.CAMERA_DRIVER));
+        butSwitchFeedShoot
+                .whenPressed(new SwitchFeed(ComputerVision.CAMERA_SHOOTER));
+        butSwitchFeedDrive
+                .whenPressed(new SwitchFeed(ComputerVision.CAMERA_DRIVER));
     }
 
-    
     /**
      * Stop all motion and initialize controls for endgame
      */
@@ -173,7 +175,7 @@ public class RobotDriver implements Module {
         this.stopMovement();
         Robot.runningRobot.winch.getLeft().getTalon().setEncPosition(0);
         Robot.runningRobot.winch.getRight().getTalon().setEncPosition(0);
-        
+
     }
 
     /**
@@ -194,6 +196,7 @@ public class RobotDriver implements Module {
         else
             climbPeriodic();
     }
+
     /**
      * The normal periodic actions of the robot during teleop
      */
@@ -217,31 +220,39 @@ public class RobotDriver implements Module {
      */
     private void climbPeriodic() {
         if (usingFirstStick()) {
-            if(Math.abs(Robot.runningRobot.winch.getRight().getTalon().getEncPosition()) <= ClimbWinches.WINCH_MAX_COUNT_RIGHT || climbAnywaysRight)
-                Robot.runningRobot.winch.getRight().setPower(-FIRST_JOYSTICK.getY());
+            if (Math.abs(Robot.runningRobot.winch.getRight().getTalon()
+                    .getEncPosition()) <= ClimbWinches.WINCH_MAX_COUNT_RIGHT
+                    || climbAnywaysRight)
+                Robot.runningRobot.winch.getRight()
+                        .setPower(-FIRST_JOYSTICK.getY());
             else
                 Robot.runningRobot.winch.getRight().setPower(0);
             hasStoppedRightClimbWinch = false;
         } else if (!hasStoppedRightClimbWinch) {
-            if(Robot.runningRobot.winch.getRight().getTalon().getEncPosition() >= ClimbWinches.WINCH_MAX_COUNT_RIGHT)
+            if (Robot.runningRobot.winch.getRight().getTalon()
+                    .getEncPosition() >= ClimbWinches.WINCH_MAX_COUNT_RIGHT)
                 climbAnywaysRight = true;
             Robot.runningRobot.winch.getRight().setPower(0);
             hasStoppedRightClimbWinch = true;
         }
-        
+
         if (usingSecondStick()) {
-            if(Math.abs(Robot.runningRobot.winch.getLeft().getTalon().getEncPosition()) <= ClimbWinches.WINCH_MAX_COUNT_LEFT || climbAnywaysLeft)
-                Robot.runningRobot.winch.getLeft().setPower(-SECOND_JOYSTICK.getY());
+            if (Math.abs(Robot.runningRobot.winch.getLeft().getTalon()
+                    .getEncPosition()) <= ClimbWinches.WINCH_MAX_COUNT_LEFT
+                    || climbAnywaysLeft)
+                Robot.runningRobot.winch.getLeft()
+                        .setPower(-SECOND_JOYSTICK.getY());
             else
                 Robot.runningRobot.winch.getLeft().setPower(0);
             hasStoppedLeftClimbWinch = false;
         } else if (!hasStoppedLeftClimbWinch) {
-            if(Math.abs(Robot.runningRobot.winch.getLeft().getTalon().getEncPosition()) >= ClimbWinches.WINCH_MAX_COUNT_LEFT)
+            if (Math.abs(Robot.runningRobot.winch.getLeft().getTalon()
+                    .getEncPosition()) >= ClimbWinches.WINCH_MAX_COUNT_LEFT)
                 climbAnywaysLeft = true;
             Robot.runningRobot.winch.getLeft().setPower(0);
             hasStoppedLeftClimbWinch = true;
         }
-        
+
     }
 
     /**
@@ -284,7 +295,8 @@ public class RobotDriver implements Module {
 
     /**
      * Performs the driving calculation. Driving can be in one of three modes:
-     * Two-stick tank drive, two-stick arcade drive using power, and two-stick arcade drive using velocity control
+     * Two-stick tank drive, two-stick arcade drive using power, and two-stick
+     * arcade drive using velocity control
      */
     public void drive() {
         if (!hasStartedDriving) {
@@ -294,9 +306,9 @@ public class RobotDriver implements Module {
         Vector2d thePowersThatBe;
 
         // Computing Driving Code
-        ArcadeDriveCalculator arcadeCalc = ArcadeDriveCalculator.INSTANCE;
-        TankDriveCalculator tankCalc = TankDriveCalculator.INSTANCE;
-        ArcadeVelocityCalculator velCalc = ArcadeVelocityCalculator.INSTANCE;
+        DriveCalculator arcadeCalc = WheelDriveCalculator.INSTANCE;
+        DriveCalculator tankCalc = TankDriveCalculator.INSTANCE;
+        DriveCalculator velCalc = ArcadeVelocityCalculator.INSTANCE;
         switch (inputMode) {
             case ONE_STICK:
                 thePowersThatBe = arcadeCalc.compute(
@@ -320,6 +332,9 @@ public class RobotDriver implements Module {
                 throw new IllegalStateException(
                         "Don't know what mode " + inputMode + " does");
         }
+        thePowersThatBe = new Vector2d(
+                SteeringWheelCalc.calculate(thePowersThatBe.getX(), true),
+                SteeringWheelCalc.calculate(thePowersThatBe.getY(), false));
         if (driveType == DriveType.ARCADE_VELOCITY) {
             Robot.runningRobot.driveTrain.setVelocity(thePowersThatBe);
         } else {
@@ -353,6 +368,7 @@ public class RobotDriver implements Module {
 
     /**
      * Deadband for first joystick
+     * 
      * @return whether the joystick is in use
      */
     private boolean usingFirstStick() {
@@ -361,9 +377,10 @@ public class RobotDriver implements Module {
                 || Math.abs(FIRST_JOYSTICK
                         .getY()) > RobotConstants.JOYSTICK_DEADBAND);
     }
-    
+
     /**
      * Deadband for second joystick
+     * 
      * @return whether the joystick is in use
      */
     private boolean usingSecondStick() {
