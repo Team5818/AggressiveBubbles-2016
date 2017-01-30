@@ -58,7 +58,7 @@ public class RobotDriver implements Module {
     private static final int BUT_UNINVERT = 8;
     private static final int BUT_ARM_ANGLE_SHOOTING = 4;
     private static final int BUT_ARM_ANGLE_COLLECT = 3;
-    private static final int BUT_ARM_ANGLE_GROUND = 2;
+    private static final int BUT_QUICK_TURN = 2; //BUT_ARM_ANGLE_GROUND = 2;
     private static final int BUT_OVERRIDE_CODRIVER = 1;
 
     /**
@@ -105,8 +105,8 @@ public class RobotDriver implements Module {
             new JoystickButton(FIRST_JOYSTICK, BUT_ARM_ANGLE_SHOOTING);
     private JoystickButton butArmAngleCollect =
             new JoystickButton(FIRST_JOYSTICK, BUT_ARM_ANGLE_COLLECT);
-    private JoystickButton butArmAngleGround =
-            new JoystickButton(FIRST_JOYSTICK, BUT_ARM_ANGLE_GROUND);
+//    private JoystickButton butQuickTurn =
+//            new JoystickButton(FIRST_JOYSTICK, BUT_QUICK_TURN);
     private JoystickButton rotateCW90 =
             new JoystickButton(SECOND_JOYSTICK, BUT_ROTATE_CW_90);
     private JoystickButton rotateCCW90 =
@@ -150,7 +150,7 @@ public class RobotDriver implements Module {
         butOverrideCoDriver.whenPressed(overrideCoDriver);
         butArmAngleShooting.whenPressed(new SetArmAngle(armAngleShooting));
         butArmAngleCollect.whenPressed(new SetArmAngle(armAngleCollect));
-        butArmAngleGround.whenPressed(armToGround);
+//        butArmAngleGround.whenPressed(armToGround);
         rotateCW90
                 .whenPressed(new SpinRobot(81, SpinRobot.DEFAULT_TIMEOUT, 0.6));
         rotateCCW90.whenPressed(
@@ -320,6 +320,7 @@ public class RobotDriver implements Module {
                     thePowersThatBe = tankCalc.compute(Vectors.fromJoystickTank(
                             FIRST_JOYSTICK, SECOND_JOYSTICK, invertThrottle));
                 } else if (driveType == DriveType.ARCADE) {
+                    ((RadiusDriveCalculator) arcadeCalc).setQuick(FIRST_JOYSTICK.getRawButton(BUT_QUICK_TURN)); 
                     thePowersThatBe = arcadeCalc.compute(Vectors.fromJoystick(
                             FIRST_JOYSTICK, SECOND_JOYSTICK, invertThrottle));
                 } else {
