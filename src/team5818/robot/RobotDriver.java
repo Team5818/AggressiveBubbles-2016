@@ -24,6 +24,7 @@ import team5818.robot.modules.drivetrain.ArcadeVelocityCalculator;
 import team5818.robot.modules.drivetrain.DriveCalculator;
 import team5818.robot.modules.drivetrain.TankDriveCalculator;
 import team5818.robot.modules.drivetrain.WheelDriveCalculator;
+import team5818.robot.util.RadiusDriveCalculator;
 import team5818.robot.util.SteeringWheelCalc;
 import team5818.robot.util.Vector2d;
 import team5818.robot.util.Vectors;
@@ -78,7 +79,7 @@ public class RobotDriver implements Module {
     /**
      * booleans that reflect the state of the robot and controls
      */
-    private static boolean invertThrottle = true;
+    private static boolean invertThrottle = false;
     private boolean hasStoppedRobot = false;
     private boolean climbMode = false;
     private boolean hasStartedDriving = false;
@@ -306,7 +307,7 @@ public class RobotDriver implements Module {
         Vector2d thePowersThatBe;
 
         // Computing Driving Code
-        DriveCalculator arcadeCalc = WheelDriveCalculator.INSTANCE;
+        DriveCalculator arcadeCalc =  RadiusDriveCalculator.INSTANCE;//WheelDriveCalculator.INSTANCE;
         DriveCalculator tankCalc = TankDriveCalculator.INSTANCE;
         DriveCalculator velCalc = ArcadeVelocityCalculator.INSTANCE;
         switch (inputMode) {
