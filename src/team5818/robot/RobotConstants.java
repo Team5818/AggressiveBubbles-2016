@@ -56,12 +56,24 @@ public final class RobotConstants {
     /**
      * talon controlling collector
      */
-    public static final int TALON_COLLECTOR_MOTOR = 10;
+    //public static final int TALON_COLLECTOR_MOTOR = 10;
+    public static final int TALON_COLLECTOR_MOTOR = -99;
+    
+    /**
+     * Talon for right rope climber
+     */
+    public static final int TALON_ROPE_RIGHT = 10;
 
     /**
      * The talon controller for the upper flywheel motor.
      */
-    public static final int TALON_FLYWHEEL_UPPER = 11;
+//    public static final int TALON_FLYWHEEL_UPPER = 11;
+    public static final int TALON_FLYWHEEL_UPPER = 99;
+    
+  /**
+   * Talon for left rope climber
+   */
+    public static final int TALON_ROPE_LEFT = 11;
 
     /**
      * The talon controller for the lower flywheel motor.

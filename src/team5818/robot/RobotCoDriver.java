@@ -43,7 +43,8 @@ public class RobotCoDriver implements Module {
     /**
      * Button indices for first joystick
      */
-    private static final int BUT_MODE_CLIMB = 11;
+    private static 
+    final int BUT_MODE_CLIMB = 11;
     private static final int BUT_EXTEND_SERVO = 9;
     private static final int BUT_RETRACT_SERVO = 8;
     private static final int BUT_NOT_MODE_CLIMB = 6;

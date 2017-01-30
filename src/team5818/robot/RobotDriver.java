@@ -216,30 +216,36 @@ public class RobotDriver implements Module {
      * Controls for endagame
      */
     private void climbPeriodic() {
-        if (usingFirstStick()) {
-            if(Math.abs(Robot.runningRobot.winch.getRight().getTalon().getEncPosition()) <= ClimbWinches.WINCH_MAX_COUNT_RIGHT || climbAnywaysRight)
-                Robot.runningRobot.winch.getRight().setPower(-FIRST_JOYSTICK.getY());
-            else
-                Robot.runningRobot.winch.getRight().setPower(0);
-            hasStoppedRightClimbWinch = false;
-        } else if (!hasStoppedRightClimbWinch) {
-            if(Robot.runningRobot.winch.getRight().getTalon().getEncPosition() >= ClimbWinches.WINCH_MAX_COUNT_RIGHT)
-                climbAnywaysRight = true;
-            Robot.runningRobot.winch.getRight().setPower(0);
-            hasStoppedRightClimbWinch = true;
+//        if (usingFirstStick()) {
+//            if(Math.abs(Robot.runningRobot.winch.getRight().getTalon().getEncPosition()) <= ClimbWinches.WINCH_MAX_COUNT_RIGHT || climbAnywaysRight)
+//                Robot.runningRobot.winch.getRight().setPower(-FIRST_JOYSTICK.getY());
+//            else
+//                Robot.runningRobot.winch.getRight().setPower(0);
+//            hasStoppedRightClimbWinch = false;
+//        } else if (!hasStoppedRightClimbWinch) {
+//            if(Robot.runningRobot.winch.getRight().getTalon().getEncPosition() >= ClimbWinches.WINCH_MAX_COUNT_RIGHT)
+//                climbAnywaysRight = true;
+//            Robot.runningRobot.winch.getRight().setPower(0);
+//            hasStoppedRightClimbWinch = true;
+//        }
+//        
+//        if (usingSecondStick()) {
+//            if(Math.abs(Robot.runningRobot.winch.getLeft().getTalon().getEncPosition()) <= ClimbWinches.WINCH_MAX_COUNT_LEFT || climbAnywaysLeft)
+//                Robot.runningRobot.winch.getLeft().setPower(-SECOND_JOYSTICK.getY());
+//            else
+//                Robot.runningRobot.winch.getLeft().setPower(0);
+//            hasStoppedLeftClimbWinch = false;
+//        } else if (!hasStoppedLeftClimbWinch) {
+//            if(Math.abs(Robot.runningRobot.winch.getLeft().getTalon().getEncPosition()) >= ClimbWinches.WINCH_MAX_COUNT_LEFT)
+//                climbAnywaysLeft = true;
+//            Robot.runningRobot.winch.getLeft().setPower(0);
+//            hasStoppedLeftClimbWinch = true;
+//        }
+        if(usingFirstStick()){
+            Robot.runningRobot.ropeclimb.setPower(-FIRST_JOYSTICK.getY());
         }
-        
-        if (usingSecondStick()) {
-            if(Math.abs(Robot.runningRobot.winch.getLeft().getTalon().getEncPosition()) <= ClimbWinches.WINCH_MAX_COUNT_LEFT || climbAnywaysLeft)
-                Robot.runningRobot.winch.getLeft().setPower(-SECOND_JOYSTICK.getY());
-            else
-                Robot.runningRobot.winch.getLeft().setPower(0);
-            hasStoppedLeftClimbWinch = false;
-        } else if (!hasStoppedLeftClimbWinch) {
-            if(Math.abs(Robot.runningRobot.winch.getLeft().getTalon().getEncPosition()) >= ClimbWinches.WINCH_MAX_COUNT_LEFT)
-                climbAnywaysLeft = true;
-            Robot.runningRobot.winch.getLeft().setPower(0);
-            hasStoppedLeftClimbWinch = true;
+        else{
+            Robot.runningRobot.ropeclimb.setPower(0.0);
         }
         
     }

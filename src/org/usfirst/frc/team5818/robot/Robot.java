@@ -31,6 +31,7 @@ import team5818.robot.modules.ClimbWinches;
 import team5818.robot.modules.Collector;
 import team5818.robot.modules.FlyWheel;
 import team5818.robot.modules.Module;
+import team5818.robot.modules.RopeClimber;
 import team5818.robot.modules.Track;
 import team5818.robot.modules.VisionThread;
 import team5818.robot.modules.drivetrain.DriveTrain;
@@ -116,6 +117,12 @@ public class Robot extends IterativeRobot {
     public final ClimbWinches winch =
             new ClimbWinches(RobotConstants.TALON_WINCH_LEFT,
                     RobotConstants.TALON_WINCH_RIGHT, false, true);
+    /**
+     * Motors for rope climbing
+     */
+    
+    public final RopeClimber ropeclimb = new RopeClimber();
+    
     /**
      * The thread for retrieving frames from the camera
      */
