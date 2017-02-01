@@ -25,10 +25,10 @@ public class SwitchFeed extends Command {
     @Override
     protected void initialize() {
         try{
-        Robot.runningRobot.vision.See.ChangeFeed(feed);
+        //Robot.runningRobot.vision.See.ChangeFeed(feed);
         }
         catch(Exception e){
-            DriverStation.reportError("couldn't switch feed", false);
+            DriverStation.reportError("couldn't do nothing", false);
         }
         
     }

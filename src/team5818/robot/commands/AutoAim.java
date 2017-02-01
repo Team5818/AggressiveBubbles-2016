@@ -86,7 +86,7 @@ public class AutoAim extends Command {
         double[] yArr = {8};
         lookupTable = new LinearLookupTable(xArr, yArr);
         
-        track = Robot.runningRobot.targeting;
+        //track = Robot.runningRobot.targeting;
         camFOV = RobotConstants.CAMFOV;
 
         this.flyUpVel = flyup;
@@ -160,23 +160,24 @@ public class AutoAim extends Command {
     }
 
     public static double calculateAngleX() {
-        double setX = (((imgWidth / 2 - (track.blobLocX))) / imgWidth * camFOV/2);
-        setX += xOffset + DEFAULT_X_OFFSET;
-        SmartDashboard.putNumber("AutoAim X Error", setX);
-        return setX;
-
+        //double setX = (((imgWidth / 2 - (track.blobLocX))) / imgWidth * camFOV/2);
+        //setX += xOffset + DEFAULT_X_OFFSET;
+        //SmartDashboard.putNumber("AutoAim X Error", setX);
+        //return setX;
+        return 0;
     }
 
     public static double calculateAngleY() {
-        double setY = ((imgHeight / 2 - (track.blobLocY))) / imgHeight * camFOV/2;
-        SmartDashboard.putNumber("AutoAim Y Angle", setY);
-        setY += yOffset + DEFAULT_Y_OFFSET;
+        //double setY = ((imgHeight / 2 - (track.blobLocY))) / imgHeight * camFOV/2;
+        //SmartDashboard.putNumber("AutoAim Y Angle", setY);
+        //setY += yOffset + DEFAULT_Y_OFFSET;
 
 //      double setY = RobotCommon.runningRobot.arm.getAngle()
 //              + ((imgHeight / 2 - (locY))) / imgHeight * camFOV / 2;
 //      setY += lookupTable.getEstimate(getDistanceFromGoal(setY));
       
-        return setY;
+        //return setY;
+        return 0;
     }
 
     public void aim() {

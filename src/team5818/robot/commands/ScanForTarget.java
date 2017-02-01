@@ -11,7 +11,7 @@ import team5818.robot.util.Vector2d;
 public class ScanForTarget extends Command{
 
     private boolean clockwise;
-    private Track targeting = Robot.runningRobot.targeting;
+    //private Track targeting = Robot.runningRobot.targeting;
     private double power;
     private DriveTrain train = Robot.runningRobot.driveTrain;
 
@@ -37,14 +37,13 @@ public class ScanForTarget extends Command{
 
     @Override
     protected void execute(){
-        targeting.GetData();
+       // targeting.GetData();
         
     }
 
     @Override
     protected boolean isFinished() {
-        return ((targeting.blobCount >= 1) || isTimedOut());
-
+       return isTimedOut();
     }
 
     @Override

@@ -119,12 +119,12 @@ public class Robot extends IterativeRobot {
     /**
      * The thread for retrieving frames from the camera
      */
-    public final VisionThread vision = addModule(new VisionThread());
+    //public final VisionThread vision = addModule(new VisionThread());
     
     /**
      * The module for processing images from the camera
      */
-    public final Track targeting = new Track();
+    //public final Track targeting = new Track();
     
     /**
      * The menu for choosing the defense to be crossed in Auto
@@ -250,7 +250,7 @@ public class Robot extends IterativeRobot {
     public void autonomousPeriodic() {
         Scheduler.getInstance().run();
         modules.forEach(Module::autoPeriodicModule);
-        targeting.GetData();
+        //targeting.GetData();
         displayNumbers();
 
     }
@@ -263,7 +263,7 @@ public class Robot extends IterativeRobot {
     public void teleopPeriodic() {
         Scheduler.getInstance().run();
         modules.forEach(Module::teleopPeriodicModule);
-        targeting.GetData();
+        //targeting.GetData();
         displayNumbers();
     }
 
@@ -318,8 +318,8 @@ public class Robot extends IterativeRobot {
         SmartDashboard.putNumber("Right Winch Counts", winch.getRight().getTalon().getEncPosition());
         SmartDashboard.putNumber("AA - Err Y", AutoAim.calculateAngleY());
         SmartDashboard.putNumber("AA - Err X", AutoAim.calculateAngleX());
-        SmartDashboard.putNumber("locX", targeting.blobLocX);
-        SmartDashboard.putNumber("locY", targeting.blobLocY);
+        //SmartDashboard.putNumber("locX", targeting.blobLocX);
+        //SmartDashboard.putNumber("locY", targeting.blobLocY);
         SmartDashboard.putNumber("Left Winch Height", winch.getLeft().getTalon().getEncPosition() / 11339.0 * 100);
         SmartDashboard.putNumber("Right WInch Height", winch.getRight().getTalon().getEncPosition() / 10967.0 * 100);
     }
