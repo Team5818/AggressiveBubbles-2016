@@ -241,8 +241,11 @@ public class RobotDriver implements Module {
 //            Robot.runningRobot.winch.getLeft().setPower(0);
 //            hasStoppedLeftClimbWinch = true;
 //        }
-        if(usingFirstStick()){
-            Robot.runningRobot.ropeclimb.setPower(-FIRST_JOYSTICK.getY());
+        Joystick stick = RobotCoDriver.firstJoystick;
+        if((Math.abs(stick.getX()) > RobotConstants.JOYSTICK_DEADBAND
+                || Math.abs(
+                        stick.getY()) > RobotConstants.JOYSTICK_DEADBAND)){
+                Robot.runningRobot.ropeclimb.setPower(-stick.getY());
         }
         else{
             Robot.runningRobot.ropeclimb.setPower(0.0);

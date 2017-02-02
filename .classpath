@@ -5,4 +5,4 @@
 	<classpathentry kind="lib" path="libs/edu/wpi/networktables/NONE/networktables-NONE.jar" sourcepath="libs/edu/wpi/networktables/NONE/networktables-NONE-sources.jar"/>
 	<classpathentry kind="lib" path="libs/edu/wpi/wpilib/NONE/wpilib-NONE.jar" sourcepath="libs/edu/wpi/wpilib/NONE/wpilib-NONE-sources.jar"/>
 	<classpathentry kind="output" path="bin"/>
-</classpath>	
+</classpath>

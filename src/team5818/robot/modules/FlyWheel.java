@@ -148,10 +148,10 @@ public class FlyWheel extends Subsystem implements PIDSource {
      */
     public double getRPS() {
         try {
-            double rps = talon.getEncVelocity() * 10.0 / 6.0 * gearBoxRatio * sensorSign;
-            return rps;
+//            double rps = talon.getEncVelocity() * 10.0 / 6.0 * gearBoxRatio * sensorSign;
+//            return rps;
         } catch (Exception e) {
-                DriverStation.reportError("Couldn't print flywheel velocity", false);
+//                DriverStation.reportError("Couldn't print flywheel velocity", false);
         }
         return 0;
     }

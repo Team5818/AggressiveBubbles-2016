@@ -31,24 +31,24 @@ public class Track {
      */
     public Track() {
 
-        try {
-            socket = new DatagramSocket(portNum);
-            InetSocketAddress address =
-                    new InetSocketAddress("10.58.18.191", portNum);
-            socket.setSoTimeout(100);
-            socket.bind(address);
-        } catch (SocketException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-
-        }
-
-        try {
-            RoboData = NetworkTable.getTable("Targeting");
-            NetworkTable.setUpdateRate(.2);
-        } catch (Exception e) {
-            DriverStation.reportError("no data table", false);
-        }
+//        try {
+//            socket = new DatagramSocket(portNum);
+//            InetSocketAddress address =
+//                    new InetSocketAddress("10.58.18.191", portNum);
+//            socket.setSoTimeout(100);
+//            socket.bind(address);
+//        } catch (SocketException e) {
+//            // TODO Auto-generated catch block
+//            e.printStackTrace();
+//
+//        }
+//
+//        try {
+//            RoboData = NetworkTable.getTable("Targeting");
+//            NetworkTable.setUpdateRate(.2);
+//        } catch (Exception e) {
+//            DriverStation.reportError("no data table", false);
+//        }
     }
 
     /**

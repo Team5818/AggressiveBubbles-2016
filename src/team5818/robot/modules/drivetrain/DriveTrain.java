@@ -99,15 +99,15 @@ public class DriveTrain extends Subsystem implements Module {
      *            {@link Vector2d#getX()} and right is {@link Vector2d#getY()}
      */
     public void setPower(Vector2d power) {
-        left.setPower(power.getX());
-        right.setPower(power.getY());
-        setDriveMode(MODE_POWER);
+//        left.setPower(power.getX());
+//        right.setPower(power.getY());
+//        setDriveMode(MODE_POWER);
     }
 
     public void setVelocity(Vector2d velocities) {
-        left.setVelocity(velocities.getX());
-        right.setVelocity(velocities.getY());
-        setDriveMode(MODE_VELOCITY);
+//        left.setVelocity(velocities.getX());
+//        right.setVelocity(velocities.getY());
+//        setDriveMode(MODE_VELOCITY);
     }
 
     public double getAverageDistance() {
@@ -120,16 +120,16 @@ public class DriveTrain extends Subsystem implements Module {
     }
 
     public void setDriveDistance(double dist, double maxPower) {
-        left.setDriveDistance(dist, maxPower);
-        right.setDriveDistance(dist, maxPower);
-        setDriveMode(MODE_DISTANCE);
+//        left.setDriveDistance(dist, maxPower);
+//        right.setDriveDistance(dist, maxPower);
+//        setDriveMode(MODE_DISTANCE);
     }
 
     public void setDriveDistance(double distLeft, double distRight,
             double maxPower) {
-        left.setDriveDistance(distLeft, maxPower);
-        right.setDriveDistance(distRight, maxPower);
-        setDriveMode(MODE_DISTANCE);
+//        left.setDriveDistance(distLeft, maxPower);
+//        right.setDriveDistance(distRight, maxPower);
+//        setDriveMode(MODE_DISTANCE);
     }
 
     public void setDriveCalculator(DriveCalculator driveCalculator) {
